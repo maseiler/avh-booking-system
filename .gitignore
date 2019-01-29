@@ -10,3 +10,15 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+# miscellaneous
+.vscode
+
+notes_for_avhbs.txt
+notes_on_sql_in_go.txt
+todo
+
+client/dist/
+client/node_modules/
+
+server/database/databaseLoginLocal.txt
+server/database/databaseLoginRemote.txt
