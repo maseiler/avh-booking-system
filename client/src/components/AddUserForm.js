@@ -13,7 +13,7 @@ export default {
     },
     methods: {
       submitUser(){
-        this.$http.post('/newUser', this.newUser).then(function (response) {
+        this.$http.post('/addUser', this.newUser).then(function (response) {
           // Success
           console.log("Added new user:", this.newUser.bierName, this.newUser.firstName, this.newUser.lastName, this.newUser.email, this.newUser.phone, this.newUser.status)
           // TODO: visible confirmation

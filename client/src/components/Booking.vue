@@ -4,8 +4,8 @@
       <div class="column">
         <div class="box">
           <p class="title">Users</p>
-          <button @click="boolAddUser = true">Add User</button>
-          <AddUserForm v-if="boolAddUser" @close="boolAddUser = false"></AddUserForm>
+          <button @click="showAddUserForm = true">Add User</button>
+          <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false"></AddUserForm>
         </div>
 
       </div>
