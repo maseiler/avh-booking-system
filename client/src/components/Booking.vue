@@ -3,9 +3,7 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <p class="title">Users</p>
-          <button @click="showAddUserForm = true">Add User</button>
-          <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false"></AddUserForm>
+          <UserTab></UserTab>
         </div>
 
       </div>

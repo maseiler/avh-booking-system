@@ -1,24 +1,16 @@
-import AddUserForm from "./AddUserForm.vue";
+import UserTab from "./UserTab.vue"
 import ItemList from "./ItemList.vue";
 export default {
   components: {
-    AddUserForm,
+    UserTab,
     ItemList,
   },
   data: function() {
     return {
-      showAddUserForm: false,
-      users: [],
       stringCheckout: "",
     };
   },
   methods: {
-    getUsers: function() {
-      this.$http.get("/users").then(response => {
-        this.users = response.body;
-      });
-      console.log("getUsers");
-    },
     checkout: function() {
       this.$http.get("/checkout").then(response => {
         this.stringCheckout = response.body;
