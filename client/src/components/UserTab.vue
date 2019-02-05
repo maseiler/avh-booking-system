@@ -23,15 +23,23 @@
         </p>
 
         <br/>
-        <div class="field">
-            <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Search" >
-                <span class="icon is-small is-left">
-                    <font-awesome-icon icon="search"/>
-                </span>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <input class="input" type="text" placeholder="Search user" v-model="search" v-on:keyup="searchUsers">
+                        <span class="icon is-small is-left">
+                            <font-awesome-icon icon="search"/>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-2">
+                <button class="button is-link" @click="showAddUserForm = true">Add User</button>
             </div>
         </div>
-        <button class="button is-link" @click="showAddUserForm = true">Add User</button>
+        <button class="button" is-primary v-for="user in searchResults" :key="user">{{ user.BierName }}</button>
+        
         <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false"></AddUserForm>
     </div>
 </template>

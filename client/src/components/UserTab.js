@@ -12,17 +12,20 @@ export default {
         usersAktivB: [],
         usersAktivKA: [],
         usersGaeste: [],
-        activeTab: 'tab1'
+        activeTab: 'tab1',
+        search: '',
+        searchResults: []
       };
     },
     methods: {
         getUsers: function() {
             this.$http.get("/users").then(response => {
-            this.allUsers = response.body
-            this.usersAH = this.allUsers[0]
-            this.usersAktivB = this.allUsers[1]
-            this.usersAktivKA = this.allUsers[2]
-            this.usersGaeste = this.allUsers[3]
+            var temp = response.body
+            this.allUsers = [].concat.apply([], temp)
+            this.usersAH = temp[0]
+            this.usersAktivB = temp[1]
+            this.usersAktivKA = temp[2]
+            this.usersGaeste = temp[3]
             this.sortBy(this.usersAH, "BierName")
             this.sortBy(this.usersAktivB, "BierName")
             this.sortBy(this.usersAktivKA, "BierName")
@@ -39,6 +42,12 @@ export default {
                     return 1
                 return 0
             })
+        },
+        searchUsers: function(){
+            if(this.search != ''){
+                var tmpSearch = this.search.toLowerCase()
+                this.searchResults = this.allUsers.filter(user => (user['BierName'].toLowerCase().includes(tmpSearch)) | (user['FirstName'].toLowerCase().includes(tmpSearch)))
+            }
         }
     },
     created(){
