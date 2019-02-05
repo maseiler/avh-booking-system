@@ -8,6 +8,7 @@ export default {
       return {
         showAddUserForm: false,
         users: [],
+        activeTab: 'tab1'
       };
     },
     methods: {
@@ -18,4 +19,7 @@ export default {
         console.log("getUsers");
       },
     },
+    created(){
+        this.$nextTick(this.getUsers())
+      }
   };
