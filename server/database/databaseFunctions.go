@@ -61,10 +61,36 @@ func GetItems() []data.Item {
 // }
 
 // GetUsers returns all users from database and prints them
-func GetUsers() []data.User {
+// func GetUsers() []data.User {
+// 	users := []data.User{}
+// 	queryString := "SELECT * FROM users;"
+// 	// queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = '%s';", column, value)
+// 	rows, err := db.Query(queryString)
+// 	HandleDatabaseError(err)
+// 	defer rows.Close()
+// 	for rows.Next() {
+// 		user := data.User{}
+// 		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
+// 		users = append(users, user)
+// 		HandleDatabaseError(err)
+// 		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
+// 		fmt.Println(info)
+// 	}
+// 	defer rows.Close()
+// 	err = rows.Err()
+// 	HandleDatabaseError(err)
+// 	return users
+// }
+
+// GetUsersOfStatus returns Users from database depending on status or all users if string is empty
+func GetUsersOfStatus(status string) []data.User {
 	users := []data.User{}
-	queryString := "SELECT * FROM users;"
-	// queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = '%s';", column, value)
+	queryString := ""
+	if status != "" {
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE Status = \"%s\";", status)
+	} else {
+		queryString = "SELECT * FROM users;"
+	}
 	rows, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	defer rows.Close()

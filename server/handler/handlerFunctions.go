@@ -25,9 +25,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 // GetUsers forwards API call to get all users from database
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	users := dbP.GetUsers()
+	users := [][]dataP.User{dbP.GetUsersOfStatus("AH"), dbP.GetUsersOfStatus("Aktiv B"), dbP.GetUsersOfStatus("Aktiv KA"), dbP.GetUsersOfStatus("Gast")}
 	response := marshalToJSON(users, w)
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
 }
