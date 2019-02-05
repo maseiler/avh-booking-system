@@ -19,7 +19,7 @@
             <button class="button" is-primary v-for="user in usersAktivKA" :key="user">{{ user.BierName }}</button>
         </p>
         <p v-if="activeTab ==='tab4'">
-            <button class="button" is-primary v-for="user in usersGaeste" :key="user">{{ user.BierName }}</button>
+            <button class="button" is-primary v-for="user in usersGaeste" :key="user">{{ user.FirstName + " " + user.LastName }}</button>
         </p>
 
         <br/>

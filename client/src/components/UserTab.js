@@ -23,27 +23,17 @@ export default {
             this.usersAktivB = this.allUsers[1]
             this.usersAktivKA = this.allUsers[2]
             this.usersGaeste = this.allUsers[3]
-            this.sortByBierName(this.usersAH)
-            this.sortByBierName(this.usersAktivB)
-            this.sortByBierName(this.usersAktivKA)
-            this.sortByFirstName(this.usersGaeste)
+            this.sortBy(this.usersAH, "BierName")
+            this.sortBy(this.usersAktivB, "BierName")
+            this.sortBy(this.usersAktivKA, "BierName")
+            this.sortBy(this.usersGaeste, "FirstName")
             });
             console.log("getUsers");
-            },
-        sortByBierName: function(array){
-            array.sort(function(a, b){
-                var nameA=a.BierName.toLowerCase(), nameB=b.BierName.toLowerCase()
-                if (nameA < nameB)
-                    return -1 
-                if (nameA > nameB)
-                    return 1
-                return 0
-            })
         },
-        sortByFirstName: function(array){
+        sortBy: function(array, param){
             array.sort(function(a, b){
-                var nameA=a.FirstName.toLowerCase(), nameB=b.FirstName.toLowerCase()
-                if (nameA < nameB) //sort string ascending
+                var nameA=a[param].toLowerCase(), nameB=b[param].toLowerCase()
+                if (nameA < nameB)
                     return -1 
                 if (nameA > nameB)
                     return 1
