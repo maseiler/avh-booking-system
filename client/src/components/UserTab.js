@@ -47,6 +47,8 @@ export default {
             if(this.search != ''){
                 var tmpSearch = this.search.toLowerCase()
                 this.searchResults = this.allUsers.filter(user => (user['BierName'].toLowerCase().includes(tmpSearch)) | (user['FirstName'].toLowerCase().includes(tmpSearch)))
+            } else {
+                this.searchResults = []
             }
         }
     },
