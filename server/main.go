@@ -1,7 +1,9 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"time"
 
 	db "./database"
 	handler "./handler"
@@ -13,15 +15,23 @@ import (
 func main() {
 	db.ConnectDatabase()
 
-	// api
 	r := mux.NewRouter()
 	r.HandleFunc("/addUser", handler.AddUser)
 	r.HandleFunc("/users", handler.GetUsers)
 	r.HandleFunc("/newUser", handler.AddUser)
 	r.HandleFunc("/items", handler.GetItems)
 	r.HandleFunc("/checkout", handler.Checkout)
-	// frontend
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./../client/dist")))
-	http.ListenAndServe(":8080", r)
+	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./../client/dist/index.html")
+	}
+	r.PathPrefix("/").Handler(handler.CustomFileServer(http.Dir("./../client/dist"), serveIndexHTML))
 
+	server := &http.Server{
+		Addr:           ":8080",
+		Handler:        r,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	log.Fatal(server.ListenAndServe())
 }

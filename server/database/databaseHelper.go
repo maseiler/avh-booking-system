@@ -35,7 +35,7 @@ func HandleDatabaseError(err error) {
 }
 
 // HandleTxError rolls back transaction and logs error to console
-func HandleTxError(tx sql.Tx, err error) {
+func HandleTxError(tx *sql.Tx, err error) {
 	// TODO make safer (copies lock value)
 	if err != nil {
 		_ = tx.Rollback()
@@ -44,7 +44,7 @@ func HandleTxError(tx sql.Tx, err error) {
 }
 
 // TxRowsAffected handles transaction error and prints affected rows to console.
-func TxRowsAffected(res sql.Result, tx sql.Tx) {
+func TxRowsAffected(res sql.Result, tx *sql.Tx) {
 	lastID, err := res.LastInsertId()
 	HandleTxError(tx, err)
 	rowCnt, err := res.RowsAffected()
