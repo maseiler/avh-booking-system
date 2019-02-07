@@ -105,6 +105,16 @@
 
           <div class="modal-footer">
             <slot name="footer">
+              <article v-if="validationError !==''" class="message is-danger">
+                <div class="message-header">
+                  <div class="field is-grouped">
+                  <p class="icon is-small is-left">
+                    <font-awesome-icon icon="exclamation" size="lg"/>
+                  </p>
+                  <p> {{validationError}}</p>
+                  </div>
+                </div>
+              </article>
               <div class="field is-grouped">
                 <div class="control">
                   <button class="button is-link" @click="submitUser">Submit</button>

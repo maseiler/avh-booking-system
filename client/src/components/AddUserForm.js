@@ -8,7 +8,8 @@ export default {
         email: '',
         phone: '',
         status: ''
-      }
+      },
+      validationError : '',
     };
   },
   methods: {
@@ -19,7 +20,7 @@ export default {
         this.$router.go()
         // todo reload page
       }).catch(function (response) {
-        console.log(response.data)
+        this.validationError = response.data
         // todo visible output
       });
     },
@@ -33,7 +34,8 @@ export default {
         this.lastName = '',
         this.email = '',
         this.phone = '',
-        this.status = ''
+        this.status = '',
+        this.validationError = ''
       this.$emit("close");
     },
   }
