@@ -32,7 +32,9 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 // validates input parameters when creating a new user
 func validateInputArguments(newUser dataP.User) (validation string) {
-	//TODO check if user already in database
+	if dbP.UserExists(newUser) {
+		return "User already exists"
+	}
 	switch newUser.Status {
 	case "Gast":
 		if newUser.FirstName == "" && newUser.LastName == "" {
