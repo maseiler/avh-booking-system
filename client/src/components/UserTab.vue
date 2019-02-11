@@ -11,16 +11,16 @@
             </ul>
         </div>
         <div class="buttons" v-if="activeTab ==='tab1'">
-            <button class="button" v-for="user in usersAH" :key="user">{{ user.BierName }}</button>
+            <button class="button" v-for="user in usersAH" :key="user">{{ displayName(user) }}</button>
         </div>
         <div class="buttons" v-if="activeTab ==='tab2'">
-            <button class="button" v-for="user in usersAktivB" :key="user">{{ user.BierName }}</button>
+            <button class="button" v-for="user in usersAktivB" :key="user">{{ displayName(user) }}</button>
         </div>
         <div class="buttons" v-if="activeTab ==='tab3'">
-            <button class="button" v-for="user in usersAktivKA" :key="user">{{ user.BierName }}</button>
+            <button class="button" v-for="user in usersAktivKA" :key="user">{{ displayName(user) }}</button>
         </div>
         <div class="buttons" v-if="activeTab ==='tab4'">
-            <button class="button" v-for="user in usersGaeste" :key="user">{{ user.FirstName + " " + user.LastName }}</button>
+            <button class="button" v-for="user in usersGaeste" :key="user">{{ user.FirstName + ' ' + user.LastName }}</button>
         </div>
 
         <br/>
@@ -40,6 +40,7 @@
                 <button class="button is-link" @click="showAddUserForm = true">Add User</button>
             </div>
         </div>
+        <!-- search results -->
         <div class="buttons" v-if="searchResults.filter(user => user['BierName'] != '')">
             <button class="button is-link" v-for="user in searchResults.filter(user => user['BierName'] != '')" :key="user">{{ user.BierName }}</button>
         </div>
