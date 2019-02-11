@@ -3,11 +3,9 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <p class="title">Users</p>
-          <button @click="boolAddUser = true">Add User</button>
-          <AddUserForm v-if="boolAddUser" @close="boolAddUser = false"></AddUserForm>
+          <UserTab></UserTab>
         </div>
-
+        
       </div>
       <div class="column is-narrow">
         <div class="box has-text-centered" style="width: 500px;">

@@ -7,7 +7,7 @@ type User struct {
 	FirstName string
 	LastName  string
 	Status    string
-	Phone     string
 	Email     string
 	Balance   float32
+	Phone     string
 }

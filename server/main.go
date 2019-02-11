@@ -18,7 +18,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/addUser", handler.AddUser)
 	r.HandleFunc("/users", handler.GetUsers)
-	r.HandleFunc("/newUser", handler.AddUser)
 	r.HandleFunc("/items", handler.GetItems)
 	r.HandleFunc("/checkout", handler.Checkout)
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {

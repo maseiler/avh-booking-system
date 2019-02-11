@@ -14,6 +14,8 @@ import { faBeer} from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { faEuroSign } from '@fortawesome/free-solid-svg-icons'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
 
 library.add(faUser)
@@ -22,6 +24,8 @@ library.add(faBeer)
 library.add(faEnvelope)
 library.add(faUserSecret)
 library.add(faEuroSign)
+library.add(faSearch)
+library.add(faExclamation)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)

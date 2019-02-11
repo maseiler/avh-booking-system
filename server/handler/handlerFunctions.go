@@ -19,15 +19,44 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	validation := validateInputArguments(newUser)
 
-	dbP.AddUser(newUser)
+	if validation == "ok" {
+		dbP.AddUser(newUser)
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	fmt.Fprint(w, validation)
+}
+
+// validates input parameters when creating a new user
+func validateInputArguments(newUser dataP.User) (validation string) {
+	if dbP.UserExists(newUser) {
+		return "User already exists"
+	}
+	switch newUser.Status {
+	case "Gast":
+		if newUser.FirstName == "" && newUser.LastName == "" {
+			return "First or last name must be specified."
+		} else if newUser.Email == "" && newUser.Phone == "" {
+			return "Email address or phone number must be specified"
+		}
+		return "ok"
+	case "Aktiv B", "Aktiv KA", "AH":
+		if newUser.BierName == "" && newUser.FirstName == "" {
+			return "Biername or first name must be specified"
+		}
+		return "ok"
+	default:
+		return "Select status"
+	}
 }
 
 // GetUsers forwards API call to get all users from database
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	users := dbP.GetUsers()
+	users := [][]dataP.User{dbP.GetUsersOfStatus("AH"), dbP.GetUsersOfStatus("Aktiv B"), dbP.GetUsersOfStatus("Aktiv KA"), dbP.GetUsersOfStatus("Gast")}
 	response := marshalToJSON(users, w)
-
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
 }

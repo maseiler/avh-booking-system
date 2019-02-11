@@ -61,16 +61,36 @@ func GetItems() []data.Item {
 // }
 
 // GetUsers returns all users from database and prints them
-func GetUsers() []data.User {
+// func GetUsers() []data.User {
+// 	users := []data.User{}
+// 	queryString := "SELECT * FROM users;"
+// 	// queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = '%s';", column, value)
+// 	rows, err := db.Query(queryString)
+// 	HandleDatabaseError(err)
+// 	defer rows.Close()
+// 	for rows.Next() {
+// 		user := data.User{}
+// 		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
+// 		users = append(users, user)
+// 		HandleDatabaseError(err)
+// 		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
+// 		fmt.Println(info)
+// 	}
+// 	defer rows.Close()
+// 	err = rows.Err()
+// 	HandleDatabaseError(err)
+// 	return users
+// }
+
+// getUsersByQuery returns list of users as requested in string
+func getUsersByQuery(query string) []data.User {
 	users := []data.User{}
-	queryString := "SELECT * FROM users;"
-	// queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = '%s';", column, value)
-	rows, err := db.Query(queryString)
+	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	defer rows.Close()
 	for rows.Next() {
 		user := data.User{}
-		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Phone, &user.Balance)
+		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
 		users = append(users, user)
 		HandleDatabaseError(err)
 		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
@@ -80,6 +100,27 @@ func GetUsers() []data.User {
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return users
+}
+
+// GetUsersOfStatus returns Users from database depending on status or all users if string is empty
+func GetUsersOfStatus(status string) []data.User {
+	queryString := ""
+	if status != "" {
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE Status = \"%s\";", status)
+	} else {
+		queryString = "SELECT * FROM users;"
+	}
+	return getUsersByQuery(queryString)
+}
+
+// UserExists returns true if user exists in database
+func UserExists(newUser data.User) bool {
+	queryString := fmt.Sprintf("SELECT * FROM users WHERE BierName = \"%s\" AND FirstName = \"%s\" AND LastName = \"%s\" AND Status = \"%s\";", newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status)
+	users := getUsersByQuery(queryString)
+	if len(users) == 0 {
+		return false
+	}
+	return true
 }
 
 // AddUser adds a new user to database and prints info
