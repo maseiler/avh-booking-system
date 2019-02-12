@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"../data"
 )
@@ -60,28 +61,6 @@ func GetItems() []data.Item {
 // 	stmt.Close()
 // }
 
-// GetUsers returns all users from database and prints them
-// func GetUsers() []data.User {
-// 	users := []data.User{}
-// 	queryString := "SELECT * FROM users;"
-// 	// queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = '%s';", column, value)
-// 	rows, err := db.Query(queryString)
-// 	HandleDatabaseError(err)
-// 	defer rows.Close()
-// 	for rows.Next() {
-// 		user := data.User{}
-// 		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
-// 		users = append(users, user)
-// 		HandleDatabaseError(err)
-// 		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
-// 		fmt.Println(info)
-// 	}
-// 	defer rows.Close()
-// 	err = rows.Err()
-// 	HandleDatabaseError(err)
-// 	return users
-// }
-
 // getUsersByQuery returns list of users as requested in string
 func getUsersByQuery(query string) []data.User {
 	users := []data.User{}
@@ -102,14 +81,24 @@ func getUsersByQuery(query string) []data.User {
 	return users
 }
 
-// GetUsersOfStatus returns Users from database depending on status or all users if string is empty
-func GetUsersOfStatus(status string) []data.User {
+// GetUsersOfColumnWithValue gets users which have a certain value in their column
+func GetUsersOfColumnWithValue(column string, value string) []data.User {
 	queryString := ""
-	if status != "" {
-		queryString = fmt.Sprintf("SELECT * FROM users WHERE Status = \"%s\";", status)
+	var err error
+	if column == "BierName" || column == "FirstName" || column == "LastName" || column == "Status" || column == "Email" || column == "PhoneNumber" {
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = \"%s\";", column, value)
+	} else if column == "UserId" {
+		var intValue int
+		intValue, err = strconv.Atoi(value)
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = %d;", column, intValue)
+	} else if column == "Balance" {
+		var floatValue float64
+		floatValue, err = strconv.ParseFloat(value, 32)
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = %f;", column, floatValue)
 	} else {
-		queryString = "SELECT * FROM users;"
+		panic("Invalid column")
 	}
+	HandleDatabaseError(err)
 	return getUsersByQuery(queryString)
 }
 
