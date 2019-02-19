@@ -120,7 +120,7 @@ func AddUser(newUser data.User) {
 	stmt, err := tx.Prepare("INSERT INTO users(BierName, FirstName, LastName, Status, Email, PhoneNumber, Balance) VAlUES(?, ?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status, newUser.Email, newUser.Phone, 0)
+	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status, newUser.Email, newUser.Phone, newUser.Balance)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

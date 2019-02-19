@@ -19,6 +19,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	validation := validateInputArguments(newUser)
 
 	if validation == "ok" {

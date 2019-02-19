@@ -8,6 +8,6 @@ type User struct {
 	LastName  string
 	Status    string
 	Email     string
-	Balance   float32
+	Balance   float32 `json:",string"`
 	Phone     string
 }
