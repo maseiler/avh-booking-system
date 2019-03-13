@@ -21,22 +21,15 @@
         </div>
       </div>
     </div>
-    <!-- search results -->
-    <div class="buttons" v-if="searchResults.filter(user => user['BierName'] != '')">
+    <div class="buttons" v-if="searchResults != []">
       <button
         class="button is-link"
-        v-for="user in searchResults.filter(user => user['BierName'] != '')"
+        v-for="user in searchResults"
         :key="user"
-      >{{ user.BierName }}</button>
+        @click="selectedUser = user"
+      >{{ displayName(user) }}</button>
     </div>
-    <div class="buttons" v-if="searchResults.filter(user => user['BierName'] == '')">
-      <button
-        class="button is-link"
-        v-for="user in searchResults.filter(user => user['BierName'] == '')"
-        :key="user"
-      >{{ user.FirstName + ' ' + user.LastName }}</button>
-    </div>
-    <!-- TODO: when user selected, show info -->
+    <UserInfo :user="selectedUser"></UserInfo>
   </div>
 </template>
 
