@@ -10,4 +10,5 @@ type User struct {
 	Email     string
 	Balance   float32 `json:",string"`
 	Phone     string
+	MaxDebt   int `json:",string"`
 }

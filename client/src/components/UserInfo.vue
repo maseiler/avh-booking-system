@@ -7,8 +7,9 @@
     <p>LastName: {{this.user.LastName}}</p>
     <p>Status: {{this.user.Status}}</p>
     <p>Email: {{this.user.Email}}</p>
-    <p>Balance: {{this.user.Balance}}</p>
     <p>Phone: {{this.user.Phone}}</p>
+    <p>Balance: {{this.user.Balance}}</p>
+    <p>MaxDebt: {{this.user.MaxDebt}}</p>
   </div>
 </template>
 

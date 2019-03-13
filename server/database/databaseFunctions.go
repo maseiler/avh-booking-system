@@ -69,10 +69,10 @@ func getUsersByQuery(query string) []data.User {
 	defer rows.Close()
 	for rows.Next() {
 		user := data.User{}
-		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
+		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone, &user.MaxDebt)
 		users = append(users, user)
 		HandleDatabaseError(err)
-		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
+		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\nMaxDebt: %d\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance, user.MaxDebt)
 		fmt.Println(info)
 	}
 	defer rows.Close()
@@ -87,7 +87,7 @@ func GetUsersOfColumnWithValue(column string, value string) []data.User {
 	var err error
 	if column == "BierName" || column == "FirstName" || column == "LastName" || column == "Status" || column == "Email" || column == "PhoneNumber" {
 		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = \"%s\";", column, value)
-	} else if column == "UserId" {
+	} else if column == "UserId" || column == "MaxDebt" {
 		var intValue int
 		intValue, err = strconv.Atoi(value)
 		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = %d;", column, intValue)
@@ -117,10 +117,10 @@ func AddUser(newUser data.User) {
 	// todo: get info from input
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO users(BierName, FirstName, LastName, Status, Email, PhoneNumber, Balance) VAlUES(?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO users(BierName, FirstName, LastName, Status, Email, Balance, PhoneNumber, MaxDebt) VAlUES(?, ?, ?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status, newUser.Email, newUser.Phone, newUser.Balance)
+	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status, newUser.Email, newUser.Balance, newUser.Phone, newUser.MaxDebt)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
