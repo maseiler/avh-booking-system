@@ -102,7 +102,7 @@ func GetUsersOfColumnWithValue(column string, value string) []data.User {
 	return getUsersByQuery(queryString)
 }
 
-// UserExists returns true if user exists in database
+// UserExists returns true if user exists in database (based on BierName, FirstName and LastName)
 func UserExists(newUser data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE BierName = \"%s\" AND FirstName = \"%s\" AND LastName = \"%s\" AND Status = \"%s\";", newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status)
 	users := getUsersByQuery(queryString)
@@ -125,4 +125,12 @@ func AddUser(newUser data.User) {
 	err = tx.Commit()
 	HandleDatabaseError(err)
 	stmt.Close()
+}
+
+// DeleteUser deletes a user with corresponding ID from database
+func DeleteUser(user data.User) {
+	queryString := fmt.Sprintf("DELETE FROM users WHERE UserId = %d;", user.UserID)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
 }

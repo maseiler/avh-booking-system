@@ -69,6 +69,29 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+// DeleteUser forwards API call to delete user from database
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var user dataP.User
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation := ""
+	if !dbP.UserExists(user) {
+		validation = "User doesn't exist."
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		dbP.DeleteUser(user)
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	}
+	fmt.Fprint(w, validation)
+}
+
 // func AddItem(w http.ResponseWriter, r *http.Request) {
 // 	decoder := json.NewDecoder(r.Body)
 

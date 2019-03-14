@@ -1,14 +1,17 @@
-import AddUserFormAdmin from "./AddUserFormAdmin.vue";
+import AddUserFormAdmin from "./AddUserFormAdmin.vue"
+import DeleteUserForm from "./DeleteUserForm.vue"
 import UserInfo from "./UserInfo.vue"
 
 export default {
   components: {
     AddUserFormAdmin,
+    DeleteUserForm,
     UserInfo
   }, data: function () {
     return {
       allUsers: [],
       showAddUserFormAdmin: false,
+      deleteUserForm: false,
       search: '',
       searchResults: [],
       selectedUser: Object

@@ -2,6 +2,8 @@
   <div>
     <h1>ADMIN</h1>
     <button class="button is-link" @click="showAddUserFormAdmin = true">Add User</button>
+    <button class="button is-link" @click="deleteUserForm = true">Delete User</button>
+    <DeleteUserForm :user="selectedUser" v-if="deleteUserForm" @close="deleteUserForm = false"></DeleteUserForm>
     <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"></AddUserFormAdmin>
     <div class="columns">
       <div class="column">
