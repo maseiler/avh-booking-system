@@ -33,7 +33,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 // validates input parameters when creating a new user
 func validateInputArguments(newUser dataP.User) (validation string, user dataP.User) {
-	if dbP.UserExists(newUser) {
+	if dbP.NewUserExists(newUser) {
 		return "User already exists", newUser
 	}
 	switch newUser.Status {
@@ -86,6 +86,29 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	} else {
 		dbP.DeleteUser(user)
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	}
+	fmt.Fprint(w, validation)
+}
+
+// ModifyUser forwards API call to replaces all values of a user
+func ModifyUser(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var user dataP.User
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation := ""
+	if !dbP.UserExists(user) {
+		validation = "User doesn't exist."
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		dbP.ModifyUser(user)
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	}

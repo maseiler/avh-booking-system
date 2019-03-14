@@ -17,6 +17,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/addUser", handler.AddUser)
+	r.HandleFunc("/modifyUser", handler.ModifyUser)
 	r.HandleFunc("/deleteUser", handler.DeleteUser)
 	r.HandleFunc("/users", handler.GetUsers)
 	r.HandleFunc("/items", handler.GetItems)
