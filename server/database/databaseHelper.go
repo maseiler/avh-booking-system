@@ -5,18 +5,23 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"path/filepath"
+	"runtime"
 	"strings"
 )
 
 // GetDatabaseLoginFromFile returns array of login information for SQL database from file
+/*  file format:
+user
+password
+database name
+*/
 func GetDatabaseLoginFromFile() []string {
-	/*  format:
-	user
-	password
-	database name
-	*/
-	// b, err := ioutil.ReadFile("database/databaseLoginRemote.txt")
-	b, err := ioutil.ReadFile("database/databaseLoginLocal.txt")
+	_, currFile, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(currFile)
+	// b, err := ioutil.ReadFile("%s/databaseLoginRemote.txt", basepath)
+	filepath := fmt.Sprintf("%s/databaseLoginLocal.txt", basepath)
+	b, err := ioutil.ReadFile(filepath)
 
 	if err != nil {
 		fmt.Print(err)

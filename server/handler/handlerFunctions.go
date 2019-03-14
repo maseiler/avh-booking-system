@@ -19,7 +19,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	validation := validateInputArguments(newUser)
+
+	validation, newUser := validateInputArguments(newUser)
 
 	if validation == "ok" {
 		dbP.AddUser(newUser)
@@ -31,34 +32,87 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // validates input parameters when creating a new user
-func validateInputArguments(newUser dataP.User) (validation string) {
-	if dbP.UserExists(newUser) {
-		return "User already exists"
+func validateInputArguments(newUser dataP.User) (validation string, user dataP.User) {
+	if dbP.NewUserExists(newUser) {
+		return "User already exists", newUser
 	}
 	switch newUser.Status {
 	case "Gast":
 		if newUser.FirstName == "" && newUser.LastName == "" {
-			return "First or last name must be specified."
+			return "First or last name must be specified.", newUser
 		} else if newUser.Email == "" && newUser.Phone == "" {
-			return "Email address or phone number must be specified"
+			return "Email address or phone number must be specified", newUser
+		} else if newUser.MaxDebt == 0 {
+			newUser.MaxDebt = 50 //TODO
+			return "ok", newUser
 		}
-		return "ok"
+		return "ok", newUser
 	case "Aktiv B", "Aktiv KA", "AH":
 		if newUser.BierName == "" && newUser.FirstName == "" {
-			return "Biername or first name must be specified"
+			return "Biername or first name must be specified", newUser
+		} else if newUser.Status == "Aktiv B" || newUser.Status == "Aktiv KA" {
+			newUser.MaxDebt = 50
+		} else if newUser.Status == "AH" {
+			newUser.MaxDebt = 100
 		}
-		return "ok"
+		return "ok", newUser
 	default:
-		return "Select status"
+		return "Select status", newUser
 	}
 }
 
 // GetUsers forwards API call to get all users from database
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	users := [][]dataP.User{dbP.GetUsersOfStatus("AH"), dbP.GetUsersOfStatus("Aktiv B"), dbP.GetUsersOfStatus("Aktiv KA"), dbP.GetUsersOfStatus("Gast")}
+	users := [][]dataP.User{dbP.GetUsersOfColumnWithValue("Status", "AH"), dbP.GetUsersOfColumnWithValue("Status", "Aktiv B"), dbP.GetUsersOfColumnWithValue("Status", "Aktiv KA"), dbP.GetUsersOfColumnWithValue("Status", "Gast")}
 	response := marshalToJSON(users, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
+}
+
+// DeleteUser forwards API call to delete user from database
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var user dataP.User
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation := ""
+	if !dbP.UserExists(user) {
+		validation = "User doesn't exist."
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		dbP.DeleteUser(user)
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	}
+	fmt.Fprint(w, validation)
+}
+
+// ModifyUser forwards API call to replaces all values of a user
+func ModifyUser(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var user dataP.User
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation := ""
+	if !dbP.UserExists(user) {
+		validation = "User doesn't exist."
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		dbP.ModifyUser(user)
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	}
+	fmt.Fprint(w, validation)
 }
 
 // func AddItem(w http.ResponseWriter, r *http.Request) {

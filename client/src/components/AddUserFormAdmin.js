@@ -8,15 +8,20 @@ export default {
         email: '',
         phone: '',
         status: '',
-        balance: '0',
-        maxDebt: '0'
+        balance: '',
+        maxDebt: ''
       },
       validationError : '',
     };
   },
   methods: {
     submitUser() {
-      console.log(this.newUser)
+      if(this.newUser.balance == ''){
+        this.newUser.balance = '0';
+      }
+      if(this.newUser.maxDebt == ''){
+        this.newUser.maxDebt = '0';
+      }
       this.$http.post('/addUser', this.newUser).then(function (response) {
         console.log("Added new user:", this.newUser.bierName, this.newUser.firstName, this.newUser.lastName, this.newUser.email, this.newUser.phone, this.newUser.status, this.newUser.balance, this.newUser.maxDebt)
         this.resetAndCloseForm()
@@ -35,6 +40,8 @@ export default {
         this.lastName = '',
         this.email = '',
         this.phone = '',
+        this.balance = '',
+        this.maxDebt = ''
         this.status = '',
         this.validationError = ''
       this.$emit("close");

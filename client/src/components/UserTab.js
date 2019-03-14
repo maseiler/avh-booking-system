@@ -13,6 +13,7 @@ export default {
         usersAktivKA: [],
         usersGaeste: [],
         activeTab: 'tab1',
+        selectedUser: '',
         search: '',
         searchResults: []
       };

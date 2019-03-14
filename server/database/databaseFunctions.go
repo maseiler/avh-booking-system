@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"../data"
 )
@@ -60,28 +61,6 @@ func GetItems() []data.Item {
 // 	stmt.Close()
 // }
 
-// GetUsers returns all users from database and prints them
-// func GetUsers() []data.User {
-// 	users := []data.User{}
-// 	queryString := "SELECT * FROM users;"
-// 	// queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = '%s';", column, value)
-// 	rows, err := db.Query(queryString)
-// 	HandleDatabaseError(err)
-// 	defer rows.Close()
-// 	for rows.Next() {
-// 		user := data.User{}
-// 		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
-// 		users = append(users, user)
-// 		HandleDatabaseError(err)
-// 		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
-// 		fmt.Println(info)
-// 	}
-// 	defer rows.Close()
-// 	err = rows.Err()
-// 	HandleDatabaseError(err)
-// 	return users
-// }
-
 // getUsersByQuery returns list of users as requested in string
 func getUsersByQuery(query string) []data.User {
 	users := []data.User{}
@@ -90,10 +69,10 @@ func getUsersByQuery(query string) []data.User {
 	defer rows.Close()
 	for rows.Next() {
 		user := data.User{}
-		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone)
+		err := rows.Scan(&user.UserID, &user.BierName, &user.FirstName, &user.LastName, &user.Status, &user.Email, &user.Balance, &user.Phone, &user.MaxDebt)
 		users = append(users, user)
 		HandleDatabaseError(err)
-		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance)
+		info := fmt.Sprintf("UserID: %d\nBierName: %s\nFirstName: %s\nLastName: %s\nStatus: %s\nEmail: %s\nPhone: %s\nBalance: %.2f\nMaxDebt: %d\n", user.UserID, user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Phone, user.Balance, user.MaxDebt)
 		fmt.Println(info)
 	}
 	defer rows.Close()
@@ -102,20 +81,40 @@ func getUsersByQuery(query string) []data.User {
 	return users
 }
 
-// GetUsersOfStatus returns Users from database depending on status or all users if string is empty
-func GetUsersOfStatus(status string) []data.User {
+// GetUsersOfColumnWithValue gets users which have a certain value in their column
+func GetUsersOfColumnWithValue(column string, value string) []data.User {
 	queryString := ""
-	if status != "" {
-		queryString = fmt.Sprintf("SELECT * FROM users WHERE Status = \"%s\";", status)
+	var err error
+	if column == "BierName" || column == "FirstName" || column == "LastName" || column == "Status" || column == "Email" || column == "PhoneNumber" {
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = \"%s\";", column, value)
+	} else if column == "UserId" || column == "MaxDebt" {
+		var intValue int
+		intValue, err = strconv.Atoi(value)
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = %d;", column, intValue)
+	} else if column == "Balance" {
+		var floatValue float64
+		floatValue, err = strconv.ParseFloat(value, 32)
+		queryString = fmt.Sprintf("SELECT * FROM users WHERE %s = %f;", column, floatValue)
 	} else {
-		queryString = "SELECT * FROM users;"
+		panic("Invalid column")
 	}
+	HandleDatabaseError(err)
 	return getUsersByQuery(queryString)
 }
 
-// UserExists returns true if user exists in database
-func UserExists(newUser data.User) bool {
+// NewUserExists returns true if user exists in database (based on BierName, FirstName and LastName)
+func NewUserExists(newUser data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE BierName = \"%s\" AND FirstName = \"%s\" AND LastName = \"%s\" AND Status = \"%s\";", newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status)
+	users := getUsersByQuery(queryString)
+	if len(users) == 0 {
+		return false
+	}
+	return true
+}
+
+// UserExists returns true if user with same UserID exists in database
+func UserExists(user data.User) bool {
+	queryString := fmt.Sprintf("SELECT * FROM users WHERE UserId = %d;", user.UserID)
 	users := getUsersByQuery(queryString)
 	if len(users) == 0 {
 		return false
@@ -128,12 +127,28 @@ func AddUser(newUser data.User) {
 	// todo: get info from input
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO users(BierName, FirstName, LastName, Status, Email, PhoneNumber, Balance) VAlUES(?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO users(BierName, FirstName, LastName, Status, Email, Balance, PhoneNumber, MaxDebt) VAlUES(?, ?, ?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status, newUser.Email, newUser.Phone, 0)
+	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status, newUser.Email, newUser.Balance, newUser.Phone, newUser.MaxDebt)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
 	stmt.Close()
+}
+
+// DeleteUser deletes a user with corresponding ID from database
+func DeleteUser(user data.User) {
+	queryString := fmt.Sprintf("DELETE FROM users WHERE UserId = %d;", user.UserID)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
+}
+
+// ModifyUser replaces all values of a user
+func ModifyUser(user data.User) {
+	queryString := fmt.Sprintf("UPDATE users SET BierName = \"%s\", FirstName = \"%s\", LastName = \"%s\", Status = \"%s\", Email = \"%s\", Balance = %f, PhoneNumber = \"%s\", MaxDebt = %d WHERE UserId = %d;", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.UserID)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
 }
