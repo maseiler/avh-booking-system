@@ -1,40 +1,30 @@
 <template>
   <div>
-    <h1>ADMIN</h1>
-    <button class="button is-link" @click="showAddUserFormAdmin = true">Add User</button>
-    <button class="button is-link" @click="showModifyUserForm = true">Modify User</button>
-    <button class="button is-link" @click="showDeleteUserForm = true">Delete User</button>
-    <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"></AddUserFormAdmin> 
-    <ModifyUserForm :user="selectedUser" v-if="showModifyUserForm" @close="showModifyUserForm = false"></ModifyUserForm>
-    <DeleteUserForm :user="selectedUser" v-if="showDeleteUserForm" @close="showDeleteUserForm = false"></DeleteUserForm>
     <div class="columns">
-      <div class="column">
-        <div class="field">
-          <div class="control has-icons-left">
-            <input
-              class="input"
-              type="text"
-              placeholder="Search user"
-              v-model="search"
-              v-on:keyup="searchUsers"
-            >
-            <span class="icon is-small is-left">
-              <font-awesome-icon icon="search"/>
-            </span>
-          </div>
+      <div class="column is-2">
+        <div class="box">
+          <aside class="menu">
+            <p class="menu-label">Administration</p>
+            <ul class="menu-list">
+              <li>
+                <a @click="showSetting('userSetting')" :class="[ showUserSettings ? 'is-active' : '']">User Settings</a>
+              </li>
+              <li>
+                <a @click="showSetting('itemSetting')" :class="[ showItemSettings ? 'is-active' : '']">Item Settings</a>
+              </li>
+              <li>
+                <a @click="showSetting('otherSetting')" :class="[ showOtherSettings ? 'is-active' : '']">Other Settings</a>
+              </li>
+            </ul>
+          </aside>
         </div>
       </div>
+      <div class="column">
+        <UserSettings v-if="showUserSettings"></UserSettings>
+        <ItemSettings v-if="showItemSettings"></ItemSettings>
+        <OtherSettings v-if="showOtherSettings"></OtherSettings>
+      </div>
     </div>
-    <div class="buttons" v-if="searchResults != []">
-      <button
-        class="button"
-        v-for="user in searchResults"
-        :key="user"
-        @click="selectedUser = user"
-        :class="[selectedUser === user ? 'is-link' : '']"
-      >{{ displayName(user) }}</button>
-    </div>
-    <UserInfo :user="selectedUser"></UserInfo>
   </div>
 </template>
 

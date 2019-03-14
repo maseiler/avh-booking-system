@@ -1,50 +1,40 @@
-import AddUserFormAdmin from "./AddUserFormAdmin.vue"
-import ModifyUserForm from "./ModifyUserForm.vue"
-import DeleteUserForm from "./DeleteUserForm.vue"
-import UserInfo from "./UserInfo.vue"
+import UserSettings from "./UserSettings.vue"
+import ItemSettings from "./ItemSettings.vue"
+import OtherSettings from "./OtherSettings.vue"
 
 export default {
   components: {
-    AddUserFormAdmin,
-    ModifyUserForm,
-    DeleteUserForm,
-    UserInfo
+    UserSettings,
+    ItemSettings,
+    OtherSettings
   }, data: function () {
     return {
-      allUsers: [],
-      showAddUserFormAdmin: false,
-      showModifyUserForm: false,
-      showDeleteUserForm: false,
-      search: '',
-      searchResults: [],
-      selectedUser: Object
+      showUserSettings: false,
+      showItemSettings: false,
+      showOtherSettings: false
     };
   },
   methods: {
-    getUsers: function () {
-      this.$http.get("/users").then(response => {
-        var temp = response.body
-        this.allUsers = [].concat.apply([], temp)
-      });
-    }, searchUsers: function () {
-      if (this.search != '') {
-        var tmpSearch = this.search.toLowerCase()
-        this.searchResults = this.allUsers.filter(user => (user['BierName'].toLowerCase().includes(tmpSearch)) | (user['FirstName'].toLowerCase().includes(tmpSearch)) | (user['LastName'].toLowerCase().includes(tmpSearch)))
-      } else {
-        this.searchResults = []
-      }
-    },
-    displayName: function (user) {
-      if (user.BierName != '') {
-        return user.BierName
-      } else {
-        if (user.LastName != '') {
-          return user.FirstName + ' ' + user.LastName[0] + '.'
-        }
-        return user.FirstName
+    showSetting(setting) {
+      switch (setting) {
+        case 'userSetting':
+          this.showUserSettings = true
+          this.showItemSettings = false
+          this.showOtherSettings = false
+          break
+        case 'itemSetting':
+          this.showUserSettings = false
+          this.showItemSettings = true
+          this.showOtherSettings = false
+          break
+        case 'otherSetting':
+          this.showUserSettings = false
+          this.showItemSettings = false
+          this.showOtherSettings = true
+          break
+        default:
+          break
       }
     }
-  }, created() {
-    this.$nextTick(this.getUsers())
   }
 }

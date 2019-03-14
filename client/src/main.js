@@ -38,7 +38,7 @@ const routes = [
   { path: '/', component: Home },
   { path: '/booking', component: Booking },
   { path: '/statistics', component: Statistics},
-  { path: '/admin', component: Admin},
+  { path: '/admin', component: Admin}
 ]
 
 Vue.use(VueResource)
