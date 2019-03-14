@@ -20,7 +20,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	validation := validateInputArguments(newUser)
+	validation, newUser := validateInputArguments(newUser)
 
 	if validation == "ok" {
 		dbP.AddUser(newUser)
@@ -32,25 +32,32 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // validates input parameters when creating a new user
-func validateInputArguments(newUser dataP.User) (validation string) {
+func validateInputArguments(newUser dataP.User) (validation string, user dataP.User) {
 	if dbP.UserExists(newUser) {
-		return "User already exists"
+		return "User already exists", newUser
 	}
 	switch newUser.Status {
 	case "Gast":
 		if newUser.FirstName == "" && newUser.LastName == "" {
-			return "First or last name must be specified."
+			return "First or last name must be specified.", newUser
 		} else if newUser.Email == "" && newUser.Phone == "" {
-			return "Email address or phone number must be specified"
+			return "Email address or phone number must be specified", newUser
+		} else if newUser.MaxDebt == 0 {
+			newUser.MaxDebt = 50 //TODO
+			return "ok", newUser
 		}
-		return "ok"
+		return "ok", newUser
 	case "Aktiv B", "Aktiv KA", "AH":
 		if newUser.BierName == "" && newUser.FirstName == "" {
-			return "Biername or first name must be specified"
+			return "Biername or first name must be specified", newUser
+		} else if newUser.Status == "Aktiv B" || newUser.Status == "Aktiv KA" {
+			newUser.MaxDebt = 50
+		} else if newUser.Status == "AH" {
+			newUser.MaxDebt = 100
 		}
-		return "ok"
+		return "ok", newUser
 	default:
-		return "Select status"
+		return "Select status", newUser
 	}
 }
 

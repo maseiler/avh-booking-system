@@ -113,6 +113,16 @@
             </div>
           </div>
 
+          <div class="field">
+            <label class="label">Max Debt</label>
+            <div class="control has-icons-left">
+              <input class="input" type="text" placeholder="Max Debt" v-model.lazy="newUser.maxDebt">
+              <span class="icon is-small is-left">
+                <font-awesome-icon icon="money-bill"/>
+              </span>
+            </div>
+          </div>
+
           <div class="modal-footer">
             <slot name="footer">
               <article v-if="validationError !==''" class="message is-danger">

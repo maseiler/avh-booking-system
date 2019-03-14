@@ -9,7 +9,7 @@ export default {
         phone: '',
         status: '',
         balance: '0',
-        maxDebt: '50'
+        maxDebt: '0'
       },
       validationError : '',
     };
@@ -21,10 +21,8 @@ export default {
         console.log("Added new user:", this.newUser.bierName, this.newUser.firstName, this.newUser.lastName, this.newUser.email, this.newUser.phone, this.newUser.status, this.newUser.balance, this.newUser.maxDebt)
         this.resetAndCloseForm()
         this.$router.go()
-        // todo reload page
       }).catch(function (response) {
         this.validationError = response.data
-        // todo visible output
       });
     },
     cancelSubmission() {
