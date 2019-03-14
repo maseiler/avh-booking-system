@@ -23,10 +23,11 @@
     </div>
     <div class="buttons" v-if="searchResults != []">
       <button
-        class="button is-link"
+        class="button"
         v-for="user in searchResults"
         :key="user"
         @click="selectedUser = user"
+        :class="[selectedUser === user ? 'is-link' : '']"
       >{{ displayName(user) }}</button>
     </div>
     <UserInfo :user="selectedUser"></UserInfo>
