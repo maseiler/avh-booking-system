@@ -102,9 +102,19 @@ func GetUsersOfColumnWithValue(column string, value string) []data.User {
 	return getUsersByQuery(queryString)
 }
 
-// UserExists returns true if user exists in database (based on BierName, FirstName and LastName)
-func UserExists(newUser data.User) bool {
+// NewUserExists returns true if user exists in database (based on BierName, FirstName and LastName)
+func NewUserExists(newUser data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE BierName = \"%s\" AND FirstName = \"%s\" AND LastName = \"%s\" AND Status = \"%s\";", newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status)
+	users := getUsersByQuery(queryString)
+	if len(users) == 0 {
+		return false
+	}
+	return true
+}
+
+// UserExists returns true if user with same UserID exists in database
+func UserExists(user data.User) bool {
+	queryString := fmt.Sprintf("SELECT * FROM users WHERE UserId = %d;", user.UserID)
 	users := getUsersByQuery(queryString)
 	if len(users) == 0 {
 		return false
@@ -130,6 +140,14 @@ func AddUser(newUser data.User) {
 // DeleteUser deletes a user with corresponding ID from database
 func DeleteUser(user data.User) {
 	queryString := fmt.Sprintf("DELETE FROM users WHERE UserId = %d;", user.UserID)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
+}
+
+// ModifyUser replaces all values of a user
+func ModifyUser(user data.User) {
+	queryString := fmt.Sprintf("UPDATE users SET BierName = \"%s\", FirstName = \"%s\", LastName = \"%s\", Status = \"%s\", Email = \"%s\", Balance = %f, PhoneNumber = \"%s\", MaxDebt = %d WHERE UserId = %d;", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.UserID)
 	rows, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	fmt.Println(rows)

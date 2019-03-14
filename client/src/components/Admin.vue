@@ -2,9 +2,11 @@
   <div>
     <h1>ADMIN</h1>
     <button class="button is-link" @click="showAddUserFormAdmin = true">Add User</button>
-    <button class="button is-link" @click="deleteUserForm = true">Delete User</button>
-    <DeleteUserForm :user="selectedUser" v-if="deleteUserForm" @close="deleteUserForm = false"></DeleteUserForm>
-    <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"></AddUserFormAdmin>
+    <button class="button is-link" @click="showModifyUserForm = true">Modify User</button>
+    <button class="button is-link" @click="showDeleteUserForm = true">Delete User</button>
+    <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"></AddUserFormAdmin> 
+    <ModifyUserForm :user="selectedUser" v-if="showModifyUserForm" @close="showModifyUserForm = false"></ModifyUserForm>
+    <DeleteUserForm :user="selectedUser" v-if="showDeleteUserForm" @close="showDeleteUserForm = false"></DeleteUserForm>
     <div class="columns">
       <div class="column">
         <div class="field">
