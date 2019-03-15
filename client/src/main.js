@@ -17,6 +17,8 @@ import { faEuroSign } from '@fortawesome/free-solid-svg-icons'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { faExclamation } from '@fortawesome/free-solid-svg-icons'
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons'
+import { faFont } from '@fortawesome/free-solid-svg-icons'
+import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
 
 library.add(faUser)
@@ -28,6 +30,8 @@ library.add(faEuroSign)
 library.add(faSearch)
 library.add(faExclamation)
 library.add(faMoneyBill)
+library.add(faFont)
+library.add(faExpandArrowsAlt)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)

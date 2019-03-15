@@ -17,12 +17,12 @@ export default {
       showDeleteUserForm: false,
       search: '',
       searchResults: [],
-      selectedUser: Object
+      selectedUser: {}
     };
   },
   methods: {
     getUsers: function () {
-      this.$http.get("/users").then(response => {
+      this.$http.get("/getUsers").then(response => {
         var temp = response.body
         this.allUsers = [].concat.apply([], temp)
       });

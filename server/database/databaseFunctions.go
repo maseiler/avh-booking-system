@@ -24,43 +24,6 @@ func ConnectDatabase() {
 	fmt.Println("Connected to:", version)
 }
 
-// GetItems returns all items from database and prints them
-func GetItems() []data.Item {
-	items := []data.Item{}
-	queryString := "SELECT * FROM items;"
-	// queryString = fmt.Sprintf("SELECT * FROM items WHERE %s = '%s';", column, value)
-	rows, err := db.Query(queryString)
-	HandleDatabaseError(err)
-
-	defer rows.Close()
-	for rows.Next() {
-		item := data.Item{}
-		err := rows.Scan(&item.ItemID, &item.Name, &item.Price, &item.Size, &item.Unit, &item.Type)
-		items = append(items, item)
-		HandleDatabaseError(err)
-		info := fmt.Sprintf("ItemID: %d\nName: %s\nPrice: %.2f\nSize: %.2f\nUnit: %s\nType: %s\n", item.ItemID, item.Name, item.Price, item.Size, item.Unit, item.Type)
-		fmt.Println(info)
-	}
-	defer rows.Close()
-	err = rows.Err()
-	HandleDatabaseError(err)
-	return items
-}
-
-// AddItems adds a new item to database and prints info
-// func AddItem(newItem dataP.Item) {
-// 	tx, err := db.Begin()
-// 	HandleDatabaseError(err)
-// 	stmt, err := tx.Prepare("INSERT INTO items(Name, Price, Size, Unit) VAlUES(?, ?, ?, ?)")
-// 	HandleTxError(*tx, err)
-// 	defer stmt.Close()
-// 	res, err := stmt.Exec(newItem.Name, newItem.Price, newItem.Size, newItem.Unit)
-// 	TxRowsAffected(res, *tx)
-// 	err = tx.Commit()
-// 	HandleDatabaseError(err)
-// 	stmt.Close()
-// }
-
 // getUsersByQuery returns list of users as requested in string
 func getUsersByQuery(query string) []data.User {
 	users := []data.User{}
@@ -137,6 +100,14 @@ func AddUser(newUser data.User) {
 	stmt.Close()
 }
 
+// ModifyUser replaces all values of a user
+func ModifyUser(user data.User) {
+	queryString := fmt.Sprintf("UPDATE users SET BierName = \"%s\", FirstName = \"%s\", LastName = \"%s\", Status = \"%s\", Email = \"%s\", Balance = %f, PhoneNumber = \"%s\", MaxDebt = %d WHERE UserId = %d;", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.UserID)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
+}
+
 // DeleteUser deletes a user with corresponding ID from database
 func DeleteUser(user data.User) {
 	queryString := fmt.Sprintf("DELETE FROM users WHERE UserId = %d;", user.UserID)
@@ -145,9 +116,95 @@ func DeleteUser(user data.User) {
 	fmt.Println(rows)
 }
 
-// ModifyUser replaces all values of a user
-func ModifyUser(user data.User) {
-	queryString := fmt.Sprintf("UPDATE users SET BierName = \"%s\", FirstName = \"%s\", LastName = \"%s\", Status = \"%s\", Email = \"%s\", Balance = %f, PhoneNumber = \"%s\", MaxDebt = %d WHERE UserId = %d;", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.UserID)
+// GetItems returns all items except the first from database and prints them
+// First Item is reserved
+func GetItems() []data.Item {
+	items := []data.Item{}
+	queryString := "SELECT * FROM items WHERE ItemId > 1;"
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+
+	defer rows.Close()
+	for rows.Next() {
+		item := data.Item{}
+		err := rows.Scan(&item.ItemID, &item.Name, &item.Price, &item.Size, &item.Unit, &item.Type)
+		items = append(items, item)
+		HandleDatabaseError(err)
+		info := fmt.Sprintf("ItemID: %d\nName: %s\nPrice: %.2f\nSize: %.2f\nUnit: %s\nType: %s\n", item.ItemID, item.Name, item.Price, item.Size, item.Unit, item.Type)
+		fmt.Println(info)
+	}
+	defer rows.Close()
+	err = rows.Err()
+	HandleDatabaseError(err)
+	return items
+}
+
+// NewItemExists returns true if item exists in database (based on Name and Size)
+func NewItemExists(newItem data.Item) bool {
+	queryString := fmt.Sprintf("SELECT * FROM items WHERE Name = \"%s\" AND Size = %.2f;", newItem.Name, newItem.Size)
+	items := getItemsByQuery(queryString)
+	if len(items) == 0 {
+		return false
+	}
+	return true
+}
+
+// ItemExists returns true if item with same ItemID exists in database
+func ItemExists(item data.Item) bool {
+	queryString := fmt.Sprintf("SELECT * FROM items WHERE ItemId = %d;", item.ItemID)
+	items := getItemsByQuery(queryString)
+	if len(items) == 0 {
+		return false
+	}
+	return true
+}
+
+// getItemsByQuery returns list of items as requested in string
+func getItemsByQuery(query string) []data.Item {
+	items := []data.Item{}
+	rows, err := db.Query(query)
+	HandleDatabaseError(err)
+	defer rows.Close()
+	for rows.Next() {
+		item := data.Item{}
+		err := rows.Scan(&item.ItemID, &item.Name, &item.Price, &item.Size, &item.Unit, &item.Type)
+		items = append(items, item)
+		HandleDatabaseError(err)
+		info := fmt.Sprintf("ItemID: %d\nName: %s\nPrice: %.2f\nSize: %.2f\nUnit: %s\nType: %s\n", item.ItemID, item.Name, item.Price, item.Size, item.Unit, item.Type)
+		fmt.Println(info)
+	}
+	defer rows.Close()
+	err = rows.Err()
+	HandleDatabaseError(err)
+	return items
+}
+
+// AddItem adds a new user to database and prints info
+func AddItem(newItem data.Item) {
+	// todo: get info from input
+	tx, err := db.Begin()
+	HandleDatabaseError(err)
+	stmt, err := tx.Prepare("INSERT INTO items(Name, Price, Size, Unit, Type) VAlUES(?, ?, ?, ?, ?)")
+	HandleTxError(tx, err)
+	defer stmt.Close()
+	res, err := stmt.Exec(newItem.Name, newItem.Price, newItem.Size, newItem.Unit, newItem.Type)
+	TxRowsAffected(res, tx)
+	err = tx.Commit()
+	HandleDatabaseError(err)
+	stmt.Close()
+}
+
+// ModifyItem replaces all values of a item
+func ModifyItem(item data.Item) {
+	queryString := fmt.Sprintf("UPDATE items SET Name = \"%s\", Price = \"%f\", Size = \"%f\", Unit = \"%s\", Type = \"%s\" WHERE ItemId = %d;", item.Name, item.Price, item.Size, item.Unit, item.Type, item.ItemID)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
+}
+
+// DeleteItem deletes a item with corresponding ID from database
+func DeleteItem(item data.Item) {
+	queryString := fmt.Sprintf("DELETE FROM items WHERE ItemId = %d;", item.ItemID)
 	rows, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
