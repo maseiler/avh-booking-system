@@ -166,5 +166,5 @@
 
 <script src="./ModifyUserForm.js"></script>
 <style lang="scss">
-@import "../assets/modal.css";
+@import "../../assets/modal.css";
 </style>

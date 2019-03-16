@@ -16,11 +16,14 @@ func main() {
 	db.ConnectDatabase()
 
 	r := mux.NewRouter()
+	r.HandleFunc("/getUsers", handler.GetUsers)
 	r.HandleFunc("/addUser", handler.AddUser)
 	r.HandleFunc("/modifyUser", handler.ModifyUser)
 	r.HandleFunc("/deleteUser", handler.DeleteUser)
-	r.HandleFunc("/users", handler.GetUsers)
-	r.HandleFunc("/items", handler.GetItems)
+	r.HandleFunc("/getItems", handler.GetItems)
+	r.HandleFunc("/addItem", handler.AddItem)
+	r.HandleFunc("/modifyItem", handler.ModifyItem)
+	r.HandleFunc("/deleteItem", handler.DeleteItem)
 	r.HandleFunc("/checkout", handler.Checkout)
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./../client/dist/index.html")

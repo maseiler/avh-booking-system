@@ -20,7 +20,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	validation, newUser := validateInputArguments(newUser)
+	validation, newUser := validateUserArguments(newUser)
 
 	if validation == "ok" {
 		dbP.AddUser(newUser)
@@ -31,8 +31,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, validation)
 }
 
-// validates input parameters when creating a new user
-func validateInputArguments(newUser dataP.User) (validation string, user dataP.User) {
+// validates input parameters when creating an new user
+func validateUserArguments(newUser dataP.User) (validation string, user dataP.User) {
 	if dbP.NewUserExists(newUser) {
 		return "User already exists", newUser
 	}
@@ -69,6 +69,29 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+// ModifyUser forwards API call to replaces all values of an user
+func ModifyUser(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var user dataP.User
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation := ""
+	if !dbP.UserExists(user) {
+		validation = "User doesn't exist."
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		dbP.ModifyUser(user)
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	}
+	fmt.Fprint(w, validation)
+}
+
 // DeleteUser forwards API call to delete user from database
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
@@ -92,48 +115,101 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, validation)
 }
 
-// ModifyUser forwards API call to replaces all values of a user
-func ModifyUser(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-
-	var user dataP.User
-	err := decoder.Decode(&user)
-
-	if err != nil {
-		panic(err)
-	}
-
-	validation := ""
-	if !dbP.UserExists(user) {
-		validation = "User doesn't exist."
-		w.WriteHeader(http.StatusBadRequest)
-	} else {
-		dbP.ModifyUser(user)
-		validation = "ok"
-		w.WriteHeader(http.StatusOK)
-	}
-	fmt.Fprint(w, validation)
-}
-
-// func AddItem(w http.ResponseWriter, r *http.Request) {
-// 	decoder := json.NewDecoder(r.Body)
-
-// 	var newItem dataP.Item
-// 	err := decoder.Decode(&newItem)
-
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	dbP.AddItem(newItem)
-// }
-
 // GetItems forwards API call to get all items from database
 func GetItems(w http.ResponseWriter, r *http.Request) {
 	items := dbP.GetItems()
 	response := marshalToJSON(items, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
+}
+
+// AddItem forwards API call to add new item to database
+func AddItem(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var newItem dataP.Item
+	err := decoder.Decode(&newItem)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if dbP.NewItemExists(newItem) {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "Item already exists")
+		return
+	}
+
+	validation, newItem := validateItemArguments(newItem)
+	if validation == "ok" {
+		dbP.AddItem(newItem)
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	fmt.Fprint(w, validation)
+}
+
+// ModifyItem forwards API call to replaces all values of an item
+func ModifyItem(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var item dataP.Item
+	err := decoder.Decode(&item)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation, newItem := validateItemArguments(item)
+
+	if validation == "ok" {
+		dbP.ModifyItem(newItem)
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	fmt.Fprint(w, validation)
+}
+
+// validates input parameters when creating an new item
+func validateItemArguments(newItem dataP.Item) (validation string, item dataP.Item) {
+	if newItem.Name == "" {
+		return "Name must be specified.", newItem
+	} else if newItem.Price == 0 {
+		return "Price must be specified.", newItem
+	} else if newItem.Size == 0 {
+		return "Size must be specified.", newItem
+	} else if newItem.Unit == "" {
+		return "Unit must be specified.", newItem
+	} else if newItem.Type == "" {
+		return "Type must be specified.", newItem
+	} else {
+		return "ok", newItem
+	}
+}
+
+// DeleteItem forwards API call to delete item from database
+func DeleteItem(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var item dataP.Item
+	err := decoder.Decode(&item)
+
+	if err != nil {
+		panic(err)
+	}
+
+	validation := ""
+	if !dbP.ItemExists(item) {
+		validation = "Item doesn't exist."
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		dbP.DeleteItem(item)
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	}
+	fmt.Fprint(w, validation)
 }
 
 // Checkout TODO

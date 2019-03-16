@@ -1,106 +1,90 @@
+<!-- TODO: not DRY. Same as AddItemForm -->
 <template>
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
+
           <div class="modal-header">
             <slot name="header">
-              <h1>Add new user</h1>
+              <h1>Modify item</h1>
             </slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
               <div class="field">
-                <label class="label">Biername</label>
+                <label class="label">Name</label>
                 <div class="control has-icons-left">
                   <input
                     class="input"
                     type="text"
-                    placeholder="Biername"
-                    v-model.lazy="newUser.bierName"
+                    placeholder="Name"
+                    v-model.lazy="item.Name"
                   >
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="beer"/>
+                    <font-awesome-icon icon="font"/>
                   </span>
                 </div>
               </div>
 
               <div class="field">
-                <label class="label">First name</label>
+                <label class="label">Price</label>
                 <div class="control has-icons-left">
                   <input
                     class="input"
                     type="text"
-                    placeholder="First name"
-                    v-model.lazy="newUser.firstName"
+                    placeholder="Price"
+                    v-model.lazy="item.Price"
                   >
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="user"/>
+                    <font-awesome-icon icon="euro-sign"/>
                   </span>
                 </div>
               </div>
 
               <div class="field">
-                <label class="label">Last name</label>
+                <label class="label">Size</label>
                 <div class="control has-icons-left">
                   <input
                     class="input"
                     type="text"
-                    placeholder="Last name"
-                    v-model.lazy="newUser.lastName"
+                    placeholder="Size"
+                    v-model.lazy="item.Size"
                   >
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="user"/>
+                    <font-awesome-icon icon="expand-arrows-alt"/>
                   </span>
                 </div>
               </div>
 
               <div class="field">
-                <label class="label">Email</label>
-                <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="email"
-                    placeholder="Email Address"
-                    v-model.lazy="newUser.email"
-                  >
-                  <span class="icon is-small is-left">
-                    <font-awesome-icon icon="envelope"/>
-                  </span>
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Phone Number</label>
-                <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Phone Number"
-                    v-model.lazy="newUser.phone"
-                  >
-                  <span class="icon is-small is-left">
-                    <font-awesome-icon icon="phone"/>
-                  </span>
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Status</label>
+                <label class="label">Unit</label>
                 <div class="control">
                   <div class="select">
-                    <select v-model="newUser.status">
-                      <option disabled value>Status</option>
-                      <option>Aktiv B</option>
-                      <option>Aktiv KA</option>
-                      <option>AH</option>
-                      <option>Gast</option>
+                    <select v-model="item.Unit">
+                      <option disabled value>Unit</option>
+                      <option>l</option>
+                      <option>piece</option>
                     </select>
                   </div>
                 </div>
               </div>
-            </slot>
+
+              <div class="field">
+                <label class="label">Type</label>
+                <div class="control">
+                  <div class="select">
+                    <select v-model="item.Type">
+                      <option disabled value>Type</option>
+                      <option>alcoholic</option>
+                      <option>non-alcoholic</option>
+                      <option>food</option>
+                      <option>boat</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
           </div>
 
           <div class="modal-footer">
@@ -117,7 +101,7 @@
               </article>
               <div class="field is-grouped">
                 <div class="control">
-                  <button class="button is-link" @click="submitUser">Submit</button>
+                  <button class="button is-link" @click="modifyItem">Submit</button>
                 </div>
                 <div class="control">
                   <button class="button is-text" @click="cancelSubmission">Cancel</button>
@@ -125,13 +109,15 @@
               </div>
             </slot>
           </div>
-        </div>
+        
+        
       </div>
+    </div>
     </div>
   </transition>
 </template>
 
-<script src="./AddUserForm.js"></script>
+<script src="./ModifyItemForm.js"></script>
 <style lang="scss">
-@import "../assets/modal.css";
+@import "../../assets/modal.css";
 </style>

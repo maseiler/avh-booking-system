@@ -10,17 +10,17 @@ export default {
     methods: {
         deleteUser() {
             if (Object.keys(this.user).length === 0) {
-                this.error = 'Please select a user first.'
+                this.error = 'Please select an user first.'
             }
             else {
                 this.$http.post('/deleteUser', this.user).then(function (response) {
                     console.log('Deleted User: ' + this.user.BierName + ' ' + this.user.FirstName + ' ' + this.user.LastName + '.')
                     this.$router.go()
-                  }).catch(function (response) {
+                }).catch(function (response) {
                     console.log('Error: Couldn\'t delete user.')
                     //TODO
-                  });
-                
+                });
+
             }
         },
         cancelSubmission() {

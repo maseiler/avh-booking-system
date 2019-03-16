@@ -7,7 +7,7 @@ export default {
   computed:{
     itemsAlc: function(){
       return this.items.filter(function(item){
-        return item.Type == 'alcohol'
+        return item.Type == 'alcoholic'
       })
     },
     itemsNonAlc: function(){
@@ -28,10 +28,9 @@ export default {
   },
   methods: {
     getItems: function() {
-      this.$http.get("/items").then(response => {
+      this.$http.get("/getItems").then(response => {
         this.items = response.body;
       });
-      console.log("getItems");
     },
   },
   created(){

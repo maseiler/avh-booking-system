@@ -20,7 +20,7 @@ export default {
     },
     methods: {
         getUsers: function() {
-            this.$http.get("/users").then(response => {
+            this.$http.get("/getUsers").then(response => {
             var temp = response.body
             this.allUsers = [].concat.apply([], temp)
             this.usersAH = temp[0]
@@ -32,7 +32,6 @@ export default {
             this.sortBy(this.usersAktivKA, "BierName")
             this.sortBy(this.usersGaeste, "FirstName")
             });
-            console.log("getUsers");
         },
         sortBy: function(array, param){
             array.sort(function(a, b){
