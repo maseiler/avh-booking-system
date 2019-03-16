@@ -1,4 +1,4 @@
-import AddItemForm from "./AddItemForm.vue"
+import AddItemForm from "../booking/AddItemForm"
 import ModifyItemForm from "./ModifyItemForm.vue"
 import DeleteItemForm from "./DeleteItemForm.vue"
 import ItemInfo from "./ItemInfo.vue"

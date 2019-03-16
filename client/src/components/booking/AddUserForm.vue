@@ -103,35 +103,15 @@
             </slot>
           </div>
 
-          <div class="field">
-            <label class="label">Balance</label>
-            <div class="control has-icons-left">
-              <input class="input" type="text" placeholder="Balance" v-model.lazy="newUser.balance">
-              <span class="icon is-small is-left">
-                <font-awesome-icon icon="euro-sign"/>
-              </span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Max Debt</label>
-            <div class="control has-icons-left">
-              <input class="input" type="text" placeholder="Max Debt" v-model.lazy="newUser.maxDebt">
-              <span class="icon is-small is-left">
-                <font-awesome-icon icon="money-bill"/>
-              </span>
-            </div>
-          </div>
-
           <div class="modal-footer">
             <slot name="footer">
               <article v-if="validationError !==''" class="message is-danger">
                 <div class="message-header">
                   <div class="field is-grouped">
-                    <p class="icon is-small is-left">
-                      <font-awesome-icon icon="exclamation" size="lg"/>
-                    </p>
-                    <p>{{validationError}}</p>
+                  <p class="icon is-small is-left">
+                    <font-awesome-icon icon="exclamation" size="lg"/>
+                  </p>
+                  <p> {{validationError}}</p>
                   </div>
                 </div>
               </article>
@@ -151,7 +131,7 @@
   </transition>
 </template>
 
-<script src="./AddUserFormAdmin.js"></script>
+<script src="./AddUserForm.js"></script>
 <style lang="scss">
-@import "../assets/modal.css";
+@import "../../assets/modal.css";
 </style>

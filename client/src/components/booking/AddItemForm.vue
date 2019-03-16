@@ -1,13 +1,11 @@
-<!-- TODO: not DRY. Same as AddItemForm -->
 <template>
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
             <slot name="header">
-              <h1>Modify item</h1>
+              <h1>Add new item</h1>
             </slot>
           </div>
 
@@ -20,7 +18,7 @@
                     class="input"
                     type="text"
                     placeholder="Name"
-                    v-model.lazy="item.Name"
+                    v-model.lazy="newItem.Name"
                   >
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="font"/>
@@ -35,7 +33,7 @@
                     class="input"
                     type="text"
                     placeholder="Price"
-                    v-model.lazy="item.Price"
+                    v-model.lazy="newItem.Price"
                   >
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="euro-sign"/>
@@ -50,7 +48,7 @@
                     class="input"
                     type="text"
                     placeholder="Size"
-                    v-model.lazy="item.Size"
+                    v-model.lazy="newItem.Size"
                   >
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="expand-arrows-alt"/>
@@ -62,7 +60,7 @@
                 <label class="label">Unit</label>
                 <div class="control">
                   <div class="select">
-                    <select v-model="item.Unit">
+                    <select v-model="newItem.Unit">
                       <option disabled value>Unit</option>
                       <option>l</option>
                       <option>piece</option>
@@ -75,7 +73,7 @@
                 <label class="label">Type</label>
                 <div class="control">
                   <div class="select">
-                    <select v-model="item.Type">
+                    <select v-model="newItem.Type">
                       <option disabled value>Type</option>
                       <option>alcoholic</option>
                       <option>non-alcoholic</option>
@@ -85,7 +83,6 @@
                   </div>
                 </div>
               </div>
-          </div>
 
           <div class="modal-footer">
             <slot name="footer">
@@ -101,7 +98,7 @@
               </article>
               <div class="field is-grouped">
                 <div class="control">
-                  <button class="button is-link" @click="modifyItem">Submit</button>
+                  <button class="button is-link" @click="submitItem">Submit</button>
                 </div>
                 <div class="control">
                   <button class="button is-text" @click="cancelSubmission">Cancel</button>
@@ -109,15 +106,13 @@
               </div>
             </slot>
           </div>
-        
-        
+        </div>
       </div>
-    </div>
     </div>
   </transition>
 </template>
 
-<script src="./ModifyItemForm.js"></script>
+<script src="./AddItemForm.js"></script>
 <style lang="scss">
-@import "../assets/modal.css";
+@import "../../assets/modal.css";
 </style>
