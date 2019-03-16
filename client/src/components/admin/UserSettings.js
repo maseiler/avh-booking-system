@@ -9,9 +9,12 @@ export default {
     ModifyUserForm,
     DeleteUserForm,
     UserInfo
-  }, data: function () {
+  },
+  props:{
+    users: []
+  },
+  data: function () {
     return {
-      allUsers: [],
       showAddUserFormAdmin: false,
       showModifyUserForm: false,
       showDeleteUserForm: false,
@@ -21,15 +24,10 @@ export default {
     };
   },
   methods: {
-    getUsers: function () {
-      this.$http.get("/getUsers").then(response => {
-        var temp = response.body
-        this.allUsers = [].concat.apply([], temp)
-      });
-    }, searchUsers: function () {
+    searchUsers: function () {
       if (this.search != '') {
         var tmpSearch = this.search.toLowerCase()
-        this.searchResults = this.allUsers.filter(user => (user['BierName'].toLowerCase().includes(tmpSearch)) | (user['FirstName'].toLowerCase().includes(tmpSearch)) | (user['LastName'].toLowerCase().includes(tmpSearch)))
+        this.searchResults = this.users.filter(user => (user['BierName'].toLowerCase().includes(tmpSearch)) | (user['FirstName'].toLowerCase().includes(tmpSearch)) | (user['LastName'].toLowerCase().includes(tmpSearch)))
       } else {
         this.searchResults = []
       }
@@ -44,7 +42,5 @@ export default {
         return user.FirstName
       }
     }
-  }, created() {
-    this.$nextTick(this.getUsers())
   }
 }

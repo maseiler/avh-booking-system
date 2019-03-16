@@ -212,6 +212,14 @@ func DeleteItem(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, validation)
 }
 
+// GetLastBookings forwards API call to get the 50 latest bookings from database
+func GetLastBookings(w http.ResponseWriter, r *http.Request) {
+	bookings := dbP.GetLastBookings()
+	response := marshalToJSON(bookings, w)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
 // Checkout TODO
 func Checkout(w http.ResponseWriter, r *http.Request) {
 	//sql query

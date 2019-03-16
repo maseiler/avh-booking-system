@@ -209,3 +209,25 @@ func DeleteItem(item data.Item) {
 	HandleDatabaseError(err)
 	fmt.Println(rows)
 }
+
+// GetLastBookings returns last 50 book entries
+func GetLastBookings() []data.BookEntry {
+	bookings := []data.BookEntry{}
+	queryString := "SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT 50;"
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+
+	defer rows.Close()
+	for rows.Next() {
+		bookEntry := data.BookEntry{}
+		err := rows.Scan(&bookEntry.BookEntryID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment)
+		bookings = append(bookings, bookEntry)
+		HandleDatabaseError(err)
+		info := fmt.Sprintf("BookEntryId: %d\nTimeStamp: %s\nUserID: %d\nItemID: %d\nAmoint: %d\nTotalPrice: %f\nComment: %s\n", bookEntry.BookEntryID, bookEntry.TimeStamp, bookEntry.UserID, bookEntry.ItemID, bookEntry.Amount, bookEntry.TotalPrice, bookEntry.Comment)
+		fmt.Println(info)
+	}
+	defer rows.Close()
+	err = rows.Err()
+	HandleDatabaseError(err)
+	return bookings
+}
