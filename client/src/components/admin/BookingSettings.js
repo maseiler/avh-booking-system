@@ -1,16 +1,27 @@
 import BookingSettings from "./BookingSettings.vue"
 import LastBookings from "./LastBookings.vue"
+import ModifyBookEntryForm from "./ModifyBookEntryForm.vue"
 
 export default {
     components: {
         BookingSettings,
-        LastBookings
+        LastBookings,
+        ModifyBookEntryForm
     },
-    props:{
+    props: {
         lastBookings: [],
         users: [],
-        items: []
+        items: [],
+    },
+    data: function () {
+        return {
+            selectedEntry: {},
+            showModifyBookEntryForm: false
+        }
     },
     methods: {
+        selectEntry: function (entry) {
+            this.selectedEntry = entry
+        }
     }
 }

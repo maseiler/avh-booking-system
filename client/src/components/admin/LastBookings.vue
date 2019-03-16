@@ -13,7 +13,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="entry in lastBookings" :key="entry">
+        <tr
+          v-for="entry in lastBookings"
+          :key="entry"
+          @click="selectEntry(entry)"
+          :class="[selectedEntry === entry ? 'is-selected' : '']"
+        >
           <th>{{entry.BookEntryID}}</th>
           <td>{{printDateTime(entry.TimeStamp)}}</td>
           <td>{{displayName(getUser(entry.UserID))}}</td>

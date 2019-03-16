@@ -42,6 +42,10 @@ export default {
             } else {
                 return item.Name + ' ' + item.Size + item.Unit
             }
+        },
+        selectEntry: function(entry){
+            this.selectedEntry = entry
+            this.$emit('selectEntry', entry)
         }
     }
 }
