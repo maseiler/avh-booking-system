@@ -29,15 +29,21 @@ export default {
       });
     },
     getItems: function () {
-      this.$http.get("/getItems").then(response => {
+      this.$http.get("/getUnreservedItems").then(response => {
         var temp = response.body
         this.items = [].concat.apply([], temp)
       });
+      this.$http.get("/getReservedItems").then(response => {
+        var temp = response.body
+        this.items = this.items.concat(temp) //TODO
+      });
     },
     getLastBookings: function () {
-      this.$http.get("/getLastBookings").then(response => {
+      //TODO magic number: 50
+      this.$http.post("/getLastNBookings", 50).then(response => {
         var temp = response.body
-        this.lastBookings = [].concat.apply([], temp)
+        // this.lastBookings = [].concat.apply([], temp)
+        this.lastBookings = this.lastBookings.concat(temp)
       });
     },
     showSetting(setting) {
