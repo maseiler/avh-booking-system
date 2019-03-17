@@ -20,11 +20,13 @@ func main() {
 	r.HandleFunc("/addUser", handler.AddUser)
 	r.HandleFunc("/modifyUser", handler.ModifyUser)
 	r.HandleFunc("/deleteUser", handler.DeleteUser)
-	r.HandleFunc("/getItems", handler.GetItems)
+	r.HandleFunc("/getUnreservedItems", handler.GetUnreservedItems)
+	r.HandleFunc("/getReservedItems", handler.GetReservedItems)
 	r.HandleFunc("/addItem", handler.AddItem)
 	r.HandleFunc("/modifyItem", handler.ModifyItem)
 	r.HandleFunc("/deleteItem", handler.DeleteItem)
-	r.HandleFunc("/checkout", handler.Checkout)
+	r.HandleFunc("/getLastNBookings", handler.GetLastNBookings)
+	// r.HandleFunc("/checkout", handler.Checkout)
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./../client/dist/index.html")
 	}

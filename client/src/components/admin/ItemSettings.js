@@ -9,9 +9,12 @@ export default {
     ModifyItemForm,
     DeleteItemForm,
     ItemInfo
-  }, data: function () {
+  },
+  props: {
+    items: []
+  },
+  data: function () {
     return {
-      allItems: [],
       showAddItemForm: false,
       showModifyItemForm: false,
       showDeleteItemForm: false,
@@ -21,26 +24,20 @@ export default {
     };
   },
   methods: {
-    getItems: function () {
-      this.$http.get("/getItems").then(response => {
-        var temp = response.body
-        this.allItems = [].concat.apply([], temp)
-      });
-    }, searchItems: function () {
+    searchItems: function () {
       if (this.search != '') {
         var tmpSearch = this.search.toLowerCase()
-        this.searchResults = this.allItems.filter(item => (item['Name'].toLowerCase().includes(tmpSearch)) | (item['Type'].toLowerCase().includes(tmpSearch)))
+        this.searchResults = this.items.filter(item => (item['Name'].toLowerCase().includes(tmpSearch)) | (item['Type'].toLowerCase().includes(tmpSearch)))
       } else {
         this.searchResults = []
       }
-    }, displayItem: function (item) {
+    },
+    displayItem: function (item) {
       if (item.Type == 'boat' || item.Type == 'food') {
         return item.Name
       } else {
         return item.Name + ' ' + item.Size + item.Unit
       }
     }
-  }, created() {
-    this.$nextTick(this.getItems())
   }
 }

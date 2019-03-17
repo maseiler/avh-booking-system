@@ -28,8 +28,9 @@ export default {
   },
   methods: {
     getItems: function() {
-      this.$http.get("/getItems").then(response => {
-        this.items = response.body;
+      this.$http.get("/getUnreservedItems").then(response => {
+        var temp = response.body;
+        this.items = [].concat.apply([], temp)
       });
     },
   },
