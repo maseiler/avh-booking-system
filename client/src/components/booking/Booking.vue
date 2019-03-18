@@ -14,7 +14,7 @@
       </div>
       <div class="column">
         <div class="box">
-          <ItemList></ItemList>
+          <ItemTab></ItemTab>
         </div>
       </div>
     </div>

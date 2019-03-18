@@ -1,9 +1,10 @@
 import UserTab from "./UserTab.vue"
-import ItemList from "./ItemList.vue";
+import ItemTab from "./ItemTab.vue";
+
 export default {
   components: {
     UserTab,
-    ItemList,
+    ItemTab
   },
   data: function() {
     return {
