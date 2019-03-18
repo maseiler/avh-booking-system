@@ -1,34 +1,76 @@
 <template>
-    <div>
-        <p class="title">Items</p>
-        <h4 class="subtitle is-4">Alcohol</h4>
-        <div class="dropdown is-active">
-            <div class="dropdown-trigger">
-                <button class="button" is-primary v-for="item in itemsAlc" :key="item">{{ item.Name + " " + item.Size + " " + item.Unit }}</button>
-            </div>
-        </div>
-          
-        <h4 class="subtitle is-4">No Alcohol</h4>
-        <div class="dropdown is-active">
-            <div class="dropdown-trigger">
-                <button class="button" is-primary v-for="item in itemsNonAlc" :key="item">{{ item.Name  + " " + item.Size + " " + item.Unit  }}</button>
-            </div>
-        </div>
-          
-          <h4 class="subtitle is-4">Food</h4>
-          <div class="dropdown is-active">
-            <div class="dropdown-trigger">
-              <button class="button" is-primary v-for="item in itemsFood" :key="item">{{ item.Name }}</button>
-            </div>
-          </div>
-          
-        <h4 class="subtitle is-4">Boats</h4>
-        <div class="dropdown is-active">
-            <div class="dropdown-trigger">
-                <button class="button" is-primary v-for="item in itemsBoat" :key="item">{{ item.Name }}</button>
-            </div>
-        </div>
+  <div>
+    <p class="title">Items</p>
+    <div class="tabs">
+      <ul>
+        <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">
+          <a @click="activeTab='tab0'">All</a>
+        </li>
+        <li :class="[ activeTab === 'tab1' ? 'is-active' : '']">
+          <a @click="activeTab='tab1'">Alcoholic</a>
+        </li>
+        <li :class="[ activeTab === 'tab2' ? 'is-active' : '']">
+          <a @click="activeTab='tab2'">Non-Alcoholic</a>
+        </li>
+        <li :class="[ activeTab === 'tab3' ? 'is-active' : '']">
+          <a @click="activeTab='tab3'">Food</a>
+        </li>
+        <li :class="[ activeTab === 'tab4' ? 'is-active' : '']">
+          <a @click="activeTab='tab4'">Boats</a>
+        </li>
+      </ul>
     </div>
+
+    <div class="buttons" v-if="activeTab === 'tab0'">
+      <button
+        class="button"
+        v-for="item in allItems"
+        :key="item"
+        :class="[selectedItem === item ? 'is-link' : '']"
+        @click="selectedItem = item"
+      >{{ displayItem(item) }}</button>
+    </div>
+
+    <div class="buttons" v-if="activeTab === 'tab1'">
+      <button
+        class="button"
+        v-for="item in itemsAlc"
+        :key="item"
+        :class="[selectedItem === item ? 'is-link' : '']"
+        @click="selectedItem = item"
+      >{{ displayItem(item) }}</button>
+    </div>
+
+    <div class="buttons" v-if="activeTab === 'tab2'">
+      <button
+        class="button"
+        v-for="item in itemsNonAlc"
+        :key="item"
+        @click="selectedItem = item"
+        :class="[selectedItem === item ? 'is-link' : '']"
+      >{{ displayItem(item) }}</button>
+    </div>
+
+    <div class="buttons" v-if="activeTab === 'tab3'">
+      <button
+        class="button"
+        v-for="item in itemsFood"
+        :key="item"
+        @click="selectedItem = item"
+        :class="[selectedItem === item ? 'is-link' : '']"
+      >{{ displayItem(item) }}</button>
+    </div>
+
+    <div class="buttons" v-if="activeTab === 'tab4'">
+      <button
+        class="button"
+        v-for="item in itemsBoat"
+        :key="item"
+        @click="selectedItem = item"
+        :class="[selectedItem === item ? 'is-link' : '']"
+      >{{ displayItem(item) }}</button>
+    </div>
+  </div>
 </template>
 
  <script src="./ItemList.js"></script>

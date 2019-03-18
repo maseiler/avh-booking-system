@@ -28,16 +28,30 @@
       >{{ displayName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab2'">
-      <button class="button" v-for="user in usersAktivB" :key="user">{{ displayName(user) }}</button>
+      <button
+        class="button"
+        v-for="user in usersAktivB"
+        :key="user"
+        :class="[selectedUser === user ? 'is-link' : '']"
+        @click="selectedUser=user"
+      >{{ displayName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab3'">
-      <button class="button" v-for="user in usersAktivKA" :key="user">{{ displayName(user) }}</button>
+      <button
+        class="button"
+        v-for="user in usersAktivKA"
+        :key="user"
+        :class="[selectedUser === user ? 'is-link' : '']"
+        @click="selectedUser=user"
+      >{{ displayName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab4'">
       <button
         class="button"
         v-for="user in usersGaeste"
         :key="user"
+        :class="[selectedUser === user ? 'is-link' : '']"
+        @click="selectedUser=user"
       >{{ user.FirstName + ' ' + user.LastName }}</button>
     </div>
 
@@ -67,14 +81,14 @@
     <!-- search results -->
     <div class="buttons" v-if="searchResults.filter(user => user['BierName'] != '')">
       <button
-        class="button is-link"
+        class="button"
         v-for="user in searchResults.filter(user => user['BierName'] != '')"
         :key="user"
       >{{ user.BierName }}</button>
     </div>
     <div class="buttons" v-if="searchResults.filter(user => user['BierName'] == '')">
       <button
-        class="button is-link"
+        class="button"
         v-for="user in searchResults.filter(user => user['BierName'] == '')"
         :key="user"
       >{{ user.FirstName + ' ' + user.LastName }}</button>
