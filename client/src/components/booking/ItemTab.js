@@ -1,6 +1,7 @@
 import ItemTab from "./ItemTab.vue"
 import ItemSearch from "./ItemSearch.vue"
 import ItemList from "./ItemList.vue"
+import Vue from "vue"
 
 export default {
   components: {
@@ -41,3 +42,14 @@ export default {
     this.$nextTick(this.getItems())
   }
 };
+
+var EventBus = new Vue();
+Object.defineProperties(Vue.prototype, {
+    $eventBus: {
+        get: function () {
+            return EventBus;
+        }
+    }
+});
+
+// event bus source: https://github.com/devjin0617/vuejs-eventbus-example

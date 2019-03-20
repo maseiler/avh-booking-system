@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="title">Items</p>
-    <ItemSearch :items="allItems" @selectItem="selectItem"></ItemSearch>
+    <ItemSearch :items="allItems" @selectItem1="selectItem"></ItemSearch>
     <hr>
     <ItemList :allItems="allItems" @selectItem="selectItem"></ItemList>
   </div>

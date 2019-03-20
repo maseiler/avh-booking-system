@@ -1,5 +1,7 @@
 <template>
   <div>
+    <p>RECEIVER</p>
+    {{busData}}
     <!-- Search bar -->
     <div class="field">
       <div class="control has-icons-left">

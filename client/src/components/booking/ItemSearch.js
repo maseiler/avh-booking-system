@@ -11,12 +11,13 @@ export default {
         return {
             search: '',
             searchResults: [],
-            selectedItem: {}
+            selectedItem: {},
+            busData: {}
         };
     },
     methods: {
-        searchItems: function(){
-            if(this.search != ''){
+        searchItems: function () {
+            if (this.search != '') {
                 var tmpSearch = this.search.toLowerCase()
                 this.searchResults = this.items.filter(item => (item['Name'].toLowerCase().includes(tmpSearch)))
             } else {
@@ -32,9 +33,16 @@ export default {
                 return "???"
             }
         },
-        selectItem: function(item){
+        selectItem: function (item) {
             this.selectedItem = item
             this.$emit('selectItem', item)
+        },
+        onReceive(text) {
+            this.busData = text
+            this.selectedItem = text
         }
+    },
+    created: function () {
+        this.$eventBus.$on('message', this.onReceive);
     }
 };
