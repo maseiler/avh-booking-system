@@ -27,7 +27,7 @@
         v-for="item in allItems"
         :key="item"
         :class="[selectedItem === item ? 'is-link' : '']"
-        @click="selectedItem = item"
+        @click="selectItem(item)"
       >{{ displayItem(item) }}</button>
     </div>
 
@@ -37,7 +37,7 @@
         v-for="item in itemsAlc"
         :key="item"
         :class="[selectedItem === item ? 'is-link' : '']"
-        @click="selectedItem = item"
+        @click="selectItem(item)"
       >{{ displayItem(item) }}</button>
     </div>
 
@@ -46,7 +46,7 @@
         class="button"
         v-for="item in itemsNonAlc"
         :key="item"
-        @click="selectedItem = item"
+        @click="selectItem(item)"
         :class="[selectedItem === item ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
@@ -56,7 +56,7 @@
         class="button"
         v-for="item in itemsFood"
         :key="item"
-        @click="selectedItem = item"
+        @click="selectItem(item)"
         :class="[selectedItem === item ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
@@ -66,7 +66,7 @@
         class="button"
         v-for="item in itemsBoat"
         :key="item"
-        @click="selectedItem = item"
+        @click="selectItem(item)"
         :class="[selectedItem === item ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
