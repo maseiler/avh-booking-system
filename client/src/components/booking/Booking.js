@@ -8,11 +8,15 @@ export default {
   },
   data: function() {
     return {
+      selectedUser: {},
       selectedItem: {},
       stringCheckout: "",
     };
   },
   methods: {
+    getUser: function(user){
+      this.selectedUser = user
+    },
     getItem: function(item){
       this.selectedItem = item
     },
