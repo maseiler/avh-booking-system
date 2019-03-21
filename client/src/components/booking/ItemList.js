@@ -52,6 +52,7 @@ export default {
       this.$eventBus.$emit('message', item);
     },
     onReceive(text) {
+      this.selectedItem = text
       this.receiveText = text;
     },
   },

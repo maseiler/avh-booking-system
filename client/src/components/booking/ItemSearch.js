@@ -35,7 +35,8 @@ export default {
         },
         selectItem: function (item) {
             this.selectedItem = item
-            this.$emit('selectItem', item)
+            // this.$emit('selectItem', item)
+            this.$eventBus.$emit('message', item);
         },
         onReceive(text) {
             this.busData = text
