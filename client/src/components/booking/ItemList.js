@@ -52,7 +52,7 @@ export default {
     },
     receiveFromEventBus(item) {
       this.selectedItem = item
-    },
+    }
   },
   created: function () {
     this.$itemEventBus.$on('sendToBus', this.receiveFromEventBus);
