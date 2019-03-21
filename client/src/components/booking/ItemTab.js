@@ -1,6 +1,7 @@
 import ItemTab from "./ItemTab.vue"
 import ItemSearch from "./ItemSearch.vue"
 import ItemList from "./ItemList.vue"
+import Vue from "vue"
 
 export default {
   components: {
@@ -35,9 +36,19 @@ export default {
     },
     selectItem: function (item) {
       this.selectedItem = item
+      this.$emit('selectedItem', item)
     }
   },
   created() {
     this.$nextTick(this.getItems())
   }
 };
+
+var ItemEventBus = new Vue();
+Object.defineProperties(Vue.prototype, {
+  $itemEventBus: {
+    get: function () {
+      return ItemEventBus;
+    }
+  }
+});

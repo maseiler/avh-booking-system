@@ -14,7 +14,7 @@
       </div>
       <div class="column">
         <div class="box">
-          <ItemTab></ItemTab>
+          <ItemTab @selectedItem="getItem"></ItemTab>
         </div>
       </div>
     </div>

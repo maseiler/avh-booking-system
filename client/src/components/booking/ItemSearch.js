@@ -11,12 +11,12 @@ export default {
         return {
             search: '',
             searchResults: [],
-            selectedItem: {}
+            selectedItem: {},
         };
     },
     methods: {
-        searchItems: function(){
-            if(this.search != ''){
+        searchItems: function () {
+            if (this.search != '') {
                 var tmpSearch = this.search.toLowerCase()
                 this.searchResults = this.items.filter(item => (item['Name'].toLowerCase().includes(tmpSearch)))
             } else {
@@ -32,9 +32,16 @@ export default {
                 return "???"
             }
         },
-        selectItem: function(item){
+        selectItem: function (item) {
             this.selectedItem = item
             this.$emit('selectItem', item)
+            this.$itemEventBus.$emit('sendToBus', item);
+        },
+        receiveFromEventBus(item) {
+            this.selectedItem = item
         }
+    },
+    created: function () {
+        this.$itemEventBus.$on('sendToBus', this.receiveFromEventBus);
     }
 };
