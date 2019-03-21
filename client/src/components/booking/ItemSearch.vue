@@ -19,7 +19,7 @@
     <div class="buttons" v-if="searchResults !== []">
       <button
         class="button"
-        v-for="item in searchResults.filter(item => item['Name'] != '')"
+        v-for="item in searchResults"
         :key="item"
         :class="[selectedItem === item ? 'is-link' : '']"
         @click="selectItem(item)"
