@@ -36,6 +36,7 @@ export default {
     },
     selectItem: function (item) {
       this.selectedItem = item
+      this.$emit('selectedItem', item)
     }
   },
   created() {
