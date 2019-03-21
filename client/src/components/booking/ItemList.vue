@@ -1,7 +1,5 @@
 <template>
   <div>
-    <p>SENDER</p>
-    <p>receiveText: {{receiveText}}</p>
     <div class="tabs">
       <ul>
         <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">

@@ -11,7 +11,6 @@ export default {
     return {
       selectedItem: {},
       activeTab: 'tab0',
-      receiveText: {}
     };
   },
   computed: {
@@ -48,15 +47,14 @@ export default {
     },
     selectItem: function (item) {
       this.selectedItem = item
-      // this.$emit('selectItem', item)
-      this.$eventBus.$emit('message', item);
+      this.$emit('selectItem', item)
+      this.$itemEventBus.$emit('sendToBus', item);
     },
-    onReceive(text) {
-      this.selectedItem = text
-      this.receiveText = text;
+    receiveFromEventBus(item) {
+      this.selectedItem = item
     },
   },
   created: function () {
-    this.$eventBus.$on('message', this.onReceive);
-  },
+    this.$itemEventBus.$on('sendToBus', this.receiveFromEventBus);
+  }
 };

@@ -43,13 +43,11 @@ export default {
   }
 };
 
-var EventBus = new Vue();
+var ItemEventBus = new Vue();
 Object.defineProperties(Vue.prototype, {
-    $eventBus: {
-        get: function () {
-            return EventBus;
-        }
+  $itemEventBus: {
+    get: function () {
+      return ItemEventBus;
     }
+  }
 });
-
-// event bus source: https://github.com/devjin0617/vuejs-eventbus-example

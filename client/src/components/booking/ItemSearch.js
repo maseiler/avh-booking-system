@@ -12,7 +12,6 @@ export default {
             search: '',
             searchResults: [],
             selectedItem: {},
-            busData: {}
         };
     },
     methods: {
@@ -35,15 +34,14 @@ export default {
         },
         selectItem: function (item) {
             this.selectedItem = item
-            // this.$emit('selectItem', item)
-            this.$eventBus.$emit('message', item);
+            this.$emit('selectItem', item)
+            this.$itemEventBus.$emit('sendToBus', item);
         },
-        onReceive(text) {
-            this.busData = text
-            this.selectedItem = text
+        receiveFromEventBus(item) {
+            this.selectedItem = item
         }
     },
     created: function () {
-        this.$eventBus.$on('message', this.onReceive);
+        this.$itemEventBus.$on('sendToBus', this.receiveFromEventBus);
     }
 };

@@ -1,12 +1,10 @@
 import UserTab from "./UserTab.vue"
 import ItemTab from "./ItemTab.vue"
-import Way from "./Way.vue"
 
 export default {
   components: {
     UserTab,
-    ItemTab,
-    Way
+    ItemTab
   },
   data: function() {
     return {

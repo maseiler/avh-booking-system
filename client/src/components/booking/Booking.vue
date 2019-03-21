@@ -8,7 +8,6 @@
         
       </div>
       <div class="column is-narrow">
-        <Way></Way>
         <div class="box has-text-centered" style="width: 500px;">
           <img class="logo" src="~@/assets/avh_logo.png" width="250px">
         </div>
