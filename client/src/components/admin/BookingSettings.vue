@@ -18,4 +18,30 @@
   </div>
 </template>
 
-<script src="./BookingSettings.js"></script>
+<script>
+import LastBookings from "./LastBookings.vue";
+import ModifyBookEntryForm from "./ModifyBookEntryForm.vue";
+
+export default {
+  components: {
+    LastBookings,
+    ModifyBookEntryForm
+  },
+  props: {
+    lastBookings: [],
+    users: [],
+    items: []
+  },
+  data: function() {
+    return {
+      selectedEntry: {},
+      showModifyBookEntryForm: false
+    };
+  },
+  methods: {
+    selectEntry: function(entry) {
+      this.selectedEntry = entry;
+    }
+  }
+};
+</script>

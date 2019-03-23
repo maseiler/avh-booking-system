@@ -1,7 +1,16 @@
 <template>
-    <div>
-        TODO
-    </div>
+  <div>TODO</div>
 </template>
 
-<script src="./ModifyBookEntryForm.js"
+<script>
+export default {
+  props: {
+    entry: {}
+  },
+  methods: {
+    modifyBookEntry: function() {
+      //TODO
+    }
+  }
+};
+</script>

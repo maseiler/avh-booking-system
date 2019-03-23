@@ -4,7 +4,6 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
             <slot name="header">
               <h1>Modify item</h1>
@@ -16,12 +15,7 @@
               <div class="field">
                 <label class="label">Name</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Name"
-                    v-model.lazy="item.Name"
-                  >
+                  <input class="input" type="text" placeholder="Name" v-model.lazy="item.Name">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="font"/>
                   </span>
@@ -31,12 +25,7 @@
               <div class="field">
                 <label class="label">Price</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Price"
-                    v-model.lazy="item.Price"
-                  >
+                  <input class="input" type="text" placeholder="Price" v-model.lazy="item.Price">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="euro-sign"/>
                   </span>
@@ -46,12 +35,7 @@
               <div class="field">
                 <label class="label">Size</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Size"
-                    v-model.lazy="item.Size"
-                  >
+                  <input class="input" type="text" placeholder="Size" v-model.lazy="item.Size">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="expand-arrows-alt"/>
                   </span>
@@ -85,6 +69,7 @@
                   </div>
                 </div>
               </div>
+            </slot>
           </div>
 
           <div class="modal-footer">
@@ -92,10 +77,10 @@
               <article v-if="validationError !==''" class="message is-danger">
                 <div class="message-header">
                   <div class="field is-grouped">
-                  <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
-                  </p>
-                  <p> {{validationError}}</p>
+                    <p class="icon is-small is-left">
+                      <font-awesome-icon icon="exclamation" size="lg"/>
+                    </p>
+                    <p>{{validationError}}</p>
                   </div>
                 </div>
               </article>
@@ -109,15 +94,55 @@
               </div>
             </slot>
           </div>
-        
-        
+        </div>
       </div>
-    </div>
     </div>
   </transition>
 </template>
 
-<script src="./ModifyItemForm.js"></script>
+<script>
+export default {
+  props: {
+    item: {}
+  },
+  data: function() {
+    return {
+      validationError: ""
+    };
+  },
+  methods: {
+    modifyItem() {
+      console.log(this.item);
+      if (Object.keys(this.item).length === 0) {
+        this.error = "Please select a user first.";
+      } else {
+        this.$http
+          .post("/modifyItem", this.item)
+          .then(function(response) {
+            console.log(
+              "Modified Item: ",
+              this.item.Name,
+              this.item.Price + "€",
+              this.item.Size,
+              this.item.Unit,
+              this.item.Type
+            );
+            this.$router.go();
+          })
+          .catch(function(response) {
+            this.validationError = response.data;
+            console.log("Error: Couldn't modify item.");
+            //TODO
+          });
+      }
+    },
+    cancelSubmission() {
+      console.log("Canceled submission.");
+      this.$emit("close");
+    }
+  }
+};
+</script>
 <style lang="scss">
 @import "../../assets/modal.css";
 </style>
