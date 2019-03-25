@@ -8,6 +8,7 @@
       </div>
       <div class="column is-narrow">
         <div class="box has-text-centered" style="width: 500px;">
+          <Cart :user="selectedUser" :items="selectedItems"/>
           <img class="logo" src="~@/assets/avh_logo.png" width="250px">
         </div>
       </div>
@@ -23,16 +24,18 @@
 <script>
 import UserTab from "./UserTab.vue";
 import ItemTab from "./ItemTab.vue";
+import Cart from "./Cart.vue";
 
 export default {
   components: {
     UserTab,
-    ItemTab
+    ItemTab,
+    Cart
   },
   data: function() {
     return {
       selectedUser: {},
-      selectedItem: {},
+      selectedItems: [],
       stringCheckout: ""
     };
   },
@@ -41,7 +44,7 @@ export default {
       this.selectedUser = user;
     },
     getItem: function(item) {
-      this.selectedItem = item;
+      this.selectedItems.push(item);
     },
     checkout: function() {
       this.$http.get("/checkout").then(response => {
