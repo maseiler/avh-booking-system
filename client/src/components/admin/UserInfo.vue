@@ -13,4 +13,10 @@
   </div>
 </template>
 
-<script src="./UserInfo.js"></script>
+<script>
+export default {
+  props: {
+    user: Object
+  }
+};
+</script>

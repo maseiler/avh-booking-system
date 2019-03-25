@@ -8,9 +8,9 @@ import Admin from './components/admin/Admin.vue'
 import Statistics from './components/statistics/Statistics.vue'
 // font awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUser} from '@fortawesome/free-solid-svg-icons'
-import { faPhone} from '@fortawesome/free-solid-svg-icons'
-import { faBeer} from '@fortawesome/free-solid-svg-icons'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faPhone } from '@fortawesome/free-solid-svg-icons'
+import { faBeer } from '@fortawesome/free-solid-svg-icons'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { faEuroSign } from '@fortawesome/free-solid-svg-icons'
@@ -41,8 +41,8 @@ Vue.use(VueRouter)
 const routes = [
   { path: '/', component: Home },
   { path: '/booking', component: Booking },
-  { path: '/statistics', component: Statistics},
-  { path: '/admin', component: Admin}
+  { path: '/statistics', component: Statistics },
+  { path: '/admin', component: Admin }
 ]
 
 Vue.use(VueResource)

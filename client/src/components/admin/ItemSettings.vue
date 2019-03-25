@@ -35,21 +35,69 @@
         <button class="button is-link" @click="showAddItemForm = true">Add Item</button>
         <button class="button is-link" @click="showModifyItemForm = true">Modify Item</button>
         <button class="button is-link" @click="showDeleteItemForm = true">Delete Item</button>
-        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false"></AddItemForm>
+        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false"/>
         <ModifyItemForm
           :item="selectedItem"
           v-if="showModifyItemForm"
           @close="showModifyItemForm = false"
-        ></ModifyItemForm>
+        />
         <DeleteItemForm
           :item="selectedItem"
           v-if="showDeleteItemForm"
           @close="showDeleteItemForm = false"
-        ></DeleteItemForm>
-        <ItemInfo :item="selectedItem"></ItemInfo>
+        />
+        <ItemInfo :item="selectedItem"/>
       </div>
     </div>
   </div>
 </template>
 
-<script src="./ItemSettings.js"></script>
+<script>
+import AddItemForm from "../booking/AddItemForm.vue";
+import ModifyItemForm from "./ModifyItemForm.vue";
+import DeleteItemForm from "./DeleteItemForm.vue";
+import ItemInfo from "./ItemInfo.vue";
+
+export default {
+  components: {
+    AddItemForm,
+    ModifyItemForm,
+    DeleteItemForm,
+    ItemInfo
+  },
+  props: {
+    items: []
+  },
+  data: function() {
+    return {
+      showAddItemForm: false,
+      showModifyItemForm: false,
+      showDeleteItemForm: false,
+      search: "",
+      searchResults: [],
+      selectedItem: {}
+    };
+  },
+  methods: {
+    searchItems: function() {
+      if (this.search != "") {
+        var tmpSearch = this.search.toLowerCase();
+        this.searchResults = this.items.filter(
+          item =>
+            item["Name"].toLowerCase().includes(tmpSearch) |
+            item["Type"].toLowerCase().includes(tmpSearch)
+        );
+      } else {
+        this.searchResults = [];
+      }
+    },
+    displayItem: function(item) {
+      if (item.Type == "boat" || item.Type == "food") {
+        return item.Name;
+      } else {
+        return item.Name + " " + item.Size + item.Unit;
+      }
+    }
+  }
+};
+</script>
