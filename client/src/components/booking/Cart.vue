@@ -6,14 +6,12 @@
           <th>Item</th>
           <th>Price</th>
           <th>Amount</th>
-          <th></th>
         </tr>
       </thead>
       <tfoot>
         <tr>
           <th></th>
           <th>{{sum}} €</th>
-          <th></th>
           <th>
             <button class="button is-small">Checkout</button>
           </th>
@@ -23,10 +21,8 @@
         <tr v-for="i in cart" :key="i">
           <td>{{i.item.Name}} {{i.item.Size}}</td>
           <td>{{i.item.Price}} €</td>
-          <td>{{i.amount}}</td>
           <td>
-            <button class="button is-small" @click="increment(cart,i.item)">+</button>
-            <button class="button is-small">-</button>
+            <input class="input is-small" type="text" v-model="i.amount" @change="updateSum">
           </td>
         </tr>
       </tbody>
@@ -40,15 +36,16 @@ export default {
     user: {},
     items: []
   },
+  watch: {
+    items: function() {
+      this.buildCart();
+    }
+  },
   data: function() {
     return {
+      cart: [],
       sum: 0
     };
-  },
-  computed: {
-    cart: function() {
-      return this.buildCart();
-    }
   },
   methods: {
     buildCart: function() {
@@ -59,13 +56,11 @@ export default {
           newItem.item = item;
           newItem.amount = 1;
           temp.push(newItem);
-          //   console.log(Number(newItem.item.Price));
-          //   this.sum += Number(newItem.item.Price);
         } else {
           this.increment(temp, item);
         }
       });
-      return temp;
+      this.cart = temp;
     },
     contains: function(array, obj) {
       for (var i in array) {
@@ -76,15 +71,22 @@ export default {
       return false;
     },
     increment: function(array, item) {
-      console.log(array);
       for (var i in array) {
         if (array[i].item.ItemID === item.ItemID) {
           array[i].amount = array[i].amount + 1;
-          //   console.log(Number(array[i].item.Price));
-          //   this.sum += Number(array[i].item.Price);
-          console.log("inc");
           return;
         }
+      }
+    },
+    updateSum: function() {
+      if (this.cart === []) {
+        this.sum = 0;
+      } else {
+        var temp = 0;
+        for (var i in this.cart) {
+          temp += this.cart[i].item.Price * this.cart[i].amount;
+        }
+        this.sum = temp;
       }
     }
   }
