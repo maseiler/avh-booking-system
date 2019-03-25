@@ -41,7 +41,43 @@
   </transition>
 </template>
 
-<script src="./DeleteUserForm.js"></script>
+<script>
+export default {
+  props: {
+    user: {}
+  },
+  methods: {
+    deleteUser() {
+      if (Object.keys(this.user).length === 0) {
+        this.error = "Please select an user first.";
+      } else {
+        this.$http
+          .post("/deleteUser", this.user)
+          .then(function(response) {
+            console.log(
+              "Deleted User: " +
+                this.user.BierName +
+                " " +
+                this.user.FirstName +
+                " " +
+                this.user.LastName +
+                "."
+            );
+            this.$router.go();
+          })
+          .catch(function(response) {
+            console.log("Error: Couldn't delete user.");
+            //TODO
+          });
+      }
+    },
+    cancelSubmission() {
+      console.log("Canceled submission.");
+      this.$emit("close");
+    }
+  }
+};
+</script>
 <style lang="scss">
 @import "../../assets/modal.css";
 </style>

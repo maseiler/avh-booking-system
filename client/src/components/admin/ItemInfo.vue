@@ -10,4 +10,10 @@
   </div>
 </template>
 
-<script src="./ItemInfo.js"></script>
+<script>
+export default {
+  props: {
+    item: {}
+  }
+};
+</script>

@@ -14,12 +14,7 @@
               <div class="field">
                 <label class="label">Name</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Name"
-                    v-model.lazy="newItem.Name"
-                  >
+                  <input class="input" type="text" placeholder="Name" v-model.lazy="newItem.Name">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="font"/>
                   </span>
@@ -29,12 +24,7 @@
               <div class="field">
                 <label class="label">Price</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Price"
-                    v-model.lazy="newItem.Price"
-                  >
+                  <input class="input" type="text" placeholder="Price" v-model.lazy="newItem.Price">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="euro-sign"/>
                   </span>
@@ -44,12 +34,7 @@
               <div class="field">
                 <label class="label">Size</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Size"
-                    v-model.lazy="newItem.Size"
-                  >
+                  <input class="input" type="text" placeholder="Size" v-model.lazy="newItem.Size">
                   <span class="icon is-small is-left">
                     <font-awesome-icon icon="expand-arrows-alt"/>
                   </span>
@@ -83,16 +68,18 @@
                   </div>
                 </div>
               </div>
+            </slot>
+          </div>
 
           <div class="modal-footer">
             <slot name="footer">
               <article v-if="validationError !==''" class="message is-danger">
                 <div class="message-header">
                   <div class="field is-grouped">
-                  <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
-                  </p>
-                  <p> {{validationError}}</p>
+                    <p class="icon is-small is-left">
+                      <font-awesome-icon icon="exclamation" size="lg"/>
+                    </p>
+                    <p>{{validationError}}</p>
                   </div>
                 </div>
               </article>
@@ -112,7 +99,56 @@
   </transition>
 </template>
 
-<script src="./AddItemForm.js"></script>
+<script>
+export default {
+  data: function() {
+    return {
+      newItem: {
+        Name: "",
+        Price: "0",
+        Size: "0",
+        Unit: "",
+        Type: ""
+      },
+      validationError: ""
+    };
+  },
+  methods: {
+    submitItem() {
+      this.$http
+        .post("/addItem", this.newItem)
+        .then(function(response) {
+          console.log(
+            "Added new item:",
+            this.newItem.Name,
+            this.newItem.Price + "€",
+            this.newItem.Size,
+            this.newItem.Unit,
+            this.newItem.Type
+          );
+          this.resetAndCloseForm();
+          this.$router.go();
+        })
+        .catch(function(response) {
+          this.validationError = response.data;
+        });
+    },
+    cancelSubmission() {
+      console.log("canceled submission");
+      this.resetAndCloseForm();
+    },
+    resetAndCloseForm() {
+      (this.Name = ""),
+        (this.Price = ""),
+        (this.Size = ""),
+        (this.Unit = ""),
+        (this.Type = ""),
+        (this.validationError = "");
+      this.$emit("close");
+    }
+  }
+};
+</script>
 <style lang="scss">
 @import "../../assets/modal.css";
 </style>
