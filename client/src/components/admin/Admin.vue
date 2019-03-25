@@ -35,15 +35,15 @@
         </div>
       </div>
       <div class="column">
-        <UserSettings v-if="showUserSettings" :users="users"></UserSettings>
-        <ItemSettings v-if="showItemSettings" :items="items"></ItemSettings>
+        <UserSettings v-if="showUserSettings" :users="users"/>
+        <ItemSettings v-if="showItemSettings" :items="items"/>
         <BookingSettings
           v-if="showBookingSettings"
           :lastBookings="lastBookings"
           :users="users"
           :items="items"
-        ></BookingSettings>
-        <OtherSettings v-if="showOtherSettings"></OtherSettings>
+        />
+        <OtherSettings v-if="showOtherSettings"/>
       </div>
     </div>
   </div>

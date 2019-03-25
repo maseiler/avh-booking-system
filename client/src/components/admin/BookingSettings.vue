@@ -4,7 +4,7 @@
     <div class="columns">
       <div class="column is-2">
         <button class="button is-link" @click="showModifyBookEntryForm = true">Modify Book Entry</button>
-        <ModifyBookEntryForm v-if="showModifyBookEntryForm" :entry="selectedEntry"></ModifyBookEntryForm>
+        <ModifyBookEntryForm v-if="showModifyBookEntryForm" :entry="selectedEntry"/>
       </div>
       <div class="column">
         <LastBookings
@@ -12,7 +12,7 @@
           :users="users"
           :items="items"
           @selectEntry="selectEntry"
-        ></LastBookings>
+        />
       </div>
     </div>
   </div>

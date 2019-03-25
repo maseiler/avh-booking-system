@@ -35,18 +35,18 @@
         <button class="button is-link" @click="showAddUserFormAdmin = true">Add User</button>
         <button class="button is-link" @click="showModifyUserForm = true">Modify User</button>
         <button class="button is-link" @click="showDeleteUserForm = true">Delete User</button>
-        <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"></AddUserFormAdmin>
+        <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"/>
         <ModifyUserForm
           :user="selectedUser"
           v-if="showModifyUserForm"
           @close="showModifyUserForm = false"
-        ></ModifyUserForm>
+        />
         <DeleteUserForm
           :user="selectedUser"
           v-if="showDeleteUserForm"
           @close="showDeleteUserForm = false"
-        ></DeleteUserForm>
-        <UserInfo :user="selectedUser"></UserInfo>
+        />
+        <UserInfo :user="selectedUser"/>
       </div>
     </div>
   </div>

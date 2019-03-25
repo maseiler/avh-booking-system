@@ -3,7 +3,7 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <UserTab></UserTab>
+          <UserTab/>
         </div>
       </div>
       <div class="column is-narrow">
@@ -13,7 +13,7 @@
       </div>
       <div class="column">
         <div class="box">
-          <ItemTab @selectedItem="getItem"></ItemTab>
+          <ItemTab @selectedItem="getItem"/>
         </div>
       </div>
     </div>

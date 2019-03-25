@@ -35,18 +35,18 @@
         <button class="button is-link" @click="showAddItemForm = true">Add Item</button>
         <button class="button is-link" @click="showModifyItemForm = true">Modify Item</button>
         <button class="button is-link" @click="showDeleteItemForm = true">Delete Item</button>
-        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false"></AddItemForm>
+        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false"/>
         <ModifyItemForm
           :item="selectedItem"
           v-if="showModifyItemForm"
           @close="showModifyItemForm = false"
-        ></ModifyItemForm>
+        />
         <DeleteItemForm
           :item="selectedItem"
           v-if="showDeleteItemForm"
           @close="showDeleteItemForm = false"
-        ></DeleteItemForm>
-        <ItemInfo :item="selectedItem"></ItemInfo>
+        />
+        <ItemInfo :item="selectedItem"/>
       </div>
     </div>
   </div>

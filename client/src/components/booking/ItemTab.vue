@@ -1,9 +1,9 @@
 <template>
   <div>
     <p class="title">Items</p>
-    <ItemSearch :items="allItems" @selectItem="selectItem"></ItemSearch>
+    <ItemSearch :items="allItems" @selectItem="selectItem"/>
     <hr>
-    <ItemList :allItems="allItems" @selectItem="selectItem"></ItemList>
+    <ItemList :allItems="allItems" @selectItem="selectItem"/>
   </div>
 </template>
 
