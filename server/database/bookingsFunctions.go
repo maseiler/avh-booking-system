@@ -68,3 +68,23 @@ func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry 
 	}
 	return getBookingsFromQuery(query)
 }
+
+// Checkout adds a Cart to bookings in database.
+func Checkout(cart data.Cart) {
+	numItems := len(cart.CartItems)
+	for i := 0; i < numItems; i++ {
+		tx, err := db.Begin()
+		HandleDatabaseError(err)
+		stmt, err := tx.Prepare("INSERT INTO bookings(TimeStamp, UserId, ItemId, Amount, TotalPrice, Comment) VAlUES(?, ?, ?, ?, ?, ?)")
+		HandleTxError(tx, err)
+		defer stmt.Close()
+		timeStamp := time.Now().Format(time.RFC3339)
+		totalPrice := float32(cart.CartItems[i].Amount) * cart.CartItems[i].Item.Price
+		comment := fmt.Sprintf("Part %d/%d", i+1, numItems)
+		res, err := stmt.Exec(timeStamp, cart.User.UserID, cart.CartItems[i].Item.ItemID, cart.CartItems[i].Amount, totalPrice, comment)
+		TxRowsAffected(res, tx)
+		err = tx.Commit()
+		HandleDatabaseError(err)
+		stmt.Close()
+	}
+}

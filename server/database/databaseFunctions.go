@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"net/http"
 )
 
 var db *sql.DB
@@ -20,10 +19,4 @@ func ConnectDatabase() {
 	var version string
 	db.QueryRow("SELECT VERSION()").Scan(&version)
 	fmt.Println("Connected to:", version)
-}
-
-// Checkout TODO
-func Checkout(w http.ResponseWriter, r *http.Request) {
-	//sql query
-	fmt.Fprintf(w, "Check this out")
 }

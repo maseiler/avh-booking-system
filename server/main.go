@@ -26,7 +26,7 @@ func main() {
 	r.HandleFunc("/modifyItem", handler.ModifyItem)
 	r.HandleFunc("/deleteItem", handler.DeleteItem)
 	r.HandleFunc("/getLastNBookings", handler.GetLastNBookings)
-	// r.HandleFunc("/checkout", handler.Checkout)
+	r.HandleFunc("/checkout", handler.Checkout)
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./../client/dist/index.html")
 	}

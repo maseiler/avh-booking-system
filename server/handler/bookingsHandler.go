@@ -15,3 +15,12 @@ func GetLastNBookings(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
 }
+
+// Checkout forwards API call to add Cart content into database
+func Checkout(w http.ResponseWriter, r *http.Request) {
+	cart := UnmarshalCart(r.Body)
+
+	dbP.Checkout(cart)
+	w.WriteHeader(http.StatusOK)
+	//TODO error handling
+}
