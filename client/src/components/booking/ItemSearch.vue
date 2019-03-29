@@ -36,7 +36,7 @@ export default {
   data: function() {
     return {
       search: "",
-      searchResults: []
+      searchResults: [],
       selectedItems: []
     };
   },
