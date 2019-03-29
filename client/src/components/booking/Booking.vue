@@ -3,7 +3,7 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <UserTab @selectedUser="getUser"/>
+          <UserTab @selectedUser="getSelectedUser"/>
         </div>
       </div>
       <div class="column is-narrow">
@@ -14,7 +14,7 @@
       </div>
       <div class="column">
         <div class="box">
-          <ItemTab @selectedItem="getItem"/>
+          <ItemTab @selectedItems="getSelectedItems"/>
         </div>
       </div>
     </div>
@@ -39,11 +39,11 @@ export default {
     };
   },
   methods: {
-    getUser: function(user) {
+    getSelectedUser: function(user) {
       this.selectedUser = user;
     },
-    getItem: function(item) {
-      this.selectedItems.push(item);
+    getSelectedItems: function(items) {
+      this.selectedItems = items;
     }
   }
 };

@@ -21,7 +21,7 @@
         class="button"
         v-for="item in searchResults"
         :key="item"
-        :class="[selectedItem === item ? 'is-link' : '']"
+        :class="[selectedItems.includes(item) ? 'is-link' : '']"
         @click="selectItem(item)"
       >{{ displayItem(item) }}</button>
     </div>
@@ -37,7 +37,7 @@ export default {
     return {
       search: "",
       searchResults: [],
-      selectedItem: {}
+      selectedItems: []
     };
   },
   methods: {
@@ -61,16 +61,20 @@ export default {
       }
     },
     selectItem: function(item) {
-      this.selectedItem = item;
-      this.$emit("selectItem", item);
-      this.$itemEventBus.$emit("sendToBus", item);
+      this.selectedItems.push(item);
+      this.$emit("selectItems", this.selectedItems);
+      this.$itemEventBus.$emit("selectItemsToBus", this.selectedItems);
     },
-    receiveFromEventBus(item) {
-      this.selectedItem = item;
+    deselectItemsFromBus: function() {
+      this.selectedItems = [];
+    },
+    selectItemsFromBus(items) {
+      this.selectedItems = items;
     }
   },
   created: function() {
-    this.$itemEventBus.$on("sendToBus", this.receiveFromEventBus);
+    this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
+    this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
   }
 };
 </script>

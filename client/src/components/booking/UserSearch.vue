@@ -71,14 +71,18 @@ export default {
     selectUser: function(user) {
       this.selectedUser = user;
       this.$emit("selectUser", user);
-      this.$userEventBus.$emit("sendToBus", user);
+      this.$userEventBus.$emit("selectUserToBus", user);
     },
-    receiveFromEventBus(user) {
+    deselectUserFromBus() {
+      this.selectedUser = {};
+    },
+    selectUserFromBus(user) {
       this.selectedUser = user;
     }
   },
   created: function() {
-    this.$userEventBus.$on("sendToBus", this.receiveFromEventBus);
+    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
+    this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }
 };
 </script>

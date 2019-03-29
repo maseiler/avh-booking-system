@@ -1,9 +1,9 @@
 <template>
   <div>
     <p class="title">Items</p>
-    <ItemSearch :items="allItems" @selectItem="selectItem"/>
+    <ItemSearch :items="allItems" @selectItems="selectItems"/>
     <hr>
-    <ItemList :allItems="allItems" @selectItem="selectItem"/>
+    <ItemList :allItems="allItems" @selectItems="selectItems"/>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
   data: function() {
     return {
       allItems: [],
-      selectedItem: {}
+      selectedItems: []
     };
   },
   methods: {
@@ -44,9 +44,9 @@ export default {
         return 0;
       });
     },
-    selectItem: function(item) {
-      this.selectedItem = item;
-      this.$emit("selectedItem", item);
+    selectItems: function(items) {
+      this.selectedItems = items;
+      this.$emit("selectedItems", this.selectedItems);
     }
   },
   created() {

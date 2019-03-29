@@ -26,7 +26,7 @@
         class="button"
         v-for="item in allItems"
         :key="item"
-        :class="[selectedItem === item ? 'is-link' : '']"
+        :class="[selectedItems.includes(item) ? 'is-link' : '']"
         @click="selectItem(item)"
       >{{ displayItem(item) }}</button>
     </div>
@@ -36,7 +36,7 @@
         class="button"
         v-for="item in itemsAlc"
         :key="item"
-        :class="[selectedItem === item ? 'is-link' : '']"
+        :class="[selectedItems.includes(item) ? 'is-link' : '']"
         @click="selectItem(item)"
       >{{ displayItem(item) }}</button>
     </div>
@@ -47,7 +47,7 @@
         v-for="item in itemsNonAlc"
         :key="item"
         @click="selectItem(item)"
-        :class="[selectedItem === item ? 'is-link' : '']"
+        :class="[selectedItems.includes(item) ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
 
@@ -57,7 +57,7 @@
         v-for="item in itemsFood"
         :key="item"
         @click="selectItem(item)"
-        :class="[selectedItem === item ? 'is-link' : '']"
+        :class="[selectedItems.includes(item) ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
 
@@ -67,7 +67,7 @@
         v-for="item in itemsBoat"
         :key="item"
         @click="selectItem(item)"
-        :class="[selectedItem === item ? 'is-link' : '']"
+        :class="[selectedItems.includes(item) ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
   </div>
@@ -80,7 +80,7 @@ export default {
   },
   data: function() {
     return {
-      selectedItem: {},
+      selectedItems: [],
       activeTab: "tab0"
     };
   },
@@ -117,16 +117,20 @@ export default {
       }
     },
     selectItem: function(item) {
-      this.selectedItem = item;
-      this.$emit("selectItem", item);
-      this.$itemEventBus.$emit("sendToBus", item);
+      this.selectedItems.push(item);
+      this.$emit("selectItems", this.selectedItems);
+      this.$itemEventBus.$emit("selectItemsToBus", this.selectedItems);
     },
-    receiveFromEventBus(item) {
-      this.selectedItem = item;
+    deselectItemsFromBus: function() {
+      this.selectedItems = [];
+    },
+    selectItemsFromBus(items) {
+      this.selectedItems = items;
     }
   },
   created: function() {
-    this.$itemEventBus.$on("sendToBus", this.receiveFromEventBus);
+    this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
+    this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
   }
 };
 </script>

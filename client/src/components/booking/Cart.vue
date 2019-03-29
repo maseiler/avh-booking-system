@@ -98,6 +98,14 @@ export default {
     emptyCart: function() {
       this.user = {};
       this.items = [];
+      this.deselectUser();
+      this.deselectItems();
+    },
+    deselectUser: function() {
+      this.$userEventBus.$emit("deselectUserToBus");
+    },
+    deselectItems: function(){
+      this.$itemEventBus.$emit("deselectItemsToBus");
     }
   }
 };
