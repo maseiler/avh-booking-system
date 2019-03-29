@@ -3,7 +3,7 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <UserTab/>
+          <UserTab @selectedUser="getUser"/>
         </div>
       </div>
       <div class="column is-narrow">
@@ -35,8 +35,7 @@ export default {
   data: function() {
     return {
       selectedUser: {},
-      selectedItems: [],
-      stringCheckout: ""
+      selectedItems: []
     };
   },
   methods: {
@@ -45,12 +44,6 @@ export default {
     },
     getItem: function(item) {
       this.selectedItems.push(item);
-    },
-    checkout: function() {
-      this.$http.get("/checkout").then(response => {
-        this.stringCheckout = response.body;
-      });
-      console.log("checkout");
     }
   }
 };

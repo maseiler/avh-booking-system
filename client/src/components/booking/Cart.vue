@@ -13,7 +13,7 @@
           <th></th>
           <th>{{sum}} €</th>
           <th>
-            <button class="button is-small">Checkout</button>
+            <button class="button is-small" @click="checkout">Checkout</button>
           </th>
         </tr>
       </tfoot>
@@ -88,6 +88,16 @@ export default {
         }
         this.sum = temp;
       }
+    },
+    checkout: function() {
+      var packedCart = { cartItems: this.cart, user: this.user };
+      this.$http.post("/checkout", packedCart).then(function(response) {
+        this.emptyCart();
+      });
+    },
+    emptyCart: function() {
+      this.user = {};
+      this.items = [];
     }
   }
 };
