@@ -39,6 +39,7 @@ export default {
   watch: {
     items: function() {
       this.buildCart();
+      this.updateSum();
     }
   },
   data: function() {
@@ -96,6 +97,7 @@ export default {
       });
     },
     emptyCart: function() {
+      this.sum = 0;
       this.user = {};
       this.items = [];
       this.deselectUser();
