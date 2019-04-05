@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	dbP "../database"
@@ -20,7 +21,13 @@ func GetLastNBookings(w http.ResponseWriter, r *http.Request) {
 func Checkout(w http.ResponseWriter, r *http.Request) {
 	cart := UnmarshalCart(r.Body)
 
-	dbP.Checkout(cart)
-	w.WriteHeader(http.StatusOK)
-	//TODO error handling
+	success := dbP.Checkout(cart)
+	validation := "ok"
+	if success {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		validation = "Reached max balance."
+	}
+	fmt.Fprint(w, validation)
 }
