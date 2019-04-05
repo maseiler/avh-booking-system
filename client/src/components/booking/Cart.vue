@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3 class="subtitle is-3">{{bookingError}}</h3>
     <table class="table">
       <thead>
         <tr>
@@ -45,7 +46,8 @@ export default {
   data: function() {
     return {
       cart: [],
-      sum: 0
+      sum: 0,
+      bookingError: ""
     };
   },
   methods: {
@@ -92,9 +94,14 @@ export default {
     },
     checkout: function() {
       var packedCart = { cartItems: this.cart, user: this.user };
-      this.$http.post("/checkout", packedCart).then(function(response) {
-        this.emptyCart();
-      });
+      this.$http
+        .post("/checkout", packedCart)
+        .then(function(response) {
+          this.emptyCart();
+        })
+        .catch(function(response) {
+          this.bookingError = response.data;
+        });
     },
     emptyCart: function() {
       this.sum = 0;
@@ -106,7 +113,7 @@ export default {
     deselectUser: function() {
       this.$userEventBus.$emit("deselectUserToBus");
     },
-    deselectItems: function(){
+    deselectItems: function() {
       this.$itemEventBus.$emit("deselectItemsToBus");
     }
   }

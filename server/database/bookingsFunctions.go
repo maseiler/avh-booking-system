@@ -70,7 +70,10 @@ func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry 
 }
 
 // Checkout adds a Cart to bookings in database.
-func Checkout(cart data.Cart) {
+func Checkout(cart data.Cart) bool {
+	if cart.User.Balance >= float32(cart.User.MaxDebt) {
+		return false
+	}
 	numItems := len(cart.CartItems)
 	for i := 0; i < numItems; i++ {
 		tx, err := db.Begin()
@@ -86,5 +89,10 @@ func Checkout(cart data.Cart) {
 		err = tx.Commit()
 		HandleDatabaseError(err)
 		stmt.Close()
+
+		user := GetUsersOfColumnWithValue("UserId", strconv.Itoa(cart.User.UserID))[0]
+		user.Balance += totalPrice
+		ModifyUser(user)
 	}
+	return true
 }
