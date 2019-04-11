@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	data "../data"
 	dbP "../database"
 )
 
@@ -20,7 +21,16 @@ func GetLastNBookings(w http.ResponseWriter, r *http.Request) {
 // Checkout forwards API call to add Cart content into database
 func Checkout(w http.ResponseWriter, r *http.Request) {
 	cart := UnmarshalCart(r.Body)
-
+	if itemsAreEmpty(cart.CartItems) {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "Select an Item.")
+		return
+	}
+	if userIsEmpty(cart.User) {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "Select a User.")
+		return
+	}
 	success := dbP.Checkout(cart)
 	validation := "ok"
 	if success {
@@ -30,4 +40,19 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		validation = "Reached max balance."
 	}
 	fmt.Fprint(w, validation)
+}
+
+func userIsEmpty(user data.User) bool {
+	emptyUser := data.User{UserID: 0, BierName: "", FirstName: "", LastName: "", Status: "", Email: "", Balance: 0, Phone: "", MaxDebt: 0}
+	if user == emptyUser {
+		return true
+	}
+	return false
+}
+
+func itemsAreEmpty(items []data.CartItem) bool {
+	if len(items) == 0 {
+		return true
+	}
+	return false
 }
