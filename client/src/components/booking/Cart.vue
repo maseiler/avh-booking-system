@@ -23,7 +23,12 @@
           <td>{{i.item.Name}} {{i.item.Size}}</td>
           <td>{{i.item.Price}} €</td>
           <td>
-            <input class="input is-small" type="text" v-model="i.amount" @change="updateSum">
+            <input
+              class="input is-small"
+              type="text"
+              v-model="i.amount"
+              @change="updateCart(i.item)"
+            >
           </td>
         </tr>
       </tbody>
@@ -81,16 +86,40 @@ export default {
         }
       }
     },
-    updateSum: function() {
-      if (this.cart === []) {
-        this.sum = 0;
-      } else {
-        var temp = 0;
-        for (var i in this.cart) {
-          temp += this.cart[i].item.Price * this.cart[i].amount;
+    updateCart: function(item) {
+      for (var i in this.cart) {
+        if (this.cart[i].item === item) {
+          var itemCount = 0;
+          for (var j in this.items) {
+            if (this.items[j] === item) {
+              itemCount++;
+            }
+          }
+          if (itemCount <= this.cart[i].amount) {
+            while (itemCount < this.cart[i].amount) {
+              this.items.push(item);
+              itemCount++;
+            }
+          } else {
+            while (itemCount > this.cart[i].amount) {
+              var index = this.items.indexOf(item);
+              if (index != -1) {
+                this.items.splice(index, 1);
+              }
+              itemCount--;
+            }
+          }
+          break;
         }
-        this.sum = temp;
       }
+    },
+    updateSum: function() {
+      var temp = 0;
+      for (var i in this.cart) {
+        temp += this.cart[i].item.Price * this.cart[i].amount;
+      }
+      temp = temp.toFixed(2);
+      this.sum = temp;
     },
     checkout: function() {
       var packedCart = { cartItems: this.cart, user: this.user };
