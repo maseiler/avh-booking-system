@@ -95,6 +95,7 @@
                       <option>Aktiv B</option>
                       <option>Aktiv KA</option>
                       <option>AH</option>
+                      <option>Steganleger</option>
                       <option>Gast</option>
                     </select>
                   </div>

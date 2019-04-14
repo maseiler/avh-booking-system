@@ -102,12 +102,13 @@
                   <label class="label">Status</label>
                   <div class="control">
                     <div class="select">
-                      <select v-model="selectedStatus">
-                        <option
-                          v-for="option in statusOptions"
-                          :key="option"
-                          :value="option"
-                        >{{option}}</option>
+                      <select v-model="user.Status">
+                        <option disabled value>Status</option>
+                        <option>Aktiv B</option>
+                        <option>Aktiv KA</option>
+                        <option>AH</option>
+                        <option>Steganleger</option>
+                        <option>Gast</option>
                       </select>
                     </div>
                   </div>
@@ -171,8 +172,6 @@ export default {
   },
   data() {
     return {
-      statusOptions: ["Aktiv B", "Aktiv KA", "AH", "Gast"],
-      selectedStatus: this.user.Status,
       validationError: ""
     };
   },

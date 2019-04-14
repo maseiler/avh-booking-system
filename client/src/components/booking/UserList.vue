@@ -15,7 +15,10 @@
           <a @click="activeTab='tab3'">Aktive KA</a>
         </li>
         <li :class="[ activeTab === 'tab4' ? 'is-active' : '']">
-          <a @click="activeTab='tab4'">Gäste</a>
+          <a @click="activeTab='tab4'">Steganleger</a>
+        </li>
+        <li :class="[ activeTab === 'tab5' ? 'is-active' : '']">
+          <a @click="activeTab='tab5'">Gäste</a>
         </li>
       </ul>
     </div>
@@ -58,6 +61,15 @@
     <div class="buttons" v-if="activeTab ==='tab4'">
       <button
         class="button"
+        v-for="user in usersSteganleger"
+        :key="user"
+        :class="[selectedUser === user ? 'is-link' : '']"
+        @click="selectUser(user)"
+      >{{ displayName(user)}}</button>
+    </div>
+    <div class="buttons" v-if="activeTab ==='tab5'">
+      <button
+        class="button"
         v-for="user in usersGaeste"
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
@@ -87,6 +99,9 @@ export default {
     },
     usersAktivKA: function() {
       return this.allUsers.filter(user => user["Status"] == "Aktiv KA");
+    },
+    usersSteganleger: function() {
+      return this.allUsers.filter(user => user["Status"] == "Steganleger");
     },
     usersGaeste: function() {
       return this.allUsers.filter(user => user["Status"] == "Gast");
