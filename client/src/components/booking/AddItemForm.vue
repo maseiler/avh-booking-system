@@ -118,16 +118,14 @@ export default {
       this.$http
         .post("/addItem", this.newItem)
         .then(function(response) {
-          console.log(
-            "Added new item:",
-            this.newItem.Name,
-            this.newItem.Price + "€",
-            this.newItem.Size,
-            this.newItem.Unit,
-            this.newItem.Type
-          );
+          var tempItem = this.newItem;
           this.resetAndCloseForm();
           this.$router.go();
+          this.$responseEventBus.$emit(
+            "addItemSuccess",
+            tempItem,
+            "is-success"
+          );
         })
         .catch(function(response) {
           this.validationError = response.data;

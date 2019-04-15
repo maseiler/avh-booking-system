@@ -2,15 +2,19 @@
   <div id="app">
     <NavBar></NavBar>
     <router-view></router-view>
+    <ResponseNotification/>
   </div>
 </template>
 
 <script>
 import NavBar from "./components/NavBar.vue";
+import ResponseNotification from "./components/ResponseNotification.vue";
+
 export default {
   name: "App",
   components: {
-    NavBar
+    NavBar,
+    ResponseNotification
   }
 };
 </script>

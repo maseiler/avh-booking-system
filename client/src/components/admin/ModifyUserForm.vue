@@ -178,24 +178,21 @@ export default {
   methods: {
     modifyUser() {
       if (Object.keys(this.user).length === 0) {
-        this.error = "Please select a user first.";
+        this.validationError = "Please select a user first.";
         console.log("error");
       } else {
         this.$http
           .post("/modifyUser", this.user)
           .then(function(response) {
-            console.log(
-              "Modified User: " +
-                this.user.BierName +
-                " " +
-                this.user.FirstName +
-                " " +
-                this.user.LastName +
-                "."
-            );
             this.$router.go();
+            this.$responseEventBus.$emit(
+              "modifyUserSuccess",
+              this.user,
+              "is-success"
+            );
           })
           .catch(function(response) {
+            this.validationError = response.body;
             console.log("Error: Couldn't modify user.");
             //TODO
           });

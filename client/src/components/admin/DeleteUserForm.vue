@@ -54,16 +54,12 @@ export default {
         this.$http
           .post("/deleteUser", this.user)
           .then(function(response) {
-            console.log(
-              "Deleted User: " +
-                this.user.BierName +
-                " " +
-                this.user.FirstName +
-                " " +
-                this.user.LastName +
-                "."
-            );
             this.$router.go();
+            this.$responseEventBus.$emit(
+              "deleteUserSuccess",
+              this.user,
+              "is-success"
+            );
           })
           .catch(function(response) {
             console.log("Error: Couldn't delete user.");

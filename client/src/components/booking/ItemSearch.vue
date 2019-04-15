@@ -51,15 +51,6 @@ export default {
         this.searchResults = [];
       }
     },
-    displayItem: function(item) {
-      if (item.Type == "alcoholic" || item.Type == "non-alcoholic") {
-        return item.Name + " " + item.Size + " " + item.Unit;
-      } else if (item.Type == "boat" || item.Type == "food") {
-        return item.Name;
-      } else {
-        return "???";
-      }
-    },
     selectItem: function(item) {
       this.selectedItems.push(item);
       this.$emit("selectItems", this.selectedItems);

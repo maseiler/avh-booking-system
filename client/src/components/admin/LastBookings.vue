@@ -21,7 +21,7 @@
         >
           <th>{{entry.BookEntryID}}</th>
           <td>{{printDateTime(entry.TimeStamp)}}</td>
-          <td>{{displayName(getUser(entry.UserID))}}</td>
+          <td>{{displayUserName(getUser(entry.UserID))}}</td>
           <td>{{displayItem(getItem(entry.ItemID))}}</td>
           <td>{{entry.Amount}}</td>
           <td>{{entry.TotalPrice}}</td>
@@ -65,16 +65,6 @@ export default {
       return this.users.find(u => {
         return u.UserID == id;
       });
-    },
-    displayName: function(user) {
-      if (user.BierName != "") {
-        return user.BierName;
-      } else {
-        if (user.LastName != "") {
-          return user.FirstName + " " + user.LastName[0] + ".";
-        }
-        return user.FirstName;
-      }
     },
     getItem: function(id) {
       return this.items.find(i => {

@@ -119,20 +119,19 @@ export default {
         this.$http
           .post("/modifyItem", this.item)
           .then(function(response) {
-            console.log(
-              "Modified Item: ",
-              this.item.Name,
-              this.item.Price + "€",
-              this.item.Size,
-              this.item.Unit,
-              this.item.Type
-            );
             this.$router.go();
+            this.$responseEventBus.$emit(
+              "modifyItemSuccess",
+              this.item,
+              "is-success"
+            );
           })
           .catch(function(response) {
-            this.validationError = response.data;
-            console.log("Error: Couldn't modify item.");
-            //TODO
+            if (response.data !== undefined) {
+              this.validationError = response.data;
+            } else {
+              this.$router.go();
+            }
           });
       }
     },

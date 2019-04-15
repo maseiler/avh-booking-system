@@ -27,7 +27,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user) }}</button>
+      >{{ displayUserName(user) }}</button>
     </div>
   </div>
 </template>
@@ -56,16 +56,6 @@ export default {
         );
       } else {
         this.searchResults = [];
-      }
-    },
-    displayName: function(user) {
-      if (user.BierName != "") {
-        return user.BierName;
-      } else {
-        if (user.LastName != "") {
-          return user.FirstName + " " + user.LastName[0] + ".";
-        }
-        return user.FirstName;
       }
     },
     selectUser: function(user) {

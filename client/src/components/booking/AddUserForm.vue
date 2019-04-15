@@ -151,30 +151,23 @@ export default {
   },
   methods: {
     submitUser() {
-      console.log(this.newUser);
       this.$http
         .post("/addUser", this.newUser)
         .then(function(response) {
-          console.log(
-            "Added new user:",
-            this.newUser.bierName,
-            this.newUser.firstName,
-            this.newUser.lastName,
-            this.newUser.email,
-            this.newUser.phone,
-            this.newUser.status,
-            this.newUser.balance,
-            this.newUser.maxDebt
-          );
+          var tempUser = this.newUser;
           this.resetAndCloseForm();
           this.$router.go();
+          this.$responseEventBus.$emit(
+            "addUserSuccess",
+            tempUser,
+            "is-success"
+          );
         })
         .catch(function(response) {
           this.validationError = response.data;
         });
     },
     cancelSubmission() {
-      console.log("canceled submission");
       this.resetAndCloseForm();
     },
     resetAndCloseForm() {

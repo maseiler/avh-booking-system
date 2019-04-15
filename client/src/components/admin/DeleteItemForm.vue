@@ -54,16 +54,12 @@ export default {
         this.$http
           .post("/deleteItem", this.item)
           .then(function(response) {
-            console.log(
-              "Deleted Item: ",
-              this.item.Name,
-              this.item.Price +
-                "€" +
-                this.item.Size +
-                this.item.Unit +
-                this.item.Type
-            );
             this.$router.go();
+            this.$responseEventBus.$emit(
+              "deleteItemSuccess",
+              this.item,
+              "is-success"
+            );
           })
           .catch(function(response) {
             console.log(response);

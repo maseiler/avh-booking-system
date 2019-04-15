@@ -54,10 +54,35 @@ const router = new VueRouter({
 
 require("./assets/main.scss")
 
+const mixin = Vue.mixin({
+  methods: {
+    displayUserName: function (user) {
+      if (user.BierName != "") {
+        return user.BierName;
+      } else {
+        if (user.LastName != "") {
+          return user.FirstName + " " + user.LastName[0] + ".";
+        }
+        return user.FirstName;
+      }
+    },
+    displayItem: function (item) {
+      if (item.Type == "alcoholic" || item.Type == "non-alcoholic") {
+        return item.Name + " " + item.Size + " " + item.Unit;
+      } else if (item.Type == "boat" || item.Type == "food") {
+        return item.Name;
+      } else {
+        return "???";
+      }
+    },
+  }
+})
+
 new Vue({
   render: h => h(App),
   // el: '#app',
   // template: '<App/>',
   // components: {App, Booking},
   router,
+  mixin
 }).$mount('#app')

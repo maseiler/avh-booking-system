@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h3 class="subtitle is-3">{{bookingError}}</h3>
     <table class="table">
       <thead>
         <tr>
@@ -126,10 +125,19 @@ export default {
       this.$http
         .post("/checkout", packedCart)
         .then(function(response) {
+          this.$responseEventBus.$emit(
+            "checkoutSuccess",
+            this.user,
+            "is-success"
+          );
           this.emptyCart();
         })
         .catch(function(response) {
-          this.bookingError = response.data;
+          this.$responseEventBus.$emit(
+            "checkoutFailure",
+            response.data,
+            "is-danger"
+          );
         });
     },
     emptyCart: function() {

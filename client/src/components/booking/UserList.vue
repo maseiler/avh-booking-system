@@ -29,7 +29,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user) }}</button>
+      >{{ displayUserName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab1'">
       <button
@@ -38,7 +38,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user) }}</button>
+      >{{ displayUserName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab2'">
       <button
@@ -47,7 +47,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user) }}</button>
+      >{{ displayUserName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab3'">
       <button
@@ -56,7 +56,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user) }}</button>
+      >{{ displayUserName(user) }}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab4'">
       <button
@@ -65,7 +65,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user)}}</button>
+      >{{ displayUserName(user)}}</button>
     </div>
     <div class="buttons" v-if="activeTab ==='tab5'">
       <button
@@ -74,7 +74,7 @@
         :key="user"
         :class="[selectedUser === user ? 'is-link' : '']"
         @click="selectUser(user)"
-      >{{ displayName(user)}}</button>
+      >{{ displayUserName(user)}}</button>
     </div>
   </div>
 </template>
@@ -108,16 +108,6 @@ export default {
     }
   },
   methods: {
-    displayName: function(user) {
-      if (user.BierName != "") {
-        return user.BierName;
-      } else {
-        if (user.LastName != "") {
-          return user.FirstName + " " + user.LastName[0] + ".";
-        }
-        return user.FirstName;
-      }
-    },
     selectUser: function(user) {
       this.selectedUser = user;
       this.$emit("selectUser", user);
