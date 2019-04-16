@@ -125,12 +125,13 @@ export default {
       this.$http
         .post("/checkout", packedCart)
         .then(function(response) {
-          var message = "".concat("Checkout from ", this.displayUserName(user));
+          var message = "".concat("Checkout from ", this.displayUserName(this.user));
           this.$responseEventBus.$emit("successMessage", message);
           this.emptyCart();
         })
         .catch(function(response) {
           this.$responseEventBus.$emit("failureMessage", response.data);
+          this.emptyCart();
         });
     },
     emptyCart: function() {

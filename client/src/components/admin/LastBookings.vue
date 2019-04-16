@@ -71,13 +71,6 @@ export default {
         return i.ItemID == id;
       });
     },
-    displayItem: function(item) {
-      if (item.Type == "boat" || item.Type == "food") {
-        return item.Name;
-      } else {
-        return item.Name + " " + item.Size + item.Unit;
-      }
-    },
     selectEntry: function(entry) {
       this.selectedEntry = entry;
       this.$emit("selectEntry", entry);
