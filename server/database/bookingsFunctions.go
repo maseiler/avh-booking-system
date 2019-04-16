@@ -96,3 +96,29 @@ func Checkout(cart data.Cart) bool {
 	}
 	return true
 }
+
+// Pay creates a book entry with inverted balance and sets user balance to 0.
+func Pay(user data.User) bool {
+	tx, err := db.Begin()
+	HandleDatabaseError(err)
+	stmt, err := tx.Prepare("INSERT INTO bookings(TimeStamp, UserId, ItemId, Amount, TotalPrice, Comment) VAlUES(?, ?, ?, ?, ?, ?)")
+	HandleTxError(tx, err)
+	defer stmt.Close()
+	timeStamp := time.Now().Format(time.RFC3339)
+	totalPrice := -float32(user.Balance)
+	comment := "Payment"
+	res, err := stmt.Exec(timeStamp, user.UserID, 1, 1, totalPrice, comment)
+	TxRowsAffected(res, tx)
+	err = tx.Commit()
+	HandleDatabaseError(err)
+	stmt.Close()
+
+	query := fmt.Sprintf("UPDATE users SET Balance = 0 WHERE UserId = %d;", user.UserID)
+	rows, err := db.Query(query)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
+	if err == nil {
+		return true
+	}
+	return false
+}

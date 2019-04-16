@@ -10,33 +10,36 @@
           <h6 class="subtitle is-6">
             <div v-if="user.BierName !== ''">
               <font-awesome-icon icon="beer"/>
-              &nbsp;Biername: {{user.BierName}}
+              &nbsp;{{user.BierName}}
             </div>
             <div v-if="user.FirstName !== ''">
               <font-awesome-icon icon="user"/>
-              &nbsp;Firstname: {{user.FirstName}}
+              &nbsp;{{user.FirstName}}
             </div>
             <div v-if="user.LastName !== ''">
-              <font-awesome-icon icon="user"/>
-              &nbsp;Lastname: {{user.LastName}}
+              <font-awesome-icon icon="user-circle"/>
+              &nbsp;{{user.LastName}}
             </div>
             <div v-if="user.Status !== ''">
               <font-awesome-icon icon="info-circle"/>
-              &nbsp;Status: {{user.Status}}
+              &nbsp;{{user.Status}}
             </div>
             <div v-if="user.Email !== ''">
               <font-awesome-icon icon="envelope"/>
-              &nbsp;Email: {{user.Email}}
+              &nbsp;{{user.Email}}
             </div>
             <div v-if="user.Phone !== ''">
               <font-awesome-icon icon="phone"/>
-              &nbsp;Phone: {{user.Phone}}
+              &nbsp;{{user.Phone}}
             </div>
           </h6>
         </div>
-        <div class="column has-text-centered">
+        <div class="column is-one-quarter">
           <h5 class="subtitle is-5" v-if="user.Balance !== ''">Balance:</h5>
           <h6 class="title is-5">{{user.Balance}} €</h6>
+        </div>
+        <div class="column is-one-quarter">
+          <button class="button is-link" @click="pay">Pay</button>
         </div>
       </div>
     </div>
@@ -47,6 +50,24 @@
 export default {
   props: {
     user: {}
+  },
+  methods: {
+    pay: function() {
+      this.$http
+        .post("/pay", this.user)
+        .then(function(response) {
+          var message = "".concat(
+            this.displayUserName(this.user),
+            " payed ",
+            this.user.Balance
+          );
+          this.$router.go();
+          this.$responseEventBus.$emit("successMessage", message);
+        })
+        .catch(function(response) {
+          this.$responseEventBus.$emit("failureMessage", response.data);
+        });
+    }
   }
 };
 </script>

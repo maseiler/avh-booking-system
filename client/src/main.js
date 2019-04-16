@@ -10,11 +10,11 @@ import Statistics from './components/statistics/Statistics.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
 import {
-  faUser, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
+  faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUser, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
+library.add(faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
@@ -57,9 +57,9 @@ const mixin = Vue.mixin({
     displayItem: function (item) {
       if (item === undefined) {
         return "???"
-      } else if (item.Type == "alcoholic" || item.Type == "non-alcoholic") {
+      } else if (item.Type === "alcoholic" || item.Type === "non-alcoholic") {
         return item.Name + " " + item.Size + " " + item.Unit;
-      } else if (item.Type == "boat" || item.Type == "food") {
+      } else if (item.Type === "boat" || item.Type === "food" || item.Type === "Admin") {
         return item.Name;
       } else {
         return "???";

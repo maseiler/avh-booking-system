@@ -14,6 +14,7 @@
             v-if="Object.keys(selectedUser).length !== 0 || Object.keys(selectedItems).length !== 0"
           />
           <img class="logo" src="~@/assets/avh_logo.png" width="250px" v-else>
+          <hr>
           <UserInfo :user="selectedUser"></UserInfo>
         </div>
       </div>

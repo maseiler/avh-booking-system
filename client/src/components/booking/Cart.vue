@@ -13,7 +13,7 @@
           <th></th>
           <th>{{sum}} €</th>
           <th>
-            <button class="button is-small" @click="checkout">Checkout</button>
+            <button class="button" @click="checkout">Checkout</button>
           </th>
         </tr>
       </tfoot>
@@ -133,10 +133,12 @@ export default {
           );
           this.$responseEventBus.$emit("successMessage", message);
           this.emptyCart();
+          this.$router.go();
         })
         .catch(function(response) {
           this.$responseEventBus.$emit("failureMessage", response.data);
           this.emptyCart();
+          this.$router.go();
         });
     },
     emptyCart: function() {

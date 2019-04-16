@@ -42,6 +42,21 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, validation)
 }
 
+// Pay forwards API call to databse to pay current balance
+func Pay(w http.ResponseWriter, r *http.Request) {
+	user := UnmarshalUser(r.Body)
+	success := dbP.Pay(user)
+	validation := ""
+	if success {
+		validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	} else {
+		validation = "Couldn't pay."
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	fmt.Fprint(w, validation)
+}
+
 func userIsEmpty(user data.User) bool {
 	emptyUser := data.User{UserID: 0, BierName: "", FirstName: "", LastName: "", Status: "", Email: "", Balance: 0, Phone: "", MaxDebt: 0}
 	if user == emptyUser {
