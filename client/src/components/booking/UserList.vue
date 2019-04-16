@@ -27,7 +27,7 @@
         class="button"
         v-for="user in allUsers"
         :key="user"
-        :class="[selectedUser === user ? 'is-link' : '']"
+        :class="buttonColor(user)"
         @click="selectUser(user)"
       >{{ displayUserName(user) }}</button>
     </div>
@@ -36,7 +36,7 @@
         class="button"
         v-for="user in usersAH"
         :key="user"
-        :class="[selectedUser === user ? 'is-link' : '']"
+        :class="buttonColor(user)"
         @click="selectUser(user)"
       >{{ displayUserName(user) }}</button>
     </div>
@@ -45,7 +45,7 @@
         class="button"
         v-for="user in usersAktivB"
         :key="user"
-        :class="[selectedUser === user ? 'is-link' : '']"
+        :class="buttonColor(user)"
         @click="selectUser(user)"
       >{{ displayUserName(user) }}</button>
     </div>
@@ -54,7 +54,7 @@
         class="button"
         v-for="user in usersAktivKA"
         :key="user"
-        :class="[selectedUser === user ? 'is-link' : '']"
+        :class="buttonColor(user)"
         @click="selectUser(user)"
       >{{ displayUserName(user) }}</button>
     </div>
@@ -63,7 +63,7 @@
         class="button"
         v-for="user in usersSteganleger"
         :key="user"
-        :class="[selectedUser === user ? 'is-link' : '']"
+        :class="buttonColor(user)"
         @click="selectUser(user)"
       >{{ displayUserName(user)}}</button>
     </div>
@@ -72,7 +72,7 @@
         class="button"
         v-for="user in usersGaeste"
         :key="user"
-        :class="[selectedUser === user ? 'is-link' : '']"
+        :class="buttonColor(user)"
         @click="selectUser(user)"
       >{{ displayUserName(user)}}</button>
     </div>
@@ -108,6 +108,17 @@ export default {
     }
   },
   methods: {
+    buttonColor: function(user) {
+      if (this.selectedUser === user) {
+        return "is-link";
+      } else if (user.Balance >= user.MaxDebt) {
+        return "is-danger";
+      } else if (user.MaxDebt - user.Balance <= user.MaxDebt * 0.1) {
+        return "is-warning";
+      } else {
+        return "";
+      }
+    },
     selectUser: function(user) {
       if (this.selectedUser === user) {
         this.deselectUser();
