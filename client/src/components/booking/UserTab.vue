@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p class="title">Users</p>
     <div class="columns">
       <div class="column">
         <UserSearch :allUsers="allUsers" @selectUser="selectUser"/>

@@ -8,30 +8,14 @@ import Admin from './components/admin/Admin.vue'
 import Statistics from './components/statistics/Statistics.vue'
 // font awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { faPhone } from '@fortawesome/free-solid-svg-icons'
-import { faBeer } from '@fortawesome/free-solid-svg-icons'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-import { faEuroSign } from '@fortawesome/free-solid-svg-icons'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { faExclamation } from '@fortawesome/free-solid-svg-icons'
-import { faMoneyBill } from '@fortawesome/free-solid-svg-icons'
-import { faFont } from '@fortawesome/free-solid-svg-icons'
-import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
+import {
+  faUser, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
+  faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle
+} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUser)
-library.add(faPhone)
-library.add(faBeer)
-library.add(faEnvelope)
-library.add(faUserSecret)
-library.add(faEuroSign)
-library.add(faSearch)
-library.add(faExclamation)
-library.add(faMoneyBill)
-library.add(faFont)
-library.add(faExpandArrowsAlt)
+library.add(faUser, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
+  faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)

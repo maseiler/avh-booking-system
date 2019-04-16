@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p class="title">Items</p>
     <div class="tabs">
       <ul>
         <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">

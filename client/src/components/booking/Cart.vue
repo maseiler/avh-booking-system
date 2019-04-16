@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="table">
+    <table class="table is-fullwidth is-hoverable">
       <thead>
         <tr>
           <th>Item</th>
@@ -18,13 +18,15 @@
         </tr>
       </tfoot>
       <tbody>
+        <tr></tr>
         <tr v-for="i in cart" :key="i">
           <td>{{i.item.Name}} {{i.item.Size}}</td>
           <td>{{i.item.Price}} €</td>
           <td>
             <input
-              class="input is-small"
+              class="input is-small has-text-black"
               type="text"
+              style="width:4em;"
               v-model="i.amount"
               @change="updateCart(i.item)"
             >
@@ -125,7 +127,10 @@ export default {
       this.$http
         .post("/checkout", packedCart)
         .then(function(response) {
-          var message = "".concat("Checkout from ", this.displayUserName(this.user));
+          var message = "".concat(
+            "Checkout from ",
+            this.displayUserName(this.user)
+          );
           this.$responseEventBus.$emit("successMessage", message);
           this.emptyCart();
         })

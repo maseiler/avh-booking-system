@@ -59,9 +59,18 @@ export default {
       }
     },
     selectUser: function(user) {
+      if (this.selectedUser === user) {
+        this.deselectUser();
+        return;
+      }
       this.selectedUser = user;
       this.$emit("selectUser", user);
       this.$userEventBus.$emit("selectUserToBus", user);
+    },
+    deselectUser: function(user) {
+      this.selectedUser = {};
+      this.$emit("selectUser", this.selectedUser);
+      this.$userEventBus.$emit("deselectUserToBus");
     },
     deselectUserFromBus() {
       this.selectedUser = {};

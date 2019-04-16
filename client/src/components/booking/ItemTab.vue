@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p class="title">Items</p>
     <ItemSearch :items="allItems" @selectItems="selectItems"/>
     <hr>
     <ItemList :allItems="allItems" @selectItems="selectItems"/>
