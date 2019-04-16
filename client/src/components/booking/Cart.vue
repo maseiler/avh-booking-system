@@ -125,19 +125,12 @@ export default {
       this.$http
         .post("/checkout", packedCart)
         .then(function(response) {
-          this.$responseEventBus.$emit(
-            "checkoutSuccess",
-            this.user,
-            "is-success"
-          );
+          var message = "".concat("Checkout from ", this.displayUserName(user));
+          this.$responseEventBus.$emit("successMessage", message);
           this.emptyCart();
         })
         .catch(function(response) {
-          this.$responseEventBus.$emit(
-            "checkoutFailure",
-            response.data,
-            "is-danger"
-          );
+          this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
     emptyCart: function() {

@@ -119,12 +119,12 @@ export default {
         this.$http
           .post("/modifyItem", this.item)
           .then(function(response) {
-            this.$router.go();
-            this.$responseEventBus.$emit(
-              "modifyItemSuccess",
-              this.item,
-              "is-success"
+            var message = "".concat(
+              "Modified item: ",
+              this.displayItem(this.item)
             );
+            this.$router.go();
+            this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
             if (response.data !== undefined) {

@@ -54,12 +54,9 @@ export default {
         this.$http
           .post("/deleteItem", this.item)
           .then(function(response) {
+            var message = "".concat("Deleted item: ", this.displayItem(this.item));
             this.$router.go();
-            this.$responseEventBus.$emit(
-              "deleteItemSuccess",
-              this.item,
-              "is-success"
-            );
+            this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
             console.log(response);

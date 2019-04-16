@@ -154,14 +154,13 @@ export default {
       this.$http
         .post("/addUser", this.newUser)
         .then(function(response) {
-          var tempUser = this.newUser;
+          var message = "".concat(
+            "Added new user: ",
+            this.displayUserName(this.newUser)
+          );
           this.resetAndCloseForm();
           this.$router.go();
-          this.$responseEventBus.$emit(
-            "addUserSuccess",
-            tempUser,
-            "is-success"
-          );
+          this.$responseEventBus.$emit("successMessage", message);
         })
         .catch(function(response) {
           this.validationError = response.data;

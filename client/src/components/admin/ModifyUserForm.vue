@@ -184,12 +184,12 @@ export default {
         this.$http
           .post("/modifyUser", this.user)
           .then(function(response) {
-            this.$router.go();
-            this.$responseEventBus.$emit(
-              "modifyUserSuccess",
-              this.user,
-              "is-success"
+            var message = "".concat(
+              "Modified user: ",
+              this.displayUserName(this.user)
             );
+            this.$router.go();
+            this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
             this.validationError = response.body;
