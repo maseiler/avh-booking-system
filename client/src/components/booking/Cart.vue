@@ -30,6 +30,10 @@
               v-model="i.amount"
               @change="updateCart(i.item)"
             >
+            &nbsp;
+            <button class="button is-small" @click="deleteItem(i)">
+              <font-awesome-icon icon="trash"/>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -140,6 +144,13 @@ export default {
           this.emptyCart();
           this.$router.go();
         });
+    },
+    deleteItem: function(item) {
+      var index = this.cart.indexOf(item);
+      if (index != -1) {
+        this.cart[index].amount = 0;
+        this.updateCart(item.item);
+      }
     },
     emptyCart: function() {
       this.sum = 0;
