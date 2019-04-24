@@ -57,6 +57,20 @@ func Pay(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, validation)
 }
 
+// DeleteBookEntry forwards API call to databse to delete book entry from database
+func DeleteBookEntry(w http.ResponseWriter, r *http.Request) {
+	entry := UnmarshalBookEntry(r.Body)
+	success := dbP.DeleteBookEntry(entry)
+	validation := "ok"
+	if success {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		validation = "Couldn't delete book entry."
+	}
+	fmt.Fprint(w, validation)
+}
+
 func userIsEmpty(user data.User) bool {
 	emptyUser := data.User{UserID: 0, BierName: "", FirstName: "", LastName: "", Status: "", Email: "", Balance: 0, Phone: "", MaxDebt: 0}
 	if user == emptyUser {

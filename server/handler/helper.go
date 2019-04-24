@@ -66,6 +66,20 @@ func UnmarshalCart(body io.ReadCloser) dataP.Cart {
 	}
 	return cart
 }
+
+// UnmarshalBookEntry unmarshals JSON object to BookEntry
+func UnmarshalBookEntry(body io.ReadCloser) dataP.BookEntry {
+	decoder := json.NewDecoder(body)
+
+	var entry dataP.BookEntry
+	err := decoder.Decode(&entry)
+
+	if err != nil {
+		panic(err)
+	}
+	return entry
+}
+
 func handleHTTPError(err error, w http.ResponseWriter) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
