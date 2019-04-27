@@ -8,7 +8,7 @@
         <div class="column has-text-left">
           <h6 class="subtitle is-6">
             <div>
-              <font-awesome-icon icon="sort-numeric-down"/>
+              <font-awesome-icon icon="fingerprint"/>
               &nbsp;{{user.UserID}}
             </div>
             <div>
