@@ -28,6 +28,8 @@ func main() {
 	r.HandleFunc("/getLastNBookings", handler.GetLastNBookings)
 	r.HandleFunc("/checkout", handler.Checkout)
 	r.HandleFunc("/pay", handler.Pay)
+	r.HandleFunc("/deleteBookEntry", handler.DeleteBookEntry)
+
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./../client/dist/index.html")
 	}

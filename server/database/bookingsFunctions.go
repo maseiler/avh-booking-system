@@ -122,3 +122,21 @@ func Pay(user data.User) bool {
 	}
 	return false
 }
+
+// DeleteBookEntry deletes an entry from database.
+func DeleteBookEntry(entry data.BookEntry) bool {
+	tx, err := db.Begin()
+	HandleDatabaseError(err)
+	stmt, err := tx.Prepare("DELETE FROM bookings WHERE BookEntryId = ?")
+	HandleTxError(tx, err)
+	defer stmt.Close()
+	res, err := stmt.Exec(entry.BookEntryID)
+	TxRowsAffected(res, tx)
+	err = tx.Commit()
+	HandleDatabaseError(err)
+	stmt.Close()
+	if err == nil {
+		return true
+	}
+	return false
+}

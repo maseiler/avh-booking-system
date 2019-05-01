@@ -1,10 +1,8 @@
 <template>
   <div>
-    <h1>BOOKING SETTINGS</h1>
     <div class="columns">
       <div class="column is-2">
-        <button class="button is-link" @click="showModifyBookEntryForm = true">Modify Book Entry</button>
-        <ModifyBookEntryForm v-if="showModifyBookEntryForm" :entry="selectedEntry"/>
+        <button class="button is-link" @click="deleteEntry">Delete entry</button>
       </div>
       <div class="column">
         <LastBookings
@@ -20,12 +18,10 @@
 
 <script>
 import LastBookings from "./LastBookings.vue";
-import ModifyBookEntryForm from "./ModifyBookEntryForm.vue";
 
 export default {
   components: {
-    LastBookings,
-    ModifyBookEntryForm
+    LastBookings
   },
   props: {
     lastBookings: [],
@@ -41,6 +37,27 @@ export default {
   methods: {
     selectEntry: function(entry) {
       this.selectedEntry = entry;
+    },
+    deleteEntry: function() {
+      if (Object.keys(this.selectedEntry).length !== 0) {
+        this.$http
+          .post("/deleteBookEntry", this.selectedEntry)
+          .then(function(response) {
+            this.$router.go();
+            this.$responseEventBus.$emit("successMessage", "Deleted bookEntry");
+          })
+          .catch(function(response) {
+            this.$responseEventBus.$emit(
+              "failureMessage",
+              "Error: Couldn't delete item."
+            );
+          });
+      } else {
+        this.$responseEventBus.$emit(
+          "failureMessage",
+          "Select an entry first!"
+        );
+      }
     }
   }
 };
