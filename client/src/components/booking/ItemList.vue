@@ -2,8 +2,9 @@
   <div>
     <div class="tabs">
       <ul>
+        <!-- TODO: icons -->
         <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">
-          <a @click="activeTab='tab0'">All</a>
+          <a @click="activeTab='tab0'">Favorites</a>
         </li>
         <li :class="[ activeTab === 'tab1' ? 'is-active' : '']">
           <a @click="activeTab='tab1'">Alcoholic</a>
@@ -23,7 +24,7 @@
     <div class="buttons" v-if="activeTab === 'tab0'">
       <button
         class="button"
-        v-for="item in allItems"
+        v-for="item in favoriteItems"
         :key="item"
         :class="[selectedItems.includes(item) ? 'is-link' : '']"
         @click="selectItem(item)"
@@ -79,8 +80,10 @@ export default {
   },
   data: function() {
     return {
+      favoriteItems: [],
       selectedItems: [],
-      activeTab: "tab0"
+      activeTab: "tab0",
+      user: {}
     };
   },
   computed: {
@@ -116,11 +119,41 @@ export default {
     },
     selectItemsFromBus(items) {
       this.selectedItems = items;
+    },
+    selectUserFromBus: function(user) {
+      this.user = user;
+      this.favoriteItems = [];
+      this.getFavoriteItems();
+    },
+    deselectUserFromBus: function() {
+      this.user = {};
+      this.favoriteItems = [];
+    },
+    getFavoriteItems: async function() {
+      await this.$http
+        .post("/getFavoriteItemIDs", this.user)
+        .then(response => {
+          var favoriteItemIDs = [].concat.apply([], response.body);
+          favoriteItemIDs.forEach(id => {
+            var item = this.getItem(id);
+            this.favoriteItems = [].concat(this.favoriteItems, item);
+          });
+        })
+        .catch(response => {
+          // TODO
+        });
+    },
+    getItem: function(id) {
+      return this.allItems.find(i => {
+        return i.ItemID == id;
+      });
     }
   },
   created: function() {
     this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
     this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
+    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
+    this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }
 };
 </script>

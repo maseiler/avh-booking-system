@@ -57,10 +57,16 @@ export default {
     };
   },
   methods: {
-    selectUser: function(user) {
+    selectUserFromBus: function(user) {
       this.selectedUser = user;
-      this.$emit("selectedUser", user);
+    },
+    deselectUserFromBus: function() {
+      this.selectUserFromBus = {};
     }
+  },
+  created: function() {
+    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
+    this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }
 };
 </script>

@@ -2,7 +2,7 @@ package data
 
 // User represents an user as in database
 type User struct {
-	UserID    int
+	UserID    int `json:",string"`
 	BierName  string
 	FirstName string
 	LastName  string

@@ -98,4 +98,5 @@ func DeleteUser(user data.User) {
 	rows, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
+	DeleteUserFromFavoriteItems(user)
 }

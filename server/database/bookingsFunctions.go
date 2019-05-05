@@ -69,7 +69,7 @@ func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry 
 	return getBookingsFromQuery(query)
 }
 
-// Checkout adds a Cart to bookings in database.
+// Checkout adds a Cart to bookings and updates favorite items in database.
 func Checkout(cart data.Cart) bool {
 	if cart.User.Balance >= float32(cart.User.MaxDebt) {
 		return false
@@ -94,6 +94,7 @@ func Checkout(cart data.Cart) bool {
 		user.Balance += totalPrice
 		ModifyUser(user)
 	}
+	UpdateFavoriteItems(cart)
 	return true
 }
 

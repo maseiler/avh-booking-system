@@ -126,9 +126,9 @@ export default {
       temp = temp.toFixed(2);
       this.sum = temp;
     },
-    checkout: function() {
+    checkout: async function() {
       var packedCart = { cartItems: this.cart, user: this.user };
-      this.$http
+      await this.$http
         .post("/checkout", packedCart)
         .then(function(response) {
           var message = "".concat(
@@ -136,14 +136,12 @@ export default {
             this.displayUserName(this.user)
           );
           this.$responseEventBus.$emit("successMessage", message);
-          this.emptyCart();
-          this.$router.go();
         })
         .catch(function(response) {
           this.$responseEventBus.$emit("failureMessage", response.data);
-          this.emptyCart();
-          this.$router.go();
         });
+      await this.emptyCart();
+      await this.$router.go();
     },
     deleteItem: function(item) {
       var index = this.cart.indexOf(item);
