@@ -4,7 +4,6 @@
       <p>{{displayUserName(user)}}</p>
     </div>
     <div class="message-body">
-      <!-- TODO: favicon -->
       <div class="columns">
         <div class="column has-text-left">
           <h6 class="subtitle is-6">
@@ -39,7 +38,8 @@
           <h6 class="title is-5">{{user.Balance}} €</h6>
         </div>
         <div class="column is-one-quarter">
-          <button class="button is-link" @click="pay">Pay</button>
+          <button class="button is-link" @click="showPaymentModal = true">Pay</button>
+          <PaymentModal :user="user" v-if="showPaymentModal" @close="showPaymentModal = false"/>
         </div>
       </div>
     </div>
@@ -47,27 +47,19 @@
 </template>
 
 <script>
+import PaymentModal from "./PaymentModal.vue";
+
 export default {
+  components: {
+    PaymentModal
+  },
   props: {
     user: {}
   },
-  methods: {
-    pay: function() {
-      this.$http
-        .post("/pay", this.user)
-        .then(function(response) {
-          var message = "".concat(
-            this.displayUserName(this.user),
-            " payed ",
-            this.user.Balance
-          );
-          this.$router.go();
-          this.$responseEventBus.$emit("successMessage", message);
-        })
-        .catch(function(response) {
-          this.$responseEventBus.$emit("failureMessage", response.data);
-        });
-    }
+  data: function() {
+    return {
+      showPaymentModal: false
+    };
   }
 };
 </script>

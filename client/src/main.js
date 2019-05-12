@@ -38,6 +38,8 @@ const router = new VueRouter({
 
 require("./assets/main.scss")
 
+Vue.config.devtools = true
+
 const mixin = Vue.mixin({
   methods: {
     displayUserName: function (user) {
