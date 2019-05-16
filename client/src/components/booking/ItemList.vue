@@ -2,21 +2,45 @@
   <div>
     <div class="tabs">
       <ul>
-        <!-- TODO: icons -->
         <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">
-          <a @click="activeTab='tab0'">Favorites</a>
+          <a @click="activeTab='tab0'">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="star"/>
+            </span>
+            Favorites
+          </a>
         </li>
         <li :class="[ activeTab === 'tab1' ? 'is-active' : '']">
-          <a @click="activeTab='tab1'">Alcoholic</a>
+          <a @click="activeTab='tab1'">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="beer"/>
+            </span>
+            Alcoholic
+          </a>
         </li>
         <li :class="[ activeTab === 'tab2' ? 'is-active' : '']">
-          <a @click="activeTab='tab2'">Non-Alcoholic</a>
+          <a @click="activeTab='tab2'">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="glass-whiskey"/>
+            </span>
+            Non-Alcoholic
+          </a>
         </li>
         <li :class="[ activeTab === 'tab3' ? 'is-active' : '']">
-          <a @click="activeTab='tab3'">Food</a>
+          <a @click="activeTab='tab3'">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="utensils"/>
+            </span>
+            Food
+          </a>
         </li>
         <li :class="[ activeTab === 'tab4' ? 'is-active' : '']">
-          <a @click="activeTab='tab4'">Boats</a>
+          <a @click="activeTab='tab4'">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="anchor"/>
+            </span>
+            Boats
+          </a>
         </li>
       </ul>
     </div>
