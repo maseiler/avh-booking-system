@@ -4,8 +4,8 @@ package data
 type Item struct {
 	ItemID int
 	Name   string
-	Price  float32 `json:",string"`
-	Size   float32 `json:",string"`
+	Price  float32
+	Size   float32
 	Unit   string
 	Type   string
 }

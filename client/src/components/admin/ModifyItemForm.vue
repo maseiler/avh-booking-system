@@ -23,7 +23,7 @@
             <div class="field">
               <label class="label">Price</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Price" v-model.lazy="item.Price">
+                <input class="input" type="text" placeholder="Price" v-model.number="item.Price">
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign"/>
                 </span>
@@ -33,7 +33,7 @@
             <div class="field">
               <label class="label">Size</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Size" v-model.lazy="item.Size">
+                <input class="input" type="text" placeholder="Size" v-model.number="item.Size">
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="expand-arrows-alt"/>
                 </span>

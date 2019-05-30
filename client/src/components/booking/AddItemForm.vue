@@ -22,7 +22,7 @@
             <div class="field">
               <label class="label">Price</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Price" v-model.lazy="newItem.Price">
+                <input class="input" type="text" placeholder="Price" v-model.number="newItem.Price">
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign"/>
                 </span>
@@ -32,7 +32,7 @@
             <div class="field">
               <label class="label">Size</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Size" v-model.lazy="newItem.Size">
+                <input class="input" type="text" placeholder="Size" v-model.number="newItem.Size">
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="expand-arrows-alt"/>
                 </span>
@@ -104,8 +104,8 @@ export default {
     return {
       newItem: {
         Name: "",
-        Price: "0",
-        Size: "0",
+        Price: 0,
+        Size: 0,
         Unit: "",
         Type: ""
       },
@@ -114,6 +114,7 @@ export default {
   },
   methods: {
     submitItem() {
+      console.log(this.newItem)
       this.$http
         .post("/addItem", this.newItem)
         .then(function(response) {
@@ -135,8 +136,8 @@ export default {
     },
     resetAndCloseForm() {
       (this.Name = ""),
-        (this.Price = ""),
-        (this.Size = ""),
+        (this.Price = 0),
+        (this.Size = 0),
         (this.Unit = ""),
         (this.Type = ""),
         (this.validationError = "");

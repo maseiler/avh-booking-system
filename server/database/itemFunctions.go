@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"strconv"
 
 	data "../data"
 )
@@ -43,21 +42,22 @@ func GetReservedItems() []data.Item {
 }
 
 // GetItemsOfColumnWithValue returns all items where value matches in specific column
-func GetItemsOfColumnWithValue(column string, value string) []data.Item {
-	query := ""
-	if column == "ItemId" {
-		intValue, _ := strconv.Atoi(value)
-		query = fmt.Sprintf("SELECT * FROM items WHERE %s = %d;", column, intValue)
-	} else if column == "Price" || column == "Size" {
-		floatValue, _ := strconv.ParseFloat(value, 32)
-		query = fmt.Sprintf("SELECT * FROM items WHERE %s = %f;", column, floatValue)
-	} else if column == "Name" || column == "Unit" || column == "Type" {
-		query = fmt.Sprintf("SELECT * FROM items WHERE %s = \"%s\";", column, value)
-	} else {
-		panic("Invalid column")
-	}
-	return getItemsByQuery(query)
-}
+// func GetItemsOfColumnWithValue(column string, value string) []data.Item {
+// 	//TODO string conversion ?!
+// 	query := ""
+// 	if column == "ItemId" {
+// 		intValue, _ := strconv.Atoi(value)
+// 		query = fmt.Sprintf("SELECT * FROM items WHERE %s = %d;", column, intValue)
+// 	} else if column == "Price" || column == "Size" {
+// 		floatValue, _ := strconv.ParseFloat(value, 32)
+// 		query = fmt.Sprintf("SELECT * FROM items WHERE %s = %f;", column, floatValue)
+// 	} else if column == "Name" || column == "Unit" || column == "Type" {
+// 		query = fmt.Sprintf("SELECT * FROM items WHERE %s = \"%s\";", column, value)
+// 	} else {
+// 		panic("Invalid column")
+// 	}
+// 	return getItemsByQuery(query)
+// }
 
 // NewItemExists returns true if item exists in database (based on Name and Size)
 func NewItemExists(newItem data.Item) bool {
