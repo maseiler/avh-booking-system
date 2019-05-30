@@ -116,7 +116,7 @@
             <div class="field">
               <label class="label">Balance</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Balance" v-model.lazy="user.Balance">
+                <input class="input" type="text" placeholder="Balance" v-model.number="user.Balance">
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign"/>
                 </span>
@@ -126,7 +126,7 @@
             <div class="field">
               <label class="label">Max Debt</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Max Debt" v-model.lazy="user.MaxDebt">
+                <input class="input" type="text" placeholder="Max Debt" v-model.number="user.MaxDebt">
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="money-bill"/>
                 </span>
@@ -178,7 +178,6 @@ export default {
     modifyUser() {
       if (Object.keys(this.user).length === 0) {
         this.validationError = "Please select a user first.";
-        console.log("error");
       } else {
         this.$http
           .post("/modifyUser", this.user)
@@ -192,8 +191,6 @@ export default {
           })
           .catch(function(response) {
             this.validationError = response.body;
-            console.log("Error: Couldn't modify user.");
-            //TODO
           });
       }
     },

@@ -142,20 +142,21 @@ export default {
         email: "",
         phone: "",
         status: "",
-        balance: "0",
-        maxDebt: "0"
+        balance: 0,
+        maxDebt: 0
       },
       validationError: ""
     };
   },
   methods: {
     submitUser() {
+      var user = this.newUser;
       this.$http
-        .post("/addUser", this.newUser)
+        .post("/addUser", user)
         .then(function(response) {
           var message = "".concat(
             "Added new user: ",
-            this.displayUserName(this.newUser)
+            this.displayUserName(user)
           );
           this.resetAndCloseForm();
           this.$router.go();

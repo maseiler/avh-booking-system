@@ -104,7 +104,12 @@
           <div class="field">
             <label class="label">Balance</label>
             <div class="control has-icons-left">
-              <input class="input" type="text" placeholder="Balance" v-model.lazy="newUser.balance">
+              <input
+                class="input"
+                type="text"
+                placeholder="Balance"
+                v-model.number="newUser.balance"
+              >
               <span class="icon is-small is-left">
                 <font-awesome-icon icon="euro-sign"/>
               </span>
@@ -118,7 +123,7 @@
                 class="input"
                 type="text"
                 placeholder="Max Debt"
-                v-model.lazy="newUser.maxDebt"
+                v-model.number="newUser.maxDebt"
               >
               <span class="icon is-small is-left">
                 <font-awesome-icon icon="money-bill"/>
@@ -167,20 +172,14 @@ export default {
         email: "",
         phone: "",
         status: "",
-        balance: "",
-        maxDebt: ""
+        balance: 0,
+        maxDebt: 0
       },
       validationError: ""
     };
   },
   methods: {
     submitUser() {
-      if (this.newUser.balance == "") {
-        this.newUser.balance = "0";
-      }
-      if (this.newUser.maxDebt == "") {
-        this.newUser.maxDebt = "0";
-      }
       this.$http
         .post("/addUser", this.newUser)
         .then(function(response) {

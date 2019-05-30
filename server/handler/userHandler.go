@@ -35,16 +35,16 @@ func validateUserArguments(newUser dataP.User) (validation string, user dataP.Us
 		} else if newUser.Email == "" && newUser.Phone == "" {
 			return "Email address or phone number must be specified", newUser
 		} else if newUser.MaxDebt == 0 {
-			newUser.MaxDebt = 50 //TODO
+			newUser.MaxDebt = 50
 			return "ok", newUser
 		}
 		return "ok", newUser
 	case "Aktiv B", "Aktiv KA", "AH":
 		if newUser.BierName == "" && newUser.FirstName == "" {
 			return "Biername or first name must be specified", newUser
-		} else if newUser.Status == "Aktiv B" || newUser.Status == "Aktiv KA" {
+		} else if newUser.MaxDebt == 0 && (newUser.Status == "Aktiv B" || newUser.Status == "Aktiv KA") {
 			newUser.MaxDebt = 50
-		} else if newUser.Status == "AH" {
+		} else if newUser.MaxDebt == 0 && newUser.Status == "AH" {
 			newUser.MaxDebt = 100
 		}
 		return "ok", newUser
