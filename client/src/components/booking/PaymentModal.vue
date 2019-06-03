@@ -44,20 +44,37 @@ export default {
   },
   methods: {
     pay: function() {
-      this.$http
-        .post("/pay", this.user)
-        .then(function(response) {
-          var message = "".concat(
-            this.displayUserName(this.user),
-            " payed ",
-            this.user.Balance
-          );
-          this.$router.go();
-          this.$responseEventBus.$emit("successMessage", message);
-        })
-        .catch(function(response) {
-          this.$responseEventBus.$emit("failureMessage", response.data);
-        });
+      if (this.weekdayIsMonday()) {
+        this.$http
+          .post("/pay", this.user)
+          .then(function(response) {
+            var message = "".concat(
+              this.displayUserName(this.user),
+              " payed ",
+              this.user.Balance
+            );
+            this.$router.go();
+            this.$responseEventBus.$emit("successMessage", message);
+          })
+          .catch(function(response) {
+            this.$responseEventBus.$emit("failureMessage", response.data);
+          });
+      } else {
+        this.$emit("close");
+        this.$responseEventBus.$emit(
+          "failureMessage",
+          "Payment only on Mondays possible!"
+        );
+      }
+    },
+    weekdayIsMonday: function() {
+      var day = new Date().getDay();
+      if (day == 1) {
+        return true;
+      } else {
+        //TODO: require password
+        return false;
+      }
     },
     cancel: function() {
       this.$emit("close");
