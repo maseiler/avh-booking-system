@@ -80,6 +80,19 @@ func UnmarshalBookEntry(body io.ReadCloser) dataP.BookEntry {
 	return entry
 }
 
+// UnmarshalFeedback unmarshals JSON object to Feedback
+func UnmarshalFeedback(body io.ReadCloser) dataP.Feedback {
+	decoder := json.NewDecoder(body)
+
+	var feedback dataP.Feedback
+	err := decoder.Decode(&feedback)
+
+	if err != nil {
+		panic(err)
+	}
+	return feedback
+}
+
 func handleHTTPError(err error, w http.ResponseWriter) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

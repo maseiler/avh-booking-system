@@ -32,6 +32,9 @@ func main() {
 	r.HandleFunc("/updateFavoriteItems", handler.UpdateFavoriteItems)
 	r.HandleFunc("/getFavoriteItemIDs", handler.GetFavoriteItemIDs)
 	r.HandleFunc("/deleteUserFromFavoriteItems", handler.DeleteUserFromFavoriteItems)
+	r.HandleFunc("/getFeedback", handler.GetFeedback)
+	r.HandleFunc("/addFeedback", handler.AddFeedback)
+	r.HandleFunc("/deleteFeedback", handler.DeleteFeedback)
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./../client/dist/index.html")

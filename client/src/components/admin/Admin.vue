@@ -30,6 +30,12 @@
                   :class="[ showOtherSettings ? 'is-active' : '']"
                 >Other Settings</a>
               </li>
+              <li>
+                <a
+                  @click="showSetting('feedbackList')"
+                  :class="[ showFeedbackList ? 'is-active' : '']"
+                >Feedback</a>
+              </li>
             </ul>
           </aside>
         </div>
@@ -44,6 +50,7 @@
           :items="items"
         />
         <OtherSettings v-if="showOtherSettings"/>
+        <FeedbackList v-if="showFeedbackList" :feedbackList="feedbackList"/>
       </div>
     </div>
   </div>
@@ -54,23 +61,27 @@ import UserSettings from "./UserSettings.vue";
 import ItemSettings from "./ItemSettings.vue";
 import BookingSettings from "./BookingSettings.vue";
 import OtherSettings from "./OtherSettings.vue";
+import FeedbackList from "./FeedbackList.vue";
 
 export default {
   components: {
     UserSettings,
     ItemSettings,
     BookingSettings,
-    OtherSettings
+    OtherSettings,
+    FeedbackList
   },
   data: function() {
     return {
       users: [],
       items: [],
       lastBookings: [],
+      feedbackList: [],
       showUserSettings: false,
       showItemSettings: false,
       showBookingSettings: false,
-      showOtherSettings: false
+      showOtherSettings: false,
+      showFeedbackList: false
     };
   },
   methods: {
@@ -94,8 +105,13 @@ export default {
       //TODO magic number: 50
       this.$http.post("/getLastNBookings", 50).then(response => {
         var temp = response.body;
-        // this.lastBookings = [].concat.apply([], temp)
         this.lastBookings = this.lastBookings.concat(temp);
+      });
+    },
+    getFeedbackList: function() {
+      this.$http.get("/getFeedback").then(response => {
+        var temp = response.body;
+        this.feedbackList = this.feedbackList.concat(temp);
       });
     },
     showSetting(setting) {
@@ -105,24 +121,35 @@ export default {
           this.showItemSettings = false;
           this.showBookingSettings = false;
           this.showOtherSettings = false;
+          this.showFeedbackList = false;
           break;
         case "itemSettings":
           this.showUserSettings = false;
           this.showItemSettings = true;
           this.showBookingSettings = false;
           this.showOtherSettings = false;
+          this.showFeedbackList = false;
           break;
         case "bookingSettings":
           this.showUserSettings = false;
           this.showItemSettings = false;
           this.showBookingSettings = true;
           this.showOtherSettings = false;
+          this.showFeedbackList = false;
           break;
         case "otherSettings":
           this.showUserSettings = false;
           this.showItemSettings = false;
           this.showBookingSettings = false;
           this.showOtherSettings = true;
+          this.showFeedbackList = false;
+          break;
+        case "feedbackList":
+          this.showUserSettings = false;
+          this.showItemSettings = false;
+          this.showBookingSettings = false;
+          this.showOtherSettings = false;
+          this.showFeedbackList = true;
           break;
         default:
           break;
@@ -133,6 +160,7 @@ export default {
     this.$nextTick(this.getUsers());
     this.$nextTick(this.getItems());
     this.$nextTick(this.getLastBookings());
+    this.$nextTick(this.getFeedbackList());
   }
 };
 </script>
