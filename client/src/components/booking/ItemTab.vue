@@ -34,8 +34,8 @@ export default {
       array.sort(function(a, b) {
         var nameA = a["Name"].toLowerCase(),
           nameB = b["Name"].toLowerCase();
-        var sizeA = a.Size.toLowerCase(),
-          sizeB = b.Size.toLowerCase();
+        var sizeA = a.Size,
+          sizeB = b.Size;
         if (nameA < nameB) return -1;
         if (nameA > nameB) return 1;
         if (sizeA < sizeB) return -1;

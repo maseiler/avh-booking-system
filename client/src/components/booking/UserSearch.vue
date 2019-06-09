@@ -52,7 +52,10 @@ export default {
           user =>
             user["BierName"].toLowerCase().includes(tmpSearch) |
             user["FirstName"].toLowerCase().includes(tmpSearch) |
-            user["LastName"].toLowerCase().includes(tmpSearch)
+            user["LastName"].toLowerCase().includes(tmpSearch) | 
+            user["Email"].toLowerCase().includes(tmpSearch) |
+            user["Phone"].toLowerCase().includes(tmpSearch) |
+            user["BoatName"].toLowerCase().includes(tmpSearch)
         );
       } else {
         this.searchResults = [];

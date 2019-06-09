@@ -11,4 +11,5 @@ type User struct {
 	Balance   float32
 	Phone     string
 	MaxDebt   int
+	BoatName  string
 }

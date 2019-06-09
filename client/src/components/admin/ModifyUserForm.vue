@@ -66,6 +66,21 @@
                 </div>
               </div>
 
+              <div v-if="user.Status == 'Steganleger'" class="field">
+                <label class="label">Boat Name</label>
+                <div class="control has-icons-left">
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="Boat Name"
+                    v-model.lazy="user.BoatName"
+                  >
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="anchor"/>
+                  </span>
+                </div>
+              </div>
+
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control has-icons-left">
@@ -116,7 +131,12 @@
             <div class="field">
               <label class="label">Balance</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Balance" v-model.number="user.Balance">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Balance"
+                  v-model.number="user.Balance"
+                >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign"/>
                 </span>
@@ -126,7 +146,12 @@
             <div class="field">
               <label class="label">Max Debt</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Max Debt" v-model.number="user.MaxDebt">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Max Debt"
+                  v-model.number="user.MaxDebt"
+                >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="money-bill"/>
                 </span>

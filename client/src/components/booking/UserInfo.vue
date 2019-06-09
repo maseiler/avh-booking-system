@@ -23,14 +23,6 @@
               <font-awesome-icon icon="info-circle"/>
               &nbsp;{{user.Status}}
             </div>
-            <div v-if="user.Email !== ''">
-              <font-awesome-icon icon="envelope"/>
-              &nbsp;{{user.Email}}
-            </div>
-            <div v-if="user.Phone !== ''">
-              <font-awesome-icon icon="phone"/>
-              &nbsp;{{user.Phone}}
-            </div>
           </h6>
         </div>
         <div class="column is-one-quarter">
@@ -38,7 +30,7 @@
           <h6 class="title is-5">{{user.Balance}} €</h6>
         </div>
         <div class="column is-one-quarter">
-          <button class="button is-link" @click="showPaymentModal = true">Pay</button>
+          <button class="button" @click="showPaymentModal = true">Pay</button>
           <PaymentModal :user="user" v-if="showPaymentModal" @close="showPaymentModal = false"/>
         </div>
       </div>

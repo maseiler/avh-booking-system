@@ -26,30 +26,36 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 // validates input parameters when creating an new user
 func validateUserArguments(newUser dataP.User) (validation string, user dataP.User) {
 	if dbP.NewUserExists(newUser) {
-		return "User already exists", newUser
+		return "User already exists.", newUser
 	}
 	switch newUser.Status {
 	case "Gast", "Steganleger":
 		if newUser.FirstName == "" && newUser.LastName == "" {
 			return "First or last name must be specified.", newUser
 		} else if newUser.Email == "" && newUser.Phone == "" {
-			return "Email address or phone number must be specified", newUser
+			return "Email address or phone number must be specified.", newUser
 		} else if newUser.MaxDebt == 0 {
 			newUser.MaxDebt = 50
-			return "ok", newUser
 		}
 		return "ok", newUser
-	case "Aktiv B", "Aktiv KA", "AH":
-		if newUser.BierName == "" && newUser.FirstName == "" {
-			return "Biername or first name must be specified", newUser
-		} else if newUser.MaxDebt == 0 && (newUser.Status == "Aktiv B" || newUser.Status == "Aktiv KA") {
+	case "Aktiv B", "Aktiv KA":
+		if newUser.BierName == "" {
+			return "Biername must be specified.", newUser
+		} else if newUser.FirstName == "" {
+			return "First name must be specified.", newUser
+		} else if newUser.MaxDebt == 0 {
 			newUser.MaxDebt = 50
-		} else if newUser.MaxDebt == 0 && newUser.Status == "AH" {
+		}
+		return "ok", newUser
+	case "AH":
+		if newUser.BierName == "" {
+			return "Biername must be specified.", newUser
+		} else if newUser.MaxDebt == 0 {
 			newUser.MaxDebt = 100
 		}
 		return "ok", newUser
 	default:
-		return "Select status", newUser
+		return "Select status.", newUser
 	}
 }
 

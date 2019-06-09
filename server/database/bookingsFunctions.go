@@ -140,4 +140,5 @@ func DeleteBookEntry(entry data.BookEntry) bool {
 		return true
 	}
 	return false
+	//TODO: adjust balance for user
 }

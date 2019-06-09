@@ -101,6 +101,21 @@
             </div>
           </div>
 
+          <div v-if="newUser.status == 'Steganleger'" class="field">
+            <label class="label">Boat Name</label>
+            <div class="control has-icons-left">
+              <input
+                class="input"
+                type="text"
+                placeholder="Boat Name"
+                v-model.lazy="newUser.BoatName"
+              >
+              <span class="icon is-small is-left">
+                <font-awesome-icon icon="anchor"/>
+              </span>
+            </div>
+          </div>
+
           <div class="modal-footer">
             <article v-if="validationError !==''" class="message is-danger">
               <div class="message-header">
