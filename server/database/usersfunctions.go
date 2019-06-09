@@ -86,7 +86,7 @@ func AddUser(newUser data.User) {
 
 // ModifyUser replaces all values of a user
 func ModifyUser(user data.User) {
-	queryString := fmt.Sprintf("UPDATE users SET BierName = \"%s\", FirstName = \"%s\", LastName = \"%s\", Status = \"%s\", Email = \"%s\", Balance = %f, PhoneNumber = \"%s\", MaxDebt = %d WHERE UserId = %d, BoatName = \"%s\";", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.UserID, user.BoatName)
+	queryString := fmt.Sprintf("UPDATE users SET BierName = \"%s\", FirstName = \"%s\", LastName = \"%s\", Status = \"%s\", Email = \"%s\", Balance = %f, PhoneNumber = \"%s\", MaxDebt = %d, BoatName = \"%s\" WHERE UserId = %d", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.BoatName, user.UserID)
 	rows, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	fmt.Println(rows)

@@ -126,6 +126,7 @@ func Pay(user data.User) bool {
 
 // DeleteBookEntry deletes an entry from database.
 func DeleteBookEntry(entry data.BookEntry) bool {
+	user := GetUsersOfColumnWithValue("UserId", strconv.Itoa(entry.UserID))[0]
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
 	stmt, err := tx.Prepare("DELETE FROM bookings WHERE BookEntryId = ?")
@@ -137,8 +138,13 @@ func DeleteBookEntry(entry data.BookEntry) bool {
 	HandleDatabaseError(err)
 	stmt.Close()
 	if err == nil {
+		if entry.TotalPrice > 0 {
+			user.Balance -= entry.TotalPrice
+		} else if entry.TotalPrice < 0 {
+			user.Balance -= entry.TotalPrice
+		}
+		ModifyUser(user)
 		return true
 	}
 	return false
-	//TODO: adjust balance for user
 }
