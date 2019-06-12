@@ -25,13 +25,13 @@ func GetFeedback() []data.Feedback {
 }
 
 // AddFeedback writes feddback string into database
-func AddFeedback(text string) {
+func AddFeedback(feedback data.Feedback) {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO feedback(Text) VAlUES(?)")
+	stmt, err := tx.Prepare("INSERT INTO feedback(Name, Text) VAlUES(?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(text)
+	res, err := stmt.Exec(feedback.Name, feedback.Content)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

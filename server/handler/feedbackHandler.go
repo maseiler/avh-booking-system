@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	dbP "../database"
@@ -18,13 +16,8 @@ func GetFeedback(w http.ResponseWriter, r *http.Request) {
 
 // AddFeedback forwards API call to add feedback to database
 func AddFeedback(w http.ResponseWriter, r *http.Request) {
-	feedback, err := ioutil.ReadAll(r.Body)
-
-	if err != nil {
-		fmt.Print(err)
-		panic(err)
-	}
-	dbP.AddFeedback(string(feedback))
+	feedback := UnmarshalFeedback(r.Body)
+	dbP.AddFeedback(feedback)
 	w.WriteHeader(http.StatusOK)
 }
 

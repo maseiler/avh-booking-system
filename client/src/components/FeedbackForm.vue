@@ -17,7 +17,20 @@
                 <font-awesome-icon icon="heart" :style="{color: '#a50303'}"/>
               </span>
             </p>
-            <textarea class="textarea is-info is-focused" rows="7" v-model="text"></textarea>
+            <div class="field">
+              <div class="control has-icons-left">
+                <input class="input" type="text" placeholder="Name (optional)" v-model="name">
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="user"/>
+                </span>
+              </div>
+            </div>
+            <textarea
+              class="textarea is-info is-focused"
+              placeholder="Comment here..."
+              rows="7"
+              v-model="text"
+            ></textarea>
           </div>
 
           <div class="modal-footer">
@@ -44,14 +57,15 @@
 export default {
   data() {
     return {
+      name: "",
       text: ""
     };
   },
   methods: {
     submitFeedback() {
-      var text = this.text;
+      var feedback = { Name: this.name, Content: this.text };
       this.$http
-        .post("/addFeedback", text)
+        .post("/addFeedback", feedback)
         .then(function(response) {
           this.$responseEventBus.$emit("successMessage", "Thank you! <3");
         })
