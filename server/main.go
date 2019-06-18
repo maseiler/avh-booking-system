@@ -37,16 +37,18 @@ func main() {
 	r.HandleFunc("/deleteFeedback", handler.DeleteFeedback)
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains")
 		http.ServeFile(w, r, "./../client/dist/index.html")
 	}
 	r.PathPrefix("/").Handler(handler.CustomFileServer(http.Dir("./../client/dist"), serveIndexHTML))
 
 	server := &http.Server{
-		Addr:           ":8080",
+		Addr:           ":8081",
 		Handler:        r,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	log.Fatal(server.ListenAndServe())
+
+	log.Fatal(server.ListenAndServeTLS("server.crt", "server.key"))
 }
