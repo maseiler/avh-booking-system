@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -26,6 +27,19 @@ func UnmarshalInt(body io.ReadCloser) int {
 		panic(err)
 	}
 	return n
+}
+
+// UnmarshalString unmarshals JSON object to string
+func UnmarshalString(body io.ReadCloser) string {
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(body)
+	str := buf.String()
+
+	if err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
+	return str
 }
 
 // UnmarshalItem unmarshals JSON object to Item
