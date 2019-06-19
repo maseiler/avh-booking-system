@@ -14,7 +14,7 @@ func GetFeedback() []data.Feedback {
 	defer rows.Close()
 	for rows.Next() {
 		feedback := data.Feedback{}
-		err := rows.Scan(&feedback.ID, &feedback.Content)
+		err := rows.Scan(&feedback.ID, &feedback.Content, &feedback.Name)
 		feedbackMap = append(feedbackMap, feedback)
 		HandleDatabaseError(err)
 	}
