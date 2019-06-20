@@ -44,10 +44,17 @@
 
 <script>
 export default {
+<<<<<<< HEAD
   data() {
     return {
       password: "",
       validationError: ""
+=======
+  name: "Login",
+  data() {
+    return {
+      password: ""
+>>>>>>> 1c8c7834d25ca6a4a48678dc730fd50454239dc1
     };
   },
   methods: {
@@ -55,6 +62,7 @@ export default {
       this.$http
         .post("/login", this.password)
         .then(function(response) {
+<<<<<<< HEAD
           this.$router.push("/admin");
         })
         .catch(function(response) {
@@ -71,3 +79,24 @@ export default {
 <style lang="scss">
 @import "../../assets/modal.css";
 </style>
+=======
+          console.log(response.data);
+          this.requireAuth = true;
+          this.$router.push("admin");
+          this.$emit("close");
+
+          // TODO: prevent access without login: https://stackoverflow.com/questions/52560021/how-to-restrict-page-access-to-unlogged-users-with-vuejs
+          // - check going back/forward
+          // TODO: reset password by typing in old password
+        })
+        .catch(function(response) {
+          // TODO
+        });
+    },
+    cancel() {
+      this.$emit("close");
+    }
+  }
+};
+</script>
+>>>>>>> 1c8c7834d25ca6a4a48678dc730fd50454239dc1

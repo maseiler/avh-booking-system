@@ -39,3 +39,22 @@
     </nav>
   </div>
 </template>
+
+<script>
+import AdminLogin from "../components/admin/Login.vue";
+export default {
+  components: {
+    AdminLogin
+  },
+  data: function() {
+    return {
+      showLogin: false
+    };
+  },
+  methods: {}
+};
+</script>
+<style lang="scss">
+@import "../assets/modal.css";
+</style>
+

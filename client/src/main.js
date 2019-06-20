@@ -28,13 +28,10 @@ const routes = [
   { path: '/booking', component: Booking },
   { path: '/statistics', component: Statistics },
   {
-    path: '/login', component: Login,
-    name: 'login',
+    path: '/login', component: Login, name: 'login',
   },
   {
-    path: '/admin', component: Admin,
-    name: 'admin',
-    meta: { routeToAdmin: true },
+    path: '/admin', component: Admin, name: 'admin',
     beforeEnter: (to, from, next) => {
       if (from.name === 'login' || from.name === 'admin') {
         return next();
