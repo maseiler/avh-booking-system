@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 import Home from './components/Home.vue'
 import Booking from './components/booking/Booking.vue'
+import Login from './components/admin/Login.vue'
 import Admin from './components/admin/Admin.vue'
 import Statistics from './components/statistics/Statistics.vue'
 // font awesome
@@ -27,11 +28,21 @@ const routes = [
   { path: '/booking', component: Booking },
   { path: '/statistics', component: Statistics },
   {
+    path: '/login', component: Login,
+    name: 'login',
+  },
+  {
     path: '/admin', component: Admin,
-    beforeEnter: requireAuth
+    name: 'admin',
+    meta: { routeToAdmin: true },
+    beforeEnter: (to, from, next) => {
+      if (from.name === 'login' || from.name === 'admin') {
+        return next();
+      }
+      return next({ path: '/' });
+    }
   }
 ]
-var requireAuth = false
 
 Vue.use(VueResource)
 
