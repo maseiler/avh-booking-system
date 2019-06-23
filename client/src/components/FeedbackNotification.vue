@@ -1,10 +1,10 @@
 <template>
   <div id="feedbackNotification">
-    <button class="button is-info" @click="showFeedbackForm = true">
+    <button class="button is-primary" :style="{ color: 'black' }" @click="showFeedbackForm = true">
       <span class="icon is-small is-left">
         <font-awesome-icon icon="bullhorn"/>
       </span>
-      &nbsp;Feedback
+      &nbsp;&nbsp;Feedback
     </button>
     <FeedbackForm v-if="showFeedbackForm" @close="showFeedbackForm = false"/>
   </div>

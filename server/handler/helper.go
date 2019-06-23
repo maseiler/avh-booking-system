@@ -42,6 +42,20 @@ func UnmarshalString(body io.ReadCloser) string {
 	return str
 }
 
+// UnmarshalStringArray unmarshals JSON object to string array
+func UnmarshalStringArray(body io.ReadCloser) []string {
+	var array []string
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(body)
+	err = json.Unmarshal(buf.Bytes(), &array)
+
+	if err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
+	return array
+}
+
 // UnmarshalItem unmarshals JSON object to Item
 func UnmarshalItem(body io.ReadCloser) dataP.Item {
 	decoder := json.NewDecoder(body)
