@@ -40,17 +40,17 @@ export default {
     Cart,
     UserInfo
   },
-  data: function() {
+  data() {
     return {
       selectedUser: {},
       selectedItems: []
     };
   },
   methods: {
-    getSelectedUser: function(user) {
+    getSelectedUser(user) {
       this.selectedUser = user;
     },
-    getSelectedItems: function(items) {
+    getSelectedItems(items) {
       this.selectedItems = items;
     }
   }

@@ -30,10 +30,12 @@
 
 <script>
 export default {
-  props: {
-    items: []
+  computed: {
+    items() {
+      return this.$store.state.items;
+    }
   },
-  data: function() {
+  data() {
     return {
       search: "",
       searchResults: [],
@@ -41,7 +43,7 @@ export default {
     };
   },
   methods: {
-    searchItems: function() {
+    searchItems() {
       if (this.search != "") {
         var tmpSearch = this.search.toLowerCase();
         this.searchResults = this.items.filter(item =>
@@ -51,19 +53,19 @@ export default {
         this.searchResults = [];
       }
     },
-    selectItem: function(item) {
+    selectItem(item) {
       this.selectedItems.push(item);
       this.$emit("selectItems", this.selectedItems);
       this.$itemEventBus.$emit("selectItemsToBus", this.selectedItems);
     },
-    deselectItemsFromBus: function() {
+    deselectItemsFromBus() {
       this.selectedItems = [];
     },
     selectItemsFromBus(items) {
       this.selectedItems = items;
     }
   },
-  created: function() {
+  created() {
     this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
     this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
   }

@@ -31,10 +31,12 @@
 
 <script>
 export default {
-  props: {
-    feedbackList: []
+  computed: {
+    feedbackList() {
+      return this.$store.state.feedback;
+    }
   },
-  data: function() {
+  data() {
     return {
       selectedEntry: {}
     };

@@ -86,8 +86,8 @@ const mixin = Vue.mixin({
 // TODO refacore in own file
 Vue.use(Vuex)
 
-function sortByName(array) {
-  array.sort(function(a, b) {
+function sortUsersByName(array) {
+  array.sort(function (a, b) {
     var bierNameA = a.BierName.toLowerCase(),
       bierNameB = b.BierName.toLowerCase();
     var firstNameA = a.FirstName.toLowerCase(),
@@ -104,34 +104,94 @@ function sortByName(array) {
   });
 }
 
+function sortItemsByName(array) {
+  array.sort(function (a, b) {
+    var nameA = a["Name"].toLowerCase(),
+      nameB = b["Name"].toLowerCase();
+    var sizeA = a.Size,
+      sizeB = b.Size;
+    if (nameA < nameB) return -1;
+    if (nameA > nameB) return 1;
+    if (sizeA < sizeB) return -1;
+    if (sizeA > sizeB) return 1;
+    return 0;
+  });
+}
+
 const store = new Vuex.Store({
+  modules: {
+    mixin: mixin
+  },
   state: {
-    storeUsers: []
+    users: [],
+    items: [],
+    bookings: [],
+    feedback: []
   },
   mutations: {
     getUsers(state) {
-      console.log("called getUsers in store")
-      var users
       Vue.http.get("/getUsers").then(response => {
-        users = [].concat.apply([], response.body);
-        sortByName(users);
-        console.log(users)
-        state.storeUsers = users
-        console.log(state.storeUsers)
+        var users = [].concat.apply([], response.body);
+        sortUsersByName(users);
+        state.users = users
       })
-      // console.log(users)
-      // state.storeUsers = users
-    }
+    },
+    getItems(state) {
+      Vue.http.get("/getUnreservedItems").then(response => {
+        var items = [].concat.apply([], response.body);
+        sortItemsByName(items)
+        state.items = items
+      });
+    },
+    getLastNBookings(state, n) {
+      Vue.http.post("/getLastNBookings", n).then(response => {
+        state.bookings = [].concat.apply([], response.body);
+      });
+    },
+    getFeedbackList(state) {
+      Vue.http.get("/getFeedback").then(response => {
+        state.feedback = [].concat.apply([], response.body);
+      });
+    },
   },
+  getters: {
+    usersAH: state => {
+      return state.users.filter(user => user["Status"] === "AH");
+    },
+    usersAktivB: state => {
+      return state.users.filter(user => user["Status"] === "Aktiv B");
+    },
+    usersAktivKA: state => {
+      return state.users.filter(user => user["Status"] === "Aktiv KA");
+    },
+    usersSteganleger: state => {
+      return state.users.filter(user => user["Status"] === "Steganleger");
+    },
+    usersGast: state => {
+      return state.users.filter(user => user["Status"] === "Gast");
+    },
+    itemsAlc: state => {
+      return state.items.filter(item => item["Type"] === "alcoholic")
+    },
+    itemsNonAlc: state => {
+      return state.items.filter(item => item["Type"] === "non-alcoholic")
+    },
+    itemsFood: state => {
+      return state.items.filter(item => item["Type"] === "food")
+    },
+    itemsBoat: state => {
+      return state.items.filter(item => item["Type"] === "boat")
+    }
+  }
 })
 
 store.commit("getUsers");
+store.commit("getItems");
+store.commit("getFeedbackList");
+store.commit("getLastNBookings", 50);
 
 new Vue({
   render: h => h(App),
-  // el: '#app',
-  // template: '<App/>',
-  // components: {App, Booking},
   store,
   router,
   mixin

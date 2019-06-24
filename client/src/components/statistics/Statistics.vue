@@ -3,8 +3,8 @@
     <br>
     <img class="logo" src="~@/assets/WIP.png">
     <br>
-    {{users[0].FirstName}}
-    {{users[0].BierName}}
+    <!-- {{users[0].FirstName}} -->
+    {{usersAH[0].BierName}}
   </div>
 </template>
 
@@ -12,7 +12,10 @@
 export default {
   computed: {
     users() {
-      return this.$store.state.storeUsers;
+      return this.$store.state.users;
+    },
+    usersAH(){
+      return this.$store.getters.usersAH
     }
   }
 };
