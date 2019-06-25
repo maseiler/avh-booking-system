@@ -1,8 +1,8 @@
 <template>
   <div>
-    <ItemSearch :items="allItems" @selectItems="selectItems"/>
+    <ItemSearch @selectItems="selectItems"/>
     <hr>
-    <ItemList :allItems="allItems" @selectItems="selectItems"/>
+    <ItemList @selectItems="selectItems"/>
   </div>
 </template>
 
@@ -16,41 +16,17 @@ export default {
     ItemSearch,
     ItemList
   },
-  data: function() {
+  data() {
     return {
-      allItems: [],
       selectedItems: []
     };
   },
   methods: {
-    getItems: function() {
-      this.$http.get("/getUnreservedItems").then(response => {
-        var temp = response.body;
-        this.allItems = [].concat.apply([], temp);
-        this.sortByName(this.allItems);
-      });
-    },
-    sortByName: function(array) {
-      array.sort(function(a, b) {
-        var nameA = a["Name"].toLowerCase(),
-          nameB = b["Name"].toLowerCase();
-        var sizeA = a.Size,
-          sizeB = b.Size;
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        if (sizeA < sizeB) return -1;
-        if (sizeA > sizeB) return 1;
-        return 0;
-      });
-    },
-    selectItems: function(items) {
+    selectItems(items) {
       this.selectedItems = items;
       this.$emit("selectedItems", this.selectedItems);
     }
   },
-  created() {
-    this.$nextTick(this.getItems());
-  }
 };
 
 var ItemEventBus = new Vue();

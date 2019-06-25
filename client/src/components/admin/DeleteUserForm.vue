@@ -38,7 +38,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button" @click="cancelSubmission">Cancel</button>
+                  <button class="button" @click="closeForm">Cancel</button>
                 </div>
               </div>
             </div>
@@ -66,7 +66,8 @@ export default {
               "Deleted user: ",
               this.displayUserName(this.user)
             );
-            this.$router.go();
+            this.closeForm()
+            this.$store.commit("getUsers");
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
@@ -75,8 +76,7 @@ export default {
           });
       }
     },
-    cancelSubmission() {
-      console.log("Canceled submission.");
+    closeForm() {
       this.$emit("close");
     }
   }

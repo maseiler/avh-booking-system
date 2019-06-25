@@ -34,25 +34,27 @@
 
 <script>
 export default {
-  props: {
-    allUsers: []
-  },
-  data: function() {
+  data() {
     return {
       selectedUser: {},
       search: "",
       searchResults: []
     };
   },
+  computed: {
+    allUsers() {
+      return this.$store.state.users;
+    }
+  },
   methods: {
-    searchUsers: function() {
+    searchUsers() {
       if (this.search != "") {
         var tmpSearch = this.search.toLowerCase();
         this.searchResults = this.allUsers.filter(
           user =>
             user["BierName"].toLowerCase().includes(tmpSearch) |
             user["FirstName"].toLowerCase().includes(tmpSearch) |
-            user["LastName"].toLowerCase().includes(tmpSearch) | 
+            user["LastName"].toLowerCase().includes(tmpSearch) |
             user["Email"].toLowerCase().includes(tmpSearch) |
             user["Phone"].toLowerCase().includes(tmpSearch) |
             user["BoatName"].toLowerCase().includes(tmpSearch)
@@ -61,7 +63,7 @@ export default {
         this.searchResults = [];
       }
     },
-    buttonColor: function(user) {
+    buttonColor(user) {
       if (this.selectedUser === user) {
         return "is-link";
       } else if (user.Balance >= user.MaxDebt) {
@@ -72,7 +74,7 @@ export default {
         return "";
       }
     },
-    selectUser: function(user) {
+    selectUser(user) {
       if (this.selectedUser === user) {
         this.deselectUser();
         return;
@@ -81,7 +83,7 @@ export default {
       this.$emit("selectUser", user);
       this.$userEventBus.$emit("selectUserToBus", user);
     },
-    deselectUser: function(user) {
+    deselectUser(user) {
       this.selectedUser = {};
       this.$emit("selectUser", this.selectedUser);
       this.$userEventBus.$emit("deselectUserToBus");
@@ -93,7 +95,7 @@ export default {
       this.selectedUser = user;
     }
   },
-  created: function() {
+  created() {
     this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
     this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }

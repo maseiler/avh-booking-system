@@ -31,10 +31,12 @@
 
 <script>
 export default {
-  props: {
-    feedbackList: []
+  computed: {
+    feedbackList() {
+      return this.$store.state.feedback;
+    }
   },
-  data: function() {
+  data() {
     return {
       selectedEntry: {}
     };
@@ -48,7 +50,7 @@ export default {
             "successMessage",
             "Deleted eedback entry."
           );
-          this.$router.go();
+          this.$store.commit("getFeedbackList");
         })
         .catch(function(response) {
           this.$responseEventBus.$emit(

@@ -21,11 +21,11 @@
             </router-link>
           </a>
 
-          <!-- <div class="navbar-item">
+          <div class="navbar-item">
             <router-link v-bind:to="'/statistics'">
               <a class="button is-white">Statistics</a>
             </router-link>
-          </div>-->
+          </div>
         </div>
 
         <div class="navbar-end">

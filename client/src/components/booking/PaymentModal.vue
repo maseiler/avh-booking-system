@@ -43,7 +43,7 @@ export default {
     user: {}
   },
   methods: {
-    pay: function() {
+    pay() {
       if (this.weekdayIsMonday()) {
         this.$http
           .post("/pay", this.user)
@@ -53,7 +53,7 @@ export default {
               " payed ",
               this.user.Balance
             );
-            this.$router.go();
+            this.$store.commit("getLastNBookings", 50);
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
@@ -67,7 +67,7 @@ export default {
         );
       }
     },
-    weekdayIsMonday: function() {
+    weekdayIsMonday() {
       var day = new Date().getDay();
       if (day == 1) {
         return true;
@@ -76,7 +76,7 @@ export default {
         return false;
       }
     },
-    cancel: function() {
+    cancel() {
       this.$emit("close");
     }
   }

@@ -21,7 +21,7 @@
         />
       </div>
       <div class="column is-4">
-        <ItemSearch :items="items" @selectItems="selectItems"/>
+        <ItemSearch @selectItems="selectItems"/>
       </div>
       <div class="column is-4">
         <ItemInfo :item="selectedItem"/>
@@ -45,10 +45,7 @@ export default {
     ItemSearch,
     ItemInfo
   },
-  props: {
-    items: []
-  },
-  data: function() {
+  data() {
     return {
       showAddItemForm: false,
       showModifyItemForm: false,

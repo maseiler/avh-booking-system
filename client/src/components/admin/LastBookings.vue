@@ -34,18 +34,24 @@
 
 <script>
 export default {
-  props: {
-    lastBookings: [],
-    users: [],
-    items: []
+  computed: {
+    lastBookings() {
+      return this.$store.state.bookings;
+    },
+    users() {
+      return this.$store.state.users;
+    },
+    items() {
+      return this.$store.state.items;
+    }
   },
-  data: function() {
+  data() {
     return {
       selectedEntry: {}
     };
   },
   methods: {
-    printDateTime: function(dateTime) {
+    printDateTime(dateTime) {
       var d = new Date(Date.parse(dateTime));
       return (
         ("0" + d.getDate()).slice(-2) +
@@ -61,17 +67,17 @@ export default {
         ("0" + d.getSeconds()).slice(-2)
       );
     },
-    getUser: function(id) {
+    getUser(id) {
       return this.users.find(u => {
         return u.UserID == id;
       });
     },
-    getItem: function(id) {
+    getItem(id) {
       return this.items.find(i => {
         return i.ItemID == id;
       });
     },
-    selectEntry: function(entry) {
+    selectEntry(entry) {
       this.selectedEntry = entry;
       this.$emit("selectEntry", entry);
     }

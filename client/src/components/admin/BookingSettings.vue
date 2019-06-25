@@ -5,12 +5,7 @@
         <button class="button is-link" @click="deleteEntry">Delete entry</button>
       </div>
       <div class="column">
-        <LastBookings
-          :lastBookings="lastBookings"
-          :users="users"
-          :items="items"
-          @selectEntry="selectEntry"
-        />
+        <LastBookings @selectEntry="selectEntry"/>
       </div>
     </div>
   </div>
@@ -23,27 +18,22 @@ export default {
   components: {
     LastBookings
   },
-  props: {
-    lastBookings: [],
-    users: [],
-    items: []
-  },
-  data: function() {
+  data() {
     return {
       selectedEntry: {},
       showModifyBookEntryForm: false
     };
   },
   methods: {
-    selectEntry: function(entry) {
+    selectEntry(entry) {
       this.selectedEntry = entry;
     },
-    deleteEntry: function() {
+    deleteEntry() {
       if (Object.keys(this.selectedEntry).length !== 0) {
         this.$http
           .post("/deleteBookEntry", this.selectedEntry)
           .then(function(response) {
-            this.$router.go();
+            this.$store.commit("getLastNBookings", 50);
             this.$responseEventBus.$emit("successMessage", "Deleted bookEntry");
           })
           .catch(function(response) {

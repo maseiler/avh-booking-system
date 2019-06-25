@@ -99,10 +99,7 @@
 
  <script>
 export default {
-  props: {
-    allItems: []
-  },
-  data: function() {
+  data() {
     return {
       favoriteItems: [],
       selectedItems: [],
@@ -111,25 +108,20 @@ export default {
     };
   },
   computed: {
-    itemsAlc: function() {
-      return this.allItems.filter(function(item) {
-        return item.Type == "alcoholic";
-      });
+    allItems() {
+      return this.$store.state.items;
     },
-    itemsNonAlc: function() {
-      return this.allItems.filter(function(item) {
-        return item.Type == "non-alcoholic";
-      });
+    itemsAlc() {
+      return this.$store.getters.itemsAlc;
     },
-    itemsFood: function() {
-      return this.allItems.filter(function(item) {
-        return item.Type == "food";
-      });
+    itemsNonAlc() {
+      return this.$store.getters.itemsNonAlc;
     },
-    itemsBoat: function() {
-      return this.allItems.filter(function(item) {
-        return item.Type == "boat";
-      });
+    itemsFood() {
+      return this.$store.getters.itemsFood;
+    },
+    itemsBoat() {
+      return this.$store.getters.itemsBoat;
     }
   },
   methods: {

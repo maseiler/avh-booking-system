@@ -33,7 +33,7 @@
                 <button class="button is-link" @click="deleteItem">Delete</button>
               </div>
               <div class="control">
-                <button class="button" @click="cancelSubmission">Cancel</button>
+                <button class="button" @click="closeForm">Cancel</button>
               </div>
             </div>
           </div>
@@ -60,7 +60,8 @@ export default {
               "Deleted item: ",
               this.displayItem(this.item)
             );
-            this.$router.go();
+            this.closeForm()
+            this.$store.commit("getItems");
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
@@ -70,8 +71,7 @@ export default {
           });
       }
     },
-    cancelSubmission() {
-      console.log("Canceled submission.");
+    closeForm() {
       this.$emit("close");
     }
   }

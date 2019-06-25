@@ -81,34 +81,34 @@
 
 <script>
 export default {
-  props: {
-    allUsers: []
-  },
-  data: function() {
+  data() {
     return {
       activeTab: "tab0",
       selectedUser: {}
     };
   },
   computed: {
-    usersAH: function() {
-      return this.allUsers.filter(user => user["Status"] == "AH");
+    allUsers() {
+      return this.$store.state.users;
     },
-    usersAktivB: function() {
-      return this.allUsers.filter(user => user["Status"] == "Aktiv B");
+    usersAH() {
+      return this.$store.getters.usersAH;
     },
-    usersAktivKA: function() {
-      return this.allUsers.filter(user => user["Status"] == "Aktiv KA");
+    usersAktivB() {
+      return this.$store.getters.usersAktivB;
     },
-    usersSteganleger: function() {
-      return this.allUsers.filter(user => user["Status"] == "Steganleger");
+    usersAktivKA() {
+      return this.$store.getters.usersAktivKA;
     },
-    usersGaeste: function() {
-      return this.allUsers.filter(user => user["Status"] == "Gast");
+    usersSteganleger() {
+      return this.$store.getters.usersSteganleger;
+    },
+    usersGaeste() {
+      return this.$store.getters.usersGast;
     }
   },
   methods: {
-    buttonColor: function(user) {
+    buttonColor(user) {
       if (this.selectedUser === user) {
         return "is-link";
       } else if (user.Balance >= user.MaxDebt) {
@@ -119,7 +119,7 @@ export default {
         return "";
       }
     },
-    selectUser: function(user) {
+    selectUser(user) {
       if (this.selectedUser === user) {
         this.deselectUser();
         return;
@@ -128,7 +128,7 @@ export default {
       this.$emit("selectUser", user);
       this.$userEventBus.$emit("selectUserToBus", user);
     },
-    deselectUser: function(user) {
+    deselectUser(user) {
       this.selectedUser = {};
       this.$emit("selectUser", this.selectedUser);
       this.$userEventBus.$emit("deselectUserToBus");
@@ -140,7 +140,7 @@ export default {
       this.selectedUser = user;
     }
   },
-  created: function() {
+  created() {
     this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
     this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }

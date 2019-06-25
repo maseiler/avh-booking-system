@@ -16,7 +16,7 @@
                   class="input"
                   type="text"
                   placeholder="Biername"
-                  v-model.lazy="newUser.bierName"
+                  v-model.lazy="newUser.BierName"
                 >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="beer"/>
@@ -31,7 +31,7 @@
                   class="input"
                   type="text"
                   placeholder="First name"
-                  v-model.lazy="newUser.firstName"
+                  v-model.lazy="newUser.FirstName"
                 >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="user"/>
@@ -46,7 +46,7 @@
                   class="input"
                   type="text"
                   placeholder="Last name"
-                  v-model.lazy="newUser.lastName"
+                  v-model.lazy="newUser.LastName"
                 >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="user"/>
@@ -61,7 +61,7 @@
                   class="input"
                   type="email"
                   placeholder="Email Address"
-                  v-model.lazy="newUser.email"
+                  v-model.lazy="newUser.Email"
                 >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="envelope"/>
@@ -76,7 +76,7 @@
                   class="input"
                   type="text"
                   placeholder="Phone Number"
-                  v-model.lazy="newUser.phone"
+                  v-model.lazy="newUser.Phone"
                 >
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="phone"/>
@@ -88,7 +88,7 @@
               <label class="label">Status</label>
               <div class="control">
                 <div class="select">
-                  <select v-model="newUser.status">
+                  <select v-model="newUser.Status">
                     <option disabled value>Status</option>
                     <option>Aktiv B</option>
                     <option>Aktiv KA</option>
@@ -135,7 +135,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button is-text" @click="cancelSubmission">Cancel</button>
+                  <button class="button is-text" @click="resetAndCloseForm">Cancel</button>
                 </div>
               </div>
             </div>
@@ -148,50 +148,46 @@
 
 <script>
 export default {
-  data: function() {
+  data() {
     return {
       newUser: {
-        bierName: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        status: "",
-        balance: 0,
-        maxDebt: 0
+        BierName: "",
+        FirstName: "",
+        LastName: "",
+        Email: "",
+        Phone: "",
+        Status: "",
+        Balance: 0,
+        MaxDebt: 0
       },
       validationError: ""
     };
   },
   methods: {
     submitUser() {
-      var user = this.newUser;
       this.$http
-        .post("/addUser", user)
+        .post("/addUser", this.newUser)
         .then(function(response) {
           var message = "".concat(
             "Added new user: ",
-            this.displayUserName(user)
+            this.displayUserName(this.newUser)
           );
           this.resetAndCloseForm();
-          this.$router.go();
+          this.$store.commit("getUsers");
           this.$responseEventBus.$emit("successMessage", message);
         })
         .catch(function(response) {
           this.validationError = response.data;
         });
     },
-    cancelSubmission() {
-      this.resetAndCloseForm();
-    },
     resetAndCloseForm() {
-      (this.bierName = ""),
-        (this.firstName = ""),
-        (this.lastName = ""),
-        (this.email = ""),
-        (this.phone = ""),
-        (this.status = ""),
-        (this.validationError = "");
+      this.newUser.BierName = "";
+      this.newUser.FirstName = "";
+      this.newUser.LastName = "";
+      this.newUser.Email = "";
+      this.newUser.Phone = "";
+      this.newUser.Status = "";
+      this.validationError = "";
       this.$emit("close");
     }
   }

@@ -21,7 +21,7 @@
         />
       </div>
       <div class="column is-4">
-        <UserSearch :allUsers="users" @selectUser="selectUser"/>
+        <UserSearch @selectUser="selectUser"/>
       </div>
       <div class="column is-4">
         <UserInfoAdmin :user="selectedUser"/>
@@ -45,10 +45,7 @@ export default {
     UserSearch,
     UserInfoAdmin
   },
-  props: {
-    users: []
-  },
-  data: function() {
+  data() {
     return {
       showAddUserFormAdmin: false,
       showModifyUserForm: false,
@@ -57,14 +54,14 @@ export default {
     };
   },
   methods: {
-    selectUserFromBus: function(user) {
+    selectUserFromBus(user) {
       this.selectedUser = user;
     },
-    deselectUserFromBus: function() {
+    deselectUserFromBus() {
       this.selectUserFromBus = {};
     }
   },
-  created: function() {
+  created() {
     this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
     this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }

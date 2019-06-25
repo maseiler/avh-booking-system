@@ -41,16 +41,11 @@
         </div>
       </div>
       <div class="column">
-        <UserSettings v-if="showUserSettings" :users="users"/>
-        <ItemSettings v-if="showItemSettings" :items="items"/>
-        <BookingSettings
-          v-if="showBookingSettings"
-          :lastBookings="lastBookings"
-          :users="users"
-          :items="items"
-        />
+        <UserSettings v-if="showUserSettings"/>
+        <ItemSettings v-if="showItemSettings"/>
+        <BookingSettings v-if="showBookingSettings"/>
         <OtherSettings v-if="showOtherSettings"/>
-        <FeedbackList v-if="showFeedbackList" :feedbackList="feedbackList"/>
+        <FeedbackList v-if="showFeedbackList"/>
       </div>
     </div>
   </div>
@@ -71,12 +66,8 @@ export default {
     OtherSettings,
     FeedbackList
   },
-  data: function() {
+  data() {
     return {
-      users: [],
-      items: [],
-      lastBookings: [],
-      feedbackList: [],
       showUserSettings: false,
       showItemSettings: false,
       showBookingSettings: false,
@@ -85,35 +76,6 @@ export default {
     };
   },
   methods: {
-    getUsers: function() {
-      this.$http.get("/getUsers").then(response => {
-        var temp = response.body;
-        this.users = [].concat.apply([], temp);
-      });
-    },
-    getItems: function() {
-      this.$http.get("/getUnreservedItems").then(response => {
-        var temp = response.body;
-        this.items = [].concat.apply([], temp);
-      });
-      this.$http.get("/getReservedItems").then(response => {
-        var temp = response.body;
-        this.items = this.items.concat(temp); //TODO
-      });
-    },
-    getLastBookings: function() {
-      //TODO magic number: 50
-      this.$http.post("/getLastNBookings", 50).then(response => {
-        var temp = response.body;
-        this.lastBookings = this.lastBookings.concat(temp);
-      });
-    },
-    getFeedbackList: function() {
-      this.$http.get("/getFeedback").then(response => {
-        var temp = response.body;
-        this.feedbackList = this.feedbackList.concat(temp);
-      });
-    },
     showSetting(setting) {
       switch (setting) {
         case "userSettings":
@@ -155,12 +117,6 @@ export default {
           break;
       }
     }
-  },
-  created() {
-    this.$nextTick(this.getUsers());
-    this.$nextTick(this.getItems());
-    this.$nextTick(this.getLastBookings());
-    this.$nextTick(this.getFeedbackList());
   }
 };
 </script>
