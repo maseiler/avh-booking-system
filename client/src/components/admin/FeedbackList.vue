@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th>ID</th>
+            <th>Name</th>
             <th>Text</th>
             <th></th>
           </tr>
@@ -16,6 +17,9 @@
             :class="[selectedEntry === entry ? 'is-selected' : '']"
           >
             <th>{{entry.ID}}</th>
+            <td>
+              <pre>{{entry.Name}}</pre>
+            </td>
             <td>
               <pre>{{entry.Content}}</pre>
             </td>
@@ -42,7 +46,7 @@ export default {
     };
   },
   methods: {
-    deleteEntry: function(id) {
+    deleteEntry(id) {
       this.$http
         .post("/deleteFeedback", id)
         .then(function(response) {
