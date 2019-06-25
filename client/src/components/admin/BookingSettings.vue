@@ -33,7 +33,7 @@ export default {
         this.$http
           .post("/deleteBookEntry", this.selectedEntry)
           .then(function(response) {
-            this.$router.go();
+            this.$store.commit("getLastNBookings", 50);
             this.$responseEventBus.$emit("successMessage", "Deleted bookEntry");
           })
           .catch(function(response) {

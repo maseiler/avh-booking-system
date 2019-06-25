@@ -50,7 +50,7 @@ export default {
             "successMessage",
             "Deleted eedback entry."
           );
-          this.$router.go();
+          this.$store.commit("getFeedbackList");
         })
         .catch(function(response) {
           this.$responseEventBus.$emit(

@@ -87,7 +87,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button is-text" @click="cancelSubmission">Cancel</button>
+                  <button class="button is-text" @click="resetAndCloseForm">Cancel</button>
                 </div>
               </div>
             </div>
@@ -123,16 +123,12 @@ export default {
             this.displayItem(this.newItem)
           );
           this.resetAndCloseForm();
-          this.$router.go();
+          this.$store.commit("getItems");
           this.$responseEventBus.$emit("successMessage", message);
         })
         .catch(function(response) {
           this.validationError = response.data;
         });
-    },
-    cancelSubmission() {
-      console.log("canceled submission");
-      this.resetAndCloseForm();
     },
     resetAndCloseForm() {
       (this.Name = ""),
