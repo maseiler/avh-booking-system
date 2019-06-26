@@ -18,6 +18,16 @@ func GetLastNBookings(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+// GetUserDebts forwards API call to get not payed book entries
+func GetUserDebts(w http.ResponseWriter, r *http.Request) {
+	user := UnmarshalUser(r.Body)
+
+	debts := dbP.GetUserDebts(user)
+	response := marshalToJSON(debts, w)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
 // Checkout forwards API call to add Cart content into database
 func Checkout(w http.ResponseWriter, r *http.Request) {
 	cart := UnmarshalCart(r.Body)

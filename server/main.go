@@ -26,6 +26,7 @@ func main() {
 	r.HandleFunc("/modifyItem", handler.ModifyItem)
 	r.HandleFunc("/deleteItem", handler.DeleteItem)
 	r.HandleFunc("/getLastNBookings", handler.GetLastNBookings)
+	r.HandleFunc("/getUserDebts", handler.GetUserDebts)
 	r.HandleFunc("/checkout", handler.Checkout)
 	r.HandleFunc("/pay", handler.Pay)
 	r.HandleFunc("/deleteBookEntry", handler.DeleteBookEntry)

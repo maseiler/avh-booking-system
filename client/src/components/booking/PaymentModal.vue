@@ -1,14 +1,14 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="modal-header">
+  <transition name="modal big">
+    <div class="modal-mask big">
+      <div class="modal-wrapper big">
+        <div class="modal-container big">
+          <div class="modal-header big">
             <h1 class="title is-4">Payment</h1>
             <hr>
           </div>
 
-          <div class="modal-body">
+          <div class="modal-body big">
             <p class="subtitle is-4">
               <b>{{displayUserName(user)}}</b> has to pay
               <b>{{user.Balance}}€</b>.
@@ -17,19 +17,40 @@
             <p class="subtitle is-4">Please place the cash in the money box!</p>
           </div>
 
-          <div class="modal-footer">
+          <div class="modal-footer big">
             <div class="level">
-              <div class="level-left">
-                <div class="level-item">
-                  <button class="button is-link" @click="pay">Pay</button>
-                </div>
+              <div class="level-item has-text-centered">
+                <button class="button is-link" @click="pay">Pay</button>
               </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <button class="button" @click="cancel">Cancel</button>
-                </div>
+              <div class="level-item has-text-centered">
+                <button class="button" @click="cancel">Cancel</button>
               </div>
             </div>
+            <hr>
+            <p
+              v-if="userBookings.LastPayment !== '0001-01-01T00:00:00Z'"
+              class="subtitle is-6"
+            >Last Payment: {{printDateTime(userBookings.LastPayment)}}</p>
+            <table class="table is-hoverable is-striped">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Item</th>
+                  <th>Amount</th>
+                  <th>Total Price</th>
+                  <th>Comment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="entry in userBookings.Debts" :key="entry">
+                  <td>{{printDateTime(entry.TimeStamp)}}</td>
+                  <td>{{displayItem(getItem(entry.ItemID))}}</td>
+                  <td>{{entry.Amount}}</td>
+                  <td>{{entry.TotalPrice}}</td>
+                  <td>{{entry.Comment}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -41,6 +62,11 @@
 export default {
   props: {
     user: {}
+  },
+  data() {
+    return {
+      userBookings: {}
+    };
   },
   methods: {
     pay() {
@@ -78,10 +104,26 @@ export default {
     },
     cancel() {
       this.$emit("close");
+    },
+    getItem(id) {
+      return this.$store.state.items.find(i => {
+        return i.ItemID == id;
+      });
     }
+  },
+  created() {
+    this.$http
+      .post("/getUserDebts", this.user)
+      .then(function(response) {
+        this.userBookings = response.body;
+      })
+      .catch(function(response) {
+        console.log(response.body);
+      });
   }
 };
 </script>
+
 <style lang="scss">
-@import "../../assets/modal.css";
+@import "../../assets/modalBig.css";
 </style>

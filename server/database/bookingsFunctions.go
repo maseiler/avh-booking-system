@@ -29,6 +29,21 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 	return bookings
 }
 
+func getTimestampFromQuery(query string) time.Time {
+	var latestPayment time.Time
+	rows, err := db.Query(query)
+	HandleDatabaseError(err)
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&latestPayment)
+		HandleDatabaseError(err)
+	}
+	defer rows.Close()
+	err = rows.Err()
+	HandleDatabaseError(err)
+	return latestPayment
+}
+
 // GetAllBookings returns all book entries in database
 func GetAllBookings() []data.BookEntry {
 	query := "SELECT * FROM bookings;"
@@ -67,6 +82,16 @@ func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry 
 		panic("Invalid column name")
 	}
 	return getBookingsFromQuery(query)
+}
+
+// GetUserDebts returns list of book entries which have not yet payed by user
+func GetUserDebts(user data.User) data.Debts {
+	lastPayDayQuery := fmt.Sprintf("SELECT TimeStamp FROM bookings WHERE UserId = %d AND TotalPrice <= 0 ORDER BY TimeStamp DESC LIMIT 1;", user.UserID)
+	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
+	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp > \"%s\";", user.UserID, lastPayDay.Format(time.RFC3339))
+	unpaid := getBookingsFromQuery(debtsQuery)
+	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
+	return debts
 }
 
 // Checkout adds a Cart to bookings and updates favorite items in database.
