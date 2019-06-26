@@ -21,8 +21,8 @@
         >
           <th>{{entry.BookEntryID}}</th>
           <td>{{printDateTime(entry.TimeStamp)}}</td>
-          <td>{{displayUserName(getUser(entry.UserID))}}</td>
-          <td>{{displayItem(getItem(entry.ItemID))}}</td>
+          <td>{{displayUserName(getUserByID(entry.UserID))}}</td>
+          <td>{{displayItem(getItemByID(entry.ItemID))}}</td>
           <td>{{entry.Amount}}</td>
           <td>{{entry.TotalPrice}}</td>
           <td>{{entry.Comment}}</td>
@@ -51,16 +51,6 @@ export default {
     };
   },
   methods: {
-    getUser(id) {
-      return this.users.find(u => {
-        return u.UserID == id;
-      });
-    },
-    getItem(id) {
-      return this.items.find(i => {
-        return i.ItemID == id;
-      });
-    },
     selectEntry(entry) {
       this.selectedEntry = entry;
       this.$emit("selectEntry", entry);

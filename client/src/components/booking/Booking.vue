@@ -8,14 +8,18 @@
       </div>
       <div class="column is-narrow">
         <div class="box has-text-centered" style="width: 500px;">
-          <Cart
-            :user="selectedUser"
-            :items="selectedItems"
+          <div
             v-if="Object.keys(selectedUser).length !== 0 || Object.keys(selectedItems).length !== 0"
-          />
-          <img class="logo" src="~@/assets/avh_logo.png" width="250px" v-else>
-          <hr>
-          <UserInfo :user="selectedUser"></UserInfo>
+          >
+            <Cart :user="selectedUser" :items="selectedItems"/>
+            <hr>
+            <UserInfo :user="selectedUser"></UserInfo>
+          </div>
+          <div v-else>
+            <img class="logo" src="~@/assets/avh_logo.png" width="250px">
+            <hr>
+            <last5Bookings/>
+          </div>
         </div>
       </div>
       <div class="column">
@@ -32,13 +36,15 @@ import UserTab from "./UserTab.vue";
 import ItemTab from "./ItemTab.vue";
 import Cart from "./Cart.vue";
 import UserInfo from "./UserInfo.vue";
+import Last5Bookings from "./Last5Bookings.vue";
 
 export default {
   components: {
     UserTab,
     ItemTab,
     Cart,
-    UserInfo
+    UserInfo,
+    Last5Bookings
   },
   data() {
     return {
