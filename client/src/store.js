@@ -97,6 +97,9 @@ const store = new Vuex.Store({
     },
     itemsBoat: state => {
       return state.items.filter(item => item["Type"] === "boat")
+    },
+    last3Bookings: state => {
+      return state.bookings.slice(0, 3)
     }
   }
 })

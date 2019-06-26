@@ -2,6 +2,16 @@ import Vue from 'vue'
 
 const mixin = Vue.mixin({
   methods: {
+    getUserByID(id) {
+      return this.$store.state.users.find(u => {
+        return u.UserID === id;
+      });
+    },
+    getItemByID(id) {
+      return this.$store.state.items.find(i => {
+        return i.ItemID === id;
+      });
+    },
     displayUserName: function (user) {
       if (user === undefined) {
         return "???";

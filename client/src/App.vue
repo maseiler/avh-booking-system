@@ -4,6 +4,7 @@
     <router-view></router-view>
     <ResponseNotification/>
     <FeedbackNotification/>
+    <LastBookingNotification/>
   </div>
 </template>
 
@@ -11,13 +12,15 @@
 import NavBar from "./components/NavBar.vue";
 import ResponseNotification from "./components/ResponseNotification.vue";
 import FeedbackNotification from "./components/FeedbackNotification.vue";
+import LastBookingNotification from "./components/LastBookingNotification.vue";
 
 export default {
   name: "App",
   components: {
     NavBar,
     ResponseNotification,
-    FeedbackNotification
+    FeedbackNotification,
+    LastBookingNotification
   }
 };
 </script>
