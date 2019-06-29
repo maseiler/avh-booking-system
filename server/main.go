@@ -53,5 +53,5 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Fatal(server.ListenAndServeTLS("server.crt", "server.key"))
+	log.Fatal(server.ListenAndServeTLS("./configs/server.crt", "./configs/server.key"))
 }

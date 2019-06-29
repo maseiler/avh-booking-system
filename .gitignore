@@ -20,8 +20,4 @@ todo
 client/dist/
 client/node_modules/
 
-server/database/databaseLoginLocal.txt
-server/database/databaseLoginRemote.txt
-server/tests/testDatabaseLogin.txt
-server/server.crt
-server/server.key
+server/configs

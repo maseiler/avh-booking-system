@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -17,10 +17,11 @@ password
 database name
 */
 func GetDatabaseLoginFromFile() []string {
-	_, currFile, _, _ := runtime.Caller(0)
-	basepath := filepath.Dir(currFile)
-	// b, err := ioutil.ReadFile("%s/databaseLoginRemote.txt", basepath)
-	filepath := fmt.Sprintf("%s/databaseLoginLocal.txt", basepath)
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	filepath := filepath.Join(dir, "/configs/databaseLoginLocal.txt")
 	b, err := ioutil.ReadFile(filepath)
 
 	if err != nil {
