@@ -14,30 +14,28 @@ func getItemsByQuery(query string) []data.Item {
 	defer rows.Close()
 	for rows.Next() {
 		item := data.Item{}
-		err := rows.Scan(&item.ItemID, &item.Name, &item.Price, &item.Size, &item.Unit, &item.Type)
+		err := rows.Scan(&item.ID, &item.Name, &item.Price, &item.Size, &item.Unit, &item.Type)
 		items = append(items, item)
 		HandleDatabaseError(err)
-		// info := fmt.Sprintf("ItemID: %d\nName: %s\nPrice: %.2f\nSize: %.2f\nUnit: %s\nType: %s\n", item.ItemID, item.Name, item.Price, item.Size, item.Unit, item.Type)
-		// fmt.Println(info)
 	}
 	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
-	fmt.Printf("Performed item query: \"%s\"\n", query)
+	// fmt.Printf("Performed item query: \"%s\"\n", query)
 	return items
 }
 
 // GetUnreservedItems returns all items except the first from database and prints them
 // First Item is reserved
 func GetUnreservedItems() []data.Item {
-	query := "SELECT * FROM items WHERE ItemId > 1;"
+	query := "SELECT * FROM items WHERE id > 1;"
 	return getItemsByQuery(query)
 }
 
 // GetReservedItems returns first (reserved) item from databse
 // First Item is reserved
 func GetReservedItems() []data.Item {
-	query := "SELECT * FROM items WHERE ItemId = 1;"
+	query := "SELECT * FROM items WHERE id = 1;"
 	return getItemsByQuery(query)
 }
 
@@ -61,7 +59,7 @@ func GetReservedItems() []data.Item {
 
 // NewItemExists returns true if item exists in database (based on Name and Size)
 func NewItemExists(newItem data.Item) bool {
-	queryString := fmt.Sprintf("SELECT * FROM items WHERE Name = \"%s\" AND Size = %.2f;", newItem.Name, newItem.Size)
+	queryString := fmt.Sprintf("SELECT * FROM items WHERE name = \"%s\" AND size = %.2f;", newItem.Name, newItem.Size)
 	items := getItemsByQuery(queryString)
 	if len(items) == 0 {
 		return false
@@ -71,7 +69,7 @@ func NewItemExists(newItem data.Item) bool {
 
 // ItemExists returns true if item with same ItemID exists in database
 func ItemExists(item data.Item) bool {
-	queryString := fmt.Sprintf("SELECT * FROM items WHERE ItemId = %d;", item.ItemID)
+	queryString := fmt.Sprintf("SELECT * FROM items WHERE id = %d;", item.ID)
 	items := getItemsByQuery(queryString)
 	if len(items) == 0 {
 		return false
@@ -84,7 +82,7 @@ func AddItem(newItem data.Item) {
 	// todo: get info from input
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO items(Name, Price, Size, Unit, Type) VAlUES(?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO items(name, price, size, unit, type) VAlUES(?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(newItem.Name, newItem.Price, newItem.Size, newItem.Unit, newItem.Type)
@@ -96,7 +94,7 @@ func AddItem(newItem data.Item) {
 
 // ModifyItem replaces all values of a item
 func ModifyItem(item data.Item) {
-	query := fmt.Sprintf("UPDATE items SET Name = \"%s\", Price = \"%f\", Size = \"%f\", Unit = \"%s\", Type = \"%s\" WHERE ItemId = %d;", item.Name, item.Price, item.Size, item.Unit, item.Type, item.ItemID)
+	query := fmt.Sprintf("UPDATE items SET name = \"%s\", price = \"%f\", size = \"%f\", unit = \"%s\", type = \"%s\" WHERE id = %d;", item.Name, item.Price, item.Size, item.Unit, item.Type, item.ID)
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
@@ -104,7 +102,7 @@ func ModifyItem(item data.Item) {
 
 // DeleteItem deletes a item with corresponding ID from database
 func DeleteItem(item data.Item) {
-	query := fmt.Sprintf("DELETE FROM items WHERE ItemId = %d;", item.ItemID)
+	query := fmt.Sprintf("DELETE FROM items WHERE id = %d;", item.ID)
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	fmt.Println(rows)

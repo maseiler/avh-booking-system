@@ -16,11 +16,9 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 	defer rows.Close()
 	for rows.Next() {
 		bookEntry := data.BookEntry{}
-		err := rows.Scan(&bookEntry.BookEntryID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment)
+		err := rows.Scan(&bookEntry.ID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment)
 		bookings = append(bookings, bookEntry)
 		HandleDatabaseError(err)
-		// info := fmt.Sprintf("BookEntryId: %d\nTimeStamp: %s\nUserID: %d\nItemID: %d\nAmoint: %d\nTotalPrice: %f\nComment: %s\n", bookEntry.BookEntryID, bookEntry.TimeStamp, bookEntry.UserID, bookEntry.ItemID, bookEntry.Amount, bookEntry.TotalPrice, bookEntry.Comment)
-		// fmt.Println(info)
 	}
 	defer rows.Close()
 	err = rows.Err()
@@ -46,35 +44,35 @@ func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
 
 // GetBookingsOfUserBetween returns all book entries of specified user within timespan
 func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp BETWEEN \"%s\" AND \"%s\";", user.UserID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\";", user.ID, start.Format(time.RFC3339), end.Format(time.RFC3339))
 	if (start == time.Time{}) || (end == time.Time{}) {
-		query = fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d;", user.UserID)
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d;", user.ID)
 	}
 	return getBookingsFromQuery(query)
 }
 
 // GetBookingsOfItemBetween returns all book entries of specified item within timespan
 func GetBookingsOfItemBetween(item data.Item, start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE ItemId = %d AND TimeStamp BETWEEN \"%s\" AND \"%s\";", item.ItemID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\";", item.ID, start.Format(time.RFC3339), end.Format(time.RFC3339))
 	if (start == time.Time{}) || (end == time.Time{}) {
-		query = fmt.Sprintf("SELECT * FROM bookings WHERE ItemId = %d;", item.ItemID)
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d;", item.ID)
 	}
 	return getBookingsFromQuery(query)
 }
 
 // GetPaymentsOfUser returns all payment of specified user within timespan
 func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.BookEntry {
-	emptyUser := data.User{UserID: 0, BierName: "", FirstName: "", LastName: "", Status: "", Email: "", Balance: 0, Phone: "", MaxDebt: 0}
+	emptyUser := data.User{ID: 0, BierName: "", FirstName: "", LastName: "", BoatName: "", Status: "", Email: "", Phone: "", Balance: 0, MaxDebt: 0}
 	var query string
 	if user == emptyUser {
-		query = fmt.Sprintf("SELECT * from bookings WHERE TotalPrice <= 0 AND TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+		query = fmt.Sprintf("SELECT * from bookings WHERE total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
 		if (start == time.Time{}) || (end == time.Time{}) {
-			query = "SELECT * from bookings WHERE TotalPrice <= 0;"
+			query = "SELECT * from bookings WHERE total_price <= 0;"
 		}
 	} else {
-		query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0 AND TimeStamp BETWEEN \"%s\" AND \"%s\";", user.UserID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+		query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\";", user.ID, start.Format(time.RFC3339), end.Format(time.RFC3339))
 		if (start == time.Time{}) || (end == time.Time{}) {
-			query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0;", user.UserID)
+			query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0;", user.ID)
 		}
 	}
 	return getBookingsFromQuery(query)
@@ -82,9 +80,9 @@ func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.Bo
 
 // GetUserDebts returns list of book entries which have not yet payed by user
 func GetUserDebts(user data.User) data.Debts {
-	lastPayDayQuery := fmt.Sprintf("SELECT TimeStamp FROM bookings WHERE UserId = %d AND TotalPrice <= 0 ORDER BY TimeStamp DESC LIMIT 1;", user.UserID)
+	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND total_price <= 0 ORDER BY time_stamp DESC LIMIT 1;", user.ID)
 	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
-	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp > \"%s\";", user.UserID, lastPayDay.Format(time.RFC3339))
+	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp > \"%s\";", user.ID, lastPayDay.Format(time.RFC3339))
 	unpaid := getBookingsFromQuery(debtsQuery)
 	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
 	return debts
@@ -114,19 +112,19 @@ func Checkout(cart data.Cart) bool {
 	for i := 0; i < numItems; i++ {
 		tx, err := db.Begin()
 		HandleDatabaseError(err)
-		stmt, err := tx.Prepare("INSERT INTO bookings(TimeStamp, UserId, ItemId, Amount, TotalPrice, Comment) VAlUES(?, ?, ?, ?, ?, ?)")
+		stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
 		HandleTxError(tx, err)
 		defer stmt.Close()
 		timeStamp := time.Now().Format(time.RFC3339)
 		totalPrice := float32(cart.CartItems[i].Amount) * cart.CartItems[i].Item.Price
 		comment := fmt.Sprintf("Part %d/%d", i+1, numItems)
-		res, err := stmt.Exec(timeStamp, cart.User.UserID, cart.CartItems[i].Item.ItemID, cart.CartItems[i].Amount, totalPrice, comment)
+		res, err := stmt.Exec(timeStamp, cart.User.ID, cart.CartItems[i].Item.ID, cart.CartItems[i].Amount, totalPrice, comment)
 		TxRowsAffected(res, tx)
 		err = tx.Commit()
 		HandleDatabaseError(err)
 		stmt.Close()
 
-		user := GetUsersOfColumnWithValue("UserId", strconv.Itoa(cart.User.UserID))[0]
+		user := GetUsersOfColumnWithValue("id", strconv.Itoa(cart.User.ID))[0]
 		user.Balance += totalPrice
 		ModifyUser(user)
 	}
@@ -138,19 +136,19 @@ func Checkout(cart data.Cart) bool {
 func Pay(user data.User) bool {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO bookings(TimeStamp, UserId, ItemId, Amount, TotalPrice, Comment) VAlUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	timeStamp := time.Now().Format(time.RFC3339)
 	totalPrice := -float32(user.Balance)
 	comment := "Payment"
-	res, err := stmt.Exec(timeStamp, user.UserID, 1, 1, totalPrice, comment)
+	res, err := stmt.Exec(timeStamp, user.ID, 1, 1, totalPrice, comment)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
 	stmt.Close()
 
-	query := fmt.Sprintf("UPDATE users SET Balance = 0 WHERE UserId = %d;", user.UserID)
+	query := fmt.Sprintf("UPDATE users SET balance = 0 WHERE id = %d;", user.ID)
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
@@ -162,13 +160,13 @@ func Pay(user data.User) bool {
 
 // DeleteBookEntry deletes an entry from database.
 func DeleteBookEntry(entry data.BookEntry) bool {
-	user := GetUsersOfColumnWithValue("UserId", strconv.Itoa(entry.UserID))[0]
+	user := GetUsersOfColumnWithValue("id", strconv.Itoa(entry.UserID))[0]
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("DELETE FROM bookings WHERE BookEntryId = ?")
+	stmt, err := tx.Prepare("DELETE FROM bookings WHERE id = ?")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(entry.BookEntryID)
+	res, err := stmt.Exec(entry.ID)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
