@@ -16,16 +16,14 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 	defer rows.Close()
 	for rows.Next() {
 		bookEntry := data.BookEntry{}
-		err := rows.Scan(&bookEntry.BookEntryID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment)
+		err := rows.Scan(&bookEntry.ID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment)
 		bookings = append(bookings, bookEntry)
 		HandleDatabaseError(err)
-		// info := fmt.Sprintf("BookEntryId: %d\nTimeStamp: %s\nUserID: %d\nItemID: %d\nAmoint: %d\nTotalPrice: %f\nComment: %s\n", bookEntry.BookEntryID, bookEntry.TimeStamp, bookEntry.UserID, bookEntry.ItemID, bookEntry.Amount, bookEntry.TotalPrice, bookEntry.Comment)
-		// fmt.Println(info)
 	}
 	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
-	fmt.Printf("Performed booking query: \"%s\"\n", query)
+	// fmt.Printf("Performed booking query: \"%s\"\n", query)
 	return bookings
 }
 
@@ -52,31 +50,31 @@ func GetAllBookings() []data.BookEntry {
 
 // GetLastNBookings returns last n book entries
 func GetLastNBookings(n int) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT %d;", n)
+	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY id DESC LIMIT %d;", n)
 	return getBookingsFromQuery(query)
 }
 
 // GetBookingsBetween returns all book entries between timespan
 func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
 	return getBookingsFromQuery(query)
 }
 
 // GetBookingsOfColumnWithValue returns all book entries where value matches in specific column
-// e.g. column="UserID" and value="12" returns all book entries of user 12
+// e.g. column="user_id" and value="12" returns all book entries of user 12
 func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry {
 	query := ""
-	if column == "BookEntryId" || column == "UserId" || column == "ItemId" || column == "Amount" {
+	if column == "id" || column == "user_id" || column == "item_id" || column == "amount" {
 		intValue, _ := strconv.Atoi(value) // TODO: error handling
 		query = fmt.Sprintf("SELECT * FROM bookings Where %s = %d;", column, intValue)
-	} else if column == "TimeStamp" {
+	} else if column == "time_stamp" {
 		//TODO func CheckTimePattern
 		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
 		//TODO client side: convert to format
-	} else if column == "TotalPrice" {
+	} else if column == "total_price" {
 		floatValue, _ := strconv.ParseFloat(value, 32)
 		query = fmt.Sprintf("SELECT * FROM bookings Where %s = %f;", column, floatValue)
-	} else if column == "Comment" {
+	} else if column == "comment" {
 		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
 	} else {
 		panic("Invalid column name")
@@ -86,9 +84,9 @@ func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry 
 
 // GetUserDebts returns list of book entries which have not yet payed by user
 func GetUserDebts(user data.User) data.Debts {
-	lastPayDayQuery := fmt.Sprintf("SELECT TimeStamp FROM bookings WHERE UserId = %d AND TotalPrice <= 0 ORDER BY TimeStamp DESC LIMIT 1;", user.UserID)
+	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND total_price <= 0 ORDER BY time_stamp DESC LIMIT 1;", user.ID)
 	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
-	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp > \"%s\";", user.UserID, lastPayDay.Format(time.RFC3339))
+	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp > \"%s\";", user.ID, lastPayDay.Format(time.RFC3339))
 	unpaid := getBookingsFromQuery(debtsQuery)
 	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
 	return debts
@@ -103,19 +101,19 @@ func Checkout(cart data.Cart) bool {
 	for i := 0; i < numItems; i++ {
 		tx, err := db.Begin()
 		HandleDatabaseError(err)
-		stmt, err := tx.Prepare("INSERT INTO bookings(TimeStamp, UserId, ItemId, Amount, TotalPrice, Comment) VAlUES(?, ?, ?, ?, ?, ?)")
+		stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
 		HandleTxError(tx, err)
 		defer stmt.Close()
 		timeStamp := time.Now().Format(time.RFC3339)
 		totalPrice := float32(cart.CartItems[i].Amount) * cart.CartItems[i].Item.Price
 		comment := fmt.Sprintf("Part %d/%d", i+1, numItems)
-		res, err := stmt.Exec(timeStamp, cart.User.UserID, cart.CartItems[i].Item.ItemID, cart.CartItems[i].Amount, totalPrice, comment)
+		res, err := stmt.Exec(timeStamp, cart.User.ID, cart.CartItems[i].Item.ID, cart.CartItems[i].Amount, totalPrice, comment)
 		TxRowsAffected(res, tx)
 		err = tx.Commit()
 		HandleDatabaseError(err)
 		stmt.Close()
 
-		user := GetUsersOfColumnWithValue("UserId", strconv.Itoa(cart.User.UserID))[0]
+		user := GetUsersOfColumnWithValue("id", strconv.Itoa(cart.User.ID))[0]
 		user.Balance += totalPrice
 		ModifyUser(user)
 	}
@@ -127,19 +125,19 @@ func Checkout(cart data.Cart) bool {
 func Pay(user data.User) bool {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO bookings(TimeStamp, UserId, ItemId, Amount, TotalPrice, Comment) VAlUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	timeStamp := time.Now().Format(time.RFC3339)
 	totalPrice := -float32(user.Balance)
 	comment := "Payment"
-	res, err := stmt.Exec(timeStamp, user.UserID, 1, 1, totalPrice, comment)
+	res, err := stmt.Exec(timeStamp, user.ID, 1, 1, totalPrice, comment)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
 	stmt.Close()
 
-	query := fmt.Sprintf("UPDATE users SET Balance = 0 WHERE UserId = %d;", user.UserID)
+	query := fmt.Sprintf("UPDATE users SET balance = 0 WHERE id = %d;", user.ID)
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
@@ -151,13 +149,13 @@ func Pay(user data.User) bool {
 
 // DeleteBookEntry deletes an entry from database.
 func DeleteBookEntry(entry data.BookEntry) bool {
-	user := GetUsersOfColumnWithValue("UserId", strconv.Itoa(entry.UserID))[0]
+	user := GetUsersOfColumnWithValue("id", strconv.Itoa(entry.UserID))[0]
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("DELETE FROM bookings WHERE BookEntryId = ?")
+	stmt, err := tx.Prepare("DELETE FROM bookings WHERE id = ?")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(entry.BookEntryID)
+	res, err := stmt.Exec(entry.ID)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

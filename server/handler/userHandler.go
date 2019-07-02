@@ -61,7 +61,7 @@ func validateUserArguments(newUser dataP.User) (validation string, user dataP.Us
 
 // GetUsers forwards API call to get all users from database
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	users := [][]dataP.User{dbP.GetUsersOfColumnWithValue("Status", "AH"), dbP.GetUsersOfColumnWithValue("Status", "Aktiv B"), dbP.GetUsersOfColumnWithValue("Status", "Aktiv KA"), dbP.GetUsersOfColumnWithValue("Status", "Steganleger"), dbP.GetUsersOfColumnWithValue("Status", "Gast")}
+	users := [][]dataP.User{dbP.GetUsersOfColumnWithValue("status", "AH"), dbP.GetUsersOfColumnWithValue("status", "Aktiv B"), dbP.GetUsersOfColumnWithValue("status", "Aktiv KA"), dbP.GetUsersOfColumnWithValue("status", "Steganleger"), dbP.GetUsersOfColumnWithValue("status", "Gast")}
 	response := marshalToJSON(users, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)

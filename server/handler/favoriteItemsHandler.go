@@ -15,7 +15,7 @@ func UpdateFavoriteItems(w http.ResponseWriter, r *http.Request) {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	} else {
-		validation = fmt.Sprintf("Couldn't update favorite items for user %d.", cart.User.UserID)
+		validation = fmt.Sprintf("Couldn't update favorite items for user %d.", cart.User.ID)
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	fmt.Fprint(w, validation)
@@ -24,7 +24,7 @@ func UpdateFavoriteItems(w http.ResponseWriter, r *http.Request) {
 // GetFavoriteItemIDs forwards API call to get the list of favorite item IDs of user
 func GetFavoriteItemIDs(w http.ResponseWriter, r *http.Request) {
 	user := UnmarshalUser(r.Body)
-	favoriteItems := dbP.GetFavoriteItemIDs(user.UserID)
+	favoriteItems := dbP.GetFavoriteItemIDs(user.ID)
 	response := marshalToJSON(favoriteItems, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
@@ -38,7 +38,7 @@ func DeleteUserFromFavoriteItems(w http.ResponseWriter, r *http.Request) {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	} else {
-		validation = fmt.Sprintf("Couldn't delete user %d from favoriteItems.", user.UserID)
+		validation = fmt.Sprintf("Couldn't delete user %d from favoriteItems.", user.ID)
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	fmt.Fprint(w, validation)
