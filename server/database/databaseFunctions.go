@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"os"
 )
 
 var db *sql.DB
@@ -11,8 +12,8 @@ var db *sql.DB
 
 // ConnectDatabase connects to the database and prints the version
 func ConnectDatabase() {
-	dbLogin := GetDatabaseLoginFromFile()
-	loginInfo := fmt.Sprintf("%s:%s@/%s", dbLogin[0], dbLogin[1], dbLogin[2])
+	loginInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("AVHBS_DB_USER"), os.Getenv("AVHBS_DB_PASS"), os.Getenv("AVHBS_DB_IP"), os.Getenv("AVHBS_DB_PORT"), os.Getenv("AVHBS_DB_NAME")+"?parseTime=true")
+	fmt.Println(loginInfo)
 	var err error
 	db, err = sql.Open("mysql", loginInfo)
 	HandleDatabaseError(err)

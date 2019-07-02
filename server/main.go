@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	db "./database"
@@ -41,9 +43,9 @@ func main() {
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains")
-		http.ServeFile(w, r, "./../client/dist/index.html")
+		http.ServeFile(w, r, filepath.Join(os.Getenv("AVHBS_FRONTEND_PATH"), "index.html"))
 	}
-	r.PathPrefix("/").Handler(handler.CustomFileServer(http.Dir("./../client/dist"), serveIndexHTML))
+	r.PathPrefix("/").Handler(handler.CustomFileServer(http.Dir(os.Getenv("AVHBS_FRONTEND_PATH")), serveIndexHTML))
 
 	server := &http.Server{
 		Addr:           ":8081",
@@ -53,5 +55,5 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Fatal(server.ListenAndServeTLS("./configs/server.crt", "./configs/server.key"))
+	log.Fatal(server.ListenAndServeTLS(os.Getenv("AVHBS_SSL_CRT_FILE_PATH"), os.Getenv("AVHBS_SSL_KEY_FILE_PATH")))
 }

@@ -2,36 +2,8 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
-	"path/filepath"
-	"strings"
 )
-
-// GetDatabaseLoginFromFile returns array of login information for SQL database from file
-/*  file format:
-user
-password
-database name
-*/
-func GetDatabaseLoginFromFile() []string {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		log.Fatal(err)
-	}
-	filepath := filepath.Join(dir, "/configs/databaseLoginLocal.txt")
-	b, err := ioutil.ReadFile(filepath)
-
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	str := string(b) // convert content to a 'string'
-
-	return strings.Split(str, "\n")
-}
 
 // HandleDatabaseError logs error to console
 func HandleDatabaseError(err error) {
