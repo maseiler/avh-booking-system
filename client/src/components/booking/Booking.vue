@@ -18,7 +18,7 @@
           <div v-else>
             <img class="logo" src="~@/assets/avh_logo.png" width="250px">
             <hr>
-            <last5Bookings/>
+            <Last5Bookings/>
           </div>
         </div>
       </div>

@@ -25,8 +25,69 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
-	fmt.Printf("Performed booking query: \"%s\"\n", query)
+	// fmt.Printf("Performed booking query: \"%s\"\n", query)
 	return bookings
+}
+
+// GetLastNBookings returns the last n book entries
+func GetLastNBookings(n int) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT %d;", n)
+	return getBookingsFromQuery(query)
+}
+
+// GetBookingsBetween returns all book entries within timespan
+func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+	if (start == time.Time{}) || (end == time.Time{}) {
+		query = "SELECT * FROM bookings;"
+	}
+	return getBookingsFromQuery(query)
+}
+
+// GetBookingsOfUserBetween returns all book entries of specified user within timespan
+func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp BETWEEN \"%s\" AND \"%s\";", user.UserID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	if (start == time.Time{}) || (end == time.Time{}) {
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d;", user.UserID)
+	}
+	return getBookingsFromQuery(query)
+}
+
+// GetBookingsOfItemBetween returns all book entries of specified item within timespan
+func GetBookingsOfItemBetween(item data.Item, start time.Time, end time.Time) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE ItemId = %d AND TimeStamp BETWEEN \"%s\" AND \"%s\";", item.ItemID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	if (start == time.Time{}) || (end == time.Time{}) {
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE ItemId = %d;", item.ItemID)
+	}
+	return getBookingsFromQuery(query)
+}
+
+// GetPaymentsOfUser returns all payment of specified user within timespan
+func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.BookEntry {
+	emptyUser := data.User{UserID: 0, BierName: "", FirstName: "", LastName: "", Status: "", Email: "", Balance: 0, Phone: "", MaxDebt: 0}
+	var query string
+	if user == emptyUser {
+		query = fmt.Sprintf("SELECT * from bookings WHERE TotalPrice <= 0 AND TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+		if (start == time.Time{}) || (end == time.Time{}) {
+			query = "SELECT * from bookings WHERE TotalPrice <= 0;"
+		}
+	} else {
+		query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0 AND TimeStamp BETWEEN \"%s\" AND \"%s\";", user.UserID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+		if (start == time.Time{}) || (end == time.Time{}) {
+			query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0;", user.UserID)
+		}
+	}
+	return getBookingsFromQuery(query)
+}
+
+// GetUserDebts returns list of book entries which have not yet payed by user
+func GetUserDebts(user data.User) data.Debts {
+	lastPayDayQuery := fmt.Sprintf("SELECT TimeStamp FROM bookings WHERE UserId = %d AND TotalPrice <= 0 ORDER BY TimeStamp DESC LIMIT 1;", user.UserID)
+	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
+	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp > \"%s\";", user.UserID, lastPayDay.Format(time.RFC3339))
+	unpaid := getBookingsFromQuery(debtsQuery)
+	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
+	return debts
 }
 
 func getTimestampFromQuery(query string) time.Time {
@@ -42,56 +103,6 @@ func getTimestampFromQuery(query string) time.Time {
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return latestPayment
-}
-
-// GetAllBookings returns all book entries in database
-func GetAllBookings() []data.BookEntry {
-	query := "SELECT * FROM bookings;"
-	return getBookingsFromQuery(query)
-}
-
-// GetLastNBookings returns last n book entries
-func GetLastNBookings(n int) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT %d;", n)
-	return getBookingsFromQuery(query)
-}
-
-// GetBookingsBetween returns all book entries between timespan
-func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
-	return getBookingsFromQuery(query)
-}
-
-// GetBookingsOfColumnWithValue returns all book entries where value matches in specific column
-// e.g. column="UserID" and value="12" returns all book entries of user 12
-func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry {
-	query := ""
-	if column == "BookEntryId" || column == "UserId" || column == "ItemId" || column == "Amount" {
-		intValue, _ := strconv.Atoi(value) // TODO: error handling
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = %d;", column, intValue)
-	} else if column == "TimeStamp" {
-		//TODO func CheckTimePattern
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
-		//TODO client side: convert to format
-	} else if column == "TotalPrice" {
-		floatValue, _ := strconv.ParseFloat(value, 32)
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = %f;", column, floatValue)
-	} else if column == "Comment" {
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
-	} else {
-		panic("Invalid column name")
-	}
-	return getBookingsFromQuery(query)
-}
-
-// GetUserDebts returns list of book entries which have not yet payed by user
-func GetUserDebts(user data.User) data.Debts {
-	lastPayDayQuery := fmt.Sprintf("SELECT TimeStamp FROM bookings WHERE UserId = %d AND TotalPrice <= 0 ORDER BY TimeStamp DESC LIMIT 1;", user.UserID)
-	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
-	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE UserId = %d AND TimeStamp > \"%s\";", user.UserID, lastPayDay.Format(time.RFC3339))
-	unpaid := getBookingsFromQuery(debtsQuery)
-	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
-	return debts
 }
 
 // Checkout adds a Cart to bookings and updates favorite items in database.
