@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	db.ConnectDatabase()
+	db.CreateDatabase()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/getUsers", handler.GetUsers)

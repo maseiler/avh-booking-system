@@ -121,7 +121,7 @@ func DeleteBookEntry(w http.ResponseWriter, r *http.Request) {
 }
 
 func userIsEmpty(user data.User) bool {
-	emptyUser := data.User{UserID: 0, BierName: "", FirstName: "", LastName: "", Status: "", Email: "", Balance: 0, Phone: "", MaxDebt: 0}
+	emptyUser := data.User{ID: 0, BierName: "", FirstName: "", LastName: "", BoatName: "", Status: "", Email: "", Phone: "", Balance: 0, MaxDebt: 0}
 	if user == emptyUser {
 		return true
 	}

@@ -7,7 +7,7 @@ import (
 )
 
 func entryExists(userID int, itemID int) bool {
-	query := fmt.Sprintf("SELECT EXISTS( SELECT 1 FROM favoriteItems WHERE UserId = %d AND ItemId = %d);", userID, itemID)
+	query := fmt.Sprintf("SELECT EXISTS( SELECT 1 FROM favoriteItems WHERE user_id = %d AND item_id = %d);", userID, itemID)
 	var exists bool
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
@@ -25,7 +25,7 @@ func entryExists(userID int, itemID int) bool {
 func addEntry(userID int, ItemID int, amount int) error {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO favoriteItems (UserId, ItemId, Count) VALUES (?, ?, ?);")
+	stmt, err := tx.Prepare("INSERT INTO favoriteItems (user_id, item_id, count) VALUES (?, ?, ?);")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(userID, ItemID, amount)
@@ -39,7 +39,7 @@ func addEntry(userID int, ItemID int, amount int) error {
 func incrementCount(userID int, ItemID int, amount int) error {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	query := fmt.Sprintf("UPDATE favoriteItems SET Count = Count+%d WHERE UserId = %d AND ItemId = %d;", amount, userID, ItemID)
+	query := fmt.Sprintf("UPDATE favoriteItems SET count = count+%d WHERE user_id = %d AND item_id = %d;", amount, userID, ItemID)
 	stmt, err := tx.Prepare(query)
 	HandleTxError(tx, err)
 	defer stmt.Close()
@@ -56,10 +56,10 @@ func UpdateFavoriteItems(cart data.Cart) bool {
 	numItems := len(cart.CartItems)
 	var err error
 	for i := 0; i < numItems; i++ {
-		if entryExists(cart.User.UserID, cart.CartItems[i].Item.ItemID) {
-			err = incrementCount(cart.User.UserID, cart.CartItems[i].Item.ItemID, cart.CartItems[i].Amount)
+		if entryExists(cart.User.ID, cart.CartItems[i].Item.ID) {
+			err = incrementCount(cart.User.ID, cart.CartItems[i].Item.ID, cart.CartItems[i].Amount)
 		} else {
-			err = addEntry(cart.User.UserID, cart.CartItems[i].Item.ItemID, cart.CartItems[i].Amount)
+			err = addEntry(cart.User.ID, cart.CartItems[i].Item.ID, cart.CartItems[i].Amount)
 		}
 		if err != nil {
 			return false
@@ -70,7 +70,7 @@ func UpdateFavoriteItems(cart data.Cart) bool {
 
 // GetFavoriteItemIDs returns list of favorite item IDs from databse.
 func GetFavoriteItemIDs(userID int) []int {
-	query := fmt.Sprintf("SELECT ItemId FROM favoriteItems WHERE UserId = %d ORDER BY Count DESC LIMIT 5;", userID)
+	query := fmt.Sprintf("SELECT item_id FROM favoriteItems WHERE user_id = %d ORDER BY count DESC LIMIT 5;", userID)
 	var favoriteItemIDs []int
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
@@ -91,7 +91,7 @@ func GetFavoriteItemIDs(userID int) []int {
 func DeleteUserFromFavoriteItems(user data.User) bool {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	query := fmt.Sprintf("DELETE FROM favoriteItems WHERE UserId = %d;", user.UserID)
+	query := fmt.Sprintf("DELETE FROM favoriteItems WHERE user_id = %d;", user.ID)
 	stmt, err := tx.Prepare(query)
 	HandleTxError(tx, err)
 	defer stmt.Close()

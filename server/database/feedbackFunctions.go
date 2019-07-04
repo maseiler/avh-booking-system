@@ -28,7 +28,7 @@ func GetFeedback() []data.Feedback {
 func AddFeedback(feedback data.Feedback) {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO feedback(Name, Text) VAlUES(?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO feedback(name, text) VAlUES(?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(feedback.Name, feedback.Content)
@@ -40,7 +40,7 @@ func AddFeedback(feedback data.Feedback) {
 
 // DeleteFeedback removes feedback string from database
 func DeleteFeedback(id int) {
-	query := fmt.Sprintf("DELETE FROM feedback WHERE ID = %d;", id)
+	query := fmt.Sprintf("DELETE FROM feedback WHERE id = %d;", id)
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
