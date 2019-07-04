@@ -29,7 +29,7 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 
 // GetLastNBookings returns the last n book entries
 func GetLastNBookings(n int) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT %d;", n)
+	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY id DESC LIMIT %d;", n)
 	return getBookingsFromQuery(query)
 }
 

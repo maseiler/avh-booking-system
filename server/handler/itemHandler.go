@@ -8,17 +8,9 @@ import (
 	dbP "../database"
 )
 
-// GetUnreservedItems forwards API call to get all items from database
-func GetUnreservedItems(w http.ResponseWriter, r *http.Request) {
-	items := dbP.GetUnreservedItems()
-	response := marshalToJSON(items, w)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
-}
-
-// GetReservedItems forwards API call to get all items from database
-func GetReservedItems(w http.ResponseWriter, r *http.Request) {
-	items := dbP.GetReservedItems()
+// GetAllItems forwards API call to get all items from database
+func GetAllItems(w http.ResponseWriter, r *http.Request) {
+	items := dbP.GetAllItems()
 	response := marshalToJSON(items, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)

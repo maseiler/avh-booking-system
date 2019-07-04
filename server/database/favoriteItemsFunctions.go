@@ -7,7 +7,7 @@ import (
 )
 
 func entryExists(userID int, itemID int) bool {
-	query := fmt.Sprintf("SELECT EXISTS( SELECT 1 FROM favoriteItems WHERE user_id = %d AND item_id = %d);", userID, itemID)
+	query := fmt.Sprintf("SELECT EXISTS( SELECT 1 FROM favorite_items WHERE user_id = %d AND item_id = %d);", userID, itemID)
 	var exists bool
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
@@ -25,7 +25,7 @@ func entryExists(userID int, itemID int) bool {
 func addEntry(userID int, ItemID int, amount int) error {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO favoriteItems (user_id, item_id, count) VALUES (?, ?, ?);")
+	stmt, err := tx.Prepare("INSERT INTO favorite_items (user_id, item_id, count) VALUES (?, ?, ?);")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(userID, ItemID, amount)
@@ -39,7 +39,7 @@ func addEntry(userID int, ItemID int, amount int) error {
 func incrementCount(userID int, ItemID int, amount int) error {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	query := fmt.Sprintf("UPDATE favoriteItems SET count = count+%d WHERE user_id = %d AND item_id = %d;", amount, userID, ItemID)
+	query := fmt.Sprintf("UPDATE favorite_items SET count = count+%d WHERE user_id = %d AND item_id = %d;", amount, userID, ItemID)
 	stmt, err := tx.Prepare(query)
 	HandleTxError(tx, err)
 	defer stmt.Close()
@@ -70,7 +70,7 @@ func UpdateFavoriteItems(cart data.Cart) bool {
 
 // GetFavoriteItemIDs returns list of favorite item IDs from databse.
 func GetFavoriteItemIDs(userID int) []int {
-	query := fmt.Sprintf("SELECT item_id FROM favoriteItems WHERE user_id = %d ORDER BY count DESC LIMIT 5;", userID)
+	query := fmt.Sprintf("SELECT item_id FROM favorite_items WHERE user_id = %d ORDER BY count DESC LIMIT 5;", userID)
 	var favoriteItemIDs []int
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
@@ -91,7 +91,7 @@ func GetFavoriteItemIDs(userID int) []int {
 func DeleteUserFromFavoriteItems(user data.User) bool {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	query := fmt.Sprintf("DELETE FROM favoriteItems WHERE user_id = %d;", user.ID)
+	query := fmt.Sprintf("DELETE FROM favorite_items WHERE user_id = %d;", user.ID)
 	stmt, err := tx.Prepare(query)
 	HandleTxError(tx, err)
 	defer stmt.Close()

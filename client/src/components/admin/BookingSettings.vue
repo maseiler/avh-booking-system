@@ -205,7 +205,7 @@ export default {
           .catch(function(response) {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Error: Couldn't delete item."
+              "Couldn't delete item."
             );
           });
       } else {

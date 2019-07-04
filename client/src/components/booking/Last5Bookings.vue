@@ -3,7 +3,7 @@
     <div class="list is-hoverable">
       <a v-for="entry in bookings" :key="entry" class="list-item has-background-white">
         {{printDateTime(entry.TimeStamp)}}
-        <br>
+        <br />
         {{displayUserName(getUserByID(entry.UserID))}} ~ {{entry.Amount}}x {{displayItem(getItemByID(entry.ItemID))}}
       </a>
     </div>

@@ -114,7 +114,6 @@ export default {
   },
   methods: {
     submitItem() {
-      console.log(this.newItem)
       this.$http
         .post("/addItem", this.newItem)
         .then(function(response) {

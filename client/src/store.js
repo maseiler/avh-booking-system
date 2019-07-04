@@ -48,25 +48,31 @@ const store = new Vuex.Store({
     getUsers(state) {
       Vue.http.get("/getUsers").then(response => {
         var users = [].concat.apply([], response.body);
+        users = users.filter(Boolean);
         sortUsersByName(users);
-        state.users = users
+        state.users = users;
       })
     },
     getItems(state) {
-      Vue.http.get("/getUnreservedItems").then(response => {
+      Vue.http.get("/getAllItems").then(response => {
         var items = [].concat.apply([], response.body);
-        sortItemsByName(items)
-        state.items = items
+        items = items.filter(Boolean);
+        sortItemsByName(items);
+        state.items = items;
       });
     },
     getLast5Bookings(state) {
       Vue.http.post("/getLastNBookings", 5).then(response => {
-        state.last5Bookings = [].concat.apply([], response.body);
+        var bookings = [].concat.apply([], response.body);
+        bookings = bookings.filter(Boolean);
+        state.last5Bookings = bookings;
       });
     },
     getFeedbackList(state) {
       Vue.http.get("/getFeedback").then(response => {
-        state.feedback = [].concat.apply([], response.body);
+        var feedback = [].concat.apply([], response.body);
+        feedback = feedback.filter(Boolean);
+        state.feedback = feedback;
       });
     },
   },

@@ -14,7 +14,7 @@ func getItemsByQuery(query string) []data.Item {
 	defer rows.Close()
 	for rows.Next() {
 		item := data.Item{}
-		err := rows.Scan(&item.ID, &item.Name, &item.Price, &item.Size, &item.Unit, &item.Type)
+		err := rows.Scan(&item.ID, &item.Name, &item.Type, &item.Size, &item.Unit, &item.Price)
 		items = append(items, item)
 		HandleDatabaseError(err)
 	}
@@ -25,17 +25,9 @@ func getItemsByQuery(query string) []data.Item {
 	return items
 }
 
-// GetUnreservedItems returns all items except the first from database and prints them
-// First Item is reserved
-func GetUnreservedItems() []data.Item {
-	query := "SELECT * FROM items WHERE id > 1;"
-	return getItemsByQuery(query)
-}
-
-// GetReservedItems returns first (reserved) item from databse
-// First Item is reserved
-func GetReservedItems() []data.Item {
-	query := "SELECT * FROM items WHERE id = 1;"
+// GetAllItems returns all items from database
+func GetAllItems() []data.Item {
+	query := "SELECT * FROM items;"
 	return getItemsByQuery(query)
 }
 

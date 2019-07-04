@@ -52,7 +52,7 @@ export default {
         .then(function(response) {
           this.$responseEventBus.$emit(
             "successMessage",
-            "Deleted eedback entry."
+            "Deleted feedback entry."
           );
           this.$store.commit("getFeedbackList");
         })
