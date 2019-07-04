@@ -17,7 +17,7 @@ func CreateDatabase() {
 	db, err = sql.Open("mysql", loginInfo)
 	HandleDatabaseError(err)
 
-	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", os.Getenv("AVHBS_DB_NAME"));
+	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", os.Getenv("AVHBS_DB_NAME"))
 	_, err = db.Exec(query)
 	HandleDatabaseError(err)
 
