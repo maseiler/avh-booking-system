@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	dataP "../data"
+	dataP "github.com/maseiler/avh-booking-system/server/data"
 )
 
 func marshalToJSON(object interface{}, w http.ResponseWriter) (response []byte) {

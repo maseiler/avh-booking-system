@@ -11,11 +11,13 @@ var db *sql.DB
 // CreateDatabase creates database and all necessary tables
 func CreateDatabase() {
 	loginInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/", os.Getenv("AVHBS_DB_USER"), os.Getenv("AVHBS_DB_PASS"), os.Getenv("AVHBS_DB_IP"), os.Getenv("AVHBS_DB_PORT"))
+	fmt.Println("LoginInfo:")
+	fmt.Println(loginInfo)
 	var err error
 	db, err = sql.Open("mysql", loginInfo)
 	HandleDatabaseError(err)
 
-	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", os.Getenv("AVHBS_DB_NAME"))
+	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", os.Getenv("AVHBS_DB_NAME"));
 	_, err = db.Exec(query)
 	HandleDatabaseError(err)
 

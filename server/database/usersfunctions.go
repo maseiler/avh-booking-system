@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	data "../data"
+	data "github.com/maseiler/avh-booking-system/server/data"
 )
 
 // getUsersByQuery returns list of users as requested in string

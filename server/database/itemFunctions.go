@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 
-	data "../data"
+	data "github.com/maseiler/avh-booking-system/server/data"
 )
 
 // getItemsByQuery returns list of items as requested in string

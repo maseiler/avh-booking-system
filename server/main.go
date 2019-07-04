@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	db "./database"
-	handler "./handler"
+	db "github.com/maseiler/avh-booking-system/server/database"
+	handler "github.com/maseiler/avh-booking-system/server/handler"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -57,5 +57,9 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	log.Fatal(server.ListenAndServeTLS(os.Getenv("AVHBS_SSL_CRT_FILE_PATH"), os.Getenv("AVHBS_SSL_KEY_FILE_PATH")))
+	if len(os.Getenv("AVHBS_SSL_CRT_FILE_PATH")) > 0 {
+		log.Fatal(server.ListenAndServeTLS(os.Getenv("AVHBS_SSL_CRT_FILE_PATH"), os.Getenv("AVHBS_SSL_KEY_FILE_PATH")))
+	} else {
+		log.Fatal(server.ListenAndServe())
+	}
 }

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	dataP "../data"
-	dbP "../database"
+	dataP "github.com/maseiler/avh-booking-system/server/data"
+	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
 // GetAllItems forwards API call to get all items from database
