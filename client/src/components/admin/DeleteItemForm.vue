@@ -5,7 +5,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <h1 class="title is-4">Delete Item</h1>
-            <hr>
+            <hr />
           </div>
 
           <div class="modal-body">
@@ -13,7 +13,7 @@
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
+                    <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
                   <p>Select item first.</p>
                 </div>
@@ -60,14 +60,15 @@ export default {
               "Deleted item: ",
               this.displayItem(this.item)
             );
-            this.closeForm()
+            this.closeForm();
             this.$store.commit("getItems");
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
-            console.log(response);
-            console.log("Error: Couldn't delete item.");
-            //TODO
+            this.$responseEventBus.$emit(
+              "failureMessage",
+              "Couldn't delete item."
+            );
           });
       }
     },

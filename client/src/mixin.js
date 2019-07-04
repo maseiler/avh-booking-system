@@ -4,12 +4,12 @@ const mixin = Vue.mixin({
   methods: {
     getUserByID(id) {
       return this.$store.state.users.find(u => {
-        return u.UserID == id;
+        return u.ID == id;
       });
     },
     getItemByID(id) {
       return this.$store.state.items.find(i => {
-        return i.ItemID == id;
+        return i.ID == id;
       });
     },
     displayUserName(user) {
@@ -31,7 +31,7 @@ const mixin = Vue.mixin({
         return "???"
       } else if (item.Type === "alcoholic" || item.Type === "non-alcoholic") {
         return item.Name + " " + item.Size + " " + item.Unit;
-      } else if (item.Type === "boat" || item.Type === "food" || item.Type === "Admin") {
+      } else if (item.Type === "boat" || item.Type === "food") {
         return item.Name;
       } else {
         return "???";

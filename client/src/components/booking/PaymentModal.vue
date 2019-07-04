@@ -5,7 +5,7 @@
         <div class="modal-container big">
           <div class="modal-header big">
             <h1 class="title is-4">Payment</h1>
-            <hr>
+            <hr />
           </div>
 
           <div class="modal-body big">
@@ -13,7 +13,7 @@
               <b>{{displayUserName(user)}}</b> has to pay
               <b>{{user.Balance}}€</b>.
             </p>
-            <br>
+            <br />
             <p class="subtitle is-4">Please place the cash in the money box!</p>
           </div>
 
@@ -26,7 +26,7 @@
                 <button class="button" @click="cancel">Cancel</button>
               </div>
             </div>
-            <hr>
+            <hr />
             <p
               v-if="userBookings.LastPayment !== '0001-01-01T00:00:00Z'"
               class="subtitle is-6"
@@ -44,7 +44,7 @@
               <tbody>
                 <tr v-for="entry in userBookings.Debts" :key="entry">
                   <td>{{printDateTime(entry.TimeStamp)}}</td>
-                  <td>{{displayItem(getItem(entry.ItemID))}}</td>
+                  <td>{{displayItem(getItemByID(entry.ItemID))}}</td>
                   <td>{{entry.Amount}}</td>
                   <td>{{entry.TotalPrice}}</td>
                   <td>{{entry.Comment}}</td>
@@ -79,7 +79,9 @@ export default {
               " payed ",
               this.user.Balance
             );
-            this.$store.commit("getLastNBookings", 50);
+            this.$emit("close");
+            this.$store.commit("getLast5Bookings");
+            this.$store.commit("getUsers");
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
@@ -94,6 +96,7 @@ export default {
       }
     },
     weekdayIsMonday() {
+      return true;
       var day = new Date().getDay();
       if (day == 1) {
         return true;
@@ -104,11 +107,6 @@ export default {
     },
     cancel() {
       this.$emit("close");
-    },
-    getItem(id) {
-      return this.$store.state.items.find(i => {
-        return i.ItemID == id;
-      });
     }
   },
   created() {
@@ -118,7 +116,7 @@ export default {
         this.userBookings = response.body;
       })
       .catch(function(response) {
-        console.log(response.body);
+        this.$responseEventBus.$emit("failureMessage", "Couldn't get debts.");
       });
   }
 };

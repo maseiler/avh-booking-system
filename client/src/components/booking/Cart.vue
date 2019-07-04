@@ -77,7 +77,7 @@ export default {
     },
     contains: function(array, obj) {
       for (var i in array) {
-        if (array[i].item.ItemID === obj.ItemID) {
+        if (array[i].item.ID === obj.ID) {
           return true;
         }
       }
@@ -85,7 +85,7 @@ export default {
     },
     increment: function(array, item) {
       for (var i in array) {
-        if (array[i].item.ItemID === item.ItemID) {
+        if (array[i].item.ID === item.ID) {
           array[i].amount = array[i].amount + 1;
           return;
         }

@@ -59,7 +59,7 @@ func NewUserExists(newUser data.User) bool {
 
 // UserExists returns true if user with same UserID exists in database
 func UserExists(user data.User) bool {
-	queryString := fmt.Sprintf("SELECT * FROM users WHERE user_id = %d;", user.ID)
+	queryString := fmt.Sprintf("SELECT * FROM users WHERE id = %d;", user.ID)
 	users := getUsersByQuery(queryString)
 	if len(users) == 0 {
 		return false
@@ -92,7 +92,7 @@ func ModifyUser(user data.User) {
 
 // DeleteUser deletes a user with corresponding ID from database
 func DeleteUser(user data.User) {
-	queryString := fmt.Sprintf("DELETE FROM users WHERE user_id = %d;", user.ID)
+	queryString := fmt.Sprintf("DELETE FROM users WHERE id = %d;", user.ID)
 	_, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	// fmt.Println(rows)

@@ -10,7 +10,7 @@
             <h6 class="subtitle is-6">
               <div>
                 <font-awesome-icon icon="fingerprint"/>
-                &nbsp;{{item.ItemID}}
+                &nbsp;{{item.ID}}
               </div>
               <div>
                 <font-awesome-icon icon="font"/>

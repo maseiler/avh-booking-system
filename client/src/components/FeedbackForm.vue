@@ -5,7 +5,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <h1 class="title is-4">Feedback</h1>
-            <hr>
+            <hr />
           </div>
 
           <div class="modal-body">
@@ -14,14 +14,14 @@
               <span
                 class="icon"
               >
-                <font-awesome-icon icon="heart" :style="{color: '#a50303'}"/>
+                <font-awesome-icon icon="heart" :style="{color: '#a50303'}" />
               </span>
             </p>
             <div class="field">
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Name (optional)" v-model="name">
+                <input class="input" type="text" placeholder="Name (optional)" v-model="name" />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="user"/>
+                  <font-awesome-icon icon="user" />
                 </span>
               </div>
             </div>
@@ -67,6 +67,7 @@ export default {
       this.$http
         .post("/addFeedback", feedback)
         .then(function(response) {
+          this.$store.commit("getFeedbackList");
           this.$responseEventBus.$emit("successMessage", "Thank you! <3");
         })
         .catch(function(response) {
@@ -75,12 +76,16 @@ export default {
             "Couldn't submit feedback."
           );
         });
-      this.text = "";
+      this.resetData();
       this.$emit("close");
     },
     cancel() {
-      this.text = "";
+      this.resetData();
       this.$emit("close");
+    },
+    resetData() {
+      this.text = "";
+      this.name = "";
     }
   }
 };

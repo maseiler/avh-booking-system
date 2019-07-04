@@ -5,7 +5,7 @@
         <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">
           <a @click="activeTab='tab0'">
             <span class="icon is-small is-left">
-              <font-awesome-icon icon="star"/>
+              <font-awesome-icon icon="star" />
             </span>
             Favorites
           </a>
@@ -13,7 +13,7 @@
         <li :class="[ activeTab === 'tab1' ? 'is-active' : '']">
           <a @click="activeTab='tab1'">
             <span class="icon is-small is-left">
-              <font-awesome-icon icon="beer"/>
+              <font-awesome-icon icon="beer" />
             </span>
             Alcoholic
           </a>
@@ -21,7 +21,7 @@
         <li :class="[ activeTab === 'tab2' ? 'is-active' : '']">
           <a @click="activeTab='tab2'">
             <span class="icon is-small is-left">
-              <font-awesome-icon icon="glass-whiskey"/>
+              <font-awesome-icon icon="glass-whiskey" />
             </span>
             Non-Alcoholic
           </a>
@@ -29,7 +29,7 @@
         <li :class="[ activeTab === 'tab3' ? 'is-active' : '']">
           <a @click="activeTab='tab3'">
             <span class="icon is-small is-left">
-              <font-awesome-icon icon="utensils"/>
+              <font-awesome-icon icon="utensils" />
             </span>
             Food
           </a>
@@ -37,7 +37,7 @@
         <li :class="[ activeTab === 'tab4' ? 'is-active' : '']">
           <a @click="activeTab='tab4'">
             <span class="icon is-small is-left">
-              <font-awesome-icon icon="anchor"/>
+              <font-awesome-icon icon="anchor" />
             </span>
             Boats
           </a>
@@ -125,27 +125,27 @@ export default {
     }
   },
   methods: {
-    selectItem: function(item) {
+    selectItem(item) {
       this.selectedItems.push(item);
       this.$emit("selectItems", this.selectedItems);
       this.$itemEventBus.$emit("selectItemsToBus", this.selectedItems);
     },
-    deselectItemsFromBus: function() {
+    deselectItemsFromBus() {
       this.selectedItems = [];
     },
     selectItemsFromBus(items) {
       this.selectedItems = items;
     },
-    selectUserFromBus: function(user) {
+    selectUserFromBus(user) {
       this.user = user;
       this.favoriteItems = [];
       this.getFavoriteItems();
     },
-    deselectUserFromBus: function() {
+    deselectUserFromBus() {
       this.user = {};
       this.favoriteItems = [];
     },
-    getFavoriteItems: async function() {
+    async getFavoriteItems() {
       await this.$http
         .post("/getFavoriteItemIDs", this.user)
         .then(response => {
@@ -156,16 +156,19 @@ export default {
           });
         })
         .catch(response => {
-          // TODO
+          this.$responseEventBus.$emit(
+            "failureMessage",
+            "Couldn't get favorite items."
+          );
         });
     },
-    getItem: function(id) {
+    getItem(id) {
       return this.allItems.find(i => {
-        return i.ItemID == id;
+        return i.ID == id;
       });
     }
   },
-  created: function() {
+  created() {
     this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
     this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
     this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);

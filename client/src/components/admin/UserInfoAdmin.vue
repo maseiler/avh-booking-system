@@ -9,7 +9,7 @@
           <h6 class="subtitle is-6">
             <div>
               <font-awesome-icon icon="fingerprint"/>
-              &nbsp;{{user.UserID}}
+              &nbsp;{{user.ID}}
             </div>
             <div>
               <font-awesome-icon icon="beer"/>

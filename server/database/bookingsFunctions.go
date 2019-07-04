@@ -29,7 +29,7 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 
 // GetLastNBookings returns the last n book entries
 func GetLastNBookings(n int) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT %d;", n)
+	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY id DESC LIMIT %d;", n)
 	return getBookingsFromQuery(query)
 }
 
@@ -42,38 +42,37 @@ func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
 	return getBookingsFromQuery(query)
 }
 
-// GetLastNBookings returns last n book entries
-func GetLastNBookings(n int) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY id DESC LIMIT %d;", n)
+// GetBookingsOfUserBetween returns all book entries of specified user within timespan
+func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\";", user.ID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	if (start == time.Time{}) || (end == time.Time{}) {
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d;", user.ID)
+	}
 	return getBookingsFromQuery(query)
 }
 
-// GetBookingsBetween returns all book entries between timespan
-func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+// GetBookingsOfItemBetween returns all book entries of specified item within timespan
+func GetBookingsOfItemBetween(item data.Item, start time.Time, end time.Time) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\";", item.ID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+	if (start == time.Time{}) || (end == time.Time{}) {
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d;", item.ID)
+	}
 	return getBookingsFromQuery(query)
 }
 
-// GetBookingsOfColumnWithValue returns all book entries where value matches in specific column
-// e.g. column="user_id" and value="12" returns all book entries of user 12
-func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry {
-	query := ""
-	if column == "id" || column == "user_id" || column == "item_id" || column == "amount" {
-		intValue, _ := strconv.Atoi(value) // TODO: error handling
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = %d;", column, intValue)
-	} else if column == "time_stamp" {
-		//TODO func CheckTimePattern
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
-		//TODO client side: convert to format
-	} else if column == "total_price" {
-		floatValue, _ := strconv.ParseFloat(value, 32)
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = %f;", column, floatValue)
-	} else if column == "comment" {
-		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
-	} else {
-		query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0 AND TimeStamp BETWEEN \"%s\" AND \"%s\";", user.UserID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+// GetPaymentsOfUser returns all payment of specified user within timespan
+func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.BookEntry {
+	emptyUser := data.User{ID: 0, BierName: "", FirstName: "", LastName: "", BoatName: "", Status: "", Email: "", Phone: "", Balance: 0, MaxDebt: 0}
+	var query string
+	if user == emptyUser {
+		query = fmt.Sprintf("SELECT * from bookings WHERE total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
 		if (start == time.Time{}) || (end == time.Time{}) {
-			query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0;", user.UserID)
+			query = "SELECT * from bookings WHERE total_price <= 0;"
+		}
+	} else {
+		query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\";", user.ID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+		if (start == time.Time{}) || (end == time.Time{}) {
+			query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0;", user.ID)
 		}
 	}
 	return getBookingsFromQuery(query)

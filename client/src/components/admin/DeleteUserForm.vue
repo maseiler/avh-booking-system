@@ -71,8 +71,7 @@ export default {
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
-            console.log("Error: Couldn't delete user.");
-            //TODO
+            this.$responseEventBus.$emit("failureMessage", "Couldn't delete user.");
           });
       }
     },

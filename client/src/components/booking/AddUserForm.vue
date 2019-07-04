@@ -5,7 +5,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <h1 class="title is-4">Add new user</h1>
-            <hr>
+            <hr />
           </div>
 
           <div class="modal-body">
@@ -17,9 +17,9 @@
                   type="text"
                   placeholder="Biername"
                   v-model.lazy="newUser.BierName"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="beer"/>
+                  <font-awesome-icon icon="beer" />
                 </span>
               </div>
             </div>
@@ -32,9 +32,9 @@
                   type="text"
                   placeholder="First name"
                   v-model.lazy="newUser.FirstName"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="user"/>
+                  <font-awesome-icon icon="user" />
                 </span>
               </div>
             </div>
@@ -47,9 +47,9 @@
                   type="text"
                   placeholder="Last name"
                   v-model.lazy="newUser.LastName"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="user"/>
+                  <font-awesome-icon icon="user" />
                 </span>
               </div>
             </div>
@@ -62,9 +62,9 @@
                   type="email"
                   placeholder="Email Address"
                   v-model.lazy="newUser.Email"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="envelope"/>
+                  <font-awesome-icon icon="envelope" />
                 </span>
               </div>
             </div>
@@ -77,9 +77,9 @@
                   type="text"
                   placeholder="Phone Number"
                   v-model.lazy="newUser.Phone"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="phone"/>
+                  <font-awesome-icon icon="phone" />
                 </span>
               </div>
             </div>
@@ -101,7 +101,7 @@
             </div>
           </div>
 
-          <div v-if="newUser.status == 'Steganleger'" class="field">
+          <div v-if="newUser.Status == 'Steganleger'" class="field">
             <label class="label">Boat Name</label>
             <div class="control has-icons-left">
               <input
@@ -109,9 +109,9 @@
                 type="text"
                 placeholder="Boat Name"
                 v-model.lazy="newUser.BoatName"
-              >
+              />
               <span class="icon is-small is-left">
-                <font-awesome-icon icon="anchor"/>
+                <font-awesome-icon icon="anchor" />
               </span>
             </div>
           </div>
@@ -121,7 +121,7 @@
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
+                    <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
                   <p>{{validationError}}</p>
                 </div>
@@ -154,6 +154,7 @@ export default {
         BierName: "",
         FirstName: "",
         LastName: "",
+        BoatName: "",
         Email: "",
         Phone: "",
         Status: "",
@@ -184,9 +185,10 @@ export default {
       this.newUser.BierName = "";
       this.newUser.FirstName = "";
       this.newUser.LastName = "";
+      this.newUser.BoatName = "";
+      this.newUser.Status = "";
       this.newUser.Email = "";
       this.newUser.Phone = "";
-      this.newUser.Status = "";
       this.validationError = "";
       this.$emit("close");
     }
