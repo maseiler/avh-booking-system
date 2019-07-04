@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="entry in lastBookings"
+          v-for="entry in bookings"
           :key="entry"
           @click="selectEntry(entry)"
           :class="[selectedEntry === entry ? 'is-selected' : '']"
@@ -34,10 +34,10 @@
 
 <script>
 export default {
+  props: {
+    bookings: []
+  },
   computed: {
-    lastBookings() {
-      return this.$store.state.bookings;
-    },
     users() {
       return this.$store.state.users;
     },

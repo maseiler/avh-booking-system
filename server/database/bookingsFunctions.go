@@ -27,24 +27,18 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 	return bookings
 }
 
-func getTimestampFromQuery(query string) time.Time {
-	var latestPayment time.Time
-	rows, err := db.Query(query)
-	HandleDatabaseError(err)
-	defer rows.Close()
-	for rows.Next() {
-		err := rows.Scan(&latestPayment)
-		HandleDatabaseError(err)
-	}
-	defer rows.Close()
-	err = rows.Err()
-	HandleDatabaseError(err)
-	return latestPayment
+// GetLastNBookings returns the last n book entries
+func GetLastNBookings(n int) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY BookEntryId DESC LIMIT %d;", n)
+	return getBookingsFromQuery(query)
 }
 
-// GetAllBookings returns all book entries in database
-func GetAllBookings() []data.BookEntry {
-	query := "SELECT * FROM bookings;"
+// GetBookingsBetween returns all book entries within timespan
+func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+	if (start == time.Time{}) || (end == time.Time{}) {
+		query = "SELECT * FROM bookings;"
+	}
 	return getBookingsFromQuery(query)
 }
 
@@ -77,7 +71,10 @@ func GetBookingsOfColumnWithValue(column string, value string) []data.BookEntry 
 	} else if column == "comment" {
 		query = fmt.Sprintf("SELECT * FROM bookings Where %s = \"%s\";", column, value)
 	} else {
-		panic("Invalid column name")
+		query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0 AND TimeStamp BETWEEN \"%s\" AND \"%s\";", user.UserID, start.Format(time.RFC3339), end.Format(time.RFC3339))
+		if (start == time.Time{}) || (end == time.Time{}) {
+			query = fmt.Sprintf("SELECT * from bookings WHERE UserId = %d AND TotalPrice <= 0;", user.UserID)
+		}
 	}
 	return getBookingsFromQuery(query)
 }
@@ -90,6 +87,21 @@ func GetUserDebts(user data.User) data.Debts {
 	unpaid := getBookingsFromQuery(debtsQuery)
 	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
 	return debts
+}
+
+func getTimestampFromQuery(query string) time.Time {
+	var latestPayment time.Time
+	rows, err := db.Query(query)
+	HandleDatabaseError(err)
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&latestPayment)
+		HandleDatabaseError(err)
+	}
+	defer rows.Close()
+	err = rows.Err()
+	HandleDatabaseError(err)
+	return latestPayment
 }
 
 // Checkout adds a Cart to bookings and updates favorite items in database.

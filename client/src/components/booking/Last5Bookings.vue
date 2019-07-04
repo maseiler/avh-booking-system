@@ -14,7 +14,7 @@
 export default {
   computed: {
     bookings() {
-      return this.$store.getters.last5Bookings;
+      return this.$store.state.last5Bookings;
     }
   }
 };

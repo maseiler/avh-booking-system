@@ -18,7 +18,46 @@ func GetLastNBookings(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-// GetUserDebts forwards API call to get not payed book entries
+// GetBookingsFromUserBetween forwards API call to get book entries of user within time span
+func GetBookingsFromUserBetween(w http.ResponseWriter, r *http.Request) {
+	userFromTo := UnmarshalUserFromTo(r.Body)
+	from := ConvertStringToTime(userFromTo.From)
+	to := ConvertStringToTime(userFromTo.To)
+
+	bookings := dbP.GetBookingsOfUserBetween(userFromTo.User, from, to)
+
+	response := marshalToJSON(bookings, w)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
+// GetBookingsFromItemBetween forwards API call to get book entries of item within time span
+func GetBookingsFromItemBetween(w http.ResponseWriter, r *http.Request) {
+	itemFromTo := UnmarshalItemFromTo(r.Body)
+	from := ConvertStringToTime(itemFromTo.From)
+	to := ConvertStringToTime(itemFromTo.To)
+
+	bookings := dbP.GetBookingsOfItemBetween(itemFromTo.Item, from, to)
+
+	response := marshalToJSON(bookings, w)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
+// GetPaymentsOfUser forwards API call to get payments of user
+func GetPaymentsOfUser(w http.ResponseWriter, r *http.Request) {
+	userFromTo := UnmarshalUserFromTo(r.Body)
+	from := ConvertStringToTime(userFromTo.From)
+	to := ConvertStringToTime(userFromTo.To)
+
+	bookings := dbP.GetPaymentsOfUser(userFromTo.User, from, to)
+
+	response := marshalToJSON(bookings, w)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
+// GetUserDebts forwards API call to get unpayed book entries
 func GetUserDebts(w http.ResponseWriter, r *http.Request) {
 	user := UnmarshalUser(r.Body)
 

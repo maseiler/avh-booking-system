@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	dataP "../data"
 )
@@ -69,6 +70,20 @@ func UnmarshalItem(body io.ReadCloser) dataP.Item {
 	return item
 }
 
+// UnmarshalItemFromTo unmarshals JSON object to ItemFromTo struct
+func UnmarshalItemFromTo(body io.ReadCloser) dataP.ItemFromTo {
+	var itemFromTo dataP.ItemFromTo
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(body)
+	err = json.Unmarshal(buf.Bytes(), &itemFromTo)
+
+	if err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
+	return itemFromTo
+}
+
 // UnmarshalUser unmarshals JSON object to User
 func UnmarshalUser(body io.ReadCloser) dataP.User {
 	decoder := json.NewDecoder(body)
@@ -80,6 +95,20 @@ func UnmarshalUser(body io.ReadCloser) dataP.User {
 		panic(err)
 	}
 	return user
+}
+
+// UnmarshalUserFromTo unmarshals JSON object to UserFromTo struct
+func UnmarshalUserFromTo(body io.ReadCloser) dataP.UserFromTo {
+	var userFromTo dataP.UserFromTo
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(body)
+	err = json.Unmarshal(buf.Bytes(), &userFromTo)
+
+	if err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
+	return userFromTo
 }
 
 // UnmarshalCart unmarshals JSON object to Cart
@@ -119,6 +148,18 @@ func UnmarshalFeedback(body io.ReadCloser) dataP.Feedback {
 		panic(err)
 	}
 	return feedback
+}
+
+// ConvertStringToTime converts string of format YYY-MM-DD to time
+func ConvertStringToTime(str string) time.Time {
+	layout := "2006-01-02"
+	t, err := time.Parse(layout, str)
+
+	if err != nil {
+		return time.Time{}
+	}
+
+	return t
 }
 
 func handleHTTPError(err error, w http.ResponseWriter) {
