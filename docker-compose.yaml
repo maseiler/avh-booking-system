@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  avhbs:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on: 
+      - db
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_pass
+      MYSQL_DATABASE: avhbs_db
+      MYSQL_ROOT_PASSWORD: db_pass
+    volumes: 
+      - mysql:/var/lib/mysql
+volumes:
+  mysql:

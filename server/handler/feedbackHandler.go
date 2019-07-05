@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	dbP "../database"
+	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
 // GetFeedback forwards API call to get all feedback from database

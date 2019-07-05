@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	dbP "../database"
+	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
 // UpdateFavoriteItems forwards API calll to create a new entry in database if item and user doesn't exists or increments count otherwise.

@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 
-	data "../data"
+	data "github.com/maseiler/avh-booking-system/server/data"
 )
 
 // GetFeedback returns map  of feedback and its ID from database

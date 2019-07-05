@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	data "../data"
-	dbP "../database"
+	data "github.com/maseiler/avh-booking-system/server/data"
+	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
 // GetLastNBookings forwards API call to get the n latest bookings from database

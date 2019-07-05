@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	dbP "../database"
+	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
 // Login confirms/denies entered password

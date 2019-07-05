@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	dataP "../data"
-	dbP "../database"
+	dataP "github.com/maseiler/avh-booking-system/server/data"
+	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
 // AddUser forwards API call to add new user to database

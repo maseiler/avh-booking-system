@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"../data"
+	"github.com/maseiler/avh-booking-system/server/data"
 )
 
 // getBookingsFromQuery returns list of book entries as requested in string
