@@ -35,7 +35,7 @@ func GetLastNBookings(n int) []data.BookEntry {
 
 // GetBookingsBetween returns all book entries within timespan
 func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE TimeStamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format(time.RFC3339), end.Format(time.RFC3339))
 	if (start == time.Time{}) || (end == time.Time{}) {
 		query = "SELECT * FROM bookings;"
 	}
