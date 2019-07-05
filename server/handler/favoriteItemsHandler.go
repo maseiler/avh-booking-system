@@ -38,7 +38,7 @@ func DeleteUserFromFavoriteItems(w http.ResponseWriter, r *http.Request) {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	} else {
-		validation = fmt.Sprintf("Couldn't delete user %d from favorite_items.", user.ID)
+		validation = fmt.Sprintf("Couldn't delete user %d from favorite items.", user.ID)
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	fmt.Fprint(w, validation)
