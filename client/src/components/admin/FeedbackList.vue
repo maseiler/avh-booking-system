@@ -48,7 +48,7 @@ export default {
   methods: {
     deleteEntry(id) {
       this.$http
-        .post("/deleteFeedback", id)
+        .post("deleteFeedback", id)
         .then(function(response) {
           this.$responseEventBus.$emit(
             "successMessage",
