@@ -167,7 +167,7 @@ export default {
   methods: {
     submitUser() {
       this.$http
-        .post("/addUser", this.newUser)
+        .post("addUser", this.newUser)
         .then(function(response) {
           var message = "".concat(
             "Added new user: ",
