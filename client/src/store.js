@@ -46,7 +46,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     getUsers(state) {
-      Vue.http.get("/getUsers").then(response => {
+      Vue.http.get("getUsers").then(response => {
         var users = [].concat.apply([], response.body);
         users = users.filter(Boolean);
         sortUsersByName(users);
@@ -54,7 +54,7 @@ const store = new Vuex.Store({
       })
     },
     getItems(state) {
-      Vue.http.get("/getAllItems").then(response => {
+      Vue.http.get("getAllItems").then(response => {
         var items = [].concat.apply([], response.body);
         items = items.filter(Boolean);
         sortItemsByName(items);
@@ -62,14 +62,14 @@ const store = new Vuex.Store({
       });
     },
     getLast5Bookings(state) {
-      Vue.http.post("/getLastNBookings", 5).then(response => {
+      Vue.http.post("getLastNBookings", 5).then(response => {
         var bookings = [].concat.apply([], response.body);
         bookings = bookings.filter(Boolean);
         state.last5Bookings = bookings;
       });
     },
     getFeedbackList(state) {
-      Vue.http.get("/getFeedback").then(response => {
+      Vue.http.get("getFeedback").then(response => {
         var feedback = [].concat.apply([], response.body);
         feedback = feedback.filter(Boolean);
         state.feedback = feedback;
