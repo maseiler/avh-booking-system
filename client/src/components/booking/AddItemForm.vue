@@ -115,7 +115,7 @@ export default {
   methods: {
     submitItem() {
       this.$http
-        .post("/addItem", this.newItem)
+        .post("addItem", this.newItem)
         .then(function(response) {
           var message = "".concat(
             "Added new item: ",

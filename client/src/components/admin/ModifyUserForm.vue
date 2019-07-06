@@ -205,7 +205,7 @@ export default {
         this.validationError = "Please select a user first.";
       } else {
         this.$http
-          .post("/modifyUser", this.user)
+          .post("modifyUser", this.user)
           .then(function(response) {
             var message = "".concat(
               "Modified user: ",

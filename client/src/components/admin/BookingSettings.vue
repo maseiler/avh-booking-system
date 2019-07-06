@@ -142,7 +142,7 @@ export default {
         userFromTo.From = this.from;
         userFromTo.To = this.to;
         this.$http
-          .post("/getBookingsFromUserBetween", userFromTo)
+          .post("getBookingsFromUserBetween", userFromTo)
           .then(response => {
             this.bookings = [].concat.apply([], response.body);
           })
@@ -158,7 +158,7 @@ export default {
         itemFromTo.From = this.from;
         itemFromTo.To = this.to;
         this.$http
-          .post("/getBookingsFromItemBetween", itemFromTo)
+          .post("getBookingsFromItemBetween", itemFromTo)
           .then(response => {
             this.bookings = [].concat.apply([], response.body);
           })
@@ -174,7 +174,7 @@ export default {
         userFromTo.From = this.from;
         userFromTo.To = this.to;
         this.$http
-          .post("/getPaymentsOfUser", userFromTo)
+          .post("getPaymentsOfUser", userFromTo)
           .then(response => {
             this.bookings = [].concat.apply([], response.body);
           })
@@ -197,7 +197,7 @@ export default {
     deleteEntry() {
       if (Object.keys(this.selectedEntry).length !== 0) {
         this.$http
-          .post("/deleteBookEntry", this.selectedEntry)
+          .post("deleteBookEntry", this.selectedEntry)
           .then(function(response) {
             this.$store.commit("getLastNBookings", 50);
             this.$responseEventBus.$emit("successMessage", "Deleted bookEntry");
