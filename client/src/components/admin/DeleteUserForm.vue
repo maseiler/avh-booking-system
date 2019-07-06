@@ -60,7 +60,7 @@ export default {
         this.error = "Please select an user first.";
       } else {
         this.$http
-          .post("/deleteUser", this.user)
+          .post("deleteUser", this.user)
           .then(function(response) {
             var message = "".concat(
               "Deleted user: ",
