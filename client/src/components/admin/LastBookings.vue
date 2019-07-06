@@ -19,7 +19,7 @@
           @click="selectEntry(entry)"
           :class="[selectedEntry === entry ? 'is-selected' : '']"
         >
-          <th>{{entry.BookEntryID}}</th>
+          <th>{{entry.ID}}</th>
           <td>{{printDateTime(entry.TimeStamp)}}</td>
           <td>{{displayUserName(getUserByID(entry.UserID))}}</td>
           <td>{{displayItem(getItemByID(entry.ItemID))}}</td>

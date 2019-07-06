@@ -201,7 +201,7 @@ export default {
         .then(function(response) {
           var message = "".concat(
             "Added new user: ",
-            displayUserName(this.newUser)
+            this.displayUserName(this.newUser)
           );
           this.resetAndCloseForm();
           this.$store.commit("getUsers");
