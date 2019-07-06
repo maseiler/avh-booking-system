@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 	"time"
+	"log"
 
 	"github.com/maseiler/avh-booking-system/server/data"
 )
