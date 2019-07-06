@@ -132,9 +132,17 @@ export default {
     getBookings() {
       if (this.option === "optLastN") {
         if (this.n > 0) {
-          this.$http.post("/getLastNBookings", this.n).then(response => {
-            this.bookings = [].concat.apply([], response.body);
-          });
+          this.$http
+            .post("getLastNBookings", this.n)
+            .then(response => {
+              this.bookings = [].concat.apply([], response.body);
+            })
+            .catch(response => {
+              this.$responseEventBus.$emit(
+                "failureMessage",
+                "Couldn't fetch bookings"
+              );
+            });
         }
       } else if (this.option === "optFromUser") {
         var userFromTo = new Object();
