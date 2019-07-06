@@ -147,7 +147,7 @@ export default {
     },
     async getFavoriteItems() {
       await this.$http
-        .post("/getFavoriteItemIDs", this.user)
+        .post("getFavoriteItemIDs", this.user)
         .then(response => {
           var favoriteItemIDs = [].concat.apply([], response.body);
           favoriteItemIDs.forEach(id => {
