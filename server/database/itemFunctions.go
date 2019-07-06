@@ -18,7 +18,6 @@ func getItemsByQuery(query string) []data.Item {
 		items = append(items, item)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	// fmt.Printf("Performed item query: \"%s\"\n", query)
@@ -81,7 +80,6 @@ func AddItem(newItem data.Item) {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 }
 
 // ModifyItem replaces all values of a item

@@ -14,7 +14,6 @@ func GetPasswords() []string {
 		pws = append(pws, pw)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return pws
@@ -32,5 +31,4 @@ func ModifyPassword(oldPw string, newPw string) {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 }

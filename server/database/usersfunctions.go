@@ -19,7 +19,6 @@ func getUsersByQuery(query string) []data.User {
 		users = append(users, user)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	// fmt.Printf("Performed user query: \"%s\"\n", query)
@@ -79,7 +78,6 @@ func AddUser(newUser data.User) {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 }
 
 // ModifyUser replaces all values of a user

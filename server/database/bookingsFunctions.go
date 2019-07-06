@@ -20,7 +20,6 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 		bookings = append(bookings, bookEntry)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	// fmt.Printf("Performed booking query: \"%s\"\n", query)
@@ -97,7 +96,6 @@ func getTimestampFromQuery(query string) time.Time {
 		err := rows.Scan(&latestPayment)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return latestPayment
@@ -122,7 +120,6 @@ func Checkout(cart data.Cart) bool {
 		TxRowsAffected(res, tx)
 		err = tx.Commit()
 		HandleDatabaseError(err)
-		stmt.Close()
 
 		user := GetUsersOfColumnWithValue("id", strconv.Itoa(cart.User.ID))[0]
 		user.Balance += totalPrice
@@ -146,7 +143,6 @@ func Pay(user data.User) bool {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 
 	query := fmt.Sprintf("UPDATE users SET balance = 0 WHERE id = %d;", user.ID)
 	rows, err := db.Query(query)
@@ -170,7 +166,6 @@ func DeleteBookEntry(entry data.BookEntry) bool {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 	if err == nil {
 		if entry.TotalPrice > 0 {
 			user.Balance -= entry.TotalPrice

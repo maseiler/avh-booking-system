@@ -18,7 +18,6 @@ func GetFeedback() []data.Feedback {
 		feedbackMap = append(feedbackMap, feedback)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return feedbackMap
@@ -35,7 +34,6 @@ func AddFeedback(feedback data.Feedback) {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 }
 
 // DeleteFeedback removes feedback string from database

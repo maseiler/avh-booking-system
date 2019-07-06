@@ -16,7 +16,6 @@ func entryExists(userID int, itemID int) bool {
 		err := rows.Scan(&exists)
 		HandleDatabaseError(err)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return exists
@@ -32,7 +31,6 @@ func addEntry(userID int, ItemID int, amount int) error {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 	return err
 }
 
@@ -47,7 +45,6 @@ func incrementCount(userID int, ItemID int, amount int) error {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 	return err
 }
 
@@ -81,7 +78,6 @@ func GetFavoriteItemIDs(userID int) []int {
 		HandleDatabaseError(err)
 		favoriteItemIDs = append(favoriteItemIDs, itemID)
 	}
-	defer rows.Close()
 	err = rows.Err()
 	HandleDatabaseError(err)
 	return favoriteItemIDs
@@ -99,7 +95,6 @@ func DeleteUserFromFavoriteItems(user data.User) bool {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	stmt.Close()
 	if err != nil {
 		return true
 	}
