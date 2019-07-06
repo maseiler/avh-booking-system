@@ -54,7 +54,7 @@ export default {
         this.error = "Please select an item first.";
       } else {
         this.$http
-          .post("/deleteItem", this.item)
+          .post("deleteItem", this.item)
           .then(function(response) {
             var message = "".concat(
               "Deleted item: ",

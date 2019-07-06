@@ -65,7 +65,7 @@ export default {
     submitFeedback() {
       var feedback = { Name: this.name, Content: this.text };
       this.$http
-        .post("/addFeedback", feedback)
+        .post("addFeedback", feedback)
         .then(function(response) {
           this.$store.commit("getFeedbackList");
           this.$responseEventBus.$emit("successMessage", "Thank you! <3");

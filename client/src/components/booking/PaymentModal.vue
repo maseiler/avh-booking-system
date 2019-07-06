@@ -72,7 +72,7 @@ export default {
     pay() {
       if (this.weekdayIsMonday()) {
         this.$http
-          .post("/pay", this.user)
+          .post("pay", this.user)
           .then(function(response) {
             var message = "".concat(
               this.displayUserName(this.user),
@@ -111,7 +111,7 @@ export default {
   },
   created() {
     this.$http
-      .post("/getUserDebts", this.user)
+      .post("getUserDebts", this.user)
       .then(function(response) {
         this.userBookings = response.body;
       })

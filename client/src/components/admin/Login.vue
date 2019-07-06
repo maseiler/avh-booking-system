@@ -53,7 +53,7 @@ export default {
   methods: {
     login() {
       this.$http
-        .post("/login", this.password)
+        .post("login", this.password)
         .then(function(response) {
           this.$router.push("/admin");
         })

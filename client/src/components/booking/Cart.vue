@@ -129,7 +129,7 @@ export default {
     checkout: async function() {
       var packedCart = { cartItems: this.cart, user: this.user };
       await this.$http
-        .post("/checkout", packedCart)
+        .post("checkout", packedCart)
         .then(function(response) {
           var message = "".concat(
             "Checkout from ",

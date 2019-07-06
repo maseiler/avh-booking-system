@@ -48,7 +48,7 @@ export default {
     changePassword() {
       if (this.newPassword1 === this.newPassword2) {
         this.$http
-          .post("/changeAdminPassword", [this.oldPassword, this.newPassword1])
+          .post("changeAdminPassword", [this.oldPassword, this.newPassword1])
           .then(function(response) {
             this.$responseEventBus.$emit("successMessage", "Changed password.");
           })

@@ -24,10 +24,6 @@ func CreateDatabase() {
 	db.Close()
 	loginInfo = loginInfo + os.Getenv("AVHBS_DB_NAME") + "?parseTime=true"
 	db, err = sql.Open("mysql", loginInfo)
-	// HandleDatabaseError(err)
-	// query = fmt.Sprintf("USE %s;", os.Getenv("AVHBS_DB_NAME"))
-	// _, err = db.Exec(query)
-	// HandleDatabaseError(err)
 
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users(
@@ -101,9 +97,6 @@ func CreateDatabase() {
 		HandleDatabaseError(err)
 	}
 
-	// db.Close()
-	// loginInfo = loginInfo + os.Getenv("AVHBS_DB_NAME") + "?parseTime=true"
-	// db, err = sql.Open("mysql", loginInfo)
 	var version string
 	db.QueryRow("SELECT VERSION()").Scan(&version)
 	newLoginInfo := fmt.Sprintf("%s:***@tcp(%s:%s)/%s", os.Getenv("AVHBS_DB_USER"), os.Getenv("AVHBS_DB_IP"), os.Getenv("AVHBS_DB_PORT"), os.Getenv("AVHBS_DB_NAME"))

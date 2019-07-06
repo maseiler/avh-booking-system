@@ -115,7 +115,7 @@ export default {
         this.validationError = "Please select an item first.";
       } else {
         this.$http
-          .post("/modifyItem", this.item)
+          .post("modifyItem", this.item)
           .then(function(response) {
             var message = "".concat(
               "Modified item: ",
