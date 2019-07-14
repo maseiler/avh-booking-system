@@ -3,17 +3,17 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <UserTab @selectedUser="getSelectedUser"/>
+          <UserTab/>
         </div>
       </div>
       <div class="column is-narrow">
         <div class="box has-text-centered" style="width: 500px;">
           <div
-            v-if="Object.keys(selectedUser).length !== 0 || Object.keys(selectedItems).length !== 0"
+            v-if="Object.keys(this.$store.state.selectedUser).length !== 0 || Object.keys(selectedItems).length !== 0"
           >
-            <Cart :user="selectedUser" :items="selectedItems"/>
+            <Cart :items="selectedItems"/>
             <hr>
-            <UserInfo :user="selectedUser"></UserInfo>
+            <UserInfo></UserInfo>
           </div>
           <div v-else>
             <img class="logo" src="~@/assets/avh_logo.png" width="250px">
@@ -48,14 +48,10 @@ export default {
   },
   data() {
     return {
-      selectedUser: {},
       selectedItems: []
     };
   },
   methods: {
-    getSelectedUser(user) {
-      this.selectedUser = user;
-    },
     getSelectedItems(items) {
       this.selectedItems = items;
     }

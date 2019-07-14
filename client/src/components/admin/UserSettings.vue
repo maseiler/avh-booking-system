@@ -10,21 +10,19 @@
         </div>
         <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false"/>
         <ModifyUserForm
-          :user="selectedUser"
           v-if="showModifyUserForm"
           @close="showModifyUserForm = false"
         />
         <DeleteUserForm
-          :user="selectedUser"
           v-if="showDeleteUserForm"
           @close="showDeleteUserForm = false"
         />
       </div>
       <div class="column is-4">
-        <UserSearch @selectUser="selectUser"/>
+        <UserSearch/>
       </div>
       <div class="column is-4">
-        <UserInfoAdmin :user="selectedUser"/>
+        <UserInfoAdmin/>
       </div>
     </div>
   </div>
@@ -50,20 +48,7 @@ export default {
       showAddUserFormAdmin: false,
       showModifyUserForm: false,
       showDeleteUserForm: false,
-      selectedUser: {}
     };
-  },
-  methods: {
-    selectUserFromBus(user) {
-      this.selectedUser = user;
-    },
-    deselectUserFromBus() {
-      this.selectUserFromBus = {};
-    }
-  },
-  created() {
-    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
-    this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }
 };
 </script>

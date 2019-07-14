@@ -8,23 +8,23 @@
         <div class="column has-text-left">
           <h6 class="subtitle is-6">
             <div>
-              <font-awesome-icon icon="fingerprint"/>
+              <font-awesome-icon icon="fingerprint" />
               &nbsp;{{user.ID}}
             </div>
             <div>
-              <font-awesome-icon icon="beer"/>
+              <font-awesome-icon icon="beer" />
               &nbsp;{{user.BierName}}
             </div>
             <div>
-              <font-awesome-icon icon="user"/>
+              <font-awesome-icon icon="user" />
               &nbsp;{{user.FirstName}}
             </div>
             <div>
-              <font-awesome-icon icon="user-circle"/>
+              <font-awesome-icon icon="user-circle" />
               &nbsp;{{user.LastName}}
             </div>
             <div>
-              <font-awesome-icon icon="info-circle"/>
+              <font-awesome-icon icon="info-circle" />
               &nbsp;{{user.Status}}
             </div>
           </h6>
@@ -32,19 +32,20 @@
         <div class="column has-text-left">
           <h6 class="subtitle is-6">
             <div>
-              <font-awesome-icon icon="envelope"/>
+              <font-awesome-icon icon="envelope" />
               &nbsp;{{user.Email}}
             </div>
             <div>
-              <font-awesome-icon icon="phone"/>
+              <font-awesome-icon icon="phone" />
               &nbsp;{{user.Phone}}
             </div>
             <div>
-              &nbsp;<font-awesome-icon icon="euro-sign"/>
+              &nbsp;
+              <font-awesome-icon icon="euro-sign" />
               &nbsp;&nbsp;{{user.Balance}}&nbsp;€
             </div>
             <div>
-              <font-awesome-icon icon="credit-card"/>
+              <font-awesome-icon icon="credit-card" />
               &nbsp;{{user.MaxDebt}}&nbsp;€
             </div>
           </h6>
@@ -56,8 +57,10 @@
 
 <script>
 export default {
-  props: {
-    user: Object
+  computed: {
+    user() {
+      return this.$store.state.selectedUser;
+    }
   }
 };
 </script>

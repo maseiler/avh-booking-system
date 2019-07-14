@@ -51,8 +51,10 @@
 
 <script>
 export default {
-  props: {
-    user: {}
+  computed:{
+    user(){
+      return this.$store.state.selectedUser;
+    }
   },
   methods: {
     deleteUser() {
@@ -66,8 +68,9 @@ export default {
               "Deleted user: ",
               this.displayUserName(this.user)
             );
-            this.closeForm()
+            this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");
+            this.closeForm()
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {

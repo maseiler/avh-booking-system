@@ -45,10 +45,12 @@ export default {
   components: {
     PaymentModal
   },
-  props: {
-    user: {}
+  computed:{
+    user(){
+      return this.$store.state.selectedUser;
+    }
   },
-  data: function() {
+  data() {
     return {
       showPaymentModal: false
     };

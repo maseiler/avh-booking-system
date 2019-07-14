@@ -5,14 +5,14 @@
         <div class="modal-container">
           <div class="modal-header">
             <h1 class="title is-4">Modify user</h1>
-            <hr>
+            <hr />
           </div>
 
           <article v-if="Object.keys(user).length === 0" class="message is-danger">
             <div class="message-header">
               <div class="field is-grouped">
                 <p class="icon is-small is-left">
-                  <font-awesome-icon icon="exclamation" size="lg"/>
+                  <font-awesome-icon icon="exclamation" size="lg" />
                 </p>
                 <p>Select user first.</p>
               </div>
@@ -29,9 +29,9 @@
                     type="text"
                     placeholder="Biername"
                     v-model.lazy="user.BierName"
-                  >
+                  />
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="beer"/>
+                    <font-awesome-icon icon="beer" />
                   </span>
                 </div>
               </div>
@@ -44,9 +44,9 @@
                     type="text"
                     placeholder="First name"
                     v-model.lazy="user.FirstName"
-                  >
+                  />
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="user"/>
+                    <font-awesome-icon icon="user" />
                   </span>
                 </div>
               </div>
@@ -59,9 +59,9 @@
                     type="text"
                     placeholder="Last name"
                     v-model.lazy="user.LastName"
-                  >
+                  />
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="user"/>
+                    <font-awesome-icon icon="user" />
                   </span>
                 </div>
               </div>
@@ -74,9 +74,9 @@
                     type="text"
                     placeholder="Boat Name"
                     v-model.lazy="user.BoatName"
-                  >
+                  />
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="anchor"/>
+                    <font-awesome-icon icon="anchor" />
                   </span>
                 </div>
               </div>
@@ -89,9 +89,9 @@
                     type="email"
                     placeholder="Email Address"
                     v-model.lazy="user.Email"
-                  >
+                  />
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="envelope"/>
+                    <font-awesome-icon icon="envelope" />
                   </span>
                 </div>
               </div>
@@ -104,9 +104,9 @@
                     type="text"
                     placeholder="Phone Number"
                     v-model.lazy="user.Phone"
-                  >
+                  />
                   <span class="icon is-small is-left">
-                    <font-awesome-icon icon="phone"/>
+                    <font-awesome-icon icon="phone" />
                   </span>
                 </div>
               </div>
@@ -136,9 +136,9 @@
                   type="text"
                   placeholder="Balance"
                   v-model.number="user.Balance"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="euro-sign"/>
+                  <font-awesome-icon icon="euro-sign" />
                 </span>
               </div>
             </div>
@@ -151,9 +151,9 @@
                   type="text"
                   placeholder="Max Debt"
                   v-model.number="user.MaxDebt"
-                >
+                />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="money-bill"/>
+                  <font-awesome-icon icon="money-bill" />
                 </span>
               </div>
             </div>
@@ -164,7 +164,7 @@
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
+                    <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
                   <p>{{validationError}}</p>
                 </div>
@@ -191,8 +191,10 @@
 
 <script>
 export default {
-  props: {
-    user: {}
+  computed: {
+    user() {
+      return this.$store.state.selectedUser;
+    }
   },
   data() {
     return {
@@ -211,8 +213,9 @@ export default {
               "Modified user: ",
               this.displayUserName(this.user)
             );
-            this.closeForm()
+            this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");
+            this.closeForm();
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {

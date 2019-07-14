@@ -116,6 +116,11 @@ export default {
     UserSearch,
     ItemSearch
   },
+  computed: {
+    user() {
+      return this.$store.state.selectedUser;
+    }
+  },
   data() {
     return {
       selectedEntry: {},
@@ -124,7 +129,6 @@ export default {
       n: 0,
       from: "",
       to: "",
-      user: {},
       item: {}
     };
   },
@@ -223,15 +227,11 @@ export default {
         );
       }
     },
-    selectUserFromBus(user) {
-      this.user = user;
-    },
     selectItemFromBus(items) {
       this.item = items[0];
     }
   },
   created() {
-    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
     this.$itemEventBus.$on("selectItemsToBus", this.selectItemFromBus);
   }
 };

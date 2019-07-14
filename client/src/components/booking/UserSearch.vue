@@ -11,9 +11,9 @@
               placeholder="Search user"
               v-model="search"
               v-on:keyup="searchUsers"
-            >
+            />
             <span class="icon is-small is-left">
-              <font-awesome-icon icon="search"/>
+              <font-awesome-icon icon="search" />
             </span>
           </div>
         </div>
@@ -25,7 +25,7 @@
         class="button"
         v-for="user in searchResults"
         :key="user"
-        :class="buttonColor(user)"
+        :class="buttonColor(selectedUser, user)"
         @click="selectUser(user)"
       >{{ displayUserName(user) }}</button>
     </div>
@@ -36,7 +36,6 @@
 export default {
   data() {
     return {
-      selectedUser: {},
       search: "",
       searchResults: []
     };
@@ -44,6 +43,9 @@ export default {
   computed: {
     allUsers() {
       return this.$store.state.users;
+    },
+    selectedUser() {
+      return this.$store.state.selectedUser;
     }
   },
   methods: {
@@ -63,41 +65,9 @@ export default {
         this.searchResults = [];
       }
     },
-    buttonColor(user) {
-      if (this.selectedUser === user) {
-        return "is-link";
-      } else if (user.Balance >= user.MaxDebt) {
-        return "is-danger";
-      } else if (user.MaxDebt - user.Balance <= user.MaxDebt * 0.1) {
-        return "is-warning";
-      } else {
-        return "";
-      }
-    },
     selectUser(user) {
-      if (this.selectedUser === user) {
-        this.deselectUser();
-        return;
-      }
-      this.selectedUser = user;
-      this.$emit("selectUser", user);
-      this.$userEventBus.$emit("selectUserToBus", user);
-    },
-    deselectUser(user) {
-      this.selectedUser = {};
-      this.$emit("selectUser", this.selectedUser);
-      this.$userEventBus.$emit("deselectUserToBus");
-    },
-    deselectUserFromBus() {
-      this.selectedUser = {};
-    },
-    selectUserFromBus(user) {
-      this.selectedUser = user;
+      this.$store.commit("selectUser", user);
     }
-  },
-  created() {
-    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
-    this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }
 };
 </script>

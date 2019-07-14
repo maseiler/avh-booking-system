@@ -79,9 +79,10 @@ export default {
               " payed ",
               this.user.Balance
             );
-            this.$emit("close");
             this.$store.commit("getLast5Bookings");
             this.$store.commit("getUsers");
+            this.$store.commit("selectUser", {});
+            this.$emit("close");
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(function(response) {
@@ -96,7 +97,7 @@ export default {
       }
     },
     weekdayIsMonday() {
-      return true;
+      // return true; // for debugging
       var day = new Date().getDay();
       if (day == 1) {
         return true;

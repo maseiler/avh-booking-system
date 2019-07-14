@@ -103,9 +103,13 @@ export default {
     return {
       favoriteItems: [],
       selectedItems: [],
-      activeTab: "tab0",
-      user: {}
+      activeTab: "tab0"
     };
+  },
+  watch: {
+    user() {
+      this.getFavoriteItems();
+    }
   },
   computed: {
     allItems() {
@@ -122,6 +126,9 @@ export default {
     },
     itemsBoat() {
       return this.$store.getters.itemsBoat;
+    },
+    user() {
+      return this.$store.state.selectedUser;
     }
   },
   methods: {
@@ -136,23 +143,15 @@ export default {
     selectItemsFromBus(items) {
       this.selectedItems = items;
     },
-    selectUserFromBus(user) {
-      this.user = user;
-      this.favoriteItems = [];
-      this.getFavoriteItems();
-    },
-    deselectUserFromBus() {
-      this.user = {};
-      this.favoriteItems = [];
-    },
     async getFavoriteItems() {
+      var result = [];
       await this.$http
         .post("getFavoriteItemIDs", this.user)
         .then(response => {
           var favoriteItemIDs = [].concat.apply([], response.body);
           favoriteItemIDs.forEach(id => {
             var item = this.getItem(id);
-            this.favoriteItems = [].concat(this.favoriteItems, item);
+            result = [].concat(result, item);
           });
         })
         .catch(response => {
@@ -161,6 +160,7 @@ export default {
             "Couldn't get favorite items."
           );
         });
+      this.favoriteItems = result;
     },
     getItem(id) {
       return this.allItems.find(i => {
@@ -171,8 +171,6 @@ export default {
   created() {
     this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
     this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
-    this.$userEventBus.$on("selectUserToBus", this.selectUserFromBus);
-    this.$userEventBus.$on("deselectUserToBus", this.deselectUserFromBus);
   }
 };
 </script>

@@ -2,15 +2,15 @@
   <div>
     <div class="columns">
       <div class="column">
-        <UserSearch @selectUser="selectUser"/>
+        <UserSearch />
       </div>
       <div class="column is-2">
         <button class="button is-link" @click="showAddUserForm = true">Add User</button>
       </div>
-      <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false"/>
+      <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false" />
     </div>
-    <hr>
-    <UserList @selectUser="selectUser"/>
+    <hr />
+    <UserList />
   </div>
 </template>
 
@@ -26,26 +26,10 @@ export default {
     UserList,
     AddUserForm
   },
-  data: function() {
+  data() {
     return {
-      showAddUserForm: false,
-      selectedUser: {}
+      showAddUserForm: false
     };
-  },
-  methods: {
-    selectUser: function(user) {
-      this.selectedUser = user;
-      this.$emit("selectedUser", user);
-    }
   }
 };
-
-var UserEventBus = new Vue();
-Object.defineProperties(Vue.prototype, {
-  $userEventBus: {
-    get: function() {
-      return UserEventBus;
-    }
-  }
-});
 </script>

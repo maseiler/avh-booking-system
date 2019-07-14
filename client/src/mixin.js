@@ -52,7 +52,18 @@ const mixin = Vue.mixin({
         ":" +
         ("0" + d.getSeconds()).slice(-2)
       );
-    }
+    },
+    buttonColor(selectedUser, user) {
+      if (selectedUser === user) {
+        return "is-link";
+      } else if (user.Balance >= user.MaxDebt) {
+        return "is-danger";
+      } else if (user.MaxDebt - user.Balance <= user.MaxDebt * 0.1) {
+        return "is-warning";
+      } else {
+        return "";
+      }
+    },
   }
 })
 

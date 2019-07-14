@@ -29,10 +29,10 @@
               style="width:4em;"
               v-model="i.amount"
               @change="updateCart(i.item)"
-            >
+            />
             &nbsp;
             <button class="button is-small" @click="deleteItem(i)">
-              <font-awesome-icon icon="trash"/>
+              <font-awesome-icon icon="trash" />
             </button>
           </td>
         </tr>
@@ -44,16 +44,20 @@
 <script>
 export default {
   props: {
-    user: {},
     items: []
   },
+  computed: {
+    user() {
+      return this.$store.state.selectedUser;
+    }
+  },
   watch: {
-    items: function() {
+    items() {
       this.buildCart();
       this.updateSum();
     }
   },
-  data: function() {
+  data() {
     return {
       cart: [],
       sum: 0,
@@ -61,7 +65,7 @@ export default {
     };
   },
   methods: {
-    buildCart: function() {
+    buildCart() {
       var temp = [];
       this.items.forEach(item => {
         if (!this.contains(temp, item)) {
@@ -75,7 +79,7 @@ export default {
       });
       this.cart = temp;
     },
-    contains: function(array, obj) {
+    contains(array, obj) {
       for (var i in array) {
         if (array[i].item.ID === obj.ID) {
           return true;
@@ -83,7 +87,7 @@ export default {
       }
       return false;
     },
-    increment: function(array, item) {
+    increment(array, item) {
       for (var i in array) {
         if (array[i].item.ID === item.ID) {
           array[i].amount = array[i].amount + 1;
@@ -91,7 +95,7 @@ export default {
         }
       }
     },
-    updateCart: function(item) {
+    updateCart(item) {
       for (var i in this.cart) {
         if (this.cart[i].item === item) {
           var itemCount = 0;
@@ -118,7 +122,7 @@ export default {
         }
       }
     },
-    updateSum: function() {
+    updateSum() {
       var temp = 0;
       for (var i in this.cart) {
         temp += this.cart[i].item.Price * this.cart[i].amount;
@@ -126,7 +130,7 @@ export default {
       temp = temp.toFixed(2);
       this.sum = temp;
     },
-    checkout: async function() {
+    async checkout() {
       var packedCart = { cartItems: this.cart, user: this.user };
       await this.$http
         .post("checkout", packedCart)
@@ -143,24 +147,22 @@ export default {
       await this.emptyCart();
       await this.$router.go();
     },
-    deleteItem: function(item) {
+    deleteItem(item) {
       var index = this.cart.indexOf(item);
       if (index != -1) {
         this.cart[index].amount = 0;
         this.updateCart(item.item);
       }
     },
-    emptyCart: function() {
+    emptyCart() {
+      this.cart = [];
       this.sum = 0;
       this.user = {};
       this.items = [];
-      this.deselectUser();
+      this.$store.commit("selectUser", {});
       this.deselectItems();
     },
-    deselectUser: function() {
-      this.$userEventBus.$emit("deselectUserToBus");
-    },
-    deselectItems: function() {
+    deselectItems() {
       this.$itemEventBus.$emit("deselectItemsToBus");
     }
   }

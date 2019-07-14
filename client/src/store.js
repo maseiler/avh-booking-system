@@ -42,7 +42,8 @@ const store = new Vuex.Store({
     users: [],
     items: [],
     last5Bookings: [],
-    feedback: []
+    feedback: [],
+    selectedUser: {}
   },
   mutations: {
     getUsers(state) {
@@ -74,6 +75,13 @@ const store = new Vuex.Store({
         feedback = feedback.filter(Boolean);
         state.feedback = feedback;
       });
+    },
+    selectUser(state, user) {
+      if (state.selectedUser === user) {
+        state.selectedUser = {};
+      } else {
+        state.selectedUser = user;
+      }
     },
   },
   getters: {
