@@ -156,7 +156,7 @@ func Pay(user data.User) bool {
 	timeStamp := time.Now().Format("2006-01-02 15:04:05")
 	totalPrice := -float32(user.Balance)
 	comment := "Payment"
-	res, err := stmt.Exec(timeStamp, user.ID, 1, 1, totalPrice, comment)
+	res, err := stmt.Exec(timeStamp, user.ID, 0, 1, totalPrice, comment)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
