@@ -31,7 +31,7 @@ const mixin = Vue.mixin({
         return "???"
       } else if (item.Type === "alcoholic" || item.Type === "non-alcoholic") {
         return item.Name + " " + item.Size + " " + item.Unit;
-      } else if (item.Type === "boat" || item.Type === "food") {
+      } else if (item.Type === "food") {
         return item.Name;
       } else {
         return "???";

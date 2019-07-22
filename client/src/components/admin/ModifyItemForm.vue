@@ -62,7 +62,6 @@
                     <option>alcoholic</option>
                     <option>non-alcoholic</option>
                     <option>food</option>
-                    <option>boat</option>
                   </select>
                 </div>
               </div>

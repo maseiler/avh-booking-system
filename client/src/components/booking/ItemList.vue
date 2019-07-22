@@ -34,14 +34,6 @@
             Food
           </a>
         </li>
-        <li :class="[ activeTab === 'tab4' ? 'is-active' : '']">
-          <a @click="activeTab='tab4'">
-            <span class="icon is-small is-left">
-              <font-awesome-icon icon="anchor" />
-            </span>
-            Boats
-          </a>
-        </li>
       </ul>
     </div>
 
@@ -84,16 +76,6 @@
         :class="[selectedItems.includes(item) ? 'is-link' : '']"
       >{{ displayItem(item) }}</button>
     </div>
-
-    <div class="buttons" v-if="activeTab === 'tab4'">
-      <button
-        class="button"
-        v-for="item in itemsBoat"
-        :key="item"
-        @click="selectItem(item)"
-        :class="[selectedItems.includes(item) ? 'is-link' : '']"
-      >{{ displayItem(item) }}</button>
-    </div>
   </div>
 </template>
 
@@ -122,9 +104,6 @@ export default {
     },
     itemsFood() {
       return this.$store.getters.itemsFood;
-    },
-    itemsBoat() {
-      return this.$store.getters.itemsBoat;
     },
     user() {
       return this.$store.state.selectedUser;

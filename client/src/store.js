@@ -120,9 +120,6 @@ const store = new Vuex.Store({
     },
     itemsFood: state => {
       return state.items.filter(item => item["Type"] === "food")
-    },
-    itemsBoat: state => {
-      return state.items.filter(item => item["Type"] === "boat")
     }
   }
 })
