@@ -32,6 +32,10 @@
         <div class="column has-text-left">
           <h6 class="subtitle is-6">
             <div>
+              <font-awesome-icon icon="anchor" />
+              &nbsp;{{user.BoatName}}
+            </div>
+            <div>
               <font-awesome-icon icon="envelope" />
               &nbsp;{{user.Email}}
             </div>
