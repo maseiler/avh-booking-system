@@ -35,7 +35,7 @@ func GetLastNBookings(n int) []data.BookEntry {
 
 // GetBookingsBetween returns all book entries within timespan
 func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
 		query = "SELECT * FROM bookings;"
 	}
@@ -44,7 +44,7 @@ func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
 
 // GetBookingsOfUserBetween returns all book entries of specified user within timespan
 func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\";", user.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", user.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
 		query = fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d;", user.ID)
 	}
@@ -53,9 +53,9 @@ func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []
 
 // GetBookingsOfItemBetween returns all book entries of specified item within timespan
 func GetBookingsOfItemBetween(item data.Item, start time.Time, end time.Time) []data.BookEntry {
-	query := fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\";", item.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
+	query := fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", item.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
-		query = fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d;", item.ID)
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d ORDER BY id DESC;", item.ID)
 	}
 	return getBookingsFromQuery(query)
 }
@@ -65,14 +65,14 @@ func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.Bo
 	emptyUser := data.User{ID: 0, BierName: "", FirstName: "", LastName: "", BoatName: "", Status: "", Email: "", Phone: "", Balance: 0, MaxDebt: 0}
 	var query string
 	if user == emptyUser {
-		query = fmt.Sprintf("SELECT * from bookings WHERE total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\";", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
+		query = fmt.Sprintf("SELECT * from bookings WHERE total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 		if (start == time.Time{}) || (end == time.Time{}) {
-			query = "SELECT * from bookings WHERE total_price <= 0;"
+			query = "SELECT * from bookings WHERE total_price <= 0 ORDER BY id DESC;"
 		}
 	} else {
-		query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\";", user.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
+		query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0 AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", user.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 		if (start == time.Time{}) || (end == time.Time{}) {
-			query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0;", user.ID)
+			query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0 ORDER BY id DESC;", user.ID)
 		}
 	}
 	return getBookingsFromQuery(query)
@@ -82,7 +82,7 @@ func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.Bo
 func GetUserDebts(user data.User) data.Debts {
 	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND total_price <= 0 ORDER BY time_stamp DESC LIMIT 1;", user.ID)
 	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
-	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp > \"%s\";", user.ID, lastPayDay.Format("2006-01-02 15:04:05"))
+	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp > \"%s\" ORDER BY id DESC;", user.ID, lastPayDay.Format("2006-01-02 15:04:05"))
 	unpaid := getBookingsFromQuery(debtsQuery)
 	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
 	return debts

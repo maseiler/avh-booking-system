@@ -44,7 +44,7 @@
         <button class="button is-link is-fullwidth" @click="option = 'optFromItem'">Of Item</button>
         <div class="box" v-if="option === 'optFromItem'">
           <br />
-          <ItemSearch :mode="single" />
+          <ItemSearch :mode="'single'" />
           <p class="p has-text-grey-light">Time span can be left empty or in format YYYY-MM-DD</p>
           <div class="columns">
             <div class="column">
@@ -131,8 +131,7 @@ export default {
       option: "",
       n: 0,
       from: "",
-      to: "",
-      item: {}
+      to: ""
     };
   },
   methods: {
