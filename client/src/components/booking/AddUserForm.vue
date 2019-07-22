@@ -10,81 +10,6 @@
 
           <div class="modal-body">
             <div class="field">
-              <label class="label">Biername</label>
-              <div class="control has-icons-left">
-                <input
-                  class="input"
-                  type="text"
-                  placeholder="Biername"
-                  v-model.lazy="newUser.BierName"
-                />
-                <span class="icon is-small is-left">
-                  <font-awesome-icon icon="beer" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">First name</label>
-              <div class="control has-icons-left">
-                <input
-                  class="input"
-                  type="text"
-                  placeholder="First name"
-                  v-model.lazy="newUser.FirstName"
-                />
-                <span class="icon is-small is-left">
-                  <font-awesome-icon icon="user" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Last name</label>
-              <div class="control has-icons-left">
-                <input
-                  class="input"
-                  type="text"
-                  placeholder="Last name"
-                  v-model.lazy="newUser.LastName"
-                />
-                <span class="icon is-small is-left">
-                  <font-awesome-icon icon="user" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Email</label>
-              <div class="control has-icons-left">
-                <input
-                  class="input"
-                  type="email"
-                  placeholder="Email Address"
-                  v-model.lazy="newUser.Email"
-                />
-                <span class="icon is-small is-left">
-                  <font-awesome-icon icon="envelope" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Phone Number</label>
-              <div class="control has-icons-left">
-                <input
-                  class="input"
-                  type="text"
-                  placeholder="Phone Number"
-                  v-model.lazy="newUser.Phone"
-                />
-                <span class="icon is-small is-left">
-                  <font-awesome-icon icon="phone" />
-                </span>
-              </div>
-            </div>
-
-            <div class="field">
               <label class="label">Status</label>
               <div class="control">
                 <div class="select">
@@ -99,20 +24,98 @@
                 </div>
               </div>
             </div>
-          </div>
 
-          <div v-if="newUser.Status == 'Steganleger'" class="field">
-            <label class="label">Boat Name</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Boat Name"
-                v-model.lazy="newUser.BoatName"
-              />
-              <span class="icon is-small is-left">
-                <font-awesome-icon icon="anchor" />
-              </span>
+            <div
+              v-if="newUser.Status !== 'Steganleger' && newUser.Status !== 'Gast' && newUser.Status !== ''"
+              class="field"
+            >
+              <label class="label">Biername</label>
+              <div class="control has-icons-left">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Biername"
+                  v-model.lazy="newUser.BierName"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="beer" />
+                </span>
+              </div>
+            </div>
+
+            <div v-if="newUser.Status !== ''" class="field">
+              <label class="label">First name</label>
+              <div class="control has-icons-left">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="First name"
+                  v-model.lazy="newUser.FirstName"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="user" />
+                </span>
+              </div>
+            </div>
+
+            <div v-if="newUser.Status !== ''" class="field">
+              <label class="label">Last name</label>
+              <div class="control has-icons-left">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Last name"
+                  v-model.lazy="newUser.LastName"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="user" />
+                </span>
+              </div>
+            </div>
+
+            <div v-if="newUser.Status === 'Steganleger'" class="field">
+              <label class="label">Boat Name</label>
+              <div class="control has-icons-left">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Boat Name"
+                  v-model.lazy="newUser.BoatName"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="anchor" />
+                </span>
+              </div>
+            </div>
+
+            <div v-if="newUser.Status === 'Steganleger' || newUser.Status === 'Gast'" class="field">
+              <label class="label">Email</label>
+              <div class="control has-icons-left">
+                <input
+                  class="input"
+                  type="email"
+                  placeholder="Email Address"
+                  v-model.lazy="newUser.Email"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="envelope" />
+                </span>
+              </div>
+            </div>
+
+            <div v-if="newUser.Status === 'Steganleger' || newUser.Status === 'Gast'" class="field">
+              <label class="label">Phone Number</label>
+              <div class="control has-icons-left">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Phone Number"
+                  v-model.lazy="newUser.Phone"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon icon="phone" />
+                </span>
+              </div>
             </div>
           </div>
 
