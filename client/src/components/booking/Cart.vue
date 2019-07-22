@@ -13,7 +13,7 @@
           <th></th>
           <th>{{sum}} €</th>
           <th>
-            <button class="button" @click="checkout">Checkout</button>
+            <button class="button is-success" @click="checkout">Checkout</button>
           </th>
         </tr>
       </tfoot>
