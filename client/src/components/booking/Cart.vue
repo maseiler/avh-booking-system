@@ -145,7 +145,7 @@ export default {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
       await this.emptyCart();
-      await this.$router.go();
+      await this.refresh();
     },
     deleteItem(item) {
       var index = this.cart.indexOf(item);
@@ -157,10 +157,13 @@ export default {
     emptyCart() {
       this.cart = [];
       this.sum = 0;
-      this.user = {};
-      this.items = [];
       this.$store.commit("selectUser", {});
       this.$store.state.selectedMultipleItems = [];
+    },
+    refresh() {
+      this.$store.commit("getUsers");
+      this.$store.commit("getItems");
+      this.$store.commit("getLast5Bookings");
     }
   }
 };
