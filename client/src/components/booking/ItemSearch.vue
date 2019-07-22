@@ -9,9 +9,9 @@
           placeholder="Search items"
           v-model="search"
           v-on:keyup="searchItems"
-        >
+        />
         <span class="icon is-small is-left">
-          <font-awesome-icon icon="search"/>
+          <font-awesome-icon icon="search" />
         </span>
       </div>
     </div>
@@ -21,7 +21,7 @@
         class="button"
         v-for="item in searchResults"
         :key="item"
-        :class="[selectedItems.includes(item) ? 'is-link' : '']"
+        :class="[isSelected(item) ? 'is-link' : '']"
         @click="selectItem(item)"
       >{{ displayItem(item) }}</button>
     </div>
@@ -30,16 +30,24 @@
 
 <script>
 export default {
+  props: {
+    mode: ""
+  },
   computed: {
     items() {
       return this.$store.state.items;
+    },
+    selectedItems() {
+      if (this.mode === "single") {
+        return this.$store.state.selectedSingleItem;
+      }
+      return this.$store.state.selectedMultipleItems;
     }
   },
   data() {
     return {
       search: "",
-      searchResults: [],
-      selectedItems: []
+      searchResults: []
     };
   },
   methods: {
@@ -54,20 +62,21 @@ export default {
       }
     },
     selectItem(item) {
-      this.selectedItems.push(item);
-      this.$emit("selectItems", this.selectedItems);
-      this.$itemEventBus.$emit("selectItemsToBus", this.selectedItems);
+      if (this.mode === "single") {
+        this.$store.commit("selectSingleItem", item);
+      } else {
+        this.$store.commit("selectMultipleItems", item);
+      }
     },
-    deselectItemsFromBus() {
-      this.selectedItems = [];
-    },
-    selectItemsFromBus(items) {
-      this.selectedItems = items;
+    isSelected(item) {
+      if (this.mode === "single") {
+        if (this.selectedItems === item) {
+          return true;
+        }
+        return false;
+      }
+      return this.selectedItems.includes(item);
     }
-  },
-  created() {
-    this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
-    this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
   }
 };
 </script>

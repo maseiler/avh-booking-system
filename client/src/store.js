@@ -43,7 +43,9 @@ const store = new Vuex.Store({
     items: [],
     last5Bookings: [],
     feedback: [],
-    selectedUser: {}
+    selectedUser: {},
+    selectedSingleItem: {},
+    selectedMultipleItems: []
   },
   mutations: {
     getUsers(state) {
@@ -83,6 +85,16 @@ const store = new Vuex.Store({
         state.selectedUser = user;
       }
     },
+    selectSingleItem(state, item) {
+      if (state.selectedSingleItem === item) {
+        state.selectedSingleItem = {};
+      } else {
+        state.selectedSingleItem = item;
+      }
+    },
+    selectMultipleItems(state, item) {
+      state.selectedMultipleItems = state.selectedMultipleItems.concat(item);
+    }
   },
   getters: {
     usersAH: state => {

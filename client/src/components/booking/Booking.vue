@@ -3,28 +3,28 @@
     <div class="columns is-gapless">
       <div class="column">
         <div class="box">
-          <UserTab/>
+          <UserTab />
         </div>
       </div>
       <div class="column is-narrow">
         <div class="box has-text-centered" style="width: 500px;">
           <div
-            v-if="Object.keys(this.$store.state.selectedUser).length !== 0 || Object.keys(selectedItems).length !== 0"
+            v-if="Object.keys(this.$store.state.selectedUser).length !== 0 || Object.keys(this.$store.state.selectedMultipleItems).length !== 0"
           >
-            <Cart :items="selectedItems"/>
-            <hr>
+            <Cart />
+            <hr />
             <UserInfo></UserInfo>
           </div>
           <div v-else>
-            <img class="logo" src="~@/assets/avh_logo.png" width="250px">
-            <hr>
-            <Last5Bookings/>
+            <img class="logo" src="~@/assets/avh_logo.png" width="250px" />
+            <hr />
+            <Last5Bookings />
           </div>
         </div>
       </div>
       <div class="column">
         <div class="box">
-          <ItemTab @selectedItems="getSelectedItems"/>
+          <ItemTab />
         </div>
       </div>
     </div>
@@ -45,16 +45,6 @@ export default {
     Cart,
     UserInfo,
     Last5Bookings
-  },
-  data() {
-    return {
-      selectedItems: []
-    };
-  },
-  methods: {
-    getSelectedItems(items) {
-      this.selectedItems = items;
-    }
   }
 };
 </script>

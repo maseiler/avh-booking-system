@@ -102,7 +102,6 @@ export default {
   data() {
     return {
       favoriteItems: [],
-      selectedItems: [],
       activeTab: "tab0"
     };
   },
@@ -129,19 +128,19 @@ export default {
     },
     user() {
       return this.$store.state.selectedUser;
+    },
+    selectedItems() {
+      return this.$store.state.selectedMultipleItems;
     }
   },
   methods: {
     selectItem(item) {
-      this.selectedItems.push(item);
-      this.$emit("selectItems", this.selectedItems);
-      this.$itemEventBus.$emit("selectItemsToBus", this.selectedItems);
+      this.$store.commit("selectMultipleItems", item);
     },
-    deselectItemsFromBus() {
-      this.selectedItems = [];
-    },
-    selectItemsFromBus(items) {
-      this.selectedItems = items;
+    getItem(id) {
+      return this.allItems.find(i => {
+        return i.ID == id;
+      });
     },
     async getFavoriteItems() {
       var result = [];
@@ -161,16 +160,7 @@ export default {
           );
         });
       this.favoriteItems = result;
-    },
-    getItem(id) {
-      return this.allItems.find(i => {
-        return i.ID == id;
-      });
     }
-  },
-  created() {
-    this.$itemEventBus.$on("selectItemsToBus", this.selectItemsFromBus);
-    this.$itemEventBus.$on("deselectItemsToBus", this.deselectItemsFromBus);
   }
 };
 </script>

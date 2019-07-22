@@ -21,7 +21,7 @@
         <div class="box" v-if="option === 'optFromUser'">
           <br />
           <UserSearch />
-          <p class="p has-text-grey-light">Time span can be left empty or in format YYY-MM-DD</p>
+          <p class="p has-text-grey-light">Time span can be left empty or in format YYYY-MM-DD</p>
           <div class="columns">
             <div class="column">
               <div class="field">
@@ -44,8 +44,8 @@
         <button class="button is-link is-fullwidth" @click="option = 'optFromItem'">Of Item</button>
         <div class="box" v-if="option === 'optFromItem'">
           <br />
-          <ItemSearch />
-          <p class="p has-text-grey-light">Time span can be left empty or in format YYY-MM-DD</p>
+          <ItemSearch :mode="single" />
+          <p class="p has-text-grey-light">Time span can be left empty or in format YYYY-MM-DD</p>
           <div class="columns">
             <div class="column">
               <div class="field">
@@ -74,7 +74,7 @@
           <UserSearch />
           <p class="p has-text-grey-light">
             User can be empty.
-            <br />Time span can be left empty or in format YYY-MM-DD
+            <br />Time span can be left empty or in format YYYY-MM-DD
           </p>
           <div class="columns">
             <div class="column">
@@ -119,6 +119,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.selectedUser;
+    },
+    item() {
+      return this.$store.state.selectedSingleItem;
     }
   },
   data() {
@@ -212,27 +215,21 @@ export default {
           .post("deleteBookEntry", this.selectedEntry)
           .then(function(response) {
             this.$store.commit("getLastNBookings", 50);
-            this.$responseEventBus.$emit("successMessage", "Deleted bookEntry");
+            this.$responseEventBus.$emit("successMessage", "Deleted book entry");
           })
           .catch(function(response) {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Couldn't delete item."
+              "Couldn't delete book entry."
             );
           });
       } else {
         this.$responseEventBus.$emit(
           "failureMessage",
-          "Select an entry first!"
+          "Select an book entry first!"
         );
       }
-    },
-    selectItemFromBus(items) {
-      this.item = items[0];
     }
-  },
-  created() {
-    this.$itemEventBus.$on("selectItemsToBus", this.selectItemFromBus);
   }
 };
 </script>

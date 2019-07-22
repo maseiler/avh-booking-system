@@ -101,10 +101,12 @@
 
 <script>
 export default {
-  props: {
-    item: {}
+  computed: {
+    item() {
+      return this.$store.state.selectedSingleItem;
+    }
   },
-  data: function() {
+  data() {
     return {
       validationError: ""
     };

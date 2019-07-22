@@ -43,12 +43,12 @@
 
 <script>
 export default {
-  props: {
-    items: []
-  },
   computed: {
     user() {
       return this.$store.state.selectedUser;
+    },
+    items() {
+      return this.$store.state.selectedMultipleItems;
     }
   },
   watch: {
@@ -160,10 +160,7 @@ export default {
       this.user = {};
       this.items = [];
       this.$store.commit("selectUser", {});
-      this.deselectItems();
-    },
-    deselectItems() {
-      this.$itemEventBus.$emit("deselectItemsToBus");
+      this.$store.state.selectedMultipleItems = [];
     }
   }
 };

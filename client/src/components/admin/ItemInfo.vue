@@ -9,15 +9,15 @@
           <div class="column has-text-left">
             <h6 class="subtitle is-6">
               <div>
-                <font-awesome-icon icon="fingerprint"/>
+                <font-awesome-icon icon="fingerprint" />
                 &nbsp;{{item.ID}}
               </div>
               <div>
-                <font-awesome-icon icon="font"/>
+                <font-awesome-icon icon="font" />
                 &nbsp;{{item.Name}}
               </div>
               <div>
-                <font-awesome-icon icon="euro-sign"/>
+                <font-awesome-icon icon="euro-sign" />
                 &nbsp;&nbsp;{{item.Price}}&nbsp;€
               </div>
             </h6>
@@ -25,15 +25,15 @@
           <div class="column has-text-left">
             <h6 class="subtitle is-6">
               <div>
-                <font-awesome-icon icon="expand-arrows-alt"/>
+                <font-awesome-icon icon="expand-arrows-alt" />
                 &nbsp;&nbsp;{{item.Size}}
               </div>
               <div>
-                <font-awesome-icon icon="balance-scale"/>
+                <font-awesome-icon icon="balance-scale" />
                 &nbsp;{{item.Unit}}
               </div>
               <div>
-                <font-awesome-icon icon="info-circle"/>
+                <font-awesome-icon icon="info-circle" />
                 &nbsp;&nbsp;{{item.Type}}
               </div>
             </h6>
@@ -46,8 +46,10 @@
 
 <script>
 export default {
-  props: {
-    item: {}
+  computed: {
+    item() {
+      return this.$store.state.selectedSingleItem;
+    }
   }
 };
 </script>

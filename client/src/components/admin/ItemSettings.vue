@@ -10,21 +10,19 @@
         </div>
         <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false"/>
         <ModifyItemForm
-          :item="selectedItem"
           v-if="showModifyItemForm"
           @close="showModifyItemForm = false"
         />
         <DeleteItemForm
-          :item="selectedItem"
           v-if="showDeleteItemForm"
           @close="showDeleteItemForm = false"
         />
       </div>
       <div class="column is-4">
-        <ItemSearch @selectItems="selectItems"/>
+        <ItemSearch :mode="'single'"/>
       </div>
       <div class="column is-4">
-        <ItemInfo :item="selectedItem"/>
+        <ItemInfo/>
       </div>
     </div>
   </div>
@@ -49,16 +47,8 @@ export default {
     return {
       showAddItemForm: false,
       showModifyItemForm: false,
-      showDeleteItemForm: false,
-      selectedItem: []
+      showDeleteItemForm: false
     };
-  },
-  methods: {
-    selectItems: function(items) {
-      this.selectedItem = items[items.length - 1];
-      var selectedItems = Array(1).fill(this.selectedItem);
-      this.$itemEventBus.$emit("selectItemsToBus", selectedItems);
-    }
   }
 };
 </script>

@@ -45,8 +45,10 @@
 
 <script>
 export default {
-  props: {
-    item: {}
+  compute: {
+    item() {
+      return this.$store.state.selectedSingleItem;
+    }
   },
   methods: {
     deleteItem() {
