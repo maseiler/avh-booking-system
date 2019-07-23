@@ -37,7 +37,7 @@ func GetLastNBookings(n int) []data.BookEntry {
 func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
 	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
-		query = "SELECT * FROM bookings;"
+		query = "SELECT * FROM bookings ORDER BY id DESC;"
 	}
 	return getBookingsFromQuery(query)
 }
@@ -46,7 +46,7 @@ func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
 func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
 	query := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", user.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
-		query = fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d;", user.ID)
+		query = fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d ORDER BY id DESC;", user.ID)
 	}
 	return getBookingsFromQuery(query)
 }
