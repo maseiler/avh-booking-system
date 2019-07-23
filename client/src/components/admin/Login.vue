@@ -8,12 +8,25 @@
               <h1 class="title is-4">Login to Admin</h1>
             </div>
             <div class="modal-body">
-              <input class="input" type="password" v-model="password" placeholder="Password">
+              <div class="field">
+                <div class="control has-icons-left">
+                  <input
+                    class="input"
+                    type="password"
+                    placeholder="Password"
+                    v-model="password"
+                    @keyup.enter="login"
+                  />
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="lock" />
+                  </span>
+                </div>
+              </div>
               <article v-if="validationError !==''" class="message is-danger">
                 <div class="message-header">
                   <div class="field is-grouped">
                     <p class="icon is-small is-left">
-                      <font-awesome-icon icon="exclamation" size="lg"/>
+                      <font-awesome-icon icon="exclamation" size="lg" />
                     </p>
                     <p>{{validationError}}</p>
                   </div>
@@ -58,7 +71,7 @@ export default {
           this.$router.push("/admin");
         })
         .catch(function(response) {
-          this.validationError = "Error. Wrong password?"
+          this.validationError = "Error. Wrong password?";
         });
     },
     cancel() {

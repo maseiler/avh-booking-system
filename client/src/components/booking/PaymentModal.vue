@@ -21,6 +21,20 @@
             <div class="level">
               <div class="level-item has-text-centered">
                 <button class="button is-link" @click="pay">Pay</button>
+                <div v-if="showPasswordForm" class="field">
+                  <div class="control has-icons-left">
+                    <input
+                      class="input"
+                      type="password"
+                      placeholder="Password"
+                      v-model="password"
+                      @keyup.enter="loginAndPay"
+                    />
+                    <span class="icon is-small is-left">
+                      <font-awesome-icon icon="lock" />
+                    </span>
+                  </div>
+                </div>
               </div>
               <div class="level-item has-text-centered">
                 <button class="button" @click="cancel">Cancel</button>
@@ -65,46 +79,57 @@ export default {
   },
   data() {
     return {
-      userBookings: {}
+      userBookings: {},
+      showPasswordForm: false,
+      password: ""
     };
   },
   methods: {
     pay() {
+      if (this.showPasswordForm && this.password !== "") {
+        this.loginAndPay();
+      }
       if (this.weekdayIsMonday()) {
-        this.$http
-          .post("pay", this.user)
-          .then(function(response) {
-            var message = "".concat(
-              this.displayUserName(this.user),
-              " payed ",
-              this.user.Balance
-            );
-            this.$store.commit("getLast5Bookings");
-            this.$store.commit("getUsers");
-            this.$store.commit("selectUser", {});
-            this.$emit("close");
-            this.$responseEventBus.$emit("successMessage", message);
-          })
-          .catch(function(response) {
-            this.$responseEventBus.$emit("failureMessage", response.data);
-          });
+        this.submitPayment();
       } else {
-        this.$emit("close");
-        this.$responseEventBus.$emit(
-          "failureMessage",
-          "Payment only on Mondays possible!"
-        );
+        this.showPasswordForm = true;
       }
     },
+    submitPayment() {
+      this.$http
+        .post("pay", this.user)
+        .then(function(response) {
+          var message = "".concat(
+            this.displayUserName(this.user),
+            " payed ",
+            this.user.Balance
+          );
+          this.$store.commit("getLast5Bookings");
+          this.$store.commit("getUsers");
+          this.$store.commit("selectUser", {});
+          this.$emit("close");
+          this.$responseEventBus.$emit("successMessage", message);
+        })
+        .catch(function(response) {
+          this.$responseEventBus.$emit("failureMessage", response.data);
+        });
+    },
     weekdayIsMonday() {
-      // return true; // for debugging
       var day = new Date().getDay();
-      if (day == 1) {
+      if (day === 1) {
         return true;
-      } else {
-        //TODO: require password
-        return false;
       }
+      return false;
+    },
+    loginAndPay() {
+      this.$http
+        .post("login", this.password)
+        .then(function(response) {
+          this.submitPayment();
+        })
+        .catch(function(response) {
+          this.validationError = "Error. Wrong password?";
+        });
     },
     cancel() {
       this.$emit("close");
