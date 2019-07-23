@@ -31,7 +31,7 @@
         </div>
         <div class="column is-one-quarter">
           <button class="button" @click="showPaymentModal = true">Pay</button>
-          <PaymentModal :user="user" v-if="showPaymentModal" @close="showPaymentModal = false"/>
+          <PaymentModal v-if="showPaymentModal" @close="showPaymentModal = false"/>
         </div>
       </div>
     </div>

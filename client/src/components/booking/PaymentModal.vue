@@ -74,8 +74,10 @@
 
 <script>
 export default {
-  props: {
-    user: {}
+  computed: {
+    user() {
+      return this.$store.state.selectedUser;
+    }
   },
   data() {
     return {
