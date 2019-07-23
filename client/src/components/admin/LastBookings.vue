@@ -28,6 +28,15 @@
           <td>{{entry.Comment}}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>{{sum}}</th>
+        <th></th>
+      </tfoot>
     </table>
   </div>
 </template>
@@ -47,13 +56,27 @@ export default {
   },
   data() {
     return {
-      selectedEntry: {}
+      selectedEntry: {},
+      sum: 0
     };
+  },
+  watch: {
+    bookings() {
+      this.updateSum();
+    }
   },
   methods: {
     selectEntry(entry) {
       this.selectedEntry = entry;
       this.$emit("selectEntry", entry);
+    },
+    updateSum() {
+      var temp = 0;
+      this.bookings.forEach(entry => {
+        temp += entry.TotalPrice;
+      });
+      temp = temp.toFixed(2);
+      this.sum = temp;
     }
   }
 };
