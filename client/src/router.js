@@ -16,6 +16,7 @@ const routes = [
     path: '/booking', component: Booking, name: 'booking',
     beforeEnter: (to, from, next) => {
       store.commit("getLast5Bookings");
+      store.commit("selectUser", {});
       store.commit("selectSingleItem", {});
       store.commit("selectMultipleItems", []);
       return next();
@@ -29,6 +30,7 @@ const routes = [
     path: '/admin', component: Admin, name: 'admin',
     beforeEnter: (to, from, next) => {
       if (from.name === 'login' || from.name === 'admin') {
+        store.commit("selectUser", {});
         store.commit("selectSingleItem", {});
         store.commit("selectMultipleItems", []);
         return next();
