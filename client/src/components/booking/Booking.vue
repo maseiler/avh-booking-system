@@ -8,6 +8,13 @@
       </div>
       <div class="column is-narrow">
         <div class="box has-text-centered" style="width: 500px;">
+          <button class="button" @click="refreshPage">
+            <span class="icon is-small is-left">
+              <font-awesome-icon icon="redo" />
+            </span>
+            &nbsp;&nbsp;Refresh
+          </button>
+          <br />
           <div
             v-if="Object.keys(this.$store.state.selectedUser).length !== 0 || Object.keys(this.$store.state.selectedMultipleItems).length !== 0"
           >
@@ -45,6 +52,11 @@ export default {
     Cart,
     UserInfo,
     Last5Bookings
+  },
+  methods: {
+    refreshPage() {
+      this.$router.go();
+    }
   }
 };
 </script>
