@@ -208,7 +208,7 @@ export default {
       } else {
         this.$http
           .post("modifyUser", this.user)
-          .then(function(response) {
+          .then(() => {
             var message = "".concat(
               "Modified user: ",
               this.displayUserName(this.user)
@@ -218,7 +218,7 @@ export default {
             this.closeForm();
             this.$responseEventBus.$emit("successMessage", message);
           })
-          .catch(function(response) {
+          .catch(response => {
             this.validationError = response.body;
           });
       }

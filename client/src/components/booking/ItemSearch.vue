@@ -31,7 +31,7 @@
 <script>
 export default {
   props: {
-    mode: ""
+    mode: String
   },
   computed: {
     items() {

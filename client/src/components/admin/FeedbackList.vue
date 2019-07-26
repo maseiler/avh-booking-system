@@ -49,14 +49,14 @@ export default {
     deleteEntry(id) {
       this.$http
         .post("deleteFeedback", id)
-        .then(function(response) {
+        .then(() => {
           this.$responseEventBus.$emit(
             "successMessage",
             "Deleted feedback entry."
           );
           this.$store.commit("getFeedbackList");
         })
-        .catch(function(response) {
+        .catch(() => {
           this.$responseEventBus.$emit(
             "failureMessage",
             "Couldn't delete feedback."

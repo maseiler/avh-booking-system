@@ -171,7 +171,7 @@ export default {
     submitUser() {
       this.$http
         .post("addUser", this.newUser)
-        .then(function(response) {
+        .then(() => {
           var message = "".concat(
             "Added new user: ",
             this.displayUserName(this.newUser)
@@ -180,7 +180,7 @@ export default {
           this.$store.commit("getUsers");
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(function(response) {
+        .catch(response => {
           this.validationError = response.data;
         });
     },

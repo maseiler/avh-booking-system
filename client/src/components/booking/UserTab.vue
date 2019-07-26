@@ -18,7 +18,6 @@
 import UserSearch from "./UserSearch.vue";
 import UserList from "./UserList.vue";
 import AddUserForm from "./AddUserForm.vue";
-import Vue from "vue";
 
 export default {
   components: {

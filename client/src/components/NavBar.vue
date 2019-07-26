@@ -3,7 +3,7 @@
     <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item">
-          <font-awesome-icon icon="euro-sign" :style="{ color: 'black' }" size="lg"/>
+          <font-awesome-icon icon="euro-sign" :style="{ color: 'black' }" size="lg" />
         </a>
       </div>
 
@@ -31,7 +31,7 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <router-link v-bind:to="'/login'">
-              <font-awesome-icon icon="user-secret" :style="{ color: 'black' }" size="lg"/>
+              <font-awesome-icon icon="user-secret" :style="{ color: 'black' }" size="lg" />
             </router-link>
           </div>
         </div>
@@ -39,22 +39,3 @@
     </nav>
   </div>
 </template>
-
-<script>
-import AdminLogin from "../components/admin/Login.vue";
-export default {
-  components: {
-    AdminLogin
-  },
-  data: function() {
-    return {
-      showLogin: false
-    };
-  },
-  methods: {}
-};
-</script>
-<style lang="scss">
-@import "../assets/modal.css";
-</style>
-

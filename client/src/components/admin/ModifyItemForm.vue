@@ -117,7 +117,7 @@ export default {
       } else {
         this.$http
           .post("modifyItem", this.item)
-          .then(function(response) {
+          .then(() => {
             var message = "".concat(
               "Modified item: ",
               this.displayItem(this.item)
@@ -126,7 +126,7 @@ export default {
             this.$store.commit("getItems");
             this.$responseEventBus.$emit("successMessage", message);
           })
-          .catch(function(response) {
+          .catch(response => {
             if (response.data !== undefined) {
               this.validationError = response.data;
             } else {

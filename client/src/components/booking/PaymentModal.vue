@@ -100,7 +100,7 @@ export default {
     submitPayment() {
       this.$http
         .post("pay", this.user)
-        .then(function(response) {
+        .then(() => {
           var message = "".concat(
             this.displayUserName(this.user),
             " payed ",
@@ -112,7 +112,7 @@ export default {
           this.$emit("close");
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(function(response) {
+        .catch(response => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
@@ -126,10 +126,10 @@ export default {
     loginAndPay() {
       this.$http
         .post("login", this.password)
-        .then(function(response) {
+        .then(() => {
           this.submitPayment();
         })
-        .catch(function(response) {
+        .catch(() => {
           this.validationError = "Error. Wrong password?";
         });
     },
@@ -140,10 +140,10 @@ export default {
   created() {
     this.$http
       .post("getUserDebts", this.user)
-      .then(function(response) {
+      .then(response => {
         this.userBookings = response.body;
       })
-      .catch(function(response) {
+      .catch(() => {
         this.$responseEventBus.$emit("failureMessage", "Couldn't get debts.");
       });
   }

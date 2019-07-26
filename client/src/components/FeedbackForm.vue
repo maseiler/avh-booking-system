@@ -66,11 +66,11 @@ export default {
       var feedback = { Name: this.name, Content: this.text };
       this.$http
         .post("addFeedback", feedback)
-        .then(function(response) {
+        .then(() => {
           this.$store.commit("getFeedbackList");
           this.$responseEventBus.$emit("successMessage", "Thank you! <3");
         })
-        .catch(function(response) {
+        .catch(() => {
           this.$responseEventBus.$emit(
             "failureMessage",
             "Couldn't submit feedback."

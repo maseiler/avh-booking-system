@@ -132,7 +132,7 @@ export default {
             result = [].concat(result, item);
           });
         })
-        .catch(response => {
+        .catch(() => {
           this.$responseEventBus.$emit(
             "failureMessage",
             "Couldn't get favorite items."

@@ -5,7 +5,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <h1 class="title is-4">Delete user</h1>
-            <hr>
+            <hr />
           </div>
 
           <div class="modal-body">
@@ -13,7 +13,7 @@
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
+                    <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
                   <p>Select user first.</p>
                 </div>
@@ -51,8 +51,8 @@
 
 <script>
 export default {
-  computed:{
-    user(){
+  computed: {
+    user() {
       return this.$store.state.selectedUser;
     }
   },
@@ -63,18 +63,21 @@ export default {
       } else {
         this.$http
           .post("deleteUser", this.user)
-          .then(function(response) {
+          .then(() => {
             var message = "".concat(
               "Deleted user: ",
               this.displayUserName(this.user)
             );
             this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");
-            this.closeForm()
+            this.closeForm();
             this.$responseEventBus.$emit("successMessage", message);
           })
-          .catch(function(response) {
-            this.$responseEventBus.$emit("failureMessage", "Couldn't delete user.");
+          .catch(() => {
+            this.$responseEventBus.$emit(
+              "failureMessage",
+              "Couldn't delete user."
+            );
           });
       }
     },

@@ -5,16 +5,16 @@
         <div class="modal-container">
           <div class="modal-header">
             <h1 class="title is-4">Add new item</h1>
-            <hr>
+            <hr />
           </div>
 
           <div class="modal-body">
             <div class="field">
               <label class="label">Name</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Name" v-model.lazy="newItem.Name">
+                <input class="input" type="text" placeholder="Name" v-model.lazy="newItem.Name" />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="font"/>
+                  <font-awesome-icon icon="font" />
                 </span>
               </div>
             </div>
@@ -22,9 +22,9 @@
             <div class="field">
               <label class="label">Price</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Price" v-model.number="newItem.Price">
+                <input class="input" type="text" placeholder="Price" v-model.number="newItem.Price" />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="euro-sign"/>
+                  <font-awesome-icon icon="euro-sign" />
                 </span>
               </div>
             </div>
@@ -32,9 +32,9 @@
             <div class="field">
               <label class="label">Size</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Size" v-model.number="newItem.Size">
+                <input class="input" type="text" placeholder="Size" v-model.number="newItem.Size" />
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="expand-arrows-alt"/>
+                  <font-awesome-icon icon="expand-arrows-alt" />
                 </span>
               </div>
             </div>
@@ -72,7 +72,7 @@
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
-                    <font-awesome-icon icon="exclamation" size="lg"/>
+                    <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
                   <p>{{validationError}}</p>
                 </div>
@@ -99,7 +99,7 @@
 
 <script>
 export default {
-  data: function() {
+  data() {
     return {
       newItem: {
         Name: "",
@@ -115,7 +115,7 @@ export default {
     submitItem() {
       this.$http
         .post("addItem", this.newItem)
-        .then(function(response) {
+        .then(() => {
           var message = "".concat(
             "Added new item: ",
             this.displayItem(this.newItem)
@@ -124,7 +124,7 @@ export default {
           this.$store.commit("getItems");
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(function(response) {
+        .catch(response => {
           this.validationError = response.data;
         });
     },

@@ -57,7 +57,7 @@ export default {
       } else {
         this.$http
           .post("deleteItem", this.item)
-          .then(function(response) {
+          .then(() => {
             var message = "".concat(
               "Deleted item: ",
               this.displayItem(this.item)
@@ -66,7 +66,7 @@ export default {
             this.$store.commit("getItems");
             this.$responseEventBus.$emit("successMessage", message);
           })
-          .catch(function(response) {
+          .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
               "Couldn't delete item."

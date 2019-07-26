@@ -16,7 +16,7 @@ export default {
   components: {
     FeedbackForm
   },
-  data: function() {
+  data() {
     return {
       showFeedbackForm: false
     };

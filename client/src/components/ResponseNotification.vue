@@ -14,27 +14,27 @@ import Vue from "vue";
 
 export default {
   props: {
-    content: "",
-    color: ""
+    content: String,
+    color: String
   },
   methods: {
-    close: function() {
+    close() {
       this.content = "";
       this.color = "";
       this.$emit("close");
     },
-    successMessage: function(message) {
+    successMessage(message) {
       this.content = message;
       this.color = "is-success";
-      var timerId = setTimeout(this.close, 3000);
+      setTimeout(this.close, 3000);
     },
-    failureMessage: function(message) {
+    failureMessage(message) {
       this.content = message;
       this.color = "is-danger";
-      var timerId = setTimeout(this.close, 3000);
+      setTimeout(this.close, 3000);
     }
   },
-  created: function() {
+  created() {
     this.$responseEventBus.$on("successMessage", this.successMessage);
     this.$responseEventBus.$on("failureMessage", this.failureMessage);
   }
@@ -43,7 +43,7 @@ export default {
 var ResponseEventBus = new Vue();
 Object.defineProperties(Vue.prototype, {
   $responseEventBus: {
-    get: function() {
+    get() {
       return ResponseEventBus;
     }
   }

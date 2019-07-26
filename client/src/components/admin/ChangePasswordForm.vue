@@ -2,12 +2,12 @@
   <div>
     <div class="field">
       <div class="control">
-        <input class="input" type="password" placeholder="Old password" v-model="oldPassword">
+        <input class="input" type="password" placeholder="Old password" v-model="oldPassword" />
       </div>
     </div>
     <div class="field">
       <div class="control">
-        <input class="input" type="password" placeholder="New password" v-model="newPassword1">
+        <input class="input" type="password" placeholder="New password" v-model="newPassword1" />
       </div>
     </div>
     <div class="field">
@@ -17,14 +17,14 @@
           type="password"
           placeholder="Confirm new password"
           v-model="newPassword2"
-        >
+        />
       </div>
     </div>
     <article v-if="validationError !== ''" class="message is-danger">
       <div class="message-header">
         <div class="field is-grouped">
           <p class="icon is-small is-left">
-            <font-awesome-icon icon="exclamation" size="lg"/>
+            <font-awesome-icon icon="exclamation" size="lg" />
           </p>
           <p>{{validationError}}</p>
         </div>
@@ -49,10 +49,10 @@ export default {
       if (this.newPassword1 === this.newPassword2) {
         this.$http
           .post("changeAdminPassword", [this.oldPassword, this.newPassword1])
-          .then(function(response) {
+          .then(() => {
             this.$responseEventBus.$emit("successMessage", "Changed password.");
           })
-          .catch(function(response) {
+          .catch(response => {
             this.$responseEventBus.$emit("failureMessage", response.body);
           });
       } else {

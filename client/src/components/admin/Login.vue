@@ -67,10 +67,10 @@ export default {
     login() {
       this.$http
         .post("login", this.password)
-        .then(function(response) {
+        .then(() => {
           this.$router.push("/admin");
         })
-        .catch(function(response) {
+        .catch(() => {
           this.validationError = "Error. Wrong password?";
         });
     },

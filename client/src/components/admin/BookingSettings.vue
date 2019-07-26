@@ -143,7 +143,7 @@ export default {
             .then(response => {
               this.bookings = [].concat.apply([], response.body);
             })
-            .catch(response => {
+            .catch(() => {
               this.$responseEventBus.$emit(
                 "failureMessage",
                 "Couldn't fetch bookings"
@@ -160,7 +160,7 @@ export default {
           .then(response => {
             this.bookings = [].concat.apply([], response.body);
           })
-          .catch(response => {
+          .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
               "Couldn't fetch bookings"
@@ -176,14 +176,14 @@ export default {
           .then(response => {
             this.bookings = [].concat.apply([], response.body);
           })
-          .catch(response => {
+          .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
               "Couldn't fetch bookings"
             );
           });
       } else if (this.option === "optUserPayments") {
-        var userFromTo = new Object();
+        userFromTo = new Object();
         userFromTo.User = this.user;
         userFromTo.From = this.from;
         userFromTo.To = this.to;
@@ -212,11 +212,14 @@ export default {
       if (Object.keys(this.selectedEntry).length !== 0) {
         this.$http
           .post("deleteBookEntry", this.selectedEntry)
-          .then(function(response) {
+          .then(() => {
             this.$store.commit("getLastNBookings", 50);
-            this.$responseEventBus.$emit("successMessage", "Deleted book entry");
+            this.$responseEventBus.$emit(
+              "successMessage",
+              "Deleted book entry"
+            );
           })
-          .catch(function(response) {
+          .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
               "Couldn't delete book entry."

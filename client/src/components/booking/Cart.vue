@@ -135,14 +135,14 @@ export default {
       var packedCart = { cartItems: this.cart, user: this.user };
       await this.$http
         .post("checkout", packedCart)
-        .then(function(response) {
+        .then(() => {
           var message = "".concat(
             "Checkout from ",
             this.displayUserName(this.user)
           );
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(function(response) {
+        .catch(response => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
       await this.emptyCart();
