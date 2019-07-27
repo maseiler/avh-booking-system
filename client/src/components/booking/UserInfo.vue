@@ -8,19 +8,23 @@
         <div class="column has-text-left">
           <h6 class="subtitle is-6">
             <div v-if="user.BierName !== ''">
-              <font-awesome-icon icon="beer"/>
+              <font-awesome-icon icon="beer" />
               &nbsp;{{user.BierName}}
             </div>
             <div v-if="user.FirstName !== ''">
-              <font-awesome-icon icon="user"/>
+              <font-awesome-icon icon="user" />
               &nbsp;{{user.FirstName}}
             </div>
             <div v-if="user.LastName !== ''">
-              <font-awesome-icon icon="user-circle"/>
+              <font-awesome-icon icon="user-circle" />
               &nbsp;{{user.LastName}}
             </div>
+            <div v-if="user.BoatName">
+              <font-awesome-icon icon="anchor" />
+              &nbsp;{{user.BoatName}}
+            </div>
             <div v-if="user.Status !== ''">
-              <font-awesome-icon icon="info-circle"/>
+              <font-awesome-icon icon="info-circle" />
               &nbsp;{{user.Status}}
             </div>
           </h6>
@@ -31,7 +35,7 @@
         </div>
         <div class="column is-one-quarter">
           <button class="button" @click="showPaymentModal = true">Pay</button>
-          <PaymentModal v-if="showPaymentModal" @close="showPaymentModal = false"/>
+          <PaymentModal v-if="showPaymentModal" @close="showPaymentModal = false" />
         </div>
       </div>
     </div>
@@ -45,8 +49,8 @@ export default {
   components: {
     PaymentModal
   },
-  computed:{
-    user(){
+  computed: {
+    user() {
       return this.$store.state.selectedUser;
     }
   },
