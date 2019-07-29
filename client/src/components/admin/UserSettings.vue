@@ -19,10 +19,11 @@
         />
       </div>
       <div class="column is-4">
+        <UserInfoAdmin/>
         <UserSearch/>
       </div>
-      <div class="column is-4">
-        <UserInfoAdmin/>
+      <div class="column">
+        <UserTable/>
       </div>
     </div>
   </div>
@@ -33,6 +34,7 @@ import AddUserFormAdmin from "./AddUserFormAdmin.vue";
 import ModifyUserForm from "./ModifyUserForm.vue";
 import DeleteUserForm from "./DeleteUserForm.vue";
 import UserSearch from "../booking/UserSearch.vue";
+import UserTable from "./UserTable.vue";
 import UserInfoAdmin from "./UserInfoAdmin.vue";
 
 export default {
@@ -41,6 +43,7 @@ export default {
     ModifyUserForm,
     DeleteUserForm,
     UserSearch,
+    UserTable,
     UserInfoAdmin
   },
   data() {
