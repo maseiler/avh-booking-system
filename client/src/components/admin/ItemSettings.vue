@@ -19,10 +19,11 @@
         />
       </div>
       <div class="column is-4">
+        <ItemInfo/>
         <ItemSearch :mode="'single'"/>
       </div>
-      <div class="column is-4">
-        <ItemInfo/>
+      <div class="column">
+        <ItemTable/>
       </div>
     </div>
   </div>
@@ -33,6 +34,7 @@ import AddItemForm from "../booking/AddItemForm.vue";
 import ModifyItemForm from "./ModifyItemForm.vue";
 import DeleteItemForm from "./DeleteItemForm.vue";
 import ItemSearch from "../booking/ItemSearch.vue";
+import ItemTable from "./ItemTable.vue";
 import ItemInfo from "./ItemInfo.vue";
 
 export default {
@@ -41,6 +43,7 @@ export default {
     ModifyItemForm,
     DeleteItemForm,
     ItemSearch,
+    ItemTable,
     ItemInfo
   },
   data() {
