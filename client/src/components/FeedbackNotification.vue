@@ -2,11 +2,11 @@
   <div id="feedbackNotification">
     <button class="button is-primary" :style="{ color: 'black' }" @click="showFeedbackForm = true">
       <span class="icon is-small is-left">
-        <font-awesome-icon icon="bullhorn"/>
+        <font-awesome-icon icon="bullhorn" />
       </span>
       &nbsp;&nbsp;Feedback
     </button>
-    <FeedbackForm v-if="showFeedbackForm" @close="showFeedbackForm = false"/>
+    <FeedbackForm v-if="showFeedbackForm" @close="showFeedbackForm = false" />
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
 
 <style>
 #feedbackNotification {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 50%;
   right: 50%;
