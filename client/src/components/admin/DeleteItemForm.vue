@@ -45,7 +45,7 @@
 
 <script>
 export default {
-  compute: {
+  computed: {
     item() {
       return this.$store.state.selectedSingleItem;
     }
