@@ -93,8 +93,8 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 
 // Pay forwards API call to databse to pay current balance
 func Pay(w http.ResponseWriter, r *http.Request) {
-	user := UnmarshalUser(r.Body)
-	success := dbP.Pay(user)
+	userBalancePart := UnmarshalUserDouble(r.Body)
+	success := dbP.Pay(userBalancePart)
 	validation := ""
 	if success {
 		validation = "ok"

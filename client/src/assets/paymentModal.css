@@ -1,4 +1,4 @@
-.modal-mask.big {
+.paymentModal-mask.big {
   position: fixed;
   z-index: 9998;
   top: 0;
@@ -10,12 +10,12 @@
   transition: opacity .3s ease;
 }
 
-.modal-wrapper.big {
+.paymentModal-wrapper.big {
   display: table-cell;
   vertical-align: middle;
 }
 
-.modal-container.big {
+.paymentModal-container.big {
   width: 600px;
   margin: 0px auto;
   padding: 20px 30px;
@@ -26,16 +26,22 @@
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header.big h1 {
+.paymentModal-header.big h1 {
   margin-top: 0;
   color: #000000;
 }
 
-.modal-body.big {
+.paymentModal-body.big {
   margin: 20px 0;
 }
 
-.modal-default-button.big {
+.paymentModal-footer.big {
+  /* TODO make dynamic corresponding to window size */
+  max-height: 400px;
+  overflow: auto;
+}
+
+.paymentModal-default-button.big {
   float: right;
 }
 
@@ -48,15 +54,15 @@
    * these styles.
    */
 
-.modal-enter.big {
+.paymentModal-enter.big {
   opacity: 0;
 }
 
-.modal-leave-active.big {
+.paymentModal-leave-active.big {
   opacity: 0;
 }
 
-.modal-enter.big .modal-container.big, .modal-leave-active.big .modal-container.big {
+.paymentModal-enter.big .paymentModal-container.big, .paymentModal-leave-active.big .paymentModal-container.big {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }

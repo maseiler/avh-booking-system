@@ -13,6 +13,7 @@ import "time"
 // 	Comment    string
 // }
 
+// BookEntry represents a booking transaction as in database
 type BookEntry struct {
 	ID         int
 	TimeStamp  time.Time
