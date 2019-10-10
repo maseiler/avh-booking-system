@@ -2,11 +2,12 @@ package database
 
 import (
 	"fmt"
+	"time"
 
 	data "github.com/maseiler/avh-booking-system/server/data"
 )
 
-// GetFeedback returns map  of feedback and its ID from database
+// GetFeedback returns map of feedback and its ID from database
 func GetFeedback() []data.Feedback {
 	feedbackMap := []data.Feedback{}
 	rows, err := db.Query("SELECT * FROM feedback;")
@@ -14,7 +15,7 @@ func GetFeedback() []data.Feedback {
 	defer rows.Close()
 	for rows.Next() {
 		feedback := data.Feedback{}
-		err := rows.Scan(&feedback.ID, &feedback.Content, &feedback.Name)
+		err := rows.Scan(&feedback.ID, &feedback.TimeStamp, &feedback.Content, &feedback.Name)
 		feedbackMap = append(feedbackMap, feedback)
 		HandleDatabaseError(err)
 	}
@@ -27,10 +28,11 @@ func GetFeedback() []data.Feedback {
 func AddFeedback(feedback data.Feedback) {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO feedback(name, text) VAlUES(?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO feedback(time_stamp, name, text) VAlUES(?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(feedback.Name, feedback.Content)
+	timeStampNow := time.Now().Format("2006-01-02 15:04:05")
+	res, err := stmt.Exec(timeStampNow, feedback.Name, feedback.Content)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

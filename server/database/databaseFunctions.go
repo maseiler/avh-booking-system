@@ -79,6 +79,7 @@ func CreateDatabase() {
 	createFeedbackTable := `
 	CREATE TABLE IF NOT EXISTS feedback(
 		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		time_stamp DATETIME,
 		text VARCHAR(2000),
 		name VARCHAR(20)
 	);`
