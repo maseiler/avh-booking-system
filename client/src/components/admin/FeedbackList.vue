@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="column">
+  <div class="column">
+    <div class="box" style="height:88vh; overflow-x:hidden; overflow-y:auto;">
       <table class="table is-hoverable is-striped">
         <thead>
           <tr>
@@ -20,7 +20,7 @@
             <th>{{entry.ID}}</th>
             <th>{{printDateTime(entry.TimeStamp)}}</th>
             <td>
-              <pre  style="white-space: pre-wrap; word-break: keep-all;">{{entry.Name}}</pre>
+              <pre style="white-space: pre-wrap; word-break: keep-all;">{{entry.Name}}</pre>
             </td>
             <td>
               <pre style="white-space: pre-wrap; word-break: keep-all;">{{entry.Content}}</pre>

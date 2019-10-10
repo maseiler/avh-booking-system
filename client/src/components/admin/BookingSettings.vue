@@ -99,7 +99,9 @@
         <button class="button is-danger is-outlined" @click="deleteEntry">Delete entry</button>
       </div>
       <div class="column">
-        <LastBookings @selectEntry="selectEntry" :bookings="bookings" />
+        <div class="box" style="height:88vh; overflow-x:auto; overflow-y:auto;">
+          <LastBookings @selectEntry="selectEntry" :bookings="bookings" />
+        </div>
       </div>
     </div>
   </div>
