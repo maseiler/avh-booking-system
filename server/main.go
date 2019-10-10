@@ -34,6 +34,7 @@ func main() {
 	r.HandleFunc("/checkout", handler.Checkout)
 	r.HandleFunc("/pay", handler.Pay)
 	r.HandleFunc("/deleteBookEntry", handler.DeleteBookEntry)
+	r.HandleFunc("/undoBookEntry", handler.UndoBookEntry)
 	r.HandleFunc("/updateFavoriteItems", handler.UpdateFavoriteItems)
 	r.HandleFunc("/getFavoriteItemIDs", handler.GetFavoriteItemIDs)
 	r.HandleFunc("/deleteUserFromFavoriteItems", handler.DeleteUserFromFavoriteItems)

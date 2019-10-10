@@ -120,6 +120,20 @@ func DeleteBookEntry(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, validation)
 }
 
+// UndoBookEntry creates a new book entry with inversed balance and adjusts the user's balance accordingly.
+func UndoBookEntry(w http.ResponseWriter, r *http.Request) {
+	entry := UnmarshalBookEntry(r.Body)
+	success := dbP.UndoBookEntry(entry)
+	validation := "ok"
+	if success {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		validation = "Couldn't undo book entry."
+	}
+	fmt.Fprint(w, validation)
+}
+
 func userIsEmpty(user data.User) bool {
 	emptyUser := data.User{ID: 0, BierName: "", FirstName: "", LastName: "", BoatName: "", Status: "", Email: "", Phone: "", Balance: 0, MaxDebt: 0}
 	if user == emptyUser {

@@ -176,7 +176,6 @@ func Pay(userBalancePart data.UserDouble) bool {
 
 // DeleteBookEntry deletes an entry from database.
 func DeleteBookEntry(entry data.BookEntry) bool {
-	user := GetUsersOfColumnWithValue("id", strconv.Itoa(entry.UserID))[0]
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
 	stmt, err := tx.Prepare("DELETE FROM bookings WHERE id = ?")
@@ -186,6 +185,28 @@ func DeleteBookEntry(entry data.BookEntry) bool {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
+	if err == nil {
+		return true
+	}
+	return false
+}
+
+// UndoBookEntry creates a new book entry with inversed balance and adjusts the user's balance accordingly.
+func UndoBookEntry(entry data.BookEntry) bool {
+	tx, err := db.Begin()
+	HandleDatabaseError(err)
+	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
+	HandleTxError(tx, err)
+	defer stmt.Close()
+	timeStamp := time.Now().Format("2006-01-02 15:04:05")
+	totalPrice := -float32(entry.TotalPrice)
+	comment := fmt.Sprintf("Undo book entry %d", entry.ID)
+	res, err := stmt.Exec(timeStamp, entry.UserID, 0, 1, totalPrice, comment)
+	TxRowsAffected(res, tx)
+	err = tx.Commit()
+	HandleDatabaseError(err)
+
+	user := GetUsersOfColumnWithValue("id", strconv.Itoa(entry.UserID))[0]
 	if err == nil {
 		if entry.TotalPrice > 0 {
 			user.Balance -= entry.TotalPrice
