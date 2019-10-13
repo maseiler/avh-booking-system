@@ -43,6 +43,7 @@ func main() {
 	r.HandleFunc("/deleteFeedback", handler.DeleteFeedback)
 	r.HandleFunc("/login", handler.Login)
 	r.HandleFunc("/changeAdminPassword", handler.ChangeAdminPassword)
+	r.HandleFunc("/getBookingStats", handler.GetBookingStats)
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains")

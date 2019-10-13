@@ -4,6 +4,8 @@ import VueResource from 'vue-resource'
 import store from './store.js'
 import mixin from './mixin.js'
 import router from './router.js'
+import Chart from 'chart.js';
+
 // font awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
@@ -30,5 +32,6 @@ new Vue({
   render: h => h(App),
   store,
   router,
-  mixin
+  mixin,
+  Chart
 }).$mount('#app')
