@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -24,5 +25,40 @@ func GetBookingStats(days int) map[string]int {
 		}
 		m[start.Format("2006-01-02 15:04:05")] = amount
 	}
+	return m
+}
+
+// GetFavoriteItemsStats perform query to return a map of item IDs and it's total number bought (if greater than 0)
+func GetFavoriteItemsStats() map[string]int {
+	m := make(map[string]int)
+	var maxID int
+	query := fmt.Sprintf("SELECT MAX(id) FROM items;")
+	rows, err := db.Query(query)
+	HandleDatabaseError(err)
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&maxID)
+		HandleDatabaseError(err)
+	}
+
+	for i := 1; i <= maxID; i++ {
+		var amount int
+		query = fmt.Sprintf("SELECT COALESCE(SUM(count), 0) FROM favorite_items WHERE item_id = %d;", i)
+		rows, err := db.Query(query)
+		HandleDatabaseError(err)
+		defer rows.Close()
+		for rows.Next() {
+			err := rows.Scan(&amount)
+			HandleDatabaseError(err)
+		}
+		m[strconv.Itoa(i)] = amount
+	}
+
+	for k := range m {
+		if m[k] == 0 {
+			delete(m, k)
+		}
+	}
+
 	return m
 }

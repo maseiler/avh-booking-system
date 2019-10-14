@@ -82,6 +82,9 @@ export default {
       });
       return result;
     }
+  },
+  mounted() {
+    this.fillData();
   }
 };
 </script>

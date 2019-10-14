@@ -12,13 +12,13 @@
                   :class="[ showBookingsStats ? 'is-active' : '']"
                 >Bookings</a>
               </li>
-              <!-- <li>
-                <a
-                  @click="showSetting('showDrinksTotalStats')"
-                  :class="[ showDrinksTotalStats ? 'is-active' : '']"
-                >Drinks Total</a>
-              </li>
               <li>
+                <a
+                  @click="showSetting('showFavoriteItemsStats')"
+                  :class="[ showFavoriteItemsStats ? 'is-active' : '']"
+                >Favorite Items</a>
+              </li>
+              <!-- <li>
                 <a
                   @click="showSetting('showDrinkSharesStats')"
                   :class="[ showDrinkSharesStats ? 'is-active' : '']"
@@ -29,15 +29,15 @@
                   @click="showSetting('showTypeStats')"
                   :class="[ showTypeStats ? 'is-active' : '']"
                 >Type Shares</a>
-              </li> -->
+              </li>-->
             </ul>
           </aside>
         </div>
       </div>
       <div class="column">
         <BookingStats v-if="showBookingsStats" />
-        <!-- <DrinkTotalStats v-if="showDrinksTotalStats"/>
-        <DrinkSharesStats v-if="showDrinkSharesStats"/>
+        <FavoriteItemsStats v-if="showFavoriteItemsStats" />
+        <!-- <DrinkSharesStats v-if="showDrinkSharesStats"/>
         <TypeStats v-if="showTypeStats"/>-->
       </div>
     </div>
@@ -46,15 +46,17 @@
 
 <script>
 import BookingStats from "./BookingStats.vue";
+import FavoriteItemsStats from "./FavoriteItemsStats.vue";
 
 export default {
   components: {
-    BookingStats
+    BookingStats,
+    FavoriteItemsStats
   },
   data() {
     return {
       showBookingsStats: true,
-      showDrinksTotalStats: false,
+      showFavoriteItemsStats: false,
       showDrinkSharesStats: false,
       showTypeStats: false
     };
@@ -64,25 +66,25 @@ export default {
       switch (setting) {
         case "showBookingsStats":
           (this.showBookingsStats = true),
-            (this.showDrinksTotalStats = false),
+            (this.showFavoriteItemsStats = false),
             (this.showDrinkSharesStats = false),
             (this.showTypeStats = false);
           break;
-        case "showDrinksTotalStats":
+        case "showFavoriteItemsStats":
           (this.showBookingsStats = false),
-            (this.showDrinksTotalStats = true),
+            (this.showFavoriteItemsStats = true),
             (this.showDrinkSharesStats = false),
             (this.showTypeStats = false);
           break;
         case "showDrinkSharesStats":
           (this.showBookingsStats = false),
-            (this.showDrinksTotalStats = false),
+            (this.showFavoriteItemsStats = false),
             (this.showDrinkSharesStats = true),
             (this.showTypeStats = false);
           break;
         case "showTypeStats":
           (this.showBookingsStats = false),
-            (this.showDrinksTotalStats = false),
+            (this.showFavoriteItemsStats = false),
             (this.showDrinkSharesStats = false),
             (this.showTypeStats = true);
           break;
