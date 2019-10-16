@@ -6,7 +6,7 @@ import (
 	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
-// GetBookingStats forwards API call to perfromq query to return a map of the time stamp and total number of bought drinks.
+// GetBookingStats forwards API call to return a map of time stamps, total buying and buying per item.
 func GetBookingStats(w http.ResponseWriter, r *http.Request) {
 	days := UnmarshalInt(r.Body)
 	stats := dbP.GetBookingStats(days)

@@ -11,12 +11,17 @@
             style="width:6em; text-align:right;"
             v-model="days"
           />
-        </div>
-        <div clas="level-item">
           <Button class="button is-link" @click="fillData">Create Chart</Button>
+          <p
+            class="p has-text-grey-light"
+          >&nbsp;&nbsp;Select number of last days you want to display</p>
         </div>
       </div>
     </div>
+    <div clas="level-item has-text-centered">
+      <p class="p has-text-grey-light">&nbsp;&nbsp;Click on item to disable/enable</p>
+    </div>
+    <div clas="level-item"></div>
     <LineChart v-if="loaded" :chartdata="chartData" :options="options" />
   </div>
 </template>
@@ -54,26 +59,54 @@ export default {
       this.$http
         .post("getBookingStats", this.days)
         .then(response => {
+          var datasets = this.createDataset(response.data);
           this.chartData = {
-            labels: this.cropTime(Object.keys(response.data)),
-            datasets: [
-              {
-                label: "Number of Drinks Booked",
-                data: Object.values(response.data),
-                backgroundColor: "#3273DC",
-                borderColor: "#3273DC",
-                fill: false,
-                borderJoinStyle: "miter",
-                lineTension: 0,
-                radius: 2
-              }
-            ]
+            labels: this.cropTime(response.data.timeStamp),
+            datasets: datasets
           };
           this.loaded = true;
         })
         .catch(response => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
+    },
+    createDataset(resp) {
+      var keys = Object.keys(resp);
+      var values = Object.values(resp);
+      var datasets = [];
+      datasets.push({
+        label: "Total",
+        data: values[values.length - 1],
+        backgroundColor: "#000000",
+        borderColor: "#000000",
+        fill: false,
+        borderJoinStyle: "miter",
+        lineTension: 0,
+        radius: 2
+      });
+      keys.splice(keys.length - 2, 2);
+      values.splice(values.length - 2, 2);
+      for (var i = 0; i < keys.length; i++) {
+        var color = this.getRandomColor(keys[i]);
+        datasets.push({
+          label: `${this.displayItem(this.getItemByID(keys[i]))}`,
+          data: values[i],
+          backgroundColor: color,
+          borderColor: color,
+          fill: false,
+          borderJoinStyle: "miter",
+          lineTension: 0,
+          radius: 2
+        });
+      }
+      return datasets;
+    },
+    getRandomColor(itemID) {
+      var keys = Object.keys(Colors);
+      // random approach
+      // return Colors[keys[(keys.length * Math.random()) << 0]];
+      // using hash
+      return Colors[keys[itemID % keys.length]];
     },
     cropTime(arr) {
       var result = [];
@@ -86,5 +119,51 @@ export default {
   mounted() {
     this.fillData();
   }
+};
+
+const Colors = {
+  aqua: "#00ffff",
+  // azure: "#f0ffff",
+  // beige: "#f5f5dc",
+  // black: "#000000",
+  blue: "#0000ff",
+  brown: "#a52a2a",
+  cyan: "#00ffff",
+  darkblue: "#00008b",
+  darkcyan: "#008b8b",
+  darkgrey: "#a9a9a9",
+  darkgreen: "#006400",
+  darkkhaki: "#bdb76b",
+  darkmagenta: "#8b008b",
+  darkolivegreen: "#556b2f",
+  darkorange: "#ff8c00",
+  darkorchid: "#9932cc",
+  darkred: "#8b0000",
+  darksalmon: "#e9967a",
+  darkviolet: "#9400d3",
+  fuchsia: "#ff00ff",
+  gold: "#ffd700",
+  green: "#008000",
+  indigo: "#4b0082",
+  khaki: "#f0e68c",
+  lightblue: "#add8e6",
+  lightcyan: "#e0ffff",
+  lightgreen: "#90ee90",
+  lightgrey: "#d3d3d3",
+  lightpink: "#ffb6c1",
+  // lightyellow: "#ffffe0",
+  lime: "#00ff00",
+  magenta: "#ff00ff",
+  maroon: "#800000",
+  navy: "#000080",
+  olive: "#808000",
+  orange: "#ffa500",
+  pink: "#ffc0cb",
+  purple: "#800080",
+  violet: "#800080",
+  red: "#ff0000",
+  silver: "#c0c0c0",
+  //     white: "#ffffff",
+  yellow: "#ffff00"
 };
 </script>
