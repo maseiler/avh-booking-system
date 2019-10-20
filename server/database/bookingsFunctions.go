@@ -80,7 +80,7 @@ func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.Bo
 
 // GetUserDebts returns list of book entries which have not yet payed by user
 func GetUserDebts(user data.User) data.Debts {
-	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND total_price <= 0 ORDER BY time_stamp DESC LIMIT 1;", user.ID)
+	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND comment = 'Payment Full' ORDER BY time_stamp DESC LIMIT 1;", user.ID)
 	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
 	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp > \"%s\" ORDER BY id DESC;", user.ID, lastPayDay.Format("2006-01-02 15:04:05"))
 	unpaid := getBookingsFromQuery(debtsQuery)
@@ -147,24 +147,27 @@ func Checkout(cart data.Cart) bool {
 }
 
 // Pay creates a book entry with inverted balance and sets user balance to 0.
-func Pay(user data.User) bool {
+func Pay(userBalancePart data.UserDouble) bool {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
 	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	timeStamp := time.Now().Format("2006-01-02 15:04:05")
-	totalPrice := -float32(user.Balance)
-	comment := "Payment"
-	res, err := stmt.Exec(timeStamp, user.ID, 0, 1, totalPrice, comment)
+	totalPrice := -float32(userBalancePart.DoubleValue)
+	comment := "Payment Part"
+	if userBalancePart.DoubleValue == userBalancePart.User.Balance {
+		comment = "Payment Full"
+	}
+	res, err := stmt.Exec(timeStamp, userBalancePart.User.ID, 0, 1, totalPrice, comment)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
 
-	query := fmt.Sprintf("UPDATE users SET balance = 0 WHERE id = %d;", user.ID)
-	rows, err := db.Query(query)
+	newBalance := userBalancePart.User.Balance - userBalancePart.DoubleValue
+	query := fmt.Sprintf("UPDATE users SET balance = %.2f WHERE id = %d;", newBalance, userBalancePart.User.ID)
+	_, err = db.Query(query)
 	HandleDatabaseError(err)
-	fmt.Println(rows)
 	if err == nil {
 		return true
 	}
@@ -173,7 +176,6 @@ func Pay(user data.User) bool {
 
 // DeleteBookEntry deletes an entry from database.
 func DeleteBookEntry(entry data.BookEntry) bool {
-	user := GetUsersOfColumnWithValue("id", strconv.Itoa(entry.UserID))[0]
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
 	stmt, err := tx.Prepare("DELETE FROM bookings WHERE id = ?")
@@ -183,6 +185,28 @@ func DeleteBookEntry(entry data.BookEntry) bool {
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
+	if err == nil {
+		return true
+	}
+	return false
+}
+
+// UndoBookEntry creates a new book entry with inversed balance and adjusts the user's balance accordingly.
+func UndoBookEntry(entry data.BookEntry) bool {
+	tx, err := db.Begin()
+	HandleDatabaseError(err)
+	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
+	HandleTxError(tx, err)
+	defer stmt.Close()
+	timeStamp := time.Now().Format("2006-01-02 15:04:05")
+	totalPrice := -float32(entry.TotalPrice)
+	comment := fmt.Sprintf("Undo book entry %d", entry.ID)
+	res, err := stmt.Exec(timeStamp, entry.UserID, 0, 1, totalPrice, comment)
+	TxRowsAffected(res, tx)
+	err = tx.Commit()
+	HandleDatabaseError(err)
+
+	user := GetUsersOfColumnWithValue("id", strconv.Itoa(entry.UserID))[0]
 	if err == nil {
 		if entry.TotalPrice > 0 {
 			user.Balance -= entry.TotalPrice

@@ -34,6 +34,7 @@ func main() {
 	r.HandleFunc("/checkout", handler.Checkout)
 	r.HandleFunc("/pay", handler.Pay)
 	r.HandleFunc("/deleteBookEntry", handler.DeleteBookEntry)
+	r.HandleFunc("/undoBookEntry", handler.UndoBookEntry)
 	r.HandleFunc("/updateFavoriteItems", handler.UpdateFavoriteItems)
 	r.HandleFunc("/getFavoriteItemIDs", handler.GetFavoriteItemIDs)
 	r.HandleFunc("/deleteUserFromFavoriteItems", handler.DeleteUserFromFavoriteItems)
@@ -42,6 +43,8 @@ func main() {
 	r.HandleFunc("/deleteFeedback", handler.DeleteFeedback)
 	r.HandleFunc("/login", handler.Login)
 	r.HandleFunc("/changeAdminPassword", handler.ChangeAdminPassword)
+	r.HandleFunc("/getBookingStats", handler.GetBookingStats)
+	r.HandleFunc("/getFavoriteItemsStats", handler.GetFavoriteItemsStats)
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains")

@@ -8,7 +8,7 @@
           <th>User</th>
           <th>Item</th>
           <th>Amount</th>
-          <th>Total Price</th>
+          <th style="text-align: right;">Price</th>
           <th>Comment</th>
         </tr>
       </thead>
@@ -24,7 +24,7 @@
           <td>{{displayUserName(getUserByID(entry.UserID))}}</td>
           <td>{{displayItem(getItemByID(entry.ItemID))}}</td>
           <td>{{entry.Amount}}</td>
-          <td>{{entry.TotalPrice}}</td>
+          <td style="text-align: right;">{{entry.TotalPrice}} €</td>
           <td>{{entry.Comment}}</td>
         </tr>
       </tbody>
@@ -34,7 +34,7 @@
         <th></th>
         <th></th>
         <th></th>
-        <th>{{sum}}</th>
+        <th style="text-align: right;">{{sum}} €</th>
         <th></th>
       </tfoot>
     </table>

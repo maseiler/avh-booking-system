@@ -96,10 +96,21 @@
         <br />
         <hr />
         <br />
-        <button class="button is-danger is-outlined" @click="deleteEntry">Delete entry</button>
+        <button class="button is-danger is-outlined" @click="undoEntry">Undo Entry</button>
+        <p
+          class="p has-text-grey-light"
+        >Modifies user's balance accordingly and creates a new book entry.</p>
+        <hr />
+        <button class="button is-danger is-outlined" @click="deleteEntry">Delete Entry</button>
+        <p class="p has-text-grey-light">
+          Use deliberately!
+          <br />The entry will be deleted and can not be restored.
+        </p>
       </div>
       <div class="column">
-        <LastBookings @selectEntry="selectEntry" :bookings="bookings" />
+        <div class="box" style="height:88vh; overflow-x:auto; overflow-y:auto;">
+          <LastBookings @selectEntry="selectEntry" :bookings="bookings" />
+        </div>
       </div>
     </div>
   </div>
@@ -223,6 +234,27 @@ export default {
             this.$responseEventBus.$emit(
               "failureMessage",
               "Couldn't delete book entry."
+            );
+          });
+      } else {
+        this.$responseEventBus.$emit(
+          "failureMessage",
+          "Select an book entry first!"
+        );
+      }
+    },
+    undoEntry() {
+      if (Object.keys(this.selectedEntry).length !== 0) {
+        this.$http
+          .post("undoBookEntry", this.selectedEntry)
+          .then(() => {
+            this.$store.commit("getLastNBookings", 50);
+            this.$responseEventBus.$emit("successMessage", "Undid book entry");
+          })
+          .catch(() => {
+            this.$responseEventBus.$emit(
+              "failureMessage",
+              "Couldn't undo book entry."
             );
           });
       } else {

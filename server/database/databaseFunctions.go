@@ -79,6 +79,7 @@ func CreateDatabase() {
 	createFeedbackTable := `
 	CREATE TABLE IF NOT EXISTS feedback(
 		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		time_stamp DATETIME,
 		text VARCHAR(2000),
 		name VARCHAR(20)
 	);`
@@ -101,7 +102,7 @@ func CreateDatabase() {
 	db.QueryRow("SELECT VERSION()").Scan(&version)
 	newLoginInfo := fmt.Sprintf("%s:***@tcp(%s:%s)/%s", os.Getenv("AVHBS_DB_USER"), os.Getenv("AVHBS_DB_IP"), os.Getenv("AVHBS_DB_PORT"), os.Getenv("AVHBS_DB_NAME"))
 	fmt.Println("AVHBS_DB_NAME:", os.Getenv("AVHBS_DB_NAME"))
-	fmt.Printf("Database set up complete: %s\n-> %s", version, newLoginInfo)
+	fmt.Printf("Database set up complete: %s\n-> %s\n", version, newLoginInfo)
 }
 
 func passwordExists(db *sql.DB) bool {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <br>
+    <br />
     <div class="columns">
       <div class="column is-1">
         <div class="buttons">
@@ -8,22 +8,18 @@
           <button class="button is-link is-fullwidth" @click="showModifyItemForm = true">Modify Item</button>
           <button class="button is-link is-fullwidth" @click="showDeleteItemForm = true">Delete Item</button>
         </div>
-        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false"/>
-        <ModifyItemForm
-          v-if="showModifyItemForm"
-          @close="showModifyItemForm = false"
-        />
-        <DeleteItemForm
-          v-if="showDeleteItemForm"
-          @close="showDeleteItemForm = false"
-        />
+        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false" />
+        <ModifyItemForm v-if="showModifyItemForm" @close="showModifyItemForm = false" />
+        <DeleteItemForm v-if="showDeleteItemForm" @close="showDeleteItemForm = false" />
       </div>
       <div class="column is-4">
-        <ItemInfo/>
-        <ItemSearch :mode="'single'"/>
+        <ItemInfo />
+        <ItemSearch :mode="'single'" />
       </div>
       <div class="column">
-        <ItemTable/>
+        <div class="box" style="height:88vh; overflow-x:hidden; overflow-y:auto;">
+          <ItemTable />
+        </div>
       </div>
     </div>
   </div>

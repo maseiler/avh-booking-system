@@ -5,9 +5,9 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Price</th>
-          <th>Size</th>
+          <th style="text-align: right;">Size</th>
           <th>Unit</th>
+          <th style="text-align: right;">Price</th>
         </tr>
       </thead>
       <tbody>
@@ -19,9 +19,9 @@
         >
           <th>{{item.ID}}</th>
           <td>{{item.Name}}</td>
-          <td>{{item.Price}}</td>
-          <td>{{item.Size}}</td>
+          <td style="text-align: right;">{{item.Size}}</td>
           <td>{{item.Unit}}</td>
+          <td style="text-align: right;">{{item.Price}} €</td>
         </tr>
       </tbody>
     </table>

@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <div class="column">
+  <div class="column">
+    <div class="box" style="height:88vh; overflow-x:hidden; overflow-y:auto;">
       <table class="table is-hoverable is-striped">
         <thead>
           <tr>
             <th>ID</th>
+            <th>Timestamp</th>
             <th>Name</th>
             <th>Text</th>
             <th></th>
@@ -17,11 +18,12 @@
             :class="[selectedEntry === entry ? 'is-selected' : '']"
           >
             <th>{{entry.ID}}</th>
+            <th>{{printDateTime(entry.TimeStamp)}}</th>
             <td>
-              <pre>{{entry.Name}}</pre>
+              <pre style="white-space: pre-wrap; word-break: keep-all;">{{entry.Name}}</pre>
             </td>
             <td>
-              <pre>{{entry.Content}}</pre>
+              <pre style="white-space: pre-wrap; word-break: keep-all;">{{entry.Content}}</pre>
             </td>
             <td>
               <button class="button is-link" @click="deleteEntry(entry.ID)">Delete</button>

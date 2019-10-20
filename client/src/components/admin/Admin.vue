@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="columns">
-      <div class="column is-2">
-        <div class="box">
+      <div class="column is-2 is-sidebar-menu">
+        <div class="box" style="height:90vh;">
           <aside class="menu">
             <p class="menu-label">Administration</p>
             <ul class="menu-list">

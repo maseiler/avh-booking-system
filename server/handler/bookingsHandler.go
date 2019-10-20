@@ -93,8 +93,8 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 
 // Pay forwards API call to databse to pay current balance
 func Pay(w http.ResponseWriter, r *http.Request) {
-	user := UnmarshalUser(r.Body)
-	success := dbP.Pay(user)
+	userBalancePart := UnmarshalUserDouble(r.Body)
+	success := dbP.Pay(userBalancePart)
 	validation := ""
 	if success {
 		validation = "ok"
@@ -116,6 +116,20 @@ func DeleteBookEntry(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		validation = "Couldn't delete book entry."
+	}
+	fmt.Fprint(w, validation)
+}
+
+// UndoBookEntry creates a new book entry with inversed balance and adjusts the user's balance accordingly.
+func UndoBookEntry(w http.ResponseWriter, r *http.Request) {
+	entry := UnmarshalBookEntry(r.Body)
+	success := dbP.UndoBookEntry(entry)
+	validation := "ok"
+	if success {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		validation = "Couldn't undo book entry."
 	}
 	fmt.Fprint(w, validation)
 }
