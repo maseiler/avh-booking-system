@@ -70,5 +70,3 @@ func containsDotDot(v string) bool {
 func isSlashRune(r rune) bool {
 	return r == '/' || r == '\\'
 }
-
-// src: http://kefblog.com/2017-04-07/How-to-serve-static-files-with-custom-not-found-handler
