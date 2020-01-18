@@ -22,7 +22,12 @@
       <p class="p has-text-grey-light">&nbsp;&nbsp;Click on item to disable/enable</p>
     </div>
     <div clas="level-item"></div>
-    <LineChart v-if="loaded" :chartdata="chartData" :options="options" />
+    <LineChart
+      v-if="loaded"
+      :chartdata="chartData"
+      :options="options"
+      style="position: relative; height:75vh"
+    />
   </div>
 </template>
 
@@ -42,6 +47,13 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+          xAxes: [
+            {
+              ticks: {
+                reverse: true
+              }
+            }
+          ],
           yAxes: [
             {
               ticks: {

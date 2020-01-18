@@ -1,7 +1,12 @@
 <template>
   <div>
     <br />
-    <BarChart v-if="loaded" :chartdata="chartData" :options="options" />
+    <BarChart
+      v-if="loaded"
+      :chartdata="chartData"
+      :options="options"
+      style="position: relative; height:75vh"
+    />
   </div>
 </template>
 
