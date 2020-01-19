@@ -44,10 +44,10 @@
 export default {
   computed: {
     users() {
-      return this.$store.state.users.sort(function(a, b) {
+      let temp = this.$store.state.users;
+      return temp.sort((a, b) => {
         if (a.ID < b.ID) return -1;
-        if (a.ID > b.ID) return 1;
-        return 0;
+        return 1;
       });
     },
     selectedUser() {
