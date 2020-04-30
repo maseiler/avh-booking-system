@@ -78,7 +78,7 @@ func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.Bo
 	return getBookingsFromQuery(query)
 }
 
-// GetUserDebts returns list of book entries which have not yet payed by user
+// GetUserDebts returns list of book entries which have not yet paid by user
 func GetUserDebts(user data.User) data.Debts {
 	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND comment = 'Payment Full' ORDER BY time_stamp DESC LIMIT 1;", user.ID)
 	lastPayDay := getTimestampFromQuery(lastPayDayQuery)

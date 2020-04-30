@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// GetBookingStats perfroms query to return a map of time stamps, total buying and buying per item.
+// GetBookingStats performs query to return a map of time stamps, total buying and buying per item.
 func GetBookingStats(days int) map[string][]string {
 	// get list of item IDs
 	var itemIDs []int
