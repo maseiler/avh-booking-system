@@ -13,10 +13,7 @@
 # miscellaneous
 .vscode
 
-notes_for_avhbs.txt
-notes_on_sql_in_go.txt
-todo
-
+# Application specifc
 client/dist/
 client/node_modules/
 

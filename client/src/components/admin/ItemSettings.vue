@@ -17,7 +17,7 @@
         <ItemSearch :mode="'single'" />
       </div>
       <div class="column">
-        <div class="box" style="height:88vh; overflow-x:hidden; overflow-y:auto;">
+        <div class="box" style="height:88vh; overflow:auto;">
           <ItemTable />
         </div>
       </div>
