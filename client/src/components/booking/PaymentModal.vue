@@ -15,19 +15,36 @@
             </p>
             <br />
             <p class="subtitle is-4">Please place the cash in the money box!</p>
-            <div class="level">
-              <div class="level-item" style="text-align:right;">
-                <div class="column is-4">
-                  <button class="button is-link is-fullwidth" @click="pay">Pay</button>
-                  <input class="input" type="text" placeholder="€" v-model.number="balancePart" />
+            <div class="columns">
+              <div class="column is-1"></div>
+              <div class="column is-3">
+                <div class="field">
+                  <p class="control has-icons-right">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="€"
+                      v-model.number="balancePart"
+                      style="text-align:right;font-weight:bold;"
+                    />
+                    <span class="icon is-right">
+                      <font-awesome-icon icon="euro-sign" :style="{ color: 'black' }" />
+                    </span>
+                  </p>
                 </div>
               </div>
-              <div class="level-item">
-                <div class="column" style="text-align:left;">
-                  <button class="button" @click="cancel">Cancel</button>
-                </div>
+              <div class="column">
+                <button class="button is-success is-fullwidth" @click="payCash">Cash</button>
               </div>
+              <div class="column">
+                <button class="button is-link is-fullwidth" @click="payEC">EC</button>
+              </div>
+              <div class="column">
+                <button class="button is-danger is-outlined is-fullwidth" @click="cancel">Cancel</button>
+              </div>
+              <div class="column is-1"></div>
             </div>
+
             <div class="level">
               <div class="level-item is-centered">
                 <div v-if="showPasswordForm" class="field">
@@ -92,10 +109,19 @@ export default {
       userBookings: {},
       showPasswordForm: false,
       password: "",
-      balancePart: 0
+      balancePart: 0,
+      paymentMethod: ""
     };
   },
   methods: {
+    payCash() {
+      this.paymentMethod = "Cash";
+      this.pay();
+    },
+    payEC() {
+      this.paymentMethod = "EC";
+      this.pay();
+    },
     pay() {
       if (this.balancePart <= 0) {
         this.$emit("close");
@@ -115,12 +141,17 @@ export default {
     },
     submitPayment() {
       this.$http
-        .post("pay", { User: this.user, DoubleValue: this.balancePart })
+        .post("pay", {
+          User: this.user,
+          Balance: this.balancePart,
+          PaymentMethod: this.paymentMethod
+        })
         .then(() => {
           var message = "".concat(
             this.displayUserName(this.user),
-            " payed ",
-            this.balancePart
+            " paid ",
+            this.balancePart,
+            " €"
           );
           this.$store.commit("getLast5Bookings");
           this.$store.commit("getUsers");

@@ -57,7 +57,7 @@ func GetPaymentsOfUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-// GetUserDebts forwards API call to get unpayed book entries
+// GetUserDebts forwards API call to get unpaid book entries
 func GetUserDebts(w http.ResponseWriter, r *http.Request) {
 	user := UnmarshalUser(r.Body)
 
@@ -93,8 +93,8 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 
 // Pay forwards API call to databse to pay current balance
 func Pay(w http.ResponseWriter, r *http.Request) {
-	userBalancePart := UnmarshalUserDouble(r.Body)
-	success := dbP.Pay(userBalancePart)
+	payment := UnmarshalPayment(r.Body)
+	success := dbP.Pay(payment)
 	validation := ""
 	if success {
 		validation = "ok"

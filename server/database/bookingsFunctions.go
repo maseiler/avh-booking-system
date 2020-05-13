@@ -17,7 +17,7 @@ func getBookingsFromQuery(query string) []data.BookEntry {
 	defer rows.Close()
 	for rows.Next() {
 		bookEntry := data.BookEntry{}
-		err := rows.Scan(&bookEntry.ID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment)
+		err := rows.Scan(&bookEntry.ID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment, &bookEntry.PaymentMethod)
 		bookings = append(bookings, bookEntry)
 		HandleDatabaseError(err)
 	}
@@ -115,7 +115,7 @@ func Checkout(cart data.Cart) bool {
 			return false
 		}
 		HandleDatabaseError(err)
-		stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
+		stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment, payment_method) VAlUES(?, ?, ?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Println(err)
 			return false
@@ -125,7 +125,8 @@ func Checkout(cart data.Cart) bool {
 		timeStamp := time.Now().Format("2006-01-02 15:04:05")
 		totalPrice := float32(cart.CartItems[i].Amount) * cart.CartItems[i].Item.Price
 		comment := fmt.Sprintf("Part %d/%d", i+1, numItems)
-		res, err := stmt.Exec(timeStamp, cart.User.ID, cart.CartItems[i].Item.ID, cart.CartItems[i].Amount, totalPrice, comment)
+		paymentMethod := ""
+		res, err := stmt.Exec(timeStamp, cart.User.ID, cart.CartItems[i].Item.ID, cart.CartItems[i].Amount, totalPrice, comment, paymentMethod)
 		if err != nil {
 			log.Println(err)
 			return false
@@ -147,25 +148,25 @@ func Checkout(cart data.Cart) bool {
 }
 
 // Pay creates a book entry with inverted balance and sets user balance to 0.
-func Pay(userBalancePart data.UserDouble) bool {
+func Pay(payment data.Payment) bool {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment) VAlUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO bookings(time_stamp, user_id, item_id, amount, total_price, comment, payment_method) VAlUES(?, ?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	timeStamp := time.Now().Format("2006-01-02 15:04:05")
-	totalPrice := -float32(userBalancePart.DoubleValue)
+	totalPrice := -float32(payment.Balance)
 	comment := "Payment Part"
-	if userBalancePart.DoubleValue == userBalancePart.User.Balance {
+	if payment.Balance == payment.User.Balance {
 		comment = "Payment Full"
 	}
-	res, err := stmt.Exec(timeStamp, userBalancePart.User.ID, 0, 1, totalPrice, comment)
+	res, err := stmt.Exec(timeStamp, payment.User.ID, 0, 1, totalPrice, comment, payment.PaymentMethod)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
 
-	newBalance := userBalancePart.User.Balance - userBalancePart.DoubleValue
-	query := fmt.Sprintf("UPDATE users SET balance = %.2f WHERE id = %d;", newBalance, userBalancePart.User.ID)
+	newBalance := payment.User.Balance - payment.Balance
+	query := fmt.Sprintf("UPDATE users SET balance = %.2f WHERE id = %d;", newBalance, payment.User.ID)
 	_, err = db.Query(query)
 	HandleDatabaseError(err)
 	if err == nil {
