@@ -108,7 +108,7 @@
         </p>
       </div>
       <div class="column">
-        <div class="box" style="height:88vh; overflow-x:auto; overflow-y:auto;">
+        <div class="box" style="height:88vh; overflow:auto;">
           <LastBookings @selectEntry="selectEntry" :bookings="bookings" />
         </div>
       </div>

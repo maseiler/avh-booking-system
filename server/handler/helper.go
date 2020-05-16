@@ -125,6 +125,20 @@ func UnmarshalUserDouble(body io.ReadCloser) dataP.UserDouble {
 	return userDouble
 }
 
+// UnmarshalPayment unmarshals JSON object to Payment struct
+func UnmarshalPayment(body io.ReadCloser) dataP.Payment {
+	var payment dataP.Payment
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(body)
+	err = json.Unmarshal(buf.Bytes(), &payment)
+
+	if err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
+	return payment
+}
+
 // UnmarshalCart unmarshals JSON object to Cart
 func UnmarshalCart(body io.ReadCloser) dataP.Cart {
 	decoder := json.NewDecoder(body)

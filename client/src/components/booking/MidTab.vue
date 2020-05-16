@@ -1,10 +1,10 @@
 <template>
   <div>
     <button class="button" @click="refreshPage">
-      <span class="icon is-small is-left">
+      <span class="icon is-small">
         <font-awesome-icon icon="redo" />
       </span>
-      &nbsp;&nbsp;Refresh
+      <p>Refresh</p>
     </button>
     <br />
     <div

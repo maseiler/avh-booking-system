@@ -71,7 +71,8 @@ func CreateDatabase() {
 		item_id INT NOT NULL,
 		amount INT NOT NULL,
 		total_price DECIMAL(6,2) NOT NULL,
-		comment VARCHAR(255) NOT NULL
+		comment VARCHAR(255) NOT NULL,
+		payment_method VARCHAR(10) NOT NULL
 	);`
 	_, err = db.Exec(createBookingsTable)
 	HandleDatabaseError(err)

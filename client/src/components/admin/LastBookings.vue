@@ -10,6 +10,8 @@
           <th>Amount</th>
           <th style="text-align: right;">Price</th>
           <th>Comment</th>
+          <th>Payment Method</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +28,7 @@
           <td>{{entry.Amount}}</td>
           <td style="text-align: right;">{{entry.TotalPrice}} €</td>
           <td>{{entry.Comment}}</td>
+          <td>{{entry.PaymentMethod}}</td>
         </tr>
       </tbody>
       <tfoot>
@@ -35,6 +38,7 @@
         <th></th>
         <th></th>
         <th style="text-align: right;">{{sum}} €</th>
+        <th></th>
         <th></th>
       </tfoot>
     </table>
