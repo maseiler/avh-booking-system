@@ -32,6 +32,9 @@ export default {
               }
             }
           ]
+        },
+        legend: {
+          display: false
         }
       }
     };
@@ -42,50 +45,69 @@ export default {
       this.$http
         .get("getFavoriteItemsStats")
         .then(response => {
-          var sortedDict = this.sortByValue(response.data);
-          var itemIDs = sortedDict.map(pair => {
-            return pair.key;
-          });
-          var itemCount = sortedDict.map(pair => {
-            return pair.val;
-          });
+          var itemStats = this.sortByCount(response.data);
+          var labels = this.getLabels(itemStats);
+          var values = this.getValues(itemStats);
+          var barColors = this.getBarColors(itemStats);
 
           this.chartData = {
-            labels: itemIDs.map(id => {
-              return this.displayItem(this.getItemByID(id));
-            }),
+            labels: labels,
             datasets: [
               {
-                label: "Drinks Bought",
-                data: itemCount,
-                backgroundColor: "rgba(50, 115, 220, 0.5)",
-                borderColor: "rgba(50, 115, 220)",
+                data: values,
+                backgroundColor: barColors,
                 borderWidth: 1
               }
             ]
           };
+
           this.loaded = true;
         })
         .catch(response => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
-    sortByValue(dict) {
-      var keys = Object.keys(dict);
-      var sortedValues = Object.values(dict).sort((a, b) => {
-        return b - a;
+    sortByCount(itemStats) {
+      return itemStats.sort((a, b) => {
+        return b["Count"] > a["Count"] ? 1 : b["Count"] < a["Count"] ? -1 : 0;
       });
-      var sortedDict = [];
-      for (var v = 0; v < sortedValues.length; v++) {
-        for (var k = 0; k < keys.length; k++) {
-          if (dict[keys[k]] == sortedValues[v]) {
-            sortedDict.push({ key: keys[k], val: sortedValues[v] });
-            keys.splice(k, 1);
-            break;
-          }
+    },
+    getLabels(itemStats) {
+      var labels = [];
+      itemStats.forEach(stat => {
+        var label = "".concat(stat["Name"]);
+        if (stat["Unit"] == "l") {
+          label = label.concat(" ", stat["Size"]);
         }
-      }
-      return sortedDict;
+        labels.push(label);
+      });
+      return labels;
+    },
+    getValues(itemStats) {
+      var values = [];
+      itemStats.forEach(stat => {
+        values.push(stat["Count"]);
+      });
+      return values;
+    },
+    getBarColors(itemStats) {
+      var colors = [];
+      itemStats.forEach(stat => {
+        switch (stat["Type"]) {
+          case "non-alcoholic":
+            colors.push("rgb(153, 212, 244, 0.9)");
+            break;
+          case "alcoholic":
+            colors.push("rgb(103, 163, 193, 0.9)");
+            break;
+          case "food":
+            colors.push("rgb(204, 255, 255, 0.9)");
+            break;
+          default:
+            colors.push("rgb(218, 240, 251, 0.9)");
+        }
+      });
+      return colors;
     }
   },
   mounted() {

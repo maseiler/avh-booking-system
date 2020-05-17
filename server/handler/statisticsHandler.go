@@ -15,7 +15,7 @@ func GetBookingStats(w http.ResponseWriter, r *http.Request) {
 	w.Write(json)
 }
 
-// GetFavoriteItemsStats forwards API call to perform query to return a map of item IDs and it's total number bought (if greater than 0)
+// GetFavoriteItemsStats forwards API call to perform query to return a list ItemStats (if count greater than 0)
 func GetFavoriteItemsStats(w http.ResponseWriter, r *http.Request) {
 	stats := dbP.GetFavoriteItemsStats()
 	json := marshalToJSON(stats, w)
