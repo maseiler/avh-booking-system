@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/maseiler/avh-booking-system/server/data"
 )
 
 // GetBookingStats performs query to return a map of time stamps, total buying and buying per item.
@@ -58,9 +60,10 @@ func GetBookingStats(days int) map[string][]string {
 	return m
 }
 
-// GetFavoriteItemsStats perform query to return a map of item IDs and it's total number bought (if greater than 0)
-func GetFavoriteItemsStats() map[string]int {
+// GetFavoriteItemsStats perform query to return a list ItemStats (if count greater than 0)
+func GetFavoriteItemsStats() []data.ItemStat {
 	m := make(map[string]int)
+	// get maxID to determine end of for loop
 	var maxID int
 	query := fmt.Sprintf("SELECT MAX(id) FROM items;")
 	rows, err := db.Query(query)
@@ -71,6 +74,7 @@ func GetFavoriteItemsStats() map[string]int {
 		HandleDatabaseError(err)
 	}
 
+	// get count of item
 	for i := 1; i <= maxID; i++ {
 		var amount int
 		query = fmt.Sprintf("SELECT COALESCE(SUM(count), 0) FROM favorite_items WHERE item_id = %d;", i)
@@ -84,11 +88,29 @@ func GetFavoriteItemsStats() map[string]int {
 		m[strconv.Itoa(i)] = amount
 	}
 
+	// delete all with count 0
 	for k := range m {
 		if m[k] == 0 {
 			delete(m, k)
 		}
 	}
 
-	return m
+	stats := []data.ItemStat{}
+	// get additional item info
+	for k := range m {
+		itemStat := data.ItemStat{}
+		id, err := strconv.Atoi(k)
+		query = fmt.Sprintf("SELECT name, size, unit, type FROM items WHERE id = %d;", id)
+		rows, err := db.Query(query)
+		HandleDatabaseError(err)
+		defer rows.Close()
+		for rows.Next() {
+			err := rows.Scan(&itemStat.Name, &itemStat.Size, &itemStat.Unit, &itemStat.Type)
+			HandleDatabaseError(err)
+		}
+		itemStat.Count = m[k]
+		stats = append(stats, itemStat)
+	}
+
+	return stats
 }
