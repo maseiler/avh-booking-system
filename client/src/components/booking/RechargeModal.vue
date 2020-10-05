@@ -4,17 +4,16 @@
       <div class="paymentModal-wrapper big">
         <div class="paymentModal-container big">
           <div class="paymentModal-header big">
-            <h1 class="title is-4">Payment</h1>
+            <h1 class="title is-4">Recharge</h1>
             <hr />
           </div>
 
           <div class="paymentModal-body big">
             <p class="subtitle is-4">
-              <b>{{displayUserName(user)}}</b> has to pay
-              <b>{{user.Balance}}€</b>.
+              <b>{{displayUserName(user)}}</b> cannot pay.<br>Available credit is <b>{{this.invertBalance(user.Balance)}}€</b>.
             </p>
             <br />
-            <p class="subtitle is-4">Please place the cash in the money box!</p>
+            <p class="subtitle is-5">To add more credit, enter and pay amount below.</p>
             <div class="columns">
               <div class="column is-1"></div>
               <div class="column is-3">
@@ -24,7 +23,7 @@
                       class="input"
                       type="text"
                       placeholder="€"
-                      v-model.number="balancePart"
+                      v-model.number="newCredit"
                       style="text-align:right;font-weight:bold;"
                     />
                     <span class="icon is-right">
@@ -109,11 +108,14 @@ export default {
       userBookings: {},
       showPasswordForm: false,
       password: "",
-      balancePart: 0,
+      newCredit: 0,
       paymentMethod: ""
     };
   },
   methods: {
+    invertBalance(balance){
+      return -1 * balance
+    },
     payCash() {
       this.paymentMethod = "Cash";
       this.pay();
@@ -123,7 +125,7 @@ export default {
       this.pay();
     },
     pay() {
-      if (this.balancePart <= 0) {
+      if (this.newCredit <= 0) {
         this.$emit("close");
         this.$responseEventBus.$emit(
           "failureMessage",
@@ -144,14 +146,14 @@ export default {
       this.$http
         .post("pay", {
           User: this.user,
-          Balance: this.balancePart,
+          Balance: this.newCredit,
           PaymentMethod: this.paymentMethod
         })
         .then(() => {
           var message = "".concat(
             this.displayUserName(this.user),
             " paid ",
-            this.balancePart,
+            this.newCredit,
             " €"
           );
           this.$store.commit("getLast5Bookings");
@@ -186,8 +188,6 @@ export default {
     }
   },
   created() {
-    this.balancePart = this.user.Balance;
-
     this.$http
       .post("getUserDebts", this.user)
       .then(response => {

@@ -30,12 +30,14 @@
           </h6>
         </div>
         <div class="column is-one-quarter">
-          <h5 class="subtitle is-5" v-if="user.Balance !== ''">Balance:</h5>
-          <h6 class="title is-5">{{user.Balance}} €</h6>
+          <h6 class="title is-5" style="color: #1A9000" v-if="user.Balance < 0">Credit:<br>{{this.invertBalance(user.Balance)}} €</h6>
+          <h6 class="title is-5" style="color: #C10404" v-else-if="user.Balance > 0">Debt:<br>{{user.Balance}} €</h6>
+          <h6 class="title is-5" v-else>Debt:<br>{{user.Balance}} €</h6>
         </div>
         <div class="column is-one-quarter">
-          <button class="button" @click="showPaymentModal = true">Pay</button>
+          <button class="button" @click="showModal()">Pay</button>
           <PaymentModal v-if="showPaymentModal" @close="showPaymentModal = false" />
+          <RechargeModal v-if="showRechargeModal" @close="showRechargeModal = false" />
         </div>
       </div>
     </div>
@@ -44,10 +46,12 @@
 
 <script>
 import PaymentModal from "./PaymentModal.vue";
+import RechargeModal from "./RechargeModal.vue";
 
 export default {
   components: {
-    PaymentModal
+    PaymentModal,
+    RechargeModal
   },
   computed: {
     user() {
@@ -56,8 +60,21 @@ export default {
   },
   data() {
     return {
-      showPaymentModal: false
+      showPaymentModal: false,
+      showRechargeModal: false
     };
+  },
+  methods:{
+    invertBalance(balance){
+      return -1 * balance
+    },
+    showModal(){
+      if(this.user.Balance > 0){
+        this.showPaymentModal = true;
+      } else {
+        this.showRechargeModal = true;
+      }
+    }
   }
 };
 </script>
