@@ -84,6 +84,32 @@ func UnmarshalItemFromTo(body io.ReadCloser) dataP.ItemFromTo {
 	return itemFromTo
 }
 
+// UnmarshalItemCategory unmarshals JSON object to ItemCategory
+func UnmarshalItemCategory(body io.ReadCloser) dataP.ItemCategory {
+	decoder := json.NewDecoder(body)
+
+	var itemC dataP.ItemCategory
+	err := decoder.Decode(&itemC)
+
+	if err != nil {
+		panic(err)
+	}
+	return itemC
+}
+
+// UnmarshalItemCategoryMap unmarshals JSON object to ItemCategoryMa
+func UnmarshalItemCategoryMap(body io.ReadCloser) dataP.ItemCategoryMap {
+	decoder := json.NewDecoder(body)
+
+	var itemC dataP.ItemCategoryMap
+	err := decoder.Decode(&itemC)
+
+	if err != nil {
+		panic(err)
+	}
+	return itemC
+}
+
 // UnmarshalUser unmarshals JSON object to User
 func UnmarshalUser(body io.ReadCloser) dataP.User {
 	decoder := json.NewDecoder(body)

@@ -20,6 +20,12 @@
               </li>
               <li>
                 <a
+                  @click="showSetting('itemCategorySettings')"
+                  :class="[ showItemCategorySettings ? 'is-active' : '']"
+                >Item Category Settings</a>
+              </li>
+              <li>
+                <a
                   @click="showSetting('bookingSettings')"
                   :class="[ showBookingSettings ? 'is-active' : '']"
                 >Booking Settings</a>
@@ -43,6 +49,7 @@
       <div class="column">
         <UserSettings v-if="showUserSettings"/>
         <ItemSettings v-if="showItemSettings"/>
+        <ItemCategorySettings v-if="showItemCategorySettings"/>
         <BookingSettings v-if="showBookingSettings"/>
         <OtherSettings v-if="showOtherSettings"/>
         <FeedbackList v-if="showFeedbackList"/>
@@ -54,6 +61,7 @@
 <script>
 import UserSettings from "./UserSettings.vue";
 import ItemSettings from "./ItemSettings.vue";
+import ItemCategorySettings from "./ItemCategoryMapSettings.vue";
 import BookingSettings from "./BookingSettings.vue";
 import OtherSettings from "./OtherSettings.vue";
 import FeedbackList from "./FeedbackList.vue";
@@ -62,6 +70,7 @@ export default {
   components: {
     UserSettings,
     ItemSettings,
+    ItemCategorySettings,
     BookingSettings,
     OtherSettings,
     FeedbackList
@@ -70,6 +79,7 @@ export default {
     return {
       showUserSettings: false,
       showItemSettings: false,
+      showItemCategorySettings: false,
       showBookingSettings: false,
       showOtherSettings: false,
       showFeedbackList: false
@@ -81,6 +91,7 @@ export default {
         case "userSettings":
           this.showUserSettings = true;
           this.showItemSettings = false;
+          this.showItemCategorySettings = false;
           this.showBookingSettings = false;
           this.showOtherSettings = false;
           this.showFeedbackList = false;
@@ -88,6 +99,15 @@ export default {
         case "itemSettings":
           this.showUserSettings = false;
           this.showItemSettings = true;
+          this.showItemCategorySettings = false;
+          this.showBookingSettings = false;
+          this.showOtherSettings = false;
+          this.showFeedbackList = false;
+          break;
+        case "itemCategorySettings":
+          this.showUserSettings = false;
+          this.showItemSettings = false;
+          this.showItemCategorySettings = true;
           this.showBookingSettings = false;
           this.showOtherSettings = false;
           this.showFeedbackList = false;
@@ -95,6 +115,7 @@ export default {
         case "bookingSettings":
           this.showUserSettings = false;
           this.showItemSettings = false;
+          this.showItemCategorySettings = false;
           this.showBookingSettings = true;
           this.showOtherSettings = false;
           this.showFeedbackList = false;
@@ -102,6 +123,7 @@ export default {
         case "otherSettings":
           this.showUserSettings = false;
           this.showItemSettings = false;
+          this.showItemCategorySettings = false;
           this.showBookingSettings = false;
           this.showOtherSettings = true;
           this.showFeedbackList = false;
@@ -109,6 +131,7 @@ export default {
         case "feedbackList":
           this.showUserSettings = false;
           this.showItemSettings = false;
+          this.showItemCategorySettings = false;
           this.showBookingSettings = false;
           this.showOtherSettings = false;
           this.showFeedbackList = true;

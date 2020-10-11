@@ -41,11 +41,15 @@ const store = new Vuex.Store({
   state: {
     users: [],
     items: [],
+    itemCategories: [],
+    itemCategoryMaps: [],
     last5Bookings: [],
     feedback: [],
     selectedUser: {},
     selectedSingleItem: {},
-    selectedMultipleItems: []
+    selectedMultipleItems: [],
+    selectedItemCategory: {},
+    selectedItemCategoryMap: {}
   },
   mutations: {
     getUsers(state) {
@@ -62,6 +66,20 @@ const store = new Vuex.Store({
         items = items.filter(Boolean);
         sortItemsByName(items);
         state.items = items;
+      });
+    },
+    getItemCategories(state) {
+      Vue.http.get("getItemCategories").then(response => {
+        var itemCs = [].concat.apply([], response.body);
+        itemCs = itemCs.filter(Boolean);
+        state.itemCategories = itemCs;
+      });
+    },
+    getItemCategoryMaps(state) {
+      Vue.http.get("getItemCategoryMaps").then(response => {
+        var icMaps = [].concat.apply([], response.body);
+        icMaps = icMaps.filter(Boolean);
+        state.itemCategoryMaps = icMaps;
       });
     },
     getLast5Bookings(state) {
@@ -94,38 +112,55 @@ const store = new Vuex.Store({
     },
     selectMultipleItems(state, item) {
       state.selectedMultipleItems = state.selectedMultipleItems.concat(item);
+    },
+    selectItemCategory(state, itemC) {
+      if (state.selectedItemCategory === itemC) {
+        state.selectedItemCategory = {};
+      } else {
+        state.selectedItemCategory = itemC
+      }
+    },
+    selectItemCategoryMap(state, icMap) {
+      if (state.selectedItemCategoryMap === icMap) {
+        state.selectedItemCategoryMap = {};
+      } else {
+        state.selectedItemCategoryMap = icMap
+      }
+    },
+    getters: {
+      usersAH: state => {
+        return state.users.filter(user => user["Status"] === "AH");
+      },
+      usersAktivB: state => {
+        return state.users.filter(user => user["Status"] === "Aktiv B");
+      },
+      usersAktivKA: state => {
+        return state.users.filter(user => user["Status"] === "Aktiv KA");
+      },
+      usersSteganleger: state => {
+        return state.users.filter(user => user["Status"] === "Steganleger");
+      },
+      usersGast: state => {
+        return state.users.filter(user => user["Status"] === "Gast");
+      },
+      itemsAlc: state => {
+        return state.items.filter(item => item["Type"] === "alcoholic")
+      },
+      itemsNonAlc: state => {
+        return state.items.filter(item => item["Type"] === "non-alcoholic")
+      },
+      itemsFood: state => {
+        return state.items.filter(item => item["Type"] === "food")
+      }
+      // TODO getters for ItemCategories?
     }
-  },
-  getters: {
-    usersAH: state => {
-      return state.users.filter(user => user["Status"] === "AH");
-    },
-    usersAktivB: state => {
-      return state.users.filter(user => user["Status"] === "Aktiv B");
-    },
-    usersAktivKA: state => {
-      return state.users.filter(user => user["Status"] === "Aktiv KA");
-    },
-    usersSteganleger: state => {
-      return state.users.filter(user => user["Status"] === "Steganleger");
-    },
-    usersGast: state => {
-      return state.users.filter(user => user["Status"] === "Gast");
-    },
-    itemsAlc: state => {
-      return state.items.filter(item => item["Type"] === "alcoholic")
-    },
-    itemsNonAlc: state => {
-      return state.items.filter(item => item["Type"] === "non-alcoholic")
-    },
-    itemsFood: state => {
-      return state.items.filter(item => item["Type"] === "food")
-    }
-  }
-})
+  })
 
 store.commit("getUsers");
 store.commit("getItems");
+store.commit("getItemCategories");
+store.commit("getItemCategoryMaps");
+store.commit("getItemCategories");
 store.commit("getFeedbackList");
 store.commit("getLast5Bookings");
 

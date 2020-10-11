@@ -53,6 +53,23 @@ func CreateDatabase() {
 	_, err = db.Exec(createItemsTable)
 	HandleDatabaseError(err)
 
+	createItemCategoryTable := `
+	CREATE TABLE IF NOT EXISTS item_categories(
+		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		name VARCHAR(20) NOT NULL
+	);`
+	_, err = db.Exec(createItemCategoryTable)
+	HandleDatabaseError(err)
+
+	createItemCategoryMapTable := `
+	CREATE TABLE IF NOT EXISTS item_category_map(
+		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		category_id INT NOT NULL,
+		item_id INT NOT NULL
+	);`
+	_, err = db.Exec(createItemCategoryMapTable)
+	HandleDatabaseError(err)
+
 	createFavoriteItemsTable := `
 	CREATE TABLE IF NOT EXISTS favorite_items (
 		user_id INT NOT NULL,
