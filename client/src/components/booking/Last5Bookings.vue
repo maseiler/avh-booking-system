@@ -1,15 +1,14 @@
 <template>
   <div>
     <div class="list is-hoverable">
-      <a v-for="entry in bookings" :key="entry" class="list-item has-background-white">
-        {{printDateTime(entry.TimeStamp)}}
+      <a
+        v-for="entry in bookings"
+        :key="entry"
+        class="list-item has-background-white"
+      >
+        {{ printDateTime(entry.TimeStamp) }}
         <br />
-        <div
-          v-if="entry.ItemID === 0"
-        >{{displayUserName(getUserByID(entry.UserID))}} ~ Payment: {{entry.TotalPrice * -1}}€</div>
-        <div
-          v-else
-        >{{displayUserName(getUserByID(entry.UserID))}} ~ {{entry.Amount}}x {{displayItem(getItemByID(entry.ItemID))}}</div>
+        {{ displayBooking(entry) }}
       </a>
     </div>
   </div>
@@ -20,7 +19,37 @@ export default {
   computed: {
     bookings() {
       return this.$store.state.last5Bookings;
-    }
-  }
+    },
+  },
+  methods: {
+    displayBooking(entry) {
+      if (entry.ItemID === 0) {
+        if (entry.Comment.startsWith("Undo")) {
+          return (
+            this.displayUserName(this.getUserByID(entry.UserID)) +
+            " ~ Undid booking: " +
+            entry.Amount +
+            "€"
+          );
+        } else if (entry.Comment.startsWith("Payment")) {
+          return (
+            this.displayUserName(this.getUserByID(entry.UserID)) +
+            " ~ Payment: " +
+            entry.TotalPrice * -1 +
+            "€"
+          );
+        }
+        return this.displayUserName(this.getUserByID(entry.UserID)) + " ~ ???";
+      } else {
+        return (
+          this.displayUserName(this.getUserByID(entry.UserID)) +
+          " ~ " +
+          entry.Amount +
+          "x " +
+          this.displayItem(this.getItemByID(entry.ItemID))
+        );
+      }
+    },
+  },
 };
 </script>
