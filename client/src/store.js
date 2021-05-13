@@ -126,41 +126,41 @@ const store = new Vuex.Store({
       } else {
         state.selectedItemCategoryMap = icMap
       }
-    },
-    getters: {
-      usersAH: state => {
-        return state.users.filter(user => user["Status"] === "AH");
-      },
-      usersAktivB: state => {
-        return state.users.filter(user => user["Status"] === "Aktiv B");
-      },
-      usersAktivKA: state => {
-        return state.users.filter(user => user["Status"] === "Aktiv KA");
-      },
-      usersSteganleger: state => {
-        return state.users.filter(user => user["Status"] === "Steganleger");
-      },
-      usersGast: state => {
-        return state.users.filter(user => user["Status"] === "Gast");
-      },
-      itemsAlc: state => {
-        return state.items.filter(item => item["Type"] === "alcoholic")
-      },
-      itemsNonAlc: state => {
-        return state.items.filter(item => item["Type"] === "non-alcoholic")
-      },
-      itemsFood: state => {
-        return state.items.filter(item => item["Type"] === "food")
-      }
-      // TODO getters for ItemCategories?
     }
-  })
+  },
+  getters: {
+    usersAH: state => {
+      return state.users.filter(user => user["Status"] === "AH");
+    },
+    usersAktivB: state => {
+      return state.users.filter(user => user["Status"] === "Aktiv B");
+    },
+    usersAktivKA: state => {
+      return state.users.filter(user => user["Status"] === "Aktiv KA");
+    },
+    usersSteganleger: state => {
+      return state.users.filter(user => user["Status"] === "Steganleger");
+    },
+    usersGast: state => {
+      return state.users.filter(user => user["Status"] === "Gast");
+    },
+    itemsAlc: state => {
+      return state.items.filter(item => item["Type"] === "alcoholic")
+    },
+    itemsNonAlc: state => {
+      return state.items.filter(item => item["Type"] === "non-alcoholic")
+    },
+    itemsFood: state => {
+      return state.items.filter(item => item["Type"] === "food")
+    }
+    // TODO getters for ItemCategories?
+  }
+})
 
 store.commit("getUsers");
 store.commit("getItems");
 store.commit("getItemCategories");
 store.commit("getItemCategoryMaps");
-store.commit("getItemCategories");
 store.commit("getFeedbackList");
 store.commit("getLast5Bookings");
 

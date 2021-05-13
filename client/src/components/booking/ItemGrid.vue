@@ -2,8 +2,8 @@
   <div>
     <table class="table is-hoverable is-striped">
       <tbody>
-        <tr v-for="itemC in itemCs" :key="itemC">
-          <th>{{ itemC.Category }}</th>
+        <tr v-for="icMap in icMaps" :key="icMap">
+          <th>{{ icMap.Category }}</th>
           <th>
             <button @click="mapCategoryItems">map</button>
             <!--
@@ -32,47 +32,78 @@ export default {
     type: String,
   },
   computed: {
-    mapCategoryItems() {
-      console.log("mapCategoryItems");
+    icMaps() {
+      var icMaps = this.$store.state.itemCategoryMaps;
       var itemCategories = this.$store.state.itemCategories;
-      var items = this.getFilteredItems(itemCategories);
-      //var map = [];
-      // List<{CategoryName, items}>
-      return items;
-    },
-    itemCs() {
-      return this.$store.state.itemCategories;
+      var icMapList = [];
+      var items;
+      if (this.type === "alcoholic") {
+        items = this.$store.getters.itemsNonAlc;
+      } else if (this.type === "non-alcoholic") {
+        //...
+      }
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        for (let j = 0; j < icMaps.length; j++) {
+          const icMap = icMaps[j];
+          if (item.ID === icMap.ItemID) {
+            let categoryName = this.getCategoryNameByID(
+              itemCategories,
+              icMap.CategoryID
+            );
+            if (this.categoryExists(icMapList, categoryName)) {
+              icMapList = icMapList[categoryName].concat({ item }); //TODO
+            } else {
+              icMapList = icMapList.concat({ categoryName: [{ item }] });
+            }
+            // check if category exists in new list
+            /*
+            for (const icMap in icMapList) {
+              if (!icMap.hasOwnProperty(categoryName)) {
+                icMapList[categoryName].concat({ item });
+                // TODO check if work
+              } else {
+                icMapList.concat({ categoryName: [{ item }] });
+              }
+            }
+            */
+          } else {
+            /*
+            if (!icMap.hasOwnProperty("Others")) {
+              icMapList[categoryName].concat({ item });
+            } else {
+              icMapList.concat({ Others: [{ item }] });
+            }
+            */
+          }
+        }
+      }
+      console.log(icMapList);
+      return icMapList;
     },
     selectedItem() {
       return this.$store.state.selectedSingleItem;
     },
   },
   methods: {
-    getFilteredItems(itemCategories) {
-      console.log("getFilteredItemss");
-      var itemList = [];
-      var categoryList = [];
-      var itemsOfType;
-      if (this.type === "alcoholic") {
-        itemsOfType = this.$store.getters.itemsAlc;
-      } else if (this.type === "non-alcoholic") {
-        //...
-      }
-      for (let i = 0; i < itemsOfType.length; i++) {
-        const item = itemsOfType[i];
-        for (let j = 0; j < itemCategories.length; j++) {
-          const itemC = itemCategories[j];
-          if (item.ID === itemC.ItemID) {
-            itemList = itemList.concat(item);
-            if (categoryList.indexOf(itemC.Category) < 0) {
-              categoryList = categoryList.concat(itemC.Category);
-            }
-          }
+    getCategoryNameByID(itemCategories, id) {
+      for (let i = 0; i < itemCategories.length; i++) {
+        const ic = itemCategories[i];
+        console.log(ic);
+        if (ic.ID == id) {
+          return ic.Name;
         }
       }
-      console.log(itemList);
-      console.log(categoryList);
-      return itemList;
+      return "";
+    },
+    categoryExists(icMapList, categoryName) {
+      for (let i = 0; i < icMapList.length; i++) {
+        const icMap = icMapList[i];
+        if (icMap[categoryName] != null) {
+          return true;
+        }
+      }
+      return false;
     },
   },
 };

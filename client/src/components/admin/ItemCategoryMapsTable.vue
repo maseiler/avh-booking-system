@@ -13,12 +13,10 @@
           v-for="ic in icMaps"
           :key="ic"
           @click="selectItemCategory(ic)"
-          :class="[
-            selectedItemCategoryMap.ItemID === ic.ID ? 'is-selected' : '',
-          ]"
+          :class="[selectedItemCategoryMap.ID === ic.ID ? 'is-selected' : '']"
         >
           <th>{{ ic.ID }}</th>
-          <td>{{ ic.Category }}</td>
+          <td>{{ getItemCategoryByID(ic.CategoryID).Name }}</td>
           <td>{{ displayItem(getItemByID(ic.ItemID)) }}</td>
         </tr>
       </tbody>
@@ -30,9 +28,10 @@
 export default {
   computed: {
     icMaps() {
+      //TODO sort
       return this.$store.state.itemCategoryMaps;
     },
-    selectedItemCategory() {
+    selectedItemCategoryMap() {
       return this.$store.state.selectedItemCategoryMap;
     },
   },

@@ -37,6 +37,11 @@ const mixin = Vue.mixin({
         return "???";
       }
     },
+    getItemCategoryByID(id) {
+      return this.$store.state.itemCategories.find(i => {
+        return i.ID == id;
+      });
+    },
     printDateTime(dateTime) {
       var d = new Date(Date.parse(dateTime));
       return (

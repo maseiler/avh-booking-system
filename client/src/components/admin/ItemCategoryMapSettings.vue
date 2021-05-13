@@ -8,11 +8,10 @@
           <!--<button class="button is-link is-fullwidth" @click="showModifyItemCategoryForm = true">Modify Item Category</button>-->
           <button class="button is-link is-fullwidth" @click="showDeleteItemCategoryForm = true">Delete</button>
         </div>
-        <AddItemCategoryForm v-if="showAddItemForm" @close="showAddItemCategoryForm = false" />
+        <!--<AddItemCategoryMapForm v-if="showAddItemForm" @close="showAddItemCategoryForm = false" />-->
         <!--<ModifyItemForm v-if="showModifyItemForm" @close="showModifyItemCategoryForm = false" />-->
-        <DeleteItemCategoryForm v-if="showDeleteItemForm" @close="showDeleteItemCategoryForm = false" />
       </div>
-      <div class="column is-4">
+      <div class="column is-6">
         <ItemInfo />
         <ItemSearch :mode="'single'" />
         <AddItemCategoryForm />
@@ -27,16 +26,14 @@
 </template>
 
 <script>
-import AddItemCategoryForm from "./AddItemCategoryForm.vue";
-//import ModifyItemCategoryForm from "./ModifyItemCategoryForm.vue";
-//import DeleteItemCategoryForm from "./DeleteItemCategoryForm.vue";
+//import AddItemCategoryMapForm from "./AddItemCategoryMapForm.vue";
 import ItemSearch from "../booking/ItemSearch.vue";
 import ItemInfo from "./ItemInfo.vue";
 import ItemCategoryMapsTable from "./ItemCategoryMapsTable.vue";
 
 export default {
   components: {
-    AddItemCategoryForm,
+    //AddItemCategoryMapForm,
     //ModifyItemForm,
     //DeleteItemCategoryForm,
     ItemCategoryMapsTable,
