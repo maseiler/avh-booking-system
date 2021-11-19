@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "avhbs-booking-system-client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,29 +8,29 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^0.1.10",
-    "bulma": "^0.8.2",
-    "chart.js": "^2.9.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/vue-fontawesome": "^2.0.6",
+    "bulma": "^0.9.3",
+    "chart.js": "^3.6.0",
     "express": "^4.17.1",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^10",
     "underscore": "^1.13.1",
-    "vue": "^2.6.12",
+    "vue": "^2.6.14",
     "vue-chartjs": "^3.5.1",
-    "vue-resource": "^1.5.2",
-    "vue-router": "^3.5.1",
+    "vue-resource": "^1.5.3",
+    "vue-router": "^3.5.3",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.13",
-    "@vue/cli-plugin-eslint": "^4.5.13",
-    "@vue/cli-service": "^4.5.13",
+    "@vue/cli-plugin-babel": "^4.5.15",
+    "@vue/cli-plugin-eslint": "^4.5.15",
+    "@vue/cli-service": "^4.5.15",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.12"
+    "eslint-plugin-vue": "^8.1.1",
+    "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
     "root": true,
@@ -41,7 +41,10 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "vue/multi-word-component-names": "off",
+      "vue/no-mutating-props": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
