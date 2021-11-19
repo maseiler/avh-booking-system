@@ -1,16 +1,49 @@
 <template>
   <div>
-    <div class="list is-hoverable">
-      <a
-        v-for="entry in bookings"
-        :key="entry"
-        class="list-item has-background-white"
-      >
-        {{ printDateTime(entry.TimeStamp) }}
-        <br />
-        {{ displayBooking(entry) }}
-      </a>
-    </div>
+    <ul v-for="entry in bookings" :key="entry">
+      <li class="dropdown is-hoverable is-fullwidth">
+        <div class="dropdown-trigger is-fullwidth">
+          <button class="button is-multiline">
+            {{ printDateTime(entry.TimeStamp) }}<br />
+            <span v-if="entry.ItemID === 0 && entry.PaymentMethod.length > 0">
+              {{ displayUserName(getUserByID(entry.UserID)) }} ~ Payment
+            </span>
+            <span
+              v-else-if="entry.ItemID === 0 && entry.Comment.startsWith('Undo')"
+            >
+              {{ displayUserName(getUserByID(entry.UserID)) }} ~ Undid book
+              entry
+            </span>
+            <span v-else>
+              {{ displayUserName(getUserByID(entry.UserID)) }} ~
+              {{ entry.Amount }}x
+              {{ displayItem(getItemByID(entry.ItemID)) }}
+            </span>
+          </button>
+        </div>
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-content has-background-white-ter">
+            <div class="dropdown-item has-background-white-ter">
+              <span v-if="entry.ItemID === 0 && entry.PaymentMethod.length > 0">
+                {{ entry.TotalPrice * -1 }}€ {{ entry.PaymentMethod }}
+              </span>
+              <span
+                v-else-if="
+                  entry.ItemID === 0 && entry.Comment.startsWith('Undo')
+                "
+              >
+                {{ entry.TotalPrice * -1 }}€
+              </span>
+              <span v-else>
+                {{ entry.Amount }}x
+                {{ displayItem(getItemByID(entry.ItemID)) }} =
+                {{ entry.TotalPrice }}€
+              </span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -21,35 +54,32 @@ export default {
       return this.$store.state.last5Bookings;
     },
   },
-  methods: {
-    displayBooking(entry) {
-      if (entry.ItemID === 0) {
-        if (entry.Comment.startsWith("Undo")) {
-          return (
-            this.displayUserName(this.getUserByID(entry.UserID)) +
-            " ~ Undid booking: " +
-            entry.Amount +
-            "€"
-          );
-        } else if (entry.Comment.startsWith("Payment")) {
-          return (
-            this.displayUserName(this.getUserByID(entry.UserID)) +
-            " ~ Payment: " +
-            entry.TotalPrice * -1 +
-            "€"
-          );
-        }
-        return this.displayUserName(this.getUserByID(entry.UserID)) + " ~ ???";
-      } else {
-        return (
-          this.displayUserName(this.getUserByID(entry.UserID)) +
-          " ~ " +
-          entry.Amount +
-          "x " +
-          this.displayItem(this.getItemByID(entry.ItemID))
-        );
-      }
-    },
-  },
 };
 </script>
+
+<style lang="scss">
+.dropdown {
+  width: 100%;
+
+  .dropdown-trigger {
+    width: 100%;
+  }
+
+  .button {
+    display: block;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+.button.is-multiline {
+  min-height: 2.25em;
+  white-space: unset;
+  height: auto;
+  flex-direction: column;
+}
+</style>
