@@ -8,7 +8,11 @@
     </button>
     <br />
     <div
-      v-if="Object.keys(this.$store.state.selectedUser).length !== 0 || Object.keys(this.$store.state.selectedMultipleItems).length !== 0"
+      v-if="
+        Object.keys(this.$store.state.selectedUser).length !== 0 ||
+        this.$store.state.selectedSingleItem !== null ||
+        Object.keys(this.$store.state.selectedMultipleItems).length !== 0
+      "
     >
       <Cart />
       <hr />
@@ -31,12 +35,12 @@ export default {
   components: {
     Cart,
     UserInfo,
-    Last5Bookings
+    Last5Bookings,
   },
   methods: {
     refreshPage() {
       this.$router.go();
-    }
-  }
+    },
+  },
 };
 </script>
