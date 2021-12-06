@@ -11,23 +11,25 @@
       <tfoot>
         <tr>
           <th></th>
-          <th>{{sum}} €</th>
+          <th>{{ sum }} €</th>
           <th>
-            <button class="button is-success" @click="checkout">Checkout</button>
+            <button class="button is-success" @click="checkout">
+              Checkout
+            </button>
           </th>
         </tr>
       </tfoot>
       <tbody>
         <tr></tr>
         <tr v-for="i in cart" :key="i">
-          <td v-if="i.item.Type==='food'">{{i.item.Name}}</td>
-          <td v-else>{{i.item.Name}} {{i.item.Size}}{{i.item.Unit}}</td>
-          <td>{{i.item.Price}} €</td>
+          <td v-if="i.item.Type === 'food'">{{ i.item.Name }}</td>
+          <td v-else>{{ i.item.Name }} {{ i.item.Size }}{{ i.item.Unit }}</td>
+          <td>{{ i.item.Price }} €</td>
           <td>
             <input
               class="input is-small has-text-black"
               type="text"
-              style="width:4em;"
+              style="width: 4em"
               v-model="i.amount"
               @change="updateCart(i.item)"
             />
@@ -50,25 +52,25 @@ export default {
     },
     items() {
       return this.$store.state.selectedMultipleItems;
-    }
+    },
   },
   watch: {
     items() {
       this.buildCart();
       this.updateSum();
-    }
+    },
   },
   data() {
     return {
       cart: [],
       sum: 0,
-      bookingError: ""
+      bookingError: "",
     };
   },
   methods: {
     buildCart() {
       var temp = [];
-      this.items.forEach(item => {
+      this.items.forEach((item) => {
         if (!this.contains(temp, item)) {
           var newItem = new Object();
           newItem.item = item;
@@ -142,12 +144,13 @@ export default {
           );
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(response => {
+        .catch((response) => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
       await this.emptyCart();
       await this.refresh();
-      this.$root.$emit('set-item-tab-to-favorites', true) 
+      this.$root.$emit("set-item-tab-to-favorites", true);
+      this.$root.$emit("set-user-tab-to-all", true);
     },
     deleteItem(item) {
       var index = this.cart.indexOf(item);
@@ -166,8 +169,8 @@ export default {
       this.$store.commit("getUsers");
       this.$store.commit("getItems");
       this.$store.commit("getLast5Bookings");
-    }
-  }
+    },
+  },
 };
 </script>
 
