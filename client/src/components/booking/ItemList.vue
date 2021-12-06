@@ -2,32 +2,32 @@
   <div>
     <div class="tabs">
       <ul>
-        <li :class="[ activeTab === 'tab0' ? 'is-active' : '']">
-          <a @click="activeTab='tab0'">
+        <li :class="[activeTab === 'tab0' ? 'is-active' : '']">
+          <a @click="activeTab = 'tab0'">
             <span class="icon is-small is-left">
               <font-awesome-icon icon="star" />
             </span>
             Favorites
           </a>
         </li>
-        <li :class="[ activeTab === 'tab1' ? 'is-active' : '']">
-          <a @click="activeTab='tab1'">
+        <li :class="[activeTab === 'tab1' ? 'is-active' : '']">
+          <a @click="activeTab = 'tab1'">
             <span class="icon is-small is-left">
               <font-awesome-icon icon="beer" />
             </span>
             Alcoholic
           </a>
         </li>
-        <li :class="[ activeTab === 'tab2' ? 'is-active' : '']">
-          <a @click="activeTab='tab2'">
+        <li :class="[activeTab === 'tab2' ? 'is-active' : '']">
+          <a @click="activeTab = 'tab2'">
             <span class="icon is-small is-left">
               <font-awesome-icon icon="glass-whiskey" />
             </span>
             Non-Alcoholic
           </a>
         </li>
-        <li :class="[ activeTab === 'tab3' ? 'is-active' : '']">
-          <a @click="activeTab='tab3'">
+        <li :class="[activeTab === 'tab3' ? 'is-active' : '']">
+          <a @click="activeTab = 'tab3'">
             <span class="icon is-small is-left">
               <font-awesome-icon icon="utensils" />
             </span>
@@ -44,7 +44,9 @@
         :key="item"
         :class="[selectedItems.includes(item) ? 'is-link' : '']"
         @click="selectItem(item)"
-      >{{ displayItem(item) }}</button>
+      >
+        {{ displayItem(item) }}
+      </button>
     </div>
 
     <div class="buttons" v-if="activeTab === 'tab1'">
@@ -54,7 +56,9 @@
         :key="item"
         :class="[selectedItems.includes(item) ? 'is-link' : '']"
         @click="selectItem(item)"
-      >{{ displayItem(item) }}</button>
+      >
+        {{ displayItem(item) }}
+      </button>
     </div>
 
     <div class="buttons" v-if="activeTab === 'tab2'">
@@ -64,7 +68,9 @@
         :key="item"
         @click="selectItem(item)"
         :class="[selectedItems.includes(item) ? 'is-link' : '']"
-      >{{ displayItem(item) }}</button>
+      >
+        {{ displayItem(item) }}
+      </button>
     </div>
 
     <div class="buttons" v-if="activeTab === 'tab3'">
@@ -74,7 +80,9 @@
         :key="item"
         @click="selectItem(item)"
         :class="[selectedItems.includes(item) ? 'is-link' : '']"
-      >{{ displayItem(item) }}</button>
+      >
+        {{ displayItem(item) }}
+      </button>
     </div>
   </div>
 </template>
@@ -84,13 +92,18 @@ export default {
   data() {
     return {
       favoriteItems: [],
-      activeTab: "tab0"
+      activeTab: "tab0",
     };
   },
   watch: {
     user() {
       this.getFavoriteItems();
-    }
+    },
+  },
+  created() {
+    this.$root.$on("set-item-tab-to-favorites", () => {
+      this.activeTab = "tab0";
+    });
   },
   computed: {
     allItems() {
@@ -110,14 +123,14 @@ export default {
     },
     selectedItems() {
       return this.$store.state.selectedMultipleItems;
-    }
+    },
   },
   methods: {
     selectItem(item) {
       this.$store.commit("selectMultipleItems", item);
     },
     getItem(id) {
-      return this.allItems.find(i => {
+      return this.allItems.find((i) => {
         return i.ID == id;
       });
     },
@@ -125,9 +138,9 @@ export default {
       var result = [];
       await this.$http
         .post("getFavoriteItemIDs", this.user)
-        .then(response => {
+        .then((response) => {
           var favoriteItemIDs = [].concat.apply([], response.body);
-          favoriteItemIDs.forEach(id => {
+          favoriteItemIDs.forEach((id) => {
             var item = this.getItem(id);
             result = [].concat(result, item);
           });
@@ -139,7 +152,7 @@ export default {
           );
         });
       this.favoriteItems = result;
-    }
-  }
+    },
+  },
 };
 </script>

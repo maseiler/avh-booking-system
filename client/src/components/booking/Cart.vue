@@ -147,6 +147,7 @@ export default {
         });
       await this.emptyCart();
       await this.refresh();
+      this.$root.$emit('set-item-tab-to-favorites', true) 
     },
     deleteItem(item) {
       var index = this.cart.indexOf(item);
