@@ -171,6 +171,10 @@ export default {
       this.$store.commit("getLast5Bookings");
     },
   },
+  created() {
+    this.buildCart();
+    this.updateSum();
+  },
 };
 </script>
 

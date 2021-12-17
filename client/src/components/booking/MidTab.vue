@@ -10,7 +10,6 @@
     <div
       v-if="
         Object.keys(this.$store.state.selectedUser).length !== 0 ||
-        this.$store.state.selectedSingleItem !== null ||
         Object.keys(this.$store.state.selectedMultipleItems).length !== 0
       "
     >
