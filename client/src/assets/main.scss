@@ -1,9 +1,8 @@
 $primary: #99d4f4;
 $danger: #db5b5b;
 
-// hütten blau
-// #AACFEF
-// #9BD6F8
-// 99d4f4
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+$family-sans-serif: "Nunito", sans-serif;
 
 @import "~bulma/bulma";
