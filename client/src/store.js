@@ -1,26 +1,31 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VueResource from 'vue-resource';
+import VueResource from 'vue-resource'
 
 Vue.use(Vuex)
 Vue.use(VueResource);
 
 function sortUsersByName(array) {
   array.sort(function (a, b) {
-    var bierNameA = a.BierName.toLowerCase(),
-      bierNameB = b.BierName.toLowerCase();
-    var firstNameA = a.FirstName.toLowerCase(),
-      firstNameB = b.FirstName.toLowerCase();
-    var lastNameA = a.LastName.toLowerCase(),
-      lastNameB = b.LastName.toLowerCase();
-    if (bierNameA < bierNameB) return -1;
-    if (bierNameA > bierNameB) return 1;
-    if (firstNameA < firstNameB) return -1;
-    if (firstNameA > firstNameB) return 1;
-    if (lastNameA < lastNameB) return -1;
-    if (lastNameA > lastNameB) return 1;
+    if (displayUserName(a).toLowerCase() < displayUserName(b).toLowerCase()) return -1;
+    if (displayUserName(a).toLowerCase() > displayUserName(b).toLowerCase()) return 1;
     return 0;
   });
+}
+
+function displayUserName(user) {
+  if (user === undefined) {
+    return "???";
+  } else
+    if (user.BierName !== "") {
+      return user.BierName;
+    } else if (user.LastName !== "" && user.FirstName !== "") {
+      return user.FirstName + " " + user.LastName[0] + ".";
+    } else if (user.FirstName !== "") {
+      return user.FirstName
+    } else {
+      return "???";
+    }
 }
 
 function sortItemsByName(array) {
