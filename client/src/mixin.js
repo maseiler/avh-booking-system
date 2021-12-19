@@ -1,42 +1,44 @@
 import Vue from 'vue'
+import helper from './helper.js'
 
+/**
+ * Functions for HTML content.
+ * Functions for JavaScript can be found in helper.js
+ */
 const mixin = Vue.mixin({
   methods: {
+    ////////////////
+    // User
+    ////////////////
     getUserByID(id) {
       return this.$store.state.users.find(u => {
         return u.ID == id;
       });
     },
-    getItemByID(id) {
-      return this.$store.state.items.find(i => {
-        return i.ID == id;
-      });
-    },
     displayUserName(user) {
-      if (user === undefined) {
-        return "???";
-      } else
-        if (user.BierName !== "") {
-          return user.BierName;
-        } else if (user.LastName !== "" && user.FirstName !== "") {
-          return user.FirstName + " " + user.LastName[0] + ".";
-        } else if (user.FirstName !== "") {
-          return user.FirstName
-        } else {
-          return "???";
-        }
+      return helper.displayUserName(user);
+    },
+    displayUserNameFull(user) {
+      return helper.displayUserNameFull(user);
+    },
+    selectUser(user) {
+      this.$store.commit("selectUser", user);
+    },
+    ////////////////
+    // Item
+    ////////////////
+    getItemByID(items, id) {
+      return helper.getItemByID(items, id);
     },
     displayItem(item) {
-      if (item === undefined) {
-        return "???"
-      } else if (item.Type === "alcoholic" || item.Type === "non-alcoholic") {
-        return item.Name + " " + item.Size + " " + item.Unit;
-      } else if (item.Type === "food") {
-        return item.Name;
-      } else {
-        return "???";
-      }
+      return helper.displayItem(item);
     },
+    selectItem(item) {
+      this.$store.commit("selectMultipleItems", item);
+    },
+    ////////////////
+    // Misc
+    ////////////////
     printDateTime(dateTime) {
       var d = new Date(Date.parse(dateTime));
       return (
@@ -63,7 +65,7 @@ const mixin = Vue.mixin({
       } else {
         return "";
       }
-    },
+    }
   }
 })
 

@@ -17,13 +17,14 @@
             <span v-else>
               {{ displayUserName(getUserByID(entry.UserID)) }} ~
               {{ entry.Amount }}x
-              {{ displayItem(getItemByID(entry.ItemID)) }}
+              {{ displayItem(getItemByID(items, entry.ItemID)) }}
             </span>
           </button>
         </div>
         <div class="dropdown-menu" role="menu">
-          <div class="dropdown-content has-background-white-ter">
-            <div class="dropdown-item has-background-white-ter">
+          <div class="dropdown-content has-background-primary-light">
+            <div class="dropdown-item has-background-primary-light">
+              <p>{{ displayUserNameFull(getUserByID(entry.UserID)) }}</p>
               <span v-if="entry.ItemID === 0 && entry.PaymentMethod.length > 0">
                 {{ entry.TotalPrice * -1 }}€ {{ entry.PaymentMethod }}
               </span>
@@ -36,7 +37,7 @@
               </span>
               <span v-else>
                 {{ entry.Amount }}x
-                {{ displayItem(getItemByID(entry.ItemID)) }} =
+                {{ displayItem(getItemByID(items, entry.ItemID)) }} =
                 {{ entry.TotalPrice }}€
               </span>
             </div>
@@ -52,6 +53,9 @@ export default {
   computed: {
     bookings() {
       return this.$store.state.last5Bookings;
+    },
+    items() {
+      return this.$store.state.items;
     },
   },
 };

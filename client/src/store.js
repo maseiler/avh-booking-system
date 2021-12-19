@@ -1,50 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
+import helper from './helper.js'
 
 Vue.use(Vuex)
 Vue.use(VueResource);
 
-function sortUsersByName(array) {
-  array.sort(function (a, b) {
-    if (displayUserName(a).toLowerCase() < displayUserName(b).toLowerCase()) return -1;
-    if (displayUserName(a).toLowerCase() > displayUserName(b).toLowerCase()) return 1;
-    return 0;
-  });
-}
-
-function displayUserName(user) {
-  if (user === undefined) {
-    return "???";
-  } else
-    if (user.BierName !== "") {
-      return user.BierName;
-    } else if (user.LastName !== "" && user.FirstName !== "") {
-      return user.FirstName + " " + user.LastName[0] + ".";
-    } else if (user.FirstName !== "") {
-      return user.FirstName
-    } else {
-      return "???";
-    }
-}
-
-function sortItemsByName(array) {
-  array.sort(function (a, b) {
-    var nameA = a["Name"].toLowerCase(),
-      nameB = b["Name"].toLowerCase();
-    var sizeA = a.Size,
-      sizeB = b.Size;
-    if (nameA < nameB) return -1;
-    if (nameA > nameB) return 1;
-    if (sizeA < sizeB) return -1;
-    if (sizeA > sizeB) return 1;
-    return 0;
-  });
-}
-
 const store = new Vuex.Store({
   state: {
     users: [],
+    usersAsDict: {},
     items: [],
     last5Bookings: [],
     feedback: [],
@@ -57,7 +22,7 @@ const store = new Vuex.Store({
       Vue.http.get("getUsers").then(response => {
         var users = [].concat.apply([], response.body);
         users = users.filter(Boolean);
-        sortUsersByName(users);
+        helper.sortUsersByName(users);
         state.users = users;
       })
     },
@@ -65,7 +30,7 @@ const store = new Vuex.Store({
       Vue.http.get("getAllItems").then(response => {
         var items = [].concat.apply([], response.body);
         items = items.filter(Boolean);
-        sortItemsByName(items);
+        helper.sortItemsByName(items);
         state.items = items;
       });
     },

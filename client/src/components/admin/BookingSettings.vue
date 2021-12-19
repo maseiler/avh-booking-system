@@ -347,7 +347,7 @@ export default {
           entry.UserID +
           "),";
         csv +=
-          this.displayItem(this.getItemByID(entry.ItemID)) +
+          this.displayItem(this.getItemByID(this.$store.state.items, entry.ItemID)) +
           " (ID: " +
           entry.ItemID +
           "),";

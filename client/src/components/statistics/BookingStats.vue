@@ -65,6 +65,11 @@ export default {
       }
     };
   },
+  computed:{
+    items(){
+      return this.$store.state.items;
+    }
+  },
   methods: {
     fillData() {
       this.loaded = false;
@@ -101,7 +106,7 @@ export default {
       for (var i = 0; i < keys.length; i++) {
         var color = this.getRandomColor(keys[i]);
         datasets.push({
-          label: `${this.displayItem(this.getItemByID(keys[i]))}`,
+          label: `${this.displayItem(this.getItemByID(this.$store.state.items, keys[i]))}`,
           data: values[i],
           backgroundColor: color,
           borderColor: color,
@@ -115,9 +120,6 @@ export default {
     },
     getRandomColor(itemID) {
       var keys = Object.keys(Colors);
-      // random approach
-      // return Colors[keys[(keys.length * Math.random()) << 0]];
-      // using hash
       return Colors[keys[itemID % keys.length]];
     },
     cropTime(arr) {

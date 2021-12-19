@@ -22,77 +22,35 @@
         </li>
       </ul>
     </div>
-    <div class="buttons" v-if="activeTab === 'tab0'">
-      <button
-        class="button"
-        v-for="user in allUsers"
-        :key="user"
-        :class="buttonColor(selectedUser, user)"
-        @click="selectUser(user)"
-      >
-        {{ displayUserName(user) }}
-      </button>
+    <div v-if="activeTab === 'tab0'">
+      <ViewDictionaryUser :userDict="allUsers">
     </div>
-    <div class="buttons" v-if="activeTab === 'tab1'">
-      <button
-        class="button"
-        v-for="user in usersAH"
-        :key="user"
-        :class="buttonColor(selectedUser, user)"
-        @click="selectUser(user)"
-      >
-        {{ displayUserName(user) }}
-      </button>
+    <div v-if="activeTab === 'tab1'">
+      <ViewDictionaryUser :userDict="usersAH">
     </div>
-    <div class="buttons" v-if="activeTab === 'tab2'">
-      <button
-        class="button"
-        v-for="user in usersAktivB"
-        :key="user"
-        :class="buttonColor(selectedUser, user)"
-        @click="selectUser(user)"
-      >
-        {{ displayUserName(user) }}
-      </button>
+    <div v-if="activeTab === 'tab2'">
+    <ViewDictionaryUser :userDict="usersAktivB">
     </div>
-    <div class="buttons" v-if="activeTab === 'tab3'">
-      <button
-        class="button"
-        v-for="user in usersAktivKA"
-        :key="user"
-        :class="buttonColor(selectedUser, user)"
-        @click="selectUser(user)"
-      >
-        {{ displayUserName(user) }}
-      </button>
+    <div v-if="activeTab === 'tab3'">
+      <ViewDictionaryUser :userDict="usersAktivKA">
     </div>
-    <div class="buttons" v-if="activeTab === 'tab4'">
-      <button
-        class="button"
-        v-for="user in usersSteganleger"
-        :key="user"
-        :class="buttonColor(selectedUser, user)"
-        @click="selectUser(user)"
-      >
-        {{ displayUserName(user) }}
-      </button>
+    <div v-if="activeTab === 'tab4'">
+      <ViewDictionaryUser :userDict="usersSteganleger">
     </div>
-    <div class="buttons" v-if="activeTab === 'tab5'">
-      <button
-        class="button"
-        v-for="user in usersGaeste"
-        :key="user"
-        :class="buttonColor(selectedUser, user)"
-        @click="selectUser(user)"
-      >
-        {{ displayUserName(user) }}
-      </button>
+    <div v-if="activeTab === 'tab5'">
+      <ViewDictionaryUser :userDict="usersGaeste">
     </div>
   </div>
 </template>
 
 <script>
+import helper from "../../helper.js";
+import ViewDictionaryUser from "./ViewDictionaryUser.vue";
+
 export default {
+  components: {
+    ViewDictionaryUser,
+  },
   data() {
     return {
       activeTab: "tab0",
@@ -105,30 +63,22 @@ export default {
   },
   computed: {
     allUsers() {
-      return this.$store.state.users;
+      return helper.getUsersAsDict(this.$store.state.users);
     },
     usersAH() {
-      return this.$store.getters.usersAH;
+      return helper.getUsersAsDict(this.$store.getters.usersAH);
     },
     usersAktivB() {
-      return this.$store.getters.usersAktivB;
+      return helper.getUsersAsDict(this.$store.getters.usersAktivB);
     },
     usersAktivKA() {
-      return this.$store.getters.usersAktivKA;
+      return helper.getUsersAsDict(this.$store.getters.usersAktivKA);
     },
     usersSteganleger() {
-      return this.$store.getters.usersSteganleger;
+      return helper.getUsersAsDict(this.$store.getters.usersSteganleger);
     },
     usersGaeste() {
-      return this.$store.getters.usersGast;
-    },
-    selectedUser() {
-      return this.$store.state.selectedUser;
-    },
-  },
-  methods: {
-    selectUser(user) {
-      this.$store.commit("selectUser", user);
+      return helper.getUsersAsDict(this.$store.getters.usersGast);
     },
   },
 };

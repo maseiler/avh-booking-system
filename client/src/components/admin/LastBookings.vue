@@ -24,7 +24,7 @@
           <th>{{entry.ID}}</th>
           <td>{{printDateTime(entry.TimeStamp)}}</td>
           <td>{{displayUserName(getUserByID(entry.UserID))}}</td>
-          <td>{{displayItem(getItemByID(entry.ItemID))}}</td>
+          <td>{{displayItem(getItemByID(items, entry.ItemID))}}</td>
           <td>{{entry.Amount}}</td>
           <td style="text-align: right;">{{entry.TotalPrice}} €</td>
           <td>{{entry.Comment}}</td>

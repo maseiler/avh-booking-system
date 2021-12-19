@@ -1,103 +1,77 @@
 <template>
   <div>
-    <div class="tabs">
+    <tabs class="tabs">
       <ul>
         <li :class="[activeTab === 'tab0' ? 'is-active' : '']">
           <a @click="activeTab = 'tab0'">
-            <span class="icon is-small is-left">
+            <icon class="icon is-small is-left">
               <font-awesome-icon icon="star" />
-            </span>
+            </icon>
             Favorites
           </a>
         </li>
         <li :class="[activeTab === 'tab1' ? 'is-active' : '']">
           <a @click="activeTab = 'tab1'">
-            <span class="icon is-small is-left">
+            <icon class="icon is-small is-left">
               <font-awesome-icon icon="beer" />
-            </span>
+            </icon>
             Alcoholic
           </a>
         </li>
         <li :class="[activeTab === 'tab2' ? 'is-active' : '']">
           <a @click="activeTab = 'tab2'">
-            <span class="icon is-small is-left">
+            <icon class="icon is-small is-left">
               <font-awesome-icon icon="glass-whiskey" />
-            </span>
+            </icon>
             Non-Alcoholic
           </a>
         </li>
         <li :class="[activeTab === 'tab3' ? 'is-active' : '']">
           <a @click="activeTab = 'tab3'">
-            <span class="icon is-small is-left">
+            <icon class="icon is-small is-left">
               <font-awesome-icon icon="utensils" />
-            </span>
+            </icon>
             Food
           </a>
         </li>
       </ul>
+    </tabs>
+
+    <div v-if="activeTab === 'tab0'">
+      <ViewDictionaryItems :itemDict="favoriteItemDict">
     </div>
 
-    <div class="buttons" v-if="activeTab === 'tab0'">
-      <button
-        class="button"
-        v-for="item in favoriteItems"
-        :key="item"
-        :class="[selectedItems.includes(item) ? 'is-link' : '']"
-        @click="selectItem(item)"
-      >
-        {{ displayItem(item) }}
-      </button>
+    <div v-if="activeTab === 'tab1'">
+      <ViewDictionaryItems :itemDict="itemsAlc">
     </div>
 
-    <div class="buttons" v-if="activeTab === 'tab1'">
-      <button
-        class="button"
-        v-for="item in itemsAlc"
-        :key="item"
-        :class="[selectedItems.includes(item) ? 'is-link' : '']"
-        @click="selectItem(item)"
-      >
-        {{ displayItem(item) }}
-      </button>
+    <div v-if="activeTab === 'tab2'">
+      <ViewDictionaryItems :itemDict="itemsNonAlc">
     </div>
 
-    <div class="buttons" v-if="activeTab === 'tab2'">
-      <button
-        class="button"
-        v-for="item in itemsNonAlc"
-        :key="item"
-        @click="selectItem(item)"
-        :class="[selectedItems.includes(item) ? 'is-link' : '']"
-      >
-        {{ displayItem(item) }}
-      </button>
-    </div>
-
-    <div class="buttons" v-if="activeTab === 'tab3'">
-      <button
-        class="button"
-        v-for="item in itemsFood"
-        :key="item"
-        @click="selectItem(item)"
-        :class="[selectedItems.includes(item) ? 'is-link' : '']"
-      >
-        {{ displayItem(item) }}
-      </button>
+    <div v-if="activeTab === 'tab3'">
+      <ViewDictionaryItems :itemDict="itemsFood">
     </div>
   </div>
 </template>
 
- <script>
+<script>
+import helper from "../../helper.js";
+import ViewDictionaryItems from "./ViewDictionaryItems.vue";
+
 export default {
+  components: {
+    ViewDictionaryItems,
+  },
   data() {
     return {
-      favoriteItems: [],
+      favoriteItemDict: {},
       activeTab: "tab0",
     };
   },
   watch: {
     user() {
-      this.getFavoriteItems();
+      this.getFavoriteItemDict();
     },
   },
   created() {
@@ -106,52 +80,39 @@ export default {
     });
   },
   computed: {
-    allItems() {
-      return this.$store.state.items;
-    },
     itemsAlc() {
-      return this.$store.getters.itemsAlc;
+      return helper.getItemsAsDict(this.$store.getters.itemsAlc);
     },
     itemsNonAlc() {
-      return this.$store.getters.itemsNonAlc;
+      return helper.getItemsAsDict(this.$store.getters.itemsNonAlc);
     },
     itemsFood() {
-      return this.$store.getters.itemsFood;
+      return helper.getItemsAsDict(this.$store.getters.itemsFood);
     },
     user() {
       return this.$store.state.selectedUser;
     },
-    selectedItems() {
-      return this.$store.state.selectedMultipleItems;
-    },
   },
   methods: {
-    selectItem(item) {
-      this.$store.commit("selectMultipleItems", item);
-    },
-    getItem(id) {
-      return this.allItems.find((i) => {
-        return i.ID == id;
-      });
-    },
-    async getFavoriteItems() {
+    async getFavoriteItemDict() {
       var result = [];
       await this.$http
         .post("getFavoriteItemIDs", this.user)
         .then((response) => {
           var favoriteItemIDs = [].concat.apply([], response.body);
           favoriteItemIDs.forEach((id) => {
-            var item = this.getItem(id);
+            var item = helper.getItemByID(this.$store.state.items, id);
             result = [].concat(result, item);
           });
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           this.$responseEventBus.$emit(
             "failureMessage",
             "Couldn't get favorite items."
           );
         });
-      this.favoriteItems = result;
+      this.favoriteItemDict = helper.getFavoriteItemsAsDict(result);
     },
   },
 };

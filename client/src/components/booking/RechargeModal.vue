@@ -82,7 +82,7 @@
               <tbody>
                 <tr v-for="entry in userBookings.Debts" :key="entry">
                   <td>{{printDateTime(entry.TimeStamp)}}</td>
-                  <td>{{displayItem(getItemByID(entry.ItemID))}}</td>
+                  <td>{{displayItem(getItemByID(items, entry.ItemID))}}</td>
                   <td>{{entry.Amount}}</td>
                   <td>{{entry.TotalPrice}}</td>
                   <td>{{entry.Comment}}</td>
@@ -101,6 +101,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.selectedUser;
+    },
+    items(){
+      return this.$store.state.items;
     }
   },
   data() {
