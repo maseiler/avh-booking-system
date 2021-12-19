@@ -9,55 +9,55 @@ import (
 	"github.com/maseiler/avh-booking-system/server/data"
 )
 
-// getBookingsFromQuery returns list of book entries as requested in string
-func getBookingsFromQuery(query string) []data.BookEntry {
-	bookings := []data.BookEntry{}
+// getBookEntriesFromQuery returns list of book entries as requested in string
+func getBookEntriesFromQuery(query string) []data.BookEntry {
+	bookEntries := []data.BookEntry{}
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	defer rows.Close()
 	for rows.Next() {
 		bookEntry := data.BookEntry{}
 		err := rows.Scan(&bookEntry.ID, &bookEntry.TimeStamp, &bookEntry.UserID, &bookEntry.ItemID, &bookEntry.Amount, &bookEntry.TotalPrice, &bookEntry.Comment, &bookEntry.PaymentMethod)
-		bookings = append(bookings, bookEntry)
+		bookEntries = append(bookEntries, bookEntry)
 		HandleDatabaseError(err)
 	}
 	err = rows.Err()
 	HandleDatabaseError(err)
 	// fmt.Printf("Performed booking query: \"%s\"\n", query)
-	return bookings
+	return bookEntries
 }
 
-// GetLastNBookings returns the last n book entries
-func GetLastNBookings(n int) []data.BookEntry {
+// GetLastNBookEntries returns the last n book entries
+func GetLastNBookEntries(n int) []data.BookEntry {
 	query := fmt.Sprintf("SELECT * FROM bookings ORDER BY id DESC LIMIT %d;", n)
-	return getBookingsFromQuery(query)
+	return getBookEntriesFromQuery(query)
 }
 
-// GetBookingsBetween returns all book entries within timespan
-func GetBookingsBetween(start time.Time, end time.Time) []data.BookEntry {
+// GetBookEntriesBetween returns all book entries within timespan
+func GetBookEntriesBetween(start time.Time, end time.Time) []data.BookEntry {
 	query := fmt.Sprintf("SELECT * FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
 		query = "SELECT * FROM bookings ORDER BY id DESC;"
 	}
-	return getBookingsFromQuery(query)
+	return getBookEntriesFromQuery(query)
 }
 
-// GetBookingsOfUserBetween returns all book entries of specified user within timespan
-func GetBookingsOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
+// GetBookEntriesOfUserBetween returns all book entries of specified user within timespan
+func GetBookEntriesOfUserBetween(user data.User, start time.Time, end time.Time) []data.BookEntry {
 	query := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", user.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
 		query = fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d ORDER BY id DESC;", user.ID)
 	}
-	return getBookingsFromQuery(query)
+	return getBookEntriesFromQuery(query)
 }
 
-// GetBookingsOfItemBetween returns all book entries of specified item within timespan
-func GetBookingsOfItemBetween(item data.Item, start time.Time, end time.Time) []data.BookEntry {
+// GetBookEntriesOfItemBetween returns all book entries of specified item within timespan
+func GetBookEntriesOfItemBetween(item data.Item, start time.Time, end time.Time) []data.BookEntry {
 	query := fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d AND time_stamp BETWEEN \"%s\" AND \"%s\" ORDER BY id DESC;", item.ID, start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 	if (start == time.Time{}) || (end == time.Time{}) {
 		query = fmt.Sprintf("SELECT * FROM bookings WHERE item_id = %d ORDER BY id DESC;", item.ID)
 	}
-	return getBookingsFromQuery(query)
+	return getBookEntriesFromQuery(query)
 }
 
 // GetPaymentsOfUser returns all payment of specified user within timespan
@@ -75,7 +75,7 @@ func GetPaymentsOfUser(user data.User, start time.Time, end time.Time) []data.Bo
 			query = fmt.Sprintf("SELECT * from bookings WHERE user_id = %d AND total_price <= 0 ORDER BY id DESC;", user.ID)
 		}
 	}
-	return getBookingsFromQuery(query)
+	return getBookEntriesFromQuery(query)
 }
 
 // GetUserDebts returns list of book entries which have not yet paid by user
@@ -83,7 +83,7 @@ func GetUserDebts(user data.User) data.Debts {
 	lastPayDayQuery := fmt.Sprintf("SELECT time_stamp FROM bookings WHERE user_id = %d AND comment = 'Payment Full' ORDER BY time_stamp DESC LIMIT 1;", user.ID)
 	lastPayDay := getTimestampFromQuery(lastPayDayQuery)
 	debtsQuery := fmt.Sprintf("SELECT * FROM bookings WHERE user_id = %d AND time_stamp > \"%s\" ORDER BY id DESC;", user.ID, lastPayDay.Format("2006-01-02 15:04:05"))
-	unpaid := getBookingsFromQuery(debtsQuery)
+	unpaid := getBookEntriesFromQuery(debtsQuery)
 	debts := data.Debts{LastPayment: lastPayDay, Debts: unpaid}
 	return debts
 }
@@ -161,6 +161,7 @@ func Pay(payment data.Payment) bool {
 		comment = "Payment Full"
 	}
 	res, err := stmt.Exec(timeStamp, payment.User.ID, 0, 1, totalPrice, comment, payment.PaymentMethod)
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
@@ -169,10 +170,7 @@ func Pay(payment data.Payment) bool {
 	query := fmt.Sprintf("UPDATE users SET balance = %.2f WHERE id = %d;", newBalance, payment.User.ID)
 	_, err = db.Query(query)
 	HandleDatabaseError(err)
-	if err == nil {
-		return true
-	}
-	return false
+	return err == nil
 }
 
 // DeleteBookEntry deletes an entry from database.
@@ -183,13 +181,11 @@ func DeleteBookEntry(entry data.BookEntry) bool {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(entry.ID)
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	if err == nil {
-		return true
-	}
-	return false
+	return err == nil
 }
 
 // UndoBookEntry creates a new book entry with inversed balance and adjusts the user's balance accordingly.
@@ -203,6 +199,7 @@ func UndoBookEntry(entry data.BookEntry) bool {
 	totalPrice := -float32(entry.TotalPrice)
 	comment := fmt.Sprintf("Undo book entry %d", entry.ID)
 	res, err := stmt.Exec(timeStamp, entry.UserID, 0, 1, totalPrice, comment, "")
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

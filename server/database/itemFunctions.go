@@ -52,20 +52,14 @@ func GetAllItems() []data.Item {
 func NewItemExists(newItem data.Item) bool {
 	queryString := fmt.Sprintf("SELECT * FROM items WHERE name = \"%s\" AND size = %.2f;", newItem.Name, newItem.Size)
 	items := getItemsByQuery(queryString)
-	if len(items) == 0 {
-		return false
-	}
-	return true
+	return len(items) == 0
 }
 
 // ItemExists returns true if item with same ItemID exists in database
 func ItemExists(item data.Item) bool {
 	queryString := fmt.Sprintf("SELECT * FROM items WHERE id = %d;", item.ID)
 	items := getItemsByQuery(queryString)
-	if len(items) == 0 {
-		return false
-	}
-	return true
+	return len(items) == 0
 }
 
 // AddItem adds a new user to database and prints info
@@ -77,6 +71,7 @@ func AddItem(newItem data.Item) {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(newItem.Name, newItem.Price, newItem.Size, newItem.Unit, newItem.Type)
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

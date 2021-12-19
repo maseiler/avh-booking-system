@@ -1,9 +1,17 @@
 <template>
   <div>
-    <nav class="navbar is-primary is-fixed-top" role="navigation" aria-label="main navigation">
+    <nav
+      class="navbar is-primary is-fixed-top"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="navbar-brand">
         <a class="navbar-item">
-          <font-awesome-icon icon="beer" :style="{ color: 'black' }" size="lg" />
+          <font-awesome-icon
+            icon="beer"
+            :style="{ color: 'black' }"
+            size="lg"
+          />
         </a>
       </div>
 
@@ -31,7 +39,11 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <router-link v-bind:to="'/login'">
-              <font-awesome-icon icon="user-secret" :style="{ color: 'black' }" size="lg" />
+              <font-awesome-icon
+                icon="user-secret"
+                :style="{ color: 'black' }"
+                size="lg"
+              />
             </router-link>
           </div>
         </div>

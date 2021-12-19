@@ -10,8 +10,8 @@
 
           <div class="paymentModal-body big">
             <p class="subtitle is-4">
-              <b>{{displayUserName(user)}}</b> has to pay
-              <b>{{user.Balance}}€</b>.
+              <b>{{ displayUserName(user) }}</b> has to pay
+              <b>{{ user.Balance }}€</b>.
             </p>
             <br />
             <p class="subtitle is-4">Please place the cash in the money box!</p>
@@ -25,22 +25,34 @@
                       type="text"
                       placeholder="€"
                       v-model.number="balancePart"
-                      style="text-align:right;font-weight:bold;"
+                      style="text-align: right; font-weight: bold"
                     />
                     <span class="icon is-right">
-                      <font-awesome-icon icon="euro-sign" :style="{ color: 'black' }" />
+                      <font-awesome-icon
+                        icon="euro-sign"
+                        :style="{ color: 'black' }"
+                      />
                     </span>
                   </p>
                 </div>
               </div>
               <div class="column">
-                <button class="button is-success is-fullwidth" @click="payCash">Cash</button>
+                <button class="button is-success is-fullwidth" @click="payCash">
+                  Cash
+                </button>
               </div>
               <div class="column">
-                <button class="button is-link is-fullwidth" @click="payEC">EC</button>
+                <button class="button is-link is-fullwidth" @click="payEC">
+                  EC
+                </button>
               </div>
               <div class="column">
-                <button class="button is-danger is-outlined is-fullwidth" @click="cancel">Cancel</button>
+                <button
+                  class="button is-danger is-outlined is-fullwidth"
+                  @click="cancel"
+                >
+                  Cancel
+                </button>
               </div>
               <div class="column is-1"></div>
             </div>
@@ -64,9 +76,11 @@
               </div>
             </div>
             <p
-              v-if="userBookings.LastPayment !== '0001-01-01T00:00:00Z'"
+              v-if="userBookEntries.LastPayment !== '0001-01-01T00:00:00Z'"
               class="subtitle is-6"
-            >Last Payment: {{printDateTime(userBookings.LastPayment)}}</p>
+            >
+              Last Payment: {{ printDateTime(userBookEntries.LastPayment) }}
+            </p>
           </div>
 
           <div class="paymentModal-footer big">
@@ -81,12 +95,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="entry in userBookings.Debts" :key="entry">
-                  <td>{{printDateTime(entry.TimeStamp)}}</td>
-                  <td>{{displayItem(getItemByID(items, entry.ItemID))}}</td>
-                  <td>{{entry.Amount}}</td>
-                  <td>{{entry.TotalPrice}}</td>
-                  <td>{{entry.Comment}}</td>
+                <tr v-for="entry in userBookEntries.Debts" :key="entry">
+                  <td>{{ printDateTime(entry.TimeStamp) }}</td>
+                  <td>{{ displayItem(getItemByID(items, entry.ItemID)) }}</td>
+                  <td>{{ entry.Amount }}</td>
+                  <td>{{ entry.TotalPrice }}</td>
+                  <td>{{ entry.Comment }}</td>
                 </tr>
               </tbody>
             </table>
@@ -103,17 +117,17 @@ export default {
     user() {
       return this.$store.state.selectedUser;
     },
-    items(){
+    items() {
       return this.$store.state.items;
-    }
+    },
   },
   data() {
     return {
-      userBookings: {},
+      userBookEntries: {},
       showPasswordForm: false,
       password: "",
       balancePart: 0,
-      paymentMethod: ""
+      paymentMethod: "",
     };
   },
   methods: {
@@ -148,7 +162,7 @@ export default {
         .post("pay", {
           User: this.user,
           Balance: this.balancePart,
-          PaymentMethod: this.paymentMethod
+          PaymentMethod: this.paymentMethod,
         })
         .then(() => {
           var message = "".concat(
@@ -157,13 +171,13 @@ export default {
             this.balancePart,
             " €"
           );
-          this.$store.commit("getLast5Bookings");
+          this.$store.commit("getLastNBookEntries", 5);
           this.$store.commit("getUsers");
           this.$store.commit("selectUser", {});
           this.$emit("close");
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(response => {
+        .catch((response) => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
@@ -186,20 +200,20 @@ export default {
     },
     cancel() {
       this.$emit("close");
-    }
+    },
   },
   created() {
     this.balancePart = this.user.Balance;
 
     this.$http
       .post("getUserDebts", this.user)
-      .then(response => {
-        this.userBookings = response.body;
+      .then((response) => {
+        this.userBookEntries = response.body;
       })
       .catch(() => {
         this.$responseEventBus.$emit("failureMessage", "Couldn't get debts.");
       });
-  }
+  },
 };
 </script>
 

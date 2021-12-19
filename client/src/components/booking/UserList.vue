@@ -23,33 +23,33 @@
       </ul>
     </div>
     <div v-if="activeTab === 'tab0'">
-      <ViewDictionaryUser :userDict="allUsers">
+      <UserDictionary :userDict="allUsers">
     </div>
     <div v-if="activeTab === 'tab1'">
-      <ViewDictionaryUser :userDict="usersAH">
+      <UserDictionary :userDict="usersAH">
     </div>
     <div v-if="activeTab === 'tab2'">
-    <ViewDictionaryUser :userDict="usersAktivB">
+    <UserDictionary :userDict="usersAktivB">
     </div>
     <div v-if="activeTab === 'tab3'">
-      <ViewDictionaryUser :userDict="usersAktivKA">
+      <UserDictionary :userDict="usersAktivKA">
     </div>
     <div v-if="activeTab === 'tab4'">
-      <ViewDictionaryUser :userDict="usersSteganleger">
+      <UserDictionary :userDict="usersSteganleger">
     </div>
     <div v-if="activeTab === 'tab5'">
-      <ViewDictionaryUser :userDict="usersGaeste">
+      <UserDictionary :userDict="usersGaeste">
     </div>
   </div>
 </template>
 
 <script>
 import helper from "../../helper.js";
-import ViewDictionaryUser from "./ViewDictionaryUser.vue";
+import UserDictionary from "./UserDictionary.vue";
 
 export default {
   components: {
-    ViewDictionaryUser,
+    UserDictionary,
   },
   data() {
     return {

@@ -28,6 +28,7 @@ func ModifyPassword(oldPw string, newPw string) {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec()
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

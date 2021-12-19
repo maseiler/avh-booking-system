@@ -9,7 +9,10 @@
           </div>
 
           <div class="modal-body">
-            <article v-if="Object.keys(user).length === 0" class="message is-danger">
+            <article
+              v-if="Object.keys(user).length === 0"
+              class="message is-danger"
+            >
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
@@ -22,7 +25,8 @@
             <div v-else>
               <p>
                 Do you really want to delete
-                <b>{{displayUserName(user)}}</b>?
+                <b>{{ displayUserName(user) }}</b
+                >?
               </p>
             </div>
           </div>
@@ -32,7 +36,9 @@
               <div class="level-left">
                 <div class="level-item">
                   <div class="control" v-if="Object.keys(user).length !== 0">
-                    <button class="button is-link" @click="deleteUser">Delete</button>
+                    <button class="button is-link" @click="deleteUser">
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>
@@ -54,7 +60,7 @@ export default {
   computed: {
     user() {
       return this.$store.state.selectedUser;
-    }
+    },
   },
   methods: {
     deleteUser() {
@@ -83,8 +89,8 @@ export default {
     },
     closeForm() {
       this.$emit("close");
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

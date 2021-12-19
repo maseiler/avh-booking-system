@@ -33,6 +33,7 @@ func AddFeedback(feedback data.Feedback) {
 	defer stmt.Close()
 	timeStampNow := time.Now().Format("2006-01-02 15:04:05")
 	res, err := stmt.Exec(timeStampNow, feedback.Name, feedback.Content)
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

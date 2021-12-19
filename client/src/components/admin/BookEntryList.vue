@@ -4,11 +4,11 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Time Stamp</th>
+          <th>Timestamp</th>
           <th>User</th>
           <th>Item</th>
           <th>Amount</th>
-          <th style="text-align: right;">Price</th>
+          <th style="text-align: right">Price</th>
           <th>Comment</th>
           <th>Payment Method</th>
           <th></th>
@@ -16,19 +16,19 @@
       </thead>
       <tbody>
         <tr
-          v-for="entry in bookings"
+          v-for="entry in bookEntries"
           :key="entry"
           @click="selectEntry(entry)"
           :class="[selectedEntry === entry ? 'is-selected' : '']"
         >
-          <th>{{entry.ID}}</th>
-          <td>{{printDateTime(entry.TimeStamp)}}</td>
-          <td>{{displayUserName(getUserByID(entry.UserID))}}</td>
-          <td>{{displayItem(getItemByID(items, entry.ItemID))}}</td>
-          <td>{{entry.Amount}}</td>
-          <td style="text-align: right;">{{entry.TotalPrice}} €</td>
-          <td>{{entry.Comment}}</td>
-          <td>{{entry.PaymentMethod}}</td>
+          <th>{{ entry.ID }}</th>
+          <td>{{ printDateTime(entry.TimeStamp) }}</td>
+          <td>{{ displayUserName(getUserByID(entry.UserID)) }}</td>
+          <td>{{ displayItem(getItemByID(items, entry.ItemID)) }}</td>
+          <td>{{ entry.Amount }}</td>
+          <td style="text-align: right">{{ entry.TotalPrice }} €</td>
+          <td>{{ entry.Comment }}</td>
+          <td>{{ entry.PaymentMethod }}</td>
         </tr>
       </tbody>
       <tfoot>
@@ -37,7 +37,7 @@
         <th></th>
         <th></th>
         <th></th>
-        <th style="text-align: right;">{{sum}} €</th>
+        <th style="text-align: right">{{ sum }} €</th>
         <th></th>
         <th></th>
       </tfoot>
@@ -48,7 +48,7 @@
 <script>
 export default {
   props: {
-    bookings: []
+    bookEntries: [],
   },
   computed: {
     users() {
@@ -56,18 +56,18 @@ export default {
     },
     items() {
       return this.$store.state.items;
-    }
+    },
   },
   data() {
     return {
       selectedEntry: {},
-      sum: 0
+      sum: 0,
     };
   },
   watch: {
-    bookings() {
+    bookEntries() {
       this.updateSum();
-    }
+    },
   },
   methods: {
     selectEntry(entry) {
@@ -76,12 +76,12 @@ export default {
     },
     updateSum() {
       var temp = 0;
-      this.bookings.forEach(entry => {
+      this.bookEntries.forEach((entry) => {
         temp += entry.TotalPrice;
       });
       temp = temp.toFixed(2);
       this.sum = temp;
-    }
-  }
+    },
+  },
 };
 </script>

@@ -28,6 +28,7 @@ func addEntry(userID int, ItemID int, amount int) error {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(userID, ItemID, amount)
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
@@ -42,6 +43,7 @@ func incrementCount(userID int, ItemID int, amount int) error {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec()
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
@@ -92,13 +94,11 @@ func DeleteUserFromFavoriteItems(user data.User) bool {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec()
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)
-	if err != nil {
-		return true
-	}
-	return false
+	return err != nil
 }
 
 //TODO create: PerformTransaction(query string)

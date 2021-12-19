@@ -11,7 +11,7 @@ const store = new Vuex.Store({
     users: [],
     usersAsDict: {},
     items: [],
-    last5Bookings: [],
+    lastNBookEntries: [],
     feedback: [],
     selectedUser: {},
     selectedSingleItem: {},
@@ -34,11 +34,11 @@ const store = new Vuex.Store({
         state.items = items;
       });
     },
-    getLast5Bookings(state) {
-      Vue.http.post("getLastNBookings", 5).then(response => {
-        var bookings = [].concat.apply([], response.body);
-        bookings = bookings.filter(Boolean);
-        state.last5Bookings = bookings;
+    getLastNBookEntries(state, n) {
+      Vue.http.post("getLastNBookEntries", n).then(response => {
+        var bookEntries = [].concat.apply([], response.body);
+        bookEntries = bookEntries.filter(Boolean);
+        state.lastNBookEntries = bookEntries;
       });
     },
     getFeedbackList(state) {
@@ -97,6 +97,6 @@ const store = new Vuex.Store({
 store.commit("getUsers");
 store.commit("getItems");
 store.commit("getFeedbackList");
-store.commit("getLast5Bookings");
+store.commit("getLastNBookEntries", 5);
 
 export default store

@@ -2,12 +2,22 @@
   <div>
     <div class="field">
       <div class="control">
-        <input class="input" type="password" placeholder="Old password" v-model="oldPassword" />
+        <input
+          class="input"
+          type="password"
+          placeholder="Old password"
+          v-model="oldPassword"
+        />
       </div>
     </div>
     <div class="field">
       <div class="control">
-        <input class="input" type="password" placeholder="New password" v-model="newPassword1" />
+        <input
+          class="input"
+          type="password"
+          placeholder="New password"
+          v-model="newPassword1"
+        />
       </div>
     </div>
     <div class="field">
@@ -26,7 +36,7 @@
           <p class="icon is-small is-left">
             <font-awesome-icon icon="exclamation" size="lg" />
           </p>
-          <p>{{validationError}}</p>
+          <p>{{ validationError }}</p>
         </div>
       </div>
     </article>
@@ -41,7 +51,7 @@ export default {
       oldPassword: "",
       newPassword1: "",
       newPassword2: "",
-      validationError: ""
+      validationError: "",
     };
   },
   methods: {
@@ -52,14 +62,14 @@ export default {
           .then(() => {
             this.$responseEventBus.$emit("successMessage", "Changed password.");
           })
-          .catch(response => {
+          .catch((response) => {
             this.$responseEventBus.$emit("failureMessage", response.body);
           });
       } else {
         this.validationError = "New passwords do not match!";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

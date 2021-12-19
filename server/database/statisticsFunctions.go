@@ -12,7 +12,7 @@ import (
 func GetBookingStats(days int) map[string][]string {
 	// get list of item IDs
 	var itemIDs []int
-	query := fmt.Sprintf("SELECT id FROM items;")
+	query := "SELECT id FROM items;"
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	defer rows.Close()
@@ -31,7 +31,7 @@ func GetBookingStats(days int) map[string][]string {
 		end := today.Add(time.Hour*time.Duration(-i*24+23) + time.Minute*time.Duration(59) + time.Second*time.Duration(59) + time.Millisecond*time.Duration(999))
 		var amount int
 
-		// get total bookings
+		// get total sum of book entries
 		query := fmt.Sprintf("SELECT COALESCE(SUM(amount), 0) FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\" AND item_id != 0;", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"))
 		rows, err := db.Query(query)
 		HandleDatabaseError(err)
@@ -44,7 +44,7 @@ func GetBookingStats(days int) map[string][]string {
 		m["timeStamp"] = append(m["timeStamp"], start.Format("2006-01-02 15:04:05"))
 		m["total"] = append(m["total"], strconv.Itoa(amount))
 
-		// get bookings of item
+		// get book entries of item
 		for _, id := range itemIDs {
 			query := fmt.Sprintf("SELECT COALESCE(SUM(amount), 0) FROM bookings WHERE time_stamp BETWEEN \"%s\" AND \"%s\" AND item_id = %d;", start.Format("2006-01-02 15:04:05"), end.Format("2006-01-02 15:04:05"), id)
 			rows, err := db.Query(query)
@@ -65,7 +65,7 @@ func GetFavoriteItemsStats() []data.ItemStat {
 	m := make(map[string]int)
 	// get maxID to determine end of for loop
 	var maxID int
-	query := fmt.Sprintf("SELECT MAX(id) FROM items;")
+	query := "SELECT MAX(id) FROM items;"
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	defer rows.Close()
@@ -99,7 +99,7 @@ func GetFavoriteItemsStats() []data.ItemStat {
 	// get additional item info
 	for k := range m {
 		itemStat := data.ItemStat{}
-		id, err := strconv.Atoi(k)
+		id, _ := strconv.Atoi(k)
 		query = fmt.Sprintf("SELECT name, size, unit, type FROM items WHERE id = %d;", id)
 		rows, err := db.Query(query)
 		HandleDatabaseError(err)

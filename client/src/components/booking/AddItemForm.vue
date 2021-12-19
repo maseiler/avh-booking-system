@@ -12,7 +12,12 @@
             <div class="field">
               <label class="label">Name</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Name" v-model.lazy="newItem.Name" />
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Name"
+                  v-model.lazy="newItem.Name"
+                />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="font" />
                 </span>
@@ -22,7 +27,12 @@
             <div class="field">
               <label class="label">Price</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Price" v-model.number="newItem.Price" />
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Price"
+                  v-model.number="newItem.Price"
+                />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign" />
                 </span>
@@ -32,7 +42,12 @@
             <div class="field">
               <label class="label">Size</label>
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Size" v-model.number="newItem.Size" />
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Size"
+                  v-model.number="newItem.Size"
+                />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="expand-arrows-alt" />
                 </span>
@@ -68,25 +83,29 @@
           </div>
 
           <div class="modal-footer">
-            <article v-if="validationError !==''" class="message is-danger">
+            <article v-if="validationError !== ''" class="message is-danger">
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
                     <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
-                  <p>{{validationError}}</p>
+                  <p>{{ validationError }}</p>
                 </div>
               </div>
             </article>
             <div class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <button class="button is-link" @click="submitItem">Submit</button>
+                  <button class="button is-link" @click="submitItem">
+                    Submit
+                  </button>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button is-text" @click="resetAndCloseForm">Cancel</button>
+                  <button class="button is-text" @click="resetAndCloseForm">
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -106,9 +125,9 @@ export default {
         Price: 0,
         Size: 0,
         Unit: "",
-        Type: ""
+        Type: "",
       },
-      validationError: ""
+      validationError: "",
     };
   },
   methods: {
@@ -124,7 +143,7 @@ export default {
           this.$store.commit("getItems");
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(response => {
+        .catch((response) => {
           this.validationError = response.data;
         });
     },
@@ -136,8 +155,8 @@ export default {
         (this.Type = ""),
         (this.validationError = "");
       this.$emit("close");
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

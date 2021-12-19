@@ -24,6 +24,7 @@ func CreateDatabase() {
 	db.Close()
 	loginInfo = loginInfo + os.Getenv("AVHBS_DB_NAME") + "?parseTime=true"
 	db, err = sql.Open("mysql", loginInfo)
+	HandleDatabaseError(err)
 
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users(

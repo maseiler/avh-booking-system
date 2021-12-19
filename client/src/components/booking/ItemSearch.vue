@@ -23,7 +23,9 @@
         :key="item"
         :class="[isSelected(item) ? 'is-link' : '']"
         @click="selectItem(item)"
-      >{{ displayItem(item) }}</button>
+      >
+        {{ displayItem(item) }}
+      </button>
     </div>
   </div>
 </template>
@@ -31,7 +33,7 @@
 <script>
 export default {
   props: {
-    mode: String
+    mode: String,
   },
   computed: {
     items() {
@@ -42,19 +44,19 @@ export default {
         return this.$store.state.selectedSingleItem;
       }
       return this.$store.state.selectedMultipleItems;
-    }
+    },
   },
   data() {
     return {
       search: "",
-      searchResults: []
+      searchResults: [],
     };
   },
   methods: {
     searchItems() {
       if (this.search != "") {
         var tmpSearch = this.search.toLowerCase();
-        this.searchResults = this.items.filter(item =>
+        this.searchResults = this.items.filter((item) =>
           item["Name"].toLowerCase().includes(tmpSearch)
         );
       } else {
@@ -76,7 +78,7 @@ export default {
         return false;
       }
       return this.selectedItems.includes(item);
-    }
-  }
+    },
+  },
 };
 </script>

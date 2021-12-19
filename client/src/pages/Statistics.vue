@@ -2,34 +2,24 @@
   <div>
     <div class="columns">
       <div class="column is-1 is-sidebar-menu">
-        <div class="box" style="height:90vh;">
+        <div class="box" style="height: 90vh">
           <aside class="menu">
             <p class="menu-label">Statistics</p>
             <ul class="menu-list">
               <li>
                 <a
                   @click="showSetting('showBookingsStats')"
-                  :class="[ showBookingsStats ? 'is-active' : '']"
-                >Bookings</a>
+                  :class="[showBookingsStats ? 'is-active' : '']"
+                  >Book Entries</a
+                >
               </li>
               <li>
                 <a
                   @click="showSetting('showFavoriteItemsStats')"
-                  :class="[ showFavoriteItemsStats ? 'is-active' : '']"
-                >Favorite Items</a>
+                  :class="[showFavoriteItemsStats ? 'is-active' : '']"
+                  >Favorite Items</a
+                >
               </li>
-              <!-- <li>
-                <a
-                  @click="showSetting('showDrinkSharesStats')"
-                  :class="[ showDrinkSharesStats ? 'is-active' : '']"
-                >Drink Share</a>
-              </li>
-              <li>
-                <a
-                  @click="showSetting('showTypeStats')"
-                  :class="[ showTypeStats ? 'is-active' : '']"
-                >Type Shares</a>
-              </li>-->
             </ul>
           </aside>
         </div>
@@ -37,28 +27,26 @@
       <div class="column">
         <BookingStats v-if="showBookingsStats" />
         <FavoriteItemsStats v-if="showFavoriteItemsStats" />
-        <!-- <DrinkSharesStats v-if="showDrinkSharesStats"/>
-        <TypeStats v-if="showTypeStats"/>-->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import BookingStats from "./BookingStats.vue";
-import FavoriteItemsStats from "./FavoriteItemsStats.vue";
+import BookingStats from "../components/statistics/BookingStats.vue";
+import FavoriteItemsStats from "../components/statistics/FavoriteItemsStats.vue";
 
 export default {
   components: {
     BookingStats,
-    FavoriteItemsStats
+    FavoriteItemsStats,
   },
   data() {
     return {
       showBookingsStats: true,
       showFavoriteItemsStats: false,
       showDrinkSharesStats: false,
-      showTypeStats: false
+      showTypeStats: false,
     };
   },
   methods: {
@@ -91,7 +79,7 @@ export default {
         default:
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>

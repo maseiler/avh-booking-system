@@ -23,16 +23,16 @@
             @click="selectUser(user)"
             :class="[selectedUser === user ? 'is-selected' : '']"
           >
-            <th>{{user.ID}}</th>
-            <td>{{user.FirstName}}</td>
-            <td>{{user.BierName}}</td>
-            <td>{{user.LastName}}</td>
-            <td>{{user.BoatName}}</td>
-            <td>{{user.Status}}</td>
-            <td>{{user.Email}}</td>
-            <td>{{user.Phone}}</td>
-            <td>{{user.Balance}} €</td>
-            <td>{{user.MaxDebt}} €</td>
+            <th>{{ user.ID }}</th>
+            <td>{{ user.FirstName }}</td>
+            <td>{{ user.BierName }}</td>
+            <td>{{ user.LastName }}</td>
+            <td>{{ user.BoatName }}</td>
+            <td>{{ user.Status }}</td>
+            <td>{{ user.Email }}</td>
+            <td>{{ user.Phone }}</td>
+            <td>{{ user.Balance }} €</td>
+            <td>{{ user.MaxDebt }} €</td>
           </tr>
         </tbody>
       </table>
@@ -52,12 +52,12 @@ export default {
     },
     selectedUser() {
       return this.$store.state.selectedUser;
-    }
+    },
   },
   methods: {
     selectUser(user) {
       this.$store.commit("selectUser", user);
-    }
-  }
+    },
+  },
 };
 </script>

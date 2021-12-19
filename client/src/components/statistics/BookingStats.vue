@@ -8,25 +8,27 @@
             class="input"
             type="number"
             placeholder="# Days"
-            style="width:6em; text-align:right;"
+            style="width: 6em; text-align: right"
             v-model="days"
           />
           <Button class="button is-link" @click="fillData">Create Chart</Button>
-          <p
-            class="p has-text-grey-light"
-          >&nbsp;&nbsp;Select number of last days you want to display</p>
+          <p class="p has-text-grey-light">
+            &nbsp;&nbsp;Select number of last days you want to display
+          </p>
         </div>
       </div>
     </div>
     <div clas="level-item has-text-centered">
-      <p class="p has-text-grey-light">&nbsp;&nbsp;Click on item to disable/enable</p>
+      <p class="p has-text-grey-light">
+        &nbsp;&nbsp;Click on item to disable/enable
+      </p>
     </div>
     <div clas="level-item"></div>
     <LineChart
       v-if="loaded"
       :chartdata="chartData"
       :options="options"
-      style="position: relative; height:75vh"
+      style="position: relative; height: 75vh"
     />
   </div>
 </template>
@@ -36,7 +38,7 @@ import LineChart from "./BookingStats.js";
 
 export default {
   components: {
-    LineChart
+    LineChart,
   },
   data() {
     return {
@@ -50,40 +52,40 @@ export default {
           xAxes: [
             {
               ticks: {
-                reverse: true
-              }
-            }
+                reverse: true,
+              },
+            },
           ],
           yAxes: [
             {
               ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
+      },
     };
   },
-  computed:{
-    items(){
+  computed: {
+    items() {
       return this.$store.state.items;
-    }
+    },
   },
   methods: {
     fillData() {
       this.loaded = false;
       this.$http
         .post("getBookingStats", this.days)
-        .then(response => {
+        .then((response) => {
           var datasets = this.createDataset(response.data);
           this.chartData = {
             labels: this.cropTime(response.data.timeStamp),
-            datasets: datasets
+            datasets: datasets,
           };
           this.loaded = true;
         })
-        .catch(response => {
+        .catch((response) => {
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
@@ -99,21 +101,23 @@ export default {
         fill: false,
         borderJoinStyle: "miter",
         lineTension: 0,
-        radius: 2
+        radius: 2,
       });
       keys.splice(keys.length - 2, 2);
       values.splice(values.length - 2, 2);
       for (var i = 0; i < keys.length; i++) {
         var color = this.getRandomColor(keys[i]);
         datasets.push({
-          label: `${this.displayItem(this.getItemByID(this.$store.state.items, keys[i]))}`,
+          label: `${this.displayItem(
+            this.getItemByID(this.$store.state.items, keys[i])
+          )}`,
           data: values[i],
           backgroundColor: color,
           borderColor: color,
           fill: false,
           borderJoinStyle: "miter",
           lineTension: 0,
-          radius: 2
+          radius: 2,
         });
       }
       return datasets;
@@ -124,15 +128,15 @@ export default {
     },
     cropTime(arr) {
       var result = [];
-      arr.forEach(element => {
+      arr.forEach((element) => {
         result = [].concat(result, element.substring(0, 10));
       });
       return result;
-    }
+    },
   },
   mounted() {
     this.fillData();
-  }
+  },
 };
 
 const Colors = {
@@ -178,6 +182,6 @@ const Colors = {
   red: "#ff0000",
   silver: "#c0c0c0",
   //     white: "#ffffff",
-  yellow: "#ffff00"
+  yellow: "#ffff00",
 };
 </script>

@@ -38,30 +38,30 @@
     </tabs>
 
     <div v-if="activeTab === 'tab0'">
-      <ViewDictionaryItems :itemDict="favoriteItemDict">
+      <ItemDictionary :itemDict="favoriteItemDict">
     </div>
 
     <div v-if="activeTab === 'tab1'">
-      <ViewDictionaryItems :itemDict="itemsAlc">
+      <ItemDictionary :itemDict="itemsAlc">
     </div>
 
     <div v-if="activeTab === 'tab2'">
-      <ViewDictionaryItems :itemDict="itemsNonAlc">
+      <ItemDictionary :itemDict="itemsNonAlc">
     </div>
 
     <div v-if="activeTab === 'tab3'">
-      <ViewDictionaryItems :itemDict="itemsFood">
+      <ItemDictionary :itemDict="itemsFood">
     </div>
   </div>
 </template>
 
 <script>
 import helper from "../../helper.js";
-import ViewDictionaryItems from "./ViewDictionaryItems.vue";
+import ItemDictionary from "./ItemDictionary.vue";
 
 export default {
   components: {
-    ViewDictionaryItems,
+    ItemDictionary,
   },
   data() {
     return {

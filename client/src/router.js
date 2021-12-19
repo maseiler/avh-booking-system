@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import store from './store.js'
-import Home from './components/Home.vue'
-import Booking from './components/booking/Booking.vue'
-import Login from './components/admin/Login.vue'
-import Admin from './components/admin/Admin.vue'
-import Statistics from './components/statistics/Statistics.vue'
+import Home from './pages/Home.vue'
+import Booking from './pages/Booking.vue'
+import Login from './components/admin/LoginModal.vue'
+import Admin from './pages/Admin.vue'
+import Statistics from './pages/Statistics.vue'
 
 Vue.use(VueRouter)
 
@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/booking', component: Booking, name: 'booking',
     beforeEnter: (to, from, next) => {
-      store.commit("getLast5Bookings");
+      store.commit("getLastNBookEntries", 5);
       store.commit("selectUser", {});
       store.commit("selectSingleItem", {});
       store.commit("selectMultipleItems", []);

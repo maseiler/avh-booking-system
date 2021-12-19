@@ -6,9 +6,9 @@
         <br />
         <button
           class="button is-link is-fullwidth is-outlined"
-          @click="getBookings"
+          @click="getBookEntries"
         >
-          Get Bookings
+          Get Book Entries
         </button>
         <br />
         <button
@@ -181,7 +181,7 @@
       </div>
       <div class="column">
         <div class="box" style="height: 88vh; overflow: auto">
-          <LastBookings @selectEntry="selectEntry" :bookings="bookings" />
+          <BookEntryList @selectEntry="selectEntry" :bookEntries="bookEntries" />
         </div>
       </div>
     </div>
@@ -189,13 +189,13 @@
 </template>
 
 <script>
-import LastBookings from "./LastBookings.vue";
+import BookEntryList from "./BookEntryList.vue";
 import UserSearch from "./../booking/UserSearch.vue";
 import ItemSearch from "./../booking/ItemSearch.vue";
 
 export default {
   components: {
-    LastBookings,
+    BookEntryList,
     UserSearch,
     ItemSearch,
   },
@@ -210,7 +210,7 @@ export default {
   data() {
     return {
       selectedEntry: {},
-      bookings: [],
+      bookEntries: [],
       option: "",
       n: 0,
       from: "",
@@ -218,18 +218,18 @@ export default {
     };
   },
   methods: {
-    getBookings() {
+    getBookEntries() {
       if (this.option === "optLastN") {
         if (this.n > 0) {
           this.$http
-            .post("getLastNBookings", this.n)
+            .post("getLastNBookEntries", this.n)
             .then((response) => {
-              this.bookings = [].concat.apply([], response.body);
+              this.bookEntries = [].concat.apply([], response.body);
             })
             .catch(() => {
               this.$responseEventBus.$emit(
                 "failureMessage",
-                "Couldn't fetch bookings"
+                "Couldn't fetch book entries."
               );
             });
         }
@@ -239,14 +239,14 @@ export default {
         userFromTo.From = this.from;
         userFromTo.To = this.to;
         this.$http
-          .post("getBookingsFromUserBetween", userFromTo)
+          .post("getBookEntriesFromUserBetween", userFromTo)
           .then((response) => {
-            this.bookings = [].concat.apply([], response.body);
+            this.bookEntries = [].concat.apply([], response.body);
           })
           .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Couldn't fetch bookings"
+              "Couldn't fetch book entries."
             );
           });
       } else if (this.option === "optFromItem") {
@@ -255,14 +255,14 @@ export default {
         itemFromTo.From = this.from;
         itemFromTo.To = this.to;
         this.$http
-          .post("getBookingsFromItemBetween", itemFromTo)
+          .post("getBookEntriesFromItemBetween", itemFromTo)
           .then((response) => {
-            this.bookings = [].concat.apply([], response.body);
+            this.bookEntries = [].concat.apply([], response.body);
           })
           .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Couldn't fetch bookings"
+              "Couldn't fetch book entries."
             );
           });
       } else if (this.option === "optUserPayments") {
@@ -273,12 +273,12 @@ export default {
         this.$http
           .post("getPaymentsOfUser", userFromTo)
           .then((response) => {
-            this.bookings = [].concat.apply([], response.body);
+            this.bookEntries = [].concat.apply([], response.body);
           })
           .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Couldn't fetch bookings"
+              "Couldn't fetch book entries."
             );
           });
       } else {
@@ -296,7 +296,7 @@ export default {
         this.$http
           .post("deleteBookEntry", this.selectedEntry)
           .then(() => {
-            this.$store.commit("getLastNBookings", 50);
+            this.$store.commit("getLastNBookEntries", 5);
             this.$responseEventBus.$emit(
               "successMessage",
               "Deleted book entry"
@@ -320,7 +320,7 @@ export default {
         this.$http
           .post("undoBookEntry", this.selectedEntry)
           .then(() => {
-            this.$store.commit("getLastNBookings", 50);
+            this.$store.commit("getLastNBookEntries", 5);
             this.$responseEventBus.$emit("successMessage", "Undid book entry");
           })
           .catch(() => {
@@ -338,7 +338,7 @@ export default {
     },
     downloadCsv() {
       let csv = "ID,Time Stamp,User,Item,Amount,Price,Comment,Payment Method\n";
-      this.bookings.forEach((entry) => {
+      this.bookEntries.forEach((entry) => {
         csv += entry.ID + ",";
         csv += this.printDateTime(entry.TimeStamp) + ",";
         csv +=
@@ -347,7 +347,9 @@ export default {
           entry.UserID +
           "),";
         csv +=
-          this.displayItem(this.getItemByID(this.$store.state.items, entry.ItemID)) +
+          this.displayItem(
+            this.getItemByID(this.$store.state.items, entry.ItemID)
+          ) +
           " (ID: " +
           entry.ItemID +
           "),";
@@ -357,10 +359,12 @@ export default {
         csv += entry.PaymentMethod + "\n";
       });
       let fileName =
-        "bookings_" +
-        this.cleanTimeStamp(this.bookings[0].TimeStamp) +
+        "book_entries_" +
+        this.cleanTimeStamp(this.bookEntries[0].TimeStamp) +
         "_-_" +
-        this.cleanTimeStamp(this.bookings[this.bookings.length - 1].TimeStamp) +
+        this.cleanTimeStamp(
+          this.bookEntries[this.bookEntries.length - 1].TimeStamp
+        ) +
         ".csv";
 
       let anchor = document.createElement("a");

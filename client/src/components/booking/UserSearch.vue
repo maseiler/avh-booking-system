@@ -27,7 +27,9 @@
         :key="user"
         :class="buttonColor(selectedUser, user)"
         @click="selectUser(user)"
-      >{{ displayUserName(user) }}</button>
+      >
+        {{ displayUserName(user) }}
+      </button>
     </div>
   </div>
 </template>
@@ -37,7 +39,7 @@ export default {
   data() {
     return {
       search: "",
-      searchResults: []
+      searchResults: [],
     };
   },
   computed: {
@@ -46,14 +48,14 @@ export default {
     },
     selectedUser() {
       return this.$store.state.selectedUser;
-    }
+    },
   },
   methods: {
     searchUsers() {
       if (this.search != "") {
         var tmpSearch = this.search.toLowerCase();
         this.searchResults = this.allUsers.filter(
-          user =>
+          (user) =>
             user["BierName"].toLowerCase().includes(tmpSearch) |
             user["FirstName"].toLowerCase().includes(tmpSearch) |
             user["LastName"].toLowerCase().includes(tmpSearch) |
@@ -67,7 +69,7 @@ export default {
     },
     selectUser(user) {
       this.$store.commit("selectUser", user);
-    }
-  }
+    },
+  },
 };
 </script>

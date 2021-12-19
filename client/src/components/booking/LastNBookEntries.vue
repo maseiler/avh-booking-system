@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul v-for="entry in bookings" :key="entry">
+    <ul v-for="entry in bookEntries" :key="entry">
       <li class="dropdown is-hoverable is-fullwidth">
         <div class="dropdown-trigger is-fullwidth">
           <button class="button is-multiline">
@@ -51,8 +51,8 @@
 <script>
 export default {
   computed: {
-    bookings() {
-      return this.$store.state.last5Bookings;
+    bookEntries() {
+      return this.$store.state.lastNBookEntries;
     },
     items() {
       return this.$store.state.items;

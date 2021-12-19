@@ -4,20 +4,44 @@
     <div class="columns">
       <div class="column is-1">
         <div class="buttons">
-          <button class="button is-link is-fullwidth" @click="showAddUserFormAdmin = true">Add User</button>
-          <button class="button is-link is-fullwidth" @click="showModifyUserForm = true">Modify User</button>
-          <button class="button is-link is-fullwidth" @click="showDeleteUserForm = true">Delete User</button>
+          <button
+            class="button is-link is-fullwidth"
+            @click="showAddUserFormAdmin = true"
+          >
+            Add User
+          </button>
+          <button
+            class="button is-link is-fullwidth"
+            @click="showModifyUserForm = true"
+          >
+            Modify User
+          </button>
+          <button
+            class="button is-link is-fullwidth"
+            @click="showDeleteUserForm = true"
+          >
+            Delete User
+          </button>
         </div>
-        <AddUserFormAdmin v-if="showAddUserFormAdmin" @close="showAddUserFormAdmin = false" />
-        <ModifyUserForm v-if="showModifyUserForm" @close="showModifyUserForm = false" />
-        <DeleteUserForm v-if="showDeleteUserForm" @close="showDeleteUserForm = false" />
+        <AddUserFormAdmin
+          v-if="showAddUserFormAdmin"
+          @close="showAddUserFormAdmin = false"
+        />
+        <ModifyUserForm
+          v-if="showModifyUserForm"
+          @close="showModifyUserForm = false"
+        />
+        <DeleteUserForm
+          v-if="showDeleteUserForm"
+          @close="showDeleteUserForm = false"
+        />
       </div>
       <div class="column is-4">
         <UserInfoAdmin />
         <UserSearch />
       </div>
       <div class="column is-7">
-        <div class="box" style="height:88vh; overflow:auto;">
+        <div class="box" style="height: 88vh; overflow: auto">
           <UserTable />
         </div>
       </div>
@@ -40,14 +64,14 @@ export default {
     DeleteUserForm,
     UserSearch,
     UserTable,
-    UserInfoAdmin
+    UserInfoAdmin,
   },
   data() {
     return {
       showAddUserFormAdmin: false,
       showModifyUserForm: false,
-      showDeleteUserForm: false
+      showDeleteUserForm: false,
     };
-  }
+  },
 };
 </script>

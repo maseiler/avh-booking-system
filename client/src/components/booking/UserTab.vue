@@ -5,7 +5,9 @@
         <UserSearch />
       </div>
       <div class="column is-2">
-        <button class="button is-link" @click="showAddUserForm = true">Add User</button>
+        <button class="button is-link" @click="showAddUserForm = true">
+          Add User
+        </button>
       </div>
       <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false" />
     </div>
@@ -23,12 +25,12 @@ export default {
   components: {
     UserSearch,
     UserList,
-    AddUserForm
+    AddUserForm,
   },
   data() {
     return {
-      showAddUserForm: false
+      showAddUserForm: false,
     };
-  }
+  },
 };
 </script>

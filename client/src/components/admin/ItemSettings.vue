@@ -4,20 +4,41 @@
     <div class="columns">
       <div class="column is-1">
         <div class="buttons">
-          <button class="button is-link is-fullwidth" @click="showAddItemForm = true">Add Item</button>
-          <button class="button is-link is-fullwidth" @click="showModifyItemForm = true">Modify Item</button>
-          <button class="button is-link is-fullwidth" @click="showDeleteItemForm = true">Delete Item</button>
+          <button
+            class="button is-link is-fullwidth"
+            @click="showAddItemForm = true"
+          >
+            Add Item
+          </button>
+          <button
+            class="button is-link is-fullwidth"
+            @click="showModifyItemForm = true"
+          >
+            Modify Item
+          </button>
+          <button
+            class="button is-link is-fullwidth"
+            @click="showDeleteItemForm = true"
+          >
+            Delete Item
+          </button>
         </div>
         <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false" />
-        <ModifyItemForm v-if="showModifyItemForm" @close="showModifyItemForm = false" />
-        <DeleteItemForm v-if="showDeleteItemForm" @close="showDeleteItemForm = false" />
+        <ModifyItemForm
+          v-if="showModifyItemForm"
+          @close="showModifyItemForm = false"
+        />
+        <DeleteItemForm
+          v-if="showDeleteItemForm"
+          @close="showDeleteItemForm = false"
+        />
       </div>
       <div class="column is-4">
         <ItemInfo />
         <ItemSearch :mode="'single'" />
       </div>
       <div class="column">
-        <div class="box" style="height:88vh; overflow:auto;">
+        <div class="box" style="height: 88vh; overflow: auto">
           <ItemTable />
         </div>
       </div>
@@ -40,14 +61,14 @@ export default {
     DeleteItemForm,
     ItemSearch,
     ItemTable,
-    ItemInfo
+    ItemInfo,
   },
   data() {
     return {
       showAddItemForm: false,
       showModifyItemForm: false,
-      showDeleteItemForm: false
+      showDeleteItemForm: false,
     };
-  }
+  },
 };
 </script>

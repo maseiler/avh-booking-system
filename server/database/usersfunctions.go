@@ -50,20 +50,14 @@ func GetUsersOfColumnWithValue(column string, value string) []data.User {
 func NewUserExists(newUser data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE bier_name = \"%s\" AND first_name = \"%s\" AND last_name = \"%s\" AND status = \"%s\";", newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status)
 	users := getUsersByQuery(queryString)
-	if len(users) == 0 {
-		return false
-	}
-	return true
+	return len(users) == 0
 }
 
 // UserExists returns true if user with same UserID exists in database
 func UserExists(user data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE id = %d;", user.ID)
 	users := getUsersByQuery(queryString)
-	if len(users) == 0 {
-		return false
-	}
-	return true
+	return len(users) == 0
 }
 
 // AddUser adds a new user to database and prints info
@@ -75,6 +69,7 @@ func AddUser(newUser data.User) {
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(newUser.BierName, newUser.FirstName, newUser.LastName, newUser.BoatName, newUser.Status, newUser.Email, newUser.Phone, newUser.Balance, newUser.MaxDebt)
+	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
 	HandleDatabaseError(err)

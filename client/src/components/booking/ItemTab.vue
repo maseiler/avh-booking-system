@@ -6,14 +6,14 @@
   </div>
 </template>
 
- <script>
+<script>
 import ItemSearch from "./ItemSearch.vue";
 import ItemList from "./ItemList.vue";
 
 export default {
   components: {
     ItemSearch,
-    ItemList
-  }
+    ItemList,
+  },
 };
 </script>

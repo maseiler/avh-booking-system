@@ -8,7 +8,10 @@
             <hr />
           </div>
 
-          <article v-if="Object.keys(user).length === 0" class="message is-danger">
+          <article
+            v-if="Object.keys(user).length === 0"
+            class="message is-danger"
+          >
             <div class="message-header">
               <div class="field is-grouped">
                 <p class="icon is-small is-left">
@@ -160,25 +163,29 @@
           </div>
 
           <div class="modal-footer">
-            <article v-if="validationError !==''" class="message is-danger">
+            <article v-if="validationError !== ''" class="message is-danger">
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
                     <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
-                  <p>{{validationError}}</p>
+                  <p>{{ validationError }}</p>
                 </div>
               </div>
             </article>
             <div class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <button class="button is-link" @click="modifyUser">Modify</button>
+                  <button class="button is-link" @click="modifyUser">
+                    Modify
+                  </button>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button is-text" @click="closeForm">Cancel</button>
+                  <button class="button is-text" @click="closeForm">
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -194,11 +201,11 @@ export default {
   computed: {
     user() {
       return this.$store.state.selectedUser;
-    }
+    },
   },
   data() {
     return {
-      validationError: ""
+      validationError: "",
     };
   },
   methods: {
@@ -218,15 +225,15 @@ export default {
             this.closeForm();
             this.$responseEventBus.$emit("successMessage", message);
           })
-          .catch(response => {
+          .catch((response) => {
             this.validationError = response.body;
           });
       }
     },
     closeForm() {
       this.$emit("close");
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

@@ -8,36 +8,35 @@ import (
 	dbP "github.com/maseiler/avh-booking-system/server/database"
 )
 
-// GetLastNBookings forwards API call to get the n latest bookings from database
-func GetLastNBookings(w http.ResponseWriter, r *http.Request) {
+// GetLastNBookEntries forwards API call to get the n latest bookings from database
+func GetLastNBookEntries(w http.ResponseWriter, r *http.Request) {
 	n := UnmarshalInt(r.Body)
-
-	bookings := dbP.GetLastNBookings(n)
+	bookings := dbP.GetLastNBookEntries(n)
 	response := marshalToJSON(bookings, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
 }
 
-// GetBookingsFromUserBetween forwards API call to get book entries of user within time span
-func GetBookingsFromUserBetween(w http.ResponseWriter, r *http.Request) {
+// GetBookEntriesFromUserBetween forwards API call to get book entries of user within time span
+func GetBookEntriesFromUserBetween(w http.ResponseWriter, r *http.Request) {
 	userFromTo := UnmarshalUserFromTo(r.Body)
 	from := ConvertStringToTime(userFromTo.From)
 	to := ConvertStringToTime(userFromTo.To)
 
-	bookings := dbP.GetBookingsOfUserBetween(userFromTo.User, from, to)
+	bookings := dbP.GetBookEntriesOfUserBetween(userFromTo.User, from, to)
 
 	response := marshalToJSON(bookings, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
 }
 
-// GetBookingsFromItemBetween forwards API call to get book entries of item within time span
-func GetBookingsFromItemBetween(w http.ResponseWriter, r *http.Request) {
+// GetBookEntriesFromItemBetween forwards API call to get book entries of item within time span
+func GetBookEntriesFromItemBetween(w http.ResponseWriter, r *http.Request) {
 	itemFromTo := UnmarshalItemFromTo(r.Body)
 	from := ConvertStringToTime(itemFromTo.From)
 	to := ConvertStringToTime(itemFromTo.To)
 
-	bookings := dbP.GetBookingsOfItemBetween(itemFromTo.Item, from, to)
+	bookings := dbP.GetBookEntriesOfItemBetween(itemFromTo.Item, from, to)
 
 	response := marshalToJSON(bookings, w)
 	w.Header().Set("Content-Type", "application/json")
@@ -136,15 +135,9 @@ func UndoBookEntry(w http.ResponseWriter, r *http.Request) {
 
 func userIsEmpty(user data.User) bool {
 	emptyUser := data.User{ID: 0, BierName: "", FirstName: "", LastName: "", BoatName: "", Status: "", Email: "", Phone: "", Balance: 0, MaxDebt: 0}
-	if user == emptyUser {
-		return true
-	}
-	return false
+	return user == emptyUser
 }
 
 func itemsAreEmpty(items []data.CartItem) bool {
-	if len(items) == 0 {
-		return true
-	}
-	return false
+	return len(items) == 0
 }

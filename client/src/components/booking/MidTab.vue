@@ -1,9 +1,9 @@
 <template>
   <div>
     <button class="button" @click="refreshPage">
-      <span class="icon is-small">
+      <icon class="icon is-small">
         <font-awesome-icon icon="redo" />
-      </span>
+      </icon>
       <p>Refresh</p>
     </button>
     <br />
@@ -20,7 +20,7 @@
     <div v-else>
       <img class="logo" src="~@/assets/avh_logo.png" width="250px" />
       <hr />
-      <Last5Bookings />
+      <LastNBookEntries />
     </div>
   </div>
 </template>
@@ -28,13 +28,13 @@
 <script>
 import Cart from "./Cart.vue";
 import UserInfo from "./UserInfo.vue";
-import Last5Bookings from "./Last5Bookings.vue";
+import LastNBookEntries from "./LastNBookEntries.vue";
 
 export default {
   components: {
     Cart,
     UserInfo,
-    Last5Bookings,
+    LastNBookEntries,
   },
   methods: {
     refreshPage() {

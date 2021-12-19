@@ -22,13 +22,13 @@
                   </span>
                 </div>
               </div>
-              <article v-if="validationError !==''" class="message is-danger">
+              <article v-if="validationError !== ''" class="message is-danger">
                 <div class="message-header">
                   <div class="field is-grouped">
                     <p class="icon is-small is-left">
                       <font-awesome-icon icon="exclamation" size="lg" />
                     </p>
-                    <p>{{validationError}}</p>
+                    <p>{{ validationError }}</p>
                   </div>
                 </div>
               </article>
@@ -38,7 +38,9 @@
               <div class="level">
                 <div class="level-left">
                   <div class="level-item">
-                    <button class="button is-link" @click="login">Submit</button>
+                    <button class="button is-link" @click="login">
+                      Submit
+                    </button>
                   </div>
                 </div>
                 <div class="level-right">
@@ -60,7 +62,7 @@ export default {
   data() {
     return {
       password: "",
-      validationError: ""
+      validationError: "",
     };
   },
   methods: {
@@ -76,8 +78,8 @@ export default {
     },
     cancel() {
       this.$router.push("/");
-    }
-  }
+    },
+  },
 };
 </script>
 

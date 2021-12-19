@@ -9,7 +9,10 @@
           </div>
 
           <div class="modal-body">
-            <article v-if="Object.keys(item).length === 0" class="message is-danger">
+            <article
+              v-if="Object.keys(item).length === 0"
+              class="message is-danger"
+            >
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
@@ -22,7 +25,8 @@
             <div v-else>
               <p>
                 Do you really want to delete
-                <b>{{displayItem(item)}}</b>?
+                <b>{{ displayItem(item) }}</b
+                >?
               </p>
             </div>
           </div>
@@ -30,7 +34,9 @@
           <div class="modal-footer">
             <div class="field is-grouped">
               <div class="control" v-if="Object.keys(item).length !== 0">
-                <button class="button is-link" @click="deleteItem">Delete</button>
+                <button class="button is-link" @click="deleteItem">
+                  Delete
+                </button>
               </div>
               <div class="control">
                 <button class="button" @click="closeForm">Cancel</button>
@@ -48,7 +54,7 @@ export default {
   computed: {
     item() {
       return this.$store.state.selectedSingleItem;
-    }
+    },
   },
   methods: {
     deleteItem() {
@@ -76,10 +82,11 @@ export default {
     },
     closeForm() {
       this.$emit("close");
-    }
-  }
+    },
+  },
 };
 </script>
+
 <style lang="scss">
 @import "../../assets/modal.css";
 </style>

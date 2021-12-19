@@ -10,16 +10,20 @@
 
           <div class="modal-body">
             <p class="subtitle is-5">
-              Do you have comments, feature requests or found a bug? Please let me know!
-              <span
-                class="icon"
-              >
-                <font-awesome-icon icon="heart" :style="{color: '#a50303'}" />
+              Do you have comments, feature requests or found a bug? Please let
+              me know!
+              <span class="icon">
+                <font-awesome-icon icon="heart" :style="{ color: '#a50303' }" />
               </span>
             </p>
             <div class="field">
               <div class="control has-icons-left">
-                <input class="input" type="text" placeholder="Name (optional)" v-model="name" />
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Name (optional)"
+                  v-model="name"
+                />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="user" />
                 </span>
@@ -37,7 +41,9 @@
             <div class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <button class="button is-link" @click="submitFeedback">Submit</button>
+                  <button class="button is-link" @click="submitFeedback">
+                    Submit
+                  </button>
                 </div>
               </div>
               <div class="level-right">
@@ -58,7 +64,7 @@ export default {
   data() {
     return {
       name: "",
-      text: ""
+      text: "",
     };
   },
   methods: {
@@ -86,8 +92,8 @@ export default {
     resetData() {
       this.text = "";
       this.name = "";
-    }
-  }
+    },
+  },
 };
 </script>
 

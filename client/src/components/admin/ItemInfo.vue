@@ -2,7 +2,7 @@
   <div v-if="item !== 'undefined' && Object.keys(item).length !== 0">
     <article class="message is-link">
       <div class="message-header">
-        <p>{{item.Name}}</p>
+        <p>{{ item.Name }}</p>
       </div>
       <div class="message-body">
         <div class="columns">
@@ -10,15 +10,15 @@
             <h6 class="subtitle is-6">
               <div>
                 <font-awesome-icon icon="fingerprint" />
-                &nbsp;{{item.ID}}
+                &nbsp;{{ item.ID }}
               </div>
               <div>
                 <font-awesome-icon icon="font" />
-                &nbsp;{{item.Name}}
+                &nbsp;{{ item.Name }}
               </div>
               <div>
                 <font-awesome-icon icon="euro-sign" />
-                &nbsp;&nbsp;{{item.Price}}&nbsp;€
+                &nbsp;&nbsp;{{ item.Price }}&nbsp;€
               </div>
             </h6>
           </div>
@@ -26,15 +26,15 @@
             <h6 class="subtitle is-6">
               <div>
                 <font-awesome-icon icon="expand-arrows-alt" />
-                &nbsp;&nbsp;{{item.Size}}
+                &nbsp;&nbsp;{{ item.Size }}
               </div>
               <div>
                 <font-awesome-icon icon="balance-scale" />
-                &nbsp;{{item.Unit}}
+                &nbsp;{{ item.Unit }}
               </div>
               <div>
                 <font-awesome-icon icon="info-circle" />
-                &nbsp;&nbsp;{{item.Type}}
+                &nbsp;&nbsp;{{ item.Type }}
               </div>
             </h6>
           </div>
@@ -49,7 +49,7 @@ export default {
   computed: {
     item() {
       return this.$store.state.selectedSingleItem;
-    }
-  }
+    },
+  },
 };
 </script>

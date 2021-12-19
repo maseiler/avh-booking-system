@@ -2,61 +2,66 @@
   <div>
     <div class="columns">
       <div class="column is-2 is-sidebar-menu">
-        <div class="box" style="height:90vh;">
+        <div class="box" style="height: 90vh">
           <aside class="menu">
             <p class="menu-label">Administration</p>
             <ul class="menu-list">
               <li>
                 <a
                   @click="showSetting('userSettings')"
-                  :class="[ showUserSettings ? 'is-active' : '']"
-                >User Settings</a>
+                  :class="[showUserSettings ? 'is-active' : '']"
+                  >User Settings</a
+                >
               </li>
               <li>
                 <a
                   @click="showSetting('itemSettings')"
-                  :class="[ showItemSettings ? 'is-active' : '']"
-                >Item Settings</a>
+                  :class="[showItemSettings ? 'is-active' : '']"
+                  >Item Settings</a
+                >
               </li>
               <li>
                 <a
                   @click="showSetting('bookingSettings')"
-                  :class="[ showBookingSettings ? 'is-active' : '']"
-                >Booking Settings</a>
+                  :class="[showBookingSettings ? 'is-active' : '']"
+                  >Booking Settings</a
+                >
               </li>
               <li>
                 <a
                   @click="showSetting('otherSettings')"
-                  :class="[ showOtherSettings ? 'is-active' : '']"
-                >Other Settings</a>
+                  :class="[showOtherSettings ? 'is-active' : '']"
+                  >Other Settings</a
+                >
               </li>
               <li>
                 <a
                   @click="showSetting('feedbackList')"
-                  :class="[ showFeedbackList ? 'is-active' : '']"
-                >Feedback</a>
+                  :class="[showFeedbackList ? 'is-active' : '']"
+                  >Feedback</a
+                >
               </li>
             </ul>
           </aside>
         </div>
       </div>
       <div class="column">
-        <UserSettings v-if="showUserSettings"/>
-        <ItemSettings v-if="showItemSettings"/>
-        <BookingSettings v-if="showBookingSettings"/>
-        <OtherSettings v-if="showOtherSettings"/>
-        <FeedbackList v-if="showFeedbackList"/>
+        <UserSettings v-if="showUserSettings" />
+        <ItemSettings v-if="showItemSettings" />
+        <BookingSettings v-if="showBookingSettings" />
+        <OtherSettings v-if="showOtherSettings" />
+        <FeedbackList v-if="showFeedbackList" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import UserSettings from "./UserSettings.vue";
-import ItemSettings from "./ItemSettings.vue";
-import BookingSettings from "./BookingSettings.vue";
-import OtherSettings from "./OtherSettings.vue";
-import FeedbackList from "./FeedbackList.vue";
+import UserSettings from "../components/admin/UserSettings.vue";
+import ItemSettings from "../components/admin/ItemSettings.vue";
+import BookingSettings from "../components/admin/BookingSettings.vue";
+import OtherSettings from "../components/admin/OtherSettings.vue";
+import FeedbackList from "../components/admin/FeedbackList.vue";
 
 export default {
   components: {
@@ -64,7 +69,7 @@ export default {
     ItemSettings,
     BookingSettings,
     OtherSettings,
-    FeedbackList
+    FeedbackList,
   },
   data() {
     return {
@@ -72,7 +77,7 @@ export default {
       showItemSettings: false,
       showBookingSettings: false,
       showOtherSettings: false,
-      showFeedbackList: false
+      showFeedbackList: false,
     };
   },
   methods: {
@@ -116,7 +121,7 @@ export default {
         default:
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>

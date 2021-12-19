@@ -168,7 +168,7 @@ export default {
     refresh() {
       this.$store.commit("getUsers");
       this.$store.commit("getItems");
-      this.$store.commit("getLast5Bookings");
+      this.$store.commit("getLastNBookEntries", 5);
     },
   },
   created() {
@@ -177,4 +177,3 @@ export default {
   },
 };
 </script>
-

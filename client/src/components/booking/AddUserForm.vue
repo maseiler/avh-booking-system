@@ -26,7 +26,11 @@
             </div>
 
             <div
-              v-if="newUser.Status !== 'Steganleger' && newUser.Status !== 'Gast' && newUser.Status !== ''"
+              v-if="
+                newUser.Status !== 'Steganleger' &&
+                newUser.Status !== 'Gast' &&
+                newUser.Status !== ''
+              "
               class="field"
             >
               <label class="label">Biername</label>
@@ -88,7 +92,12 @@
               </div>
             </div>
 
-            <div v-if="newUser.Status === 'Steganleger' || newUser.Status === 'Gast'" class="field">
+            <div
+              v-if="
+                newUser.Status === 'Steganleger' || newUser.Status === 'Gast'
+              "
+              class="field"
+            >
               <label class="label">Email</label>
               <div class="control has-icons-left">
                 <input
@@ -103,7 +112,12 @@
               </div>
             </div>
 
-            <div v-if="newUser.Status === 'Steganleger' || newUser.Status === 'Gast'" class="field">
+            <div
+              v-if="
+                newUser.Status === 'Steganleger' || newUser.Status === 'Gast'
+              "
+              class="field"
+            >
               <label class="label">Phone Number</label>
               <div class="control has-icons-left">
                 <input
@@ -120,25 +134,29 @@
           </div>
 
           <div class="modal-footer">
-            <article v-if="validationError !==''" class="message is-danger">
+            <article v-if="validationError !== ''" class="message is-danger">
               <div class="message-header">
                 <div class="field is-grouped">
                   <p class="icon is-small is-left">
                     <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
-                  <p>{{validationError}}</p>
+                  <p>{{ validationError }}</p>
                 </div>
               </div>
             </article>
             <div class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <button class="button is-link" @click="submitUser">Submit</button>
+                  <button class="button is-link" @click="submitUser">
+                    Submit
+                  </button>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button is-text" @click="resetAndCloseForm">Cancel</button>
+                  <button class="button is-text" @click="resetAndCloseForm">
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -162,9 +180,9 @@ export default {
         Phone: "",
         Status: "",
         Balance: 0,
-        MaxDebt: 0
+        MaxDebt: 0,
       },
-      validationError: ""
+      validationError: "",
     };
   },
   methods: {
@@ -180,7 +198,7 @@ export default {
           this.$store.commit("getUsers");
           this.$responseEventBus.$emit("successMessage", message);
         })
-        .catch(response => {
+        .catch((response) => {
           this.validationError = response.data;
         });
     },
@@ -194,8 +212,8 @@ export default {
       this.newUser.Phone = "";
       this.validationError = "";
       this.$emit("close");
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

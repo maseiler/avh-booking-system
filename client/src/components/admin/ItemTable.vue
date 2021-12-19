@@ -5,9 +5,9 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th style="text-align: right;">Size</th>
+          <th style="text-align: right">Size</th>
           <th>Unit</th>
-          <th style="text-align: right;">Price</th>
+          <th style="text-align: right">Price</th>
         </tr>
       </thead>
       <tbody>
@@ -17,11 +17,11 @@
           @click="selectItem(item)"
           :class="[selectedItem === item ? 'is-selected' : '']"
         >
-          <th>{{item.ID}}</th>
-          <td>{{item.Name}}</td>
-          <td style="text-align: right;">{{item.Size}}</td>
-          <td>{{item.Unit}}</td>
-          <td style="text-align: right;">{{item.Price}} €</td>
+          <th>{{ item.ID }}</th>
+          <td>{{ item.Name }}</td>
+          <td style="text-align: right">{{ item.Size }}</td>
+          <td>{{ item.Unit }}</td>
+          <td style="text-align: right">{{ item.Price }} €</td>
         </tr>
       </tbody>
     </table>
@@ -40,12 +40,12 @@ export default {
     },
     selectedItem() {
       return this.$store.state.selectedSingleItem;
-    }
+    },
   },
   methods: {
     selectItem(item) {
       this.$store.commit("selectSingleItem", item);
-    }
-  }
+    },
+  },
 };
 </script>
