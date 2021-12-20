@@ -50,14 +50,14 @@ func GetUsersOfColumnWithValue(column string, value string) []data.User {
 func NewUserExists(newUser data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE bier_name = \"%s\" AND first_name = \"%s\" AND last_name = \"%s\" AND status = \"%s\";", newUser.BierName, newUser.FirstName, newUser.LastName, newUser.Status)
 	users := getUsersByQuery(queryString)
-	return len(users) == 0
+	return len(users) != 0
 }
 
 // UserExists returns true if user with same UserID exists in database
 func UserExists(user data.User) bool {
 	queryString := fmt.Sprintf("SELECT * FROM users WHERE id = %d;", user.ID)
 	users := getUsersByQuery(queryString)
-	return len(users) == 0
+	return len(users) != 0
 }
 
 // AddUser adds a new user to database and prints info
