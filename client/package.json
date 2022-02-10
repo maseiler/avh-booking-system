@@ -14,7 +14,7 @@
     "bulma": "^0.9.3",
     "chart.js": "^2.9.4",
     "express": "^4.17.1",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^10",
     "underscore": "^1.13.1",
     "vue": "^2.6.14",
