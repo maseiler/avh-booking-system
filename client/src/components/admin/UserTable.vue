@@ -12,8 +12,8 @@
             <th>Status</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Balance</th>
-            <th>Max Debt</th>
+            <th style="text-align: right">Balance</th>
+            <th style="text-align: right">Max Debt</th>
           </tr>
         </thead>
         <tbody>
@@ -31,8 +31,8 @@
             <td>{{ user.Status }}</td>
             <td>{{ user.Email }}</td>
             <td>{{ user.Phone }}</td>
-            <td>{{ user.Balance }} €</td>
-            <td>{{ user.MaxDebt }} €</td>
+            <td style="text-align: right">{{ user.Balance }} €</td>
+            <td style="text-align: right">{{ user.MaxDebt }} €</td>
           </tr>
         </tbody>
       </table>

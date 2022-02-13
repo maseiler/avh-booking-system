@@ -2,7 +2,7 @@
   <div>
     <div class="columns">
       <div class="column is-1 is-sidebar-menu">
-        <div class="box" style="height: 90vh">
+        <div class="box max-height-scroll-y">
           <aside class="menu">
             <p class="menu-label">Statistics</p>
             <ul class="menu-list">

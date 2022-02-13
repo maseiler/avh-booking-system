@@ -52,14 +52,14 @@ func GetAllItems() []data.Item {
 func NewItemExists(newItem data.Item) bool {
 	queryString := fmt.Sprintf("SELECT * FROM items WHERE name = \"%s\" AND size = %.2f;", newItem.Name, newItem.Size)
 	items := getItemsByQuery(queryString)
-	return len(items) == 0
+	return len(items) > 0
 }
 
 // ItemExists returns true if item with same ItemID exists in database
 func ItemExists(item data.Item) bool {
 	queryString := fmt.Sprintf("SELECT * FROM items WHERE id = %d;", item.ID)
 	items := getItemsByQuery(queryString)
-	return len(items) == 0
+	return len(items) > 0
 }
 
 // AddItem adds a new user to database and prints info

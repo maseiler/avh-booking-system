@@ -218,7 +218,7 @@ export default {
           .then(() => {
             var message = "".concat(
               "Modified user: ",
-              this.displayUserName(this.user)
+              this.displayUserNameFull(this.user)
             );
             this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");

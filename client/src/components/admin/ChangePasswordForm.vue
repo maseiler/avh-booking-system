@@ -60,7 +60,10 @@ export default {
         this.$http
           .post("changeAdminPassword", [this.oldPassword, this.newPassword1])
           .then(() => {
-            this.$responseEventBus.$emit("successMessage", "Changed password.");
+            this.$responseEventBus.$emit(
+              "successMessage",
+              "Changed password.\n\nPlease make sure that all responsible persons know the new password."
+            );
           })
           .catch((response) => {
             this.$responseEventBus.$emit("failureMessage", response.body);

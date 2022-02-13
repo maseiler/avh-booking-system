@@ -70,6 +70,7 @@ export default {
             );
             this.closeForm();
             this.$store.commit("getItems");
+            this.$store.commit("selectSingleItem", {});
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch(() => {

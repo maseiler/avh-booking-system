@@ -2,23 +2,17 @@
   <div class="booking">
     <div class="columns is-gapless">
       <div class="column">
-        <div
-          class="box"
-          style="height: 90vh; overflow-x: hidden; overflow-y: auto"
-        >
+        <div class="box max-height-scroll-y">
           <UserTab />
         </div>
       </div>
       <div class="column is-narrow">
-        <div class="box" style="width: 500px; height: 90vh; overflow-y: auto">
+        <div class="box max-height-scroll-y" style="width: 500px">
           <MidTab />
         </div>
       </div>
       <div class="column">
-        <div
-          class="box"
-          style="height: 90vh; overflow-x: hidden; overflow-y: auto"
-        >
+        <div class="box max-height-scroll-y">
           <ItemTab />
         </div>
       </div>
