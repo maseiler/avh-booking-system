@@ -25,7 +25,7 @@
             <div v-else>
               <p>
                 Do you really want to delete
-                <b>{{ displayUserName(user) }}</b
+                <b>{{ displayUserNameFull(user) }}</b
                 >?
               </p>
             </div>
@@ -72,7 +72,7 @@ export default {
           .then(() => {
             var message = "".concat(
               "Deleted user: ",
-              this.displayUserName(this.user)
+              this.displayUserNameFull(this.user)
             );
             this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");

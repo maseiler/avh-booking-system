@@ -11,7 +11,7 @@
           <div class="modal-body">
             <p class="subtitle is-5">
               Do you have comments, feature requests or found a bug? Please let
-              me know!
+              us know!
               <span class="icon">
                 <font-awesome-icon icon="heart" :style="{ color: '#a50303' }" />
               </span>

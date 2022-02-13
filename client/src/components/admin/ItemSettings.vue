@@ -1,46 +1,51 @@
 <template>
   <div>
     <br />
-    <div class="columns">
-      <div class="column is-1">
-        <div class="buttons">
-          <button
-            class="button is-link is-fullwidth"
-            @click="showAddItemForm = true"
+    <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false" />
+    <ModifyItemForm
+      v-if="showModifyItemForm"
+      @close="showModifyItemForm = false"
+    />
+    <DeleteItemForm
+      v-if="showDeleteItemForm"
+      @close="showDeleteItemForm = false"
+    />
+    <div class="tile is-ancestor is-narrow">
+      <div class="tile is-parent is-vertical">
+        <article class="tile is-child">
+          <div class="box field is-grouped">
+            <button class="button is-link is-1" @click="showAddItemForm = true">
+              Add Item
+            </button>
+            &nbsp;
+            <button
+              class="button is-link is-1"
+              @click="showModifyItemForm = true"
+            >
+              Modify Item
+            </button>
+            &nbsp;
+            <button
+              class="button is-link is-1"
+              @click="showDeleteItemForm = true"
+            >
+              Delete Item
+            </button>
+          </div>
+        </article>
+        <article class="tile is-child">
+          <div class="box" style="height: 17rem; overflow: auto">
+            <ItemSearch :mode="'single'" />
+          </div>
+        </article>
+        <article class="tile is-child">
+          <div
+            class="box"
+            style="height: calc(100vh - 26.25rem); overflow: auto"
           >
-            Add Item
-          </button>
-          <button
-            class="button is-link is-fullwidth"
-            @click="showModifyItemForm = true"
-          >
-            Modify Item
-          </button>
-          <button
-            class="button is-link is-fullwidth"
-            @click="showDeleteItemForm = true"
-          >
-            Delete Item
-          </button>
-        </div>
-        <AddItemForm v-if="showAddItemForm" @close="showAddItemForm = false" />
-        <ModifyItemForm
-          v-if="showModifyItemForm"
-          @close="showModifyItemForm = false"
-        />
-        <DeleteItemForm
-          v-if="showDeleteItemForm"
-          @close="showDeleteItemForm = false"
-        />
-      </div>
-      <div class="column is-4">
-        <ItemInfo />
-        <ItemSearch :mode="'single'" />
-      </div>
-      <div class="column">
-        <div class="box" style="height: 88vh; overflow: auto">
-          <ItemTable />
-        </div>
+            <ItemTable />
+          </div>
+        </article>
       </div>
     </div>
   </div>
@@ -50,9 +55,8 @@
 import AddItemForm from "../booking/AddItemForm.vue";
 import ModifyItemForm from "./ModifyItemForm.vue";
 import DeleteItemForm from "./DeleteItemForm.vue";
-import ItemSearch from "../booking/ItemSearch.vue";
+import ItemSearch from "./ItemSearch.vue";
 import ItemTable from "./ItemTable.vue";
-import ItemInfo from "./ItemInfo.vue";
 
 export default {
   components: {
@@ -61,7 +65,6 @@ export default {
     DeleteItemForm,
     ItemSearch,
     ItemTable,
-    ItemInfo,
   },
   data() {
     return {

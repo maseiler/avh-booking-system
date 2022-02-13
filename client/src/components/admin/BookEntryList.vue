@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="table is-hoverable is-striped">
+    <table class="table is-hoverable is-striped is-fullwidth">
       <thead>
         <tr>
           <th>ID</th>
