@@ -1,0 +1,12 @@
+{
+  "name": "AVH Booking System Client",
+  "outputfilename": "AVH Booking System Client",
+  "assetdir": "frontend/dist",
+  "wailsjsdir": "frontend/src",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "author": {
+    "name": "Matthias Seiler",
+    "website": "https://github.com/maseiler/avh-booking-system"
+  }
+}
