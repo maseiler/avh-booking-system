@@ -7,13 +7,22 @@ import (
 	"net/http"
 )
 
+// Config struct
+type AvhbsConfig struct {
+	url        string
+	clientName string
+}
+
 // App struct
 type App struct {
 	ctx context.Context
 }
 
+var avhbsConfig = AvhbsConfig{}
+
 // NewApp creates a new App application struct
-func NewApp() *App {
+func NewApp(config AvhbsConfig) *App {
+	avhbsConfig = config
 	return &App{}
 }
 
@@ -40,9 +49,8 @@ func (a *App) Greet(name string) string {
 
 // GetCommitMessage
 func (a *App) GetHello() string {
-	// TODO HTTP call
-	requestURL := fmt.Sprintf("http://localhost:%d/hello", 8081)
-	res, err := http.Get(requestURL)
+	// TODO HTTPS call
+	res, err := http.Get(avhbsConfig.url + "/hello")
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
 	} else {

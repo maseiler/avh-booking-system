@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"embed"
+	"errors"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -14,8 +18,9 @@ import (
 var assets embed.FS
 
 func main() {
+	avhbsConfig := getConfig()
 	// Create an instance of the app structure
-	app := NewApp()
+	app := NewApp(avhbsConfig)
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -51,4 +56,41 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getConfig() AvhbsConfig {
+	file, err := os.Open("/usr/share/avhbs/config")
+
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			log.Fatal("Can not find AVHBS config file.")
+		}
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	url := ""
+	clientName := ""
+	scanner := bufio.NewScanner(file)
+	i := 0
+	for scanner.Scan() {
+		if i == 0 {
+			url = scanner.Text()
+		}
+		if i == 1 {
+			clientName = scanner.Text()
+		}
+		i++
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	avhbsConfig := AvhbsConfig{url, clientName}
+
+	fmt.Println(avhbsConfig)
+
+	return avhbsConfig
+	// TODO: check if client name in DB
 }
