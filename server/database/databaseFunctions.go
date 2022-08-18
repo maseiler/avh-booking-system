@@ -11,17 +11,17 @@ var db *sql.DB
 // CreateDatabase creates database and all necessary tables
 func CreateDatabase() {
 	loginInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/", os.Getenv("AVHBS_DB_USER"), os.Getenv("AVHBS_DB_PASS"), os.Getenv("AVHBS_DB_IP"), os.Getenv("AVHBS_DB_PORT"))
-	fmt.Println("LoginInfo:")
+	fmt.Println("Database Login Info:")
 	fmt.Println(loginInfo)
 	var err error
 	db, err = sql.Open("mysql", loginInfo)
 	HandleDatabaseError(err)
 
-	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", os.Getenv("AVHBS_DB_NAME"))
-	_, err = db.Exec(query)
+	createDatabaseQuery := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", os.Getenv("AVHBS_DB_NAME"))
+	_, err = db.Exec(createDatabaseQuery)
 	HandleDatabaseError(err)
-
 	db.Close()
+
 	loginInfo = loginInfo + os.Getenv("AVHBS_DB_NAME") + "?parseTime=true"
 	db, err = sql.Open("mysql", loginInfo)
 	HandleDatabaseError(err)
@@ -29,6 +29,7 @@ func CreateDatabase() {
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users(
 		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		creation_time_stamp DATETIME NOT NULL,
 		bier_name VARCHAR(50),
 		first_name VARCHAR(50),
 		last_name VARCHAR(50),
@@ -45,6 +46,7 @@ func CreateDatabase() {
 	createItemsTable := `
 	CREATE TABLE IF NOT EXISTS items(
 		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		creation_time_stamp DATETIME NOT NULL,
 		name VARCHAR(50),
 		type VARCHAR(20),
 		size DECIMAL(6,2),
@@ -81,22 +83,31 @@ func CreateDatabase() {
 	createFeedbackTable := `
 	CREATE TABLE IF NOT EXISTS feedback(
 		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		time_stamp DATETIME,
+		time_stamp DATETIME NOT NULL,
 		text VARCHAR(2000),
 		name VARCHAR(20)
 	);`
 	_, err = db.Exec(createFeedbackTable)
 	HandleDatabaseError(err)
 
+	createClientsTable := `
+	CREATE TABLE IF NOT EXISTS clients(
+		name VARCHAR(20) NOT NULL,
+		creation_time_stamp DATETIME NOT NULL
+	);`
+	_, err = db.Exec(createClientsTable)
+	HandleDatabaseError(err)
+
 	createPasswordsTable := `
 	CREATE TABLE IF NOT EXISTS passwords(
-		password VARCHAR(30)
+		password VARCHAR(30) NOT NULL,
+		creation_time_stamp DATETIME NOT NULL
 	);`
 	_, err = db.Exec(createPasswordsTable)
 	HandleDatabaseError(err)
 
 	if !passwordExists(db) {
-		_, err = db.Exec("INSERT INTO passwords VALUES('admin');")
+		_, err = db.Exec("INSERT IGNORE INTO passwords VALUES('admin', NOW());")
 		HandleDatabaseError(err)
 	}
 
@@ -109,7 +120,7 @@ func CreateDatabase() {
 
 func passwordExists(db *sql.DB) bool {
 	var pws []string
-	rows, err := db.Query("SELECT * FROM passwords;")
+	rows, err := db.Query("SELECT password FROM passwords;")
 	HandleDatabaseError(err)
 	defer rows.Close()
 	if rows.Next() {

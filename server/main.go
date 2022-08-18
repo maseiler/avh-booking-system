@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	db "github.com/maseiler/avh-booking-system/server/database"
 	handler "github.com/maseiler/avh-booking-system/server/handler"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -13,6 +14,8 @@ import (
 )
 
 func main() {
+	db.CreateDatabase()
+
 	r := mux.NewRouter()
 	r.HandleFunc("/hello", handler.GetHello)
 
