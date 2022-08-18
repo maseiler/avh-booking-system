@@ -28,86 +28,114 @@ func CreateDatabase() {
 
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users(
-		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		creation_time_stamp DATETIME NOT NULL,
+		id INT NOT NULL AUTO_INCREMENT,
+		creation DATETIME NOT NULL,
+		client VARCHAR(20) NOT NULL,
 		bier_name VARCHAR(50),
 		first_name VARCHAR(50),
 		last_name VARCHAR(50),
 		boat_name VARCHAR(50),
-		status VARCHAR(20),
+		status VARCHAR(20) NOT NULL,
 		email VARCHAR(50),
 		phone VARCHAR(30),
-		balance DECIMAL(6,2),
-		max_debt INT
+		balance DECIMAL(6,2) NOT NULL,
+		max_debt INT NOT NULL,
+		PRIMARY KEY (id)
 	);`
 	_, err = db.Exec(createUsersTable)
 	HandleDatabaseError(err)
 
 	createItemsTable := `
-	CREATE TABLE IF NOT EXISTS items(
-		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		creation_time_stamp DATETIME NOT NULL,
-		name VARCHAR(50),
-		type VARCHAR(20),
-		size DECIMAL(6,2),
-		unit VARCHAR(10),
-		price DECIMAL(6,2)
-	);`
+		CREATE TABLE IF NOT EXISTS items(
+			id INT NOT NULL AUTO_INCREMENT,
+			creation DATETIME NOT NULL,
+			client VARCHAR(20) NOT NULL,
+			name VARCHAR(50) NOT NULL,
+			type VARCHAR(20) NOT NULL,
+			size DECIMAL(6,2) NOT NULL,
+			unit VARCHAR(10) NOT NULL,
+			price DECIMAL(6,2) NOT NULL,
+			PRIMARY KEY (id)
+		);`
 	_, err = db.Exec(createItemsTable)
 	HandleDatabaseError(err)
 
+	// TODO create trigger: increment, if entry in bookings
 	createFavoriteItemsTable := `
-	CREATE TABLE IF NOT EXISTS favorite_items (
-		user_id INT NOT NULL,
-		item_id INT NOT NULL,
-		count INT,
-		PRIMARY KEY (user_id, item_id)
-	);`
+		CREATE TABLE IF NOT EXISTS favorite_items (
+			user_id INT NOT NULL,
+			item_id INT NOT NULL,
+			count INT NOT NULL,
+			PRIMARY KEY (user_id, item_id)
+		);`
 	_, err = db.Exec(createFavoriteItemsTable)
 	HandleDatabaseError(err)
 
 	createBookingsTable := `
-	CREATE TABLE IF NOT EXISTS bookings(
-		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		time_stamp DATETIME NOT NULL,
-		user_id INT NOT NULL,
-		item_id INT NOT NULL,
-		amount INT NOT NULL,
-		total_price DECIMAL(6,2) NOT NULL,
-		comment VARCHAR(255) NOT NULL,
-		payment_method VARCHAR(10) NOT NULL
-	);`
+		CREATE TABLE IF NOT EXISTS bookings(
+			id INT NOT NULL AUTO_INCREMENT,
+			time_stamp DATETIME NOT NULL,
+			client VARCHAR(20) NOT NULL,
+			user_id INT NOT NULL,
+			item_id INT NOT NULL,
+			amount INT NOT NULL,
+			price DECIMAL(6,2) NOT NULL,
+			comment VARCHAR(255) NOT NULL,
+			payment_method VARCHAR(10) NOT NULL,
+			PRIMARY KEY (id)
+		);`
 	_, err = db.Exec(createBookingsTable)
 	HandleDatabaseError(err)
 
 	createFeedbackTable := `
-	CREATE TABLE IF NOT EXISTS feedback(
-		id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		time_stamp DATETIME NOT NULL,
-		text VARCHAR(2000),
-		name VARCHAR(20)
-	);`
+		CREATE TABLE IF NOT EXISTS feedback(
+			id INT NOT NULL AUTO_INCREMENT,
+			time_stamp DATETIME NOT NULL,
+			client VARCHAR(20) NOT NULL,
+			text VARCHAR(2000),
+			name VARCHAR(20),
+			PRIMARY KEY (id)
+		);`
 	_, err = db.Exec(createFeedbackTable)
 	HandleDatabaseError(err)
 
 	createClientsTable := `
 	CREATE TABLE IF NOT EXISTS clients(
 		name VARCHAR(20) NOT NULL,
-		creation_time_stamp DATETIME NOT NULL
+		creation DATETIME NOT NULL,
+		PRIMARY KEY (name)
 	);`
 	_, err = db.Exec(createClientsTable)
 	HandleDatabaseError(err)
 
 	createPasswordsTable := `
-	CREATE TABLE IF NOT EXISTS passwords(
-		password VARCHAR(30) NOT NULL,
-		creation_time_stamp DATETIME NOT NULL
-	);`
+		CREATE TABLE IF NOT EXISTS passwords(
+			password VARCHAR(30) NOT NULL,
+			creation DATETIME NOT NULL,
+			client VARCHAR(20) NOT NULL,
+			PRIMARY KEY (password)
+		);`
 	_, err = db.Exec(createPasswordsTable)
 	HandleDatabaseError(err)
 
+	// add foreign keys
+	_, err = db.Exec("ALTER TABLE users ADD CONSTRAINT FOREIGN KEY (client) REFERENCES clients(name);")
+	HandleDatabaseError(err)
+	_, err = db.Exec("ALTER TABLE items ADD CONSTRAINT FOREIGN KEY (client) REFERENCES clients(name);")
+	HandleDatabaseError(err)
+	_, err = db.Exec("ALTER TABLE bookings ADD CONSTRAINT FOREIGN KEY (client) REFERENCES clients(name);")
+	HandleDatabaseError(err)
+	_, err = db.Exec("ALTER TABLE feedback ADD CONSTRAINT FOREIGN KEY (client) REFERENCES clients(name);")
+	HandleDatabaseError(err)
+	_, err = db.Exec("ALTER TABLE passwords ADD CONSTRAINT FOREIGN KEY (client) REFERENCES clients(name);")
+	HandleDatabaseError(err)
+
+	// insert values
+	_, err = db.Exec("INSERT IGNORE INTO clients VALUES('Server', NOW());")
+	HandleDatabaseError(err)
+
 	if !passwordExists(db) {
-		_, err = db.Exec("INSERT IGNORE INTO passwords VALUES('admin', NOW());")
+		_, err = db.Exec("INSERT IGNORE INTO passwords VALUES('admin', NOW(), 'Server');")
 		HandleDatabaseError(err)
 	}
 
