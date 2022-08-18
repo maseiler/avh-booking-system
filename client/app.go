@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -49,8 +50,14 @@ func (a *App) Greet(name string) string {
 
 // GetCommitMessage
 func (a *App) GetHello() string {
-	// TODO HTTPS call
-	res, err := http.Get(avhbsConfig.url + "/hello")
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+	res, err := client.Get(avhbsConfig.url + "/hello")
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
 	} else {
