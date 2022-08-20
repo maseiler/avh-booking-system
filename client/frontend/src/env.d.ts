@@ -6,3 +6,8 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+declare module "@/src/assets/*.scss" {
+  const styles: any;
+  export = styles;
+}

@@ -18,6 +18,7 @@ client/build/
 client/frontend/package.json.md5
 client/frontend/dist/
 client/frontend/node_modules/
+client/frontend/src/wailsjs
 client/vendor/
 
 server/configs

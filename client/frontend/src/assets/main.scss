@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+@import url("https://fonts.googleapis.com/css?npmfamily=Nunito:400,700");
+
+$family-sans-serif: "Nunito", sans-serif;
+
+// custom Bulma colors
+$huette: #99d4f4;
+$huette-invert: findColorInvert($huette);
+$custom-colors: (
+    "huette": ($huette, $huette-invert)
+);
+
+// navbar
+$navbar-background-color: $huette;
+$navbar-item-hover-background-color: $huette;
+
+
+@import "../node_modules/bulma/bulma.sass";

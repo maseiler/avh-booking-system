@@ -9,6 +9,11 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/vue-fontawesome": "^3.0.1",
+    "bulma": "^0.9.4",
+    "node-sass": "^7.0.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.11",
     "vuex": "^4.0.2"
