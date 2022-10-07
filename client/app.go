@@ -39,9 +39,20 @@ type User struct { // TODO redundant (./client/models/User)
 
 var avhbsConfig = AvhbsConfig{}
 
+var client *http.Client
+
 // NewApp creates a new App application struct
 func NewApp(config AvhbsConfig) *App {
 	avhbsConfig = config
+
+	client = &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true, // TODO
+			},
+		},
+	}
+
 	return &App{}
 }
 
@@ -63,21 +74,16 @@ func (a *App) shutdown(ctx context.Context) {
 
 // Get all users
 func (a *App) GetAllUsers() []User {
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-	}
 	res, err := client.Get(avhbsConfig.url + "/getAllUsers")
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
 	} else {
 		//fmt.Printf("client: status code: %d\n", res.StatusCode)
 		var users []User = UnmarshalUserList(res.Body)
+		res.Body.Close()
 		return users
 	}
+	res.Body.Close()
 	return nil
 }
 
@@ -88,18 +94,11 @@ func (a *App) GetClientName() string {
 
 // Adds new user
 func (a *App) AddNewUser(newUser User) bool {
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true, // TODO
-			},
-		},
-	}
-
 	newUser.Client = avhbsConfig.clientName
 	userAsJson, err := json.Marshal(newUser)
 	HandleMarshalingError(err)
-	_, err = client.Post(avhbsConfig.url+"/addNewUser", "application/json", bytes.NewBuffer(userAsJson))
+	res, err := client.Post(avhbsConfig.url+"/addNewUser", "application/json", bytes.NewBuffer(userAsJson))
+	res.Body.Close()
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
 	} else {
