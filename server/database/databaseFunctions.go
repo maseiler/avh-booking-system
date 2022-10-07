@@ -157,7 +157,7 @@ func CreateDatabase() {
 
 	// add triggers
 	incrementFavoriteItemTrigger := `
-	CREATE TRIGGER increment_favorite_item
+	CREATE TRIGGER IF NOT EXISTS increment_favorite_item
 	AFTER INSERT ON bookings
 	FOR EACH ROW
 	BEGIN
@@ -174,7 +174,7 @@ func CreateDatabase() {
 	HandleDatabaseError(err)
 
 	updateBalanceTrigger := `
-	CREATE TRIGGER update_balance
+	CREATE TRIGGER IF NOT EXISTS update_balance
 	AFTER INSERT ON payments
 	FOR EACH ROW
 	BEGIN

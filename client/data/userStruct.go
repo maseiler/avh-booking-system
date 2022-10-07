@@ -2,7 +2,7 @@ package data
 
 import "time"
 
-// User represents an user as in database
+// User represents an user as defined in the database
 type User struct {
 	Id        int
 	Creation  time.Time

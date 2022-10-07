@@ -17,7 +17,9 @@ func main() {
 	db.CreateDatabase()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/hello", handler.GetHello)
+	// user routes
+	r.HandleFunc("/addNewUser", handler.AddNewUser)
+	r.HandleFunc("/getAllUsers", handler.GetAllUsers)
 
 	server := &http.Server{
 		Addr:           ":8081",
