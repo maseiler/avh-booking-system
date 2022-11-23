@@ -23,6 +23,7 @@
           </button>
         </buttons>
       </columns>
+  </div>
 </template>
 
 <script>

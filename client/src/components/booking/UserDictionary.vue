@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user-list">
     <div
       class="columns"
       v-for="(users, key) in userDict"

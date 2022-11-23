@@ -1,10 +1,14 @@
 $primary: #99d4f4;
 $danger: #db5b5b;
 
+html, body{
+  height: 100%;
+}
 .max-height-scroll-y {
   height: calc(100vh - 3.25rem); // 3.25rem == nav bar height
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
+  // height:100vh;
+  // overflow-y: auto;
 }
 
 .tile.is-narrow {
@@ -19,6 +23,11 @@ $danger: #db5b5b;
   .notification {
     border-radius: 2pt;
   }
+}
+.user-list{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height:calc(100vh - 14rem);
 }
 
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");

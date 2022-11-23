@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column">
-        <UserSearch />
-      </div>
-      <div class="column is-2">
-        <button class="button is-link" @click="showAddUserForm = true">
-          Add User
-        </button>
-      </div>
-      <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false" />
+  <div class="columns">
+    <div class="column">
+      <UserSearch />
     </div>
+    <div class="column is-2">
+      <button class="button is-link" @click="showAddUserForm = true">
+        Add User
+      </button>
+    </div>
+    <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false" />
     <hr />
-    <UserList />
   </div>
+  <UserList />
+</div>
 </template>
 
 <script>
