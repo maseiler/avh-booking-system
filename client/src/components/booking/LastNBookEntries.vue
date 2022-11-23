@@ -60,30 +60,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.dropdown {
-  width: 100%;
-
-  .dropdown-trigger {
-    width: 100%;
-  }
-
-  .button {
-    display: block;
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .dropdown-menu {
-    width: 100%;
-  }
-}
-
-.button.is-multiline {
-  min-height: 2.25em;
-  white-space: unset;
-  height: auto;
-  flex-direction: column;
-}
-</style>

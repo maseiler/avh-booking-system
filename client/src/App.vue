@@ -21,11 +21,3 @@ export default {
   },
 };
 </script>
-
-
-<style>
-#app {
-  text-align: center;
-  color: #000000;
-}
-</style>

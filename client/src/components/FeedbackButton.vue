@@ -29,15 +29,3 @@ export default {
   },
 };
 </script>
-
-<style>
-#feedbackModal {
-  display:block;
-  margin:0 auto;
-  width:fit-content;
-  position: fixed;
-  bottom: 0px;
-  left:50%;
-  transform: translateX(-50%);
-}
-</style>

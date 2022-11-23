@@ -1,9 +1,36 @@
 $primary: #99d4f4;
 $danger: #db5b5b;
 
-html, body{
-  height: 100%;
+#app {
+  text-align: center;
+  color: #000000;
 }
+
+.dropdown {
+  width: 100%;
+
+  .dropdown-trigger {
+    width: 100%;
+  }
+
+  .button {
+    display: block;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+.button.is-multiline {
+  min-height: 2.25em;
+  white-space: unset;
+  height: auto;
+  flex-direction: column;
+}
+
 .max-height-scroll-y {
   height: calc(100vh - 3.25rem); // 3.25rem == nav bar height
   overflow: hidden;
@@ -28,6 +55,16 @@ html, body{
   overflow-y: scroll;
   overflow-x: hidden;
   height:calc(100vh - 14rem);
+}
+
+#feedbackModal {
+  display:block;
+  margin:0 auto;
+  width:fit-content;
+  position: fixed;
+  bottom: 0px;
+  left:50%;
+  transform: translateX(-50%);
 }
 
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
