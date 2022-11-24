@@ -73,19 +73,23 @@ $danger: #db5b5b;
     border-radius: 2pt;
   }
 }
-.user-list{
+.user-list,
+.item-list{
   overflow-y: scroll;
   overflow-x: hidden;
   height:calc(100vh - 10.8rem);
 }
-.user-list::-webkit-scrollbar{
+.user-list::-webkit-scrollbar,
+.item-list::-webkit-scrollbar{
   width:0.4rem;
 }
-.user-list::-webkit-scrollbar-track{
+.user-list::-webkit-scrollbar-track,
+.item-list::-webkit-scrollbar-track{
   background-color: #eee;
   border-radius: 0.5em;
 }
-.user-list::-webkit-scrollbar-thumb{
+.user-list::-webkit-scrollbar-thumb,
+.item-list::-webkit-scrollbar-thumb{
   background-color: rgba(0 0 0 / 0.1);
   border-radius: 0.5em;
 }

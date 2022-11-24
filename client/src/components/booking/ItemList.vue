@@ -36,22 +36,10 @@
         </li>
       </ul>
     </tabs>
-
-    <div v-if="activeTab === 'tab0'">
-      <ItemDictionary :itemDict="favoriteItemDict">
-    </div>
-
-    <div v-if="activeTab === 'tab1'">
-      <ItemDictionary :itemDict="itemsAlc">
-    </div>
-
-    <div v-if="activeTab === 'tab2'">
-      <ItemDictionary :itemDict="itemsNonAlc">
-    </div>
-
-    <div v-if="activeTab === 'tab3'">
-      <ItemDictionary :itemDict="itemsFood">
-    </div>
+    <ItemDictionary v-if="activeTab === 'tab0'" :itemDict="favoriteItemDict" />
+    <ItemDictionary v-if="activeTab === 'tab1'" :itemDict="itemsAlc" />
+    <ItemDictionary v-if="activeTab === 'tab2'" :itemDict="itemsNonAlc" />
+    <ItemDictionary v-if="activeTab === 'tab3'" :itemDict="itemsFood" /> 
   </div>
 </template>
 

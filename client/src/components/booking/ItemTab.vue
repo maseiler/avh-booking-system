@@ -1,7 +1,6 @@
 <template>
   <div>
     <ItemSearch :mode="'multiple'" />
-    <hr />
     <ItemList />
   </div>
 </template>

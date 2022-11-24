@@ -22,24 +22,12 @@
         </li>
       </ul>
     </div>
-    <!-- <div v-if="activeTab === 'tab0'"> -->
-      <UserDictionary v-if="activeTab === 'tab0'" :userDict="allUsers" />
-    <!-- </div> -->
-    <!-- <div v-if="activeTab === 'tab1'"> -->
-      <UserDictionary v-if="activeTab === 'tab1'" :userDict="usersAH" />
-    <!-- </div> -->
-    <!-- <div v-if="activeTab === 'tab2'"> -->
+    <UserDictionary v-if="activeTab === 'tab0'" :userDict="allUsers" />
+    <UserDictionary v-if="activeTab === 'tab1'" :userDict="usersAH" />
     <UserDictionary v-if="activeTab === 'tab2'" :userDict="usersAktivB" />
-    <!-- </div> -->
-    <!-- <div v-if="activeTab === 'tab3'"> -->
-      <UserDictionary v-if="activeTab === 'tab3'" :userDict="usersAktivKA" />
-    <!-- </div> -->
-    <!-- <div v-if="activeTab === 'tab4'"> -->
-      <UserDictionary v-if="activeTab === 'tab4'" :userDict="usersSteganleger" />
-    <!-- </div> -->
-    <!-- <div v-if="activeTab === 'tab5'"> -->
-      <UserDictionary v-if="activeTab === 'tab5'" :userDict="usersGaeste" />
-    <!-- </div> -->
+    <UserDictionary v-if="activeTab === 'tab3'" :userDict="usersAktivKA" />
+    <UserDictionary v-if="activeTab === 'tab4'" :userDict="usersSteganleger" />
+    <UserDictionary v-if="activeTab === 'tab5'" :userDict="usersGaeste" />
   </div>
 </template>
 
