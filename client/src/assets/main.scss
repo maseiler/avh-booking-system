@@ -1,9 +1,18 @@
 $primary: #99d4f4;
+$background: #fff;
+$text: #000;
+$text-strong:#000;
 $danger: #db5b5b;
 
+@import "~bulma/bulma";
+
+
+.home{
+  margin-bottom: 3rem;
+}
 #app {
   text-align: center;
-  color: #000000;
+  color: $text;
 }
 
 .dropdown {
@@ -30,12 +39,25 @@ $danger: #db5b5b;
   height: auto;
   flex-direction: column;
 }
+.search-input-area{
+  gap:0.5rem;
+  margin: 0 !important;
+}
+
+.search-input-area > div:first-child{
+  flex:1;
+}
+
 
 .max-height-scroll-y {
   height: calc(100vh - 3.25rem); // 3.25rem == nav bar height
+  min-height: 3rem;
   overflow: hidden;
   // height:100vh;
   // overflow-y: auto;
+}
+.max-height-scroll-y .tabs{
+  margin-bottom:0.5rem;
 }
 
 .tile.is-narrow {
@@ -54,7 +76,18 @@ $danger: #db5b5b;
 .user-list{
   overflow-y: scroll;
   overflow-x: hidden;
-  height:calc(100vh - 14rem);
+  height:calc(100vh - 10.8rem);
+}
+.user-list::-webkit-scrollbar{
+  width:0.4rem;
+}
+.user-list::-webkit-scrollbar-track{
+  background-color: #eee;
+  border-radius: 0.5em;
+}
+.user-list::-webkit-scrollbar-thumb{
+  background-color: rgba(0 0 0 / 0.1);
+  border-radius: 0.5em;
 }
 
 #feedbackModal {
@@ -66,9 +99,28 @@ $danger: #db5b5b;
   left:50%;
   transform: translateX(-50%);
 }
+/*
+* Kenne das bulma framework zu schlecht,
+* desshalb muss ich da leider aktiv dagegen arbeiten ^^
+* Hier also ein paar Responsive Resets:
+* ~L
+*/
+.navbar-menu,
+.navbar,
+.navbar-start{
+  display:flex;
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding:0;
+  align-items: center;
+  background-color: unset;
+  box-shadow: unset;
+}
+// .navbar.is-primary{
+//   background-color: $primary;
+// }
 
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
 $family-sans-serif: "Nunito", sans-serif;
 
-@import "~bulma/bulma";

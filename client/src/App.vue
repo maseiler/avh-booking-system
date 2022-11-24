@@ -18,6 +18,6 @@ export default {
     NavBar,
     Notification,
     FeedbackButton,
-  },
+  }
 };
 </script>

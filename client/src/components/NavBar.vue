@@ -17,21 +17,21 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item">
-            <router-link v-bind:to="'/'">
-              <a class="button is-white">Home</a>
+          <div class="navbar-item">
+            <router-link class="button is-white" v-bind:to="'/'">
+              Home
             </router-link>
-          </a>
-
-          <a class="navbar-item">
-            <router-link v-bind:to="'/booking'">
-              <a class="button is-white">Booking</a>
-            </router-link>
-          </a>
+          </div>
 
           <div class="navbar-item">
-            <router-link v-bind:to="'/statistics'">
-              <a class="button is-white">Statistics</a>
+            <router-link class="button is-white" v-bind:to="'/booking'">
+              Booking
+            </router-link>
+          </div>
+
+          <div class="navbar-item">
+            <router-link class="button is-white" v-bind:to="'/statistics'">
+              Statistics
             </router-link>
           </div>
         </div>

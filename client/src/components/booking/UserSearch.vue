@@ -1,8 +1,6 @@
 <template>
   <div>
     <!-- search bar -->
-    <div class="columns">
-      <div class="column">
         <div class="field">
           <div class="control has-icons-left">
             <input
@@ -17,8 +15,6 @@
             </span>
           </div>
         </div>
-      </div>
-    </div>
     <!-- search results -->
     <div class="buttons" v-if="searchResults !== []">
       <button
