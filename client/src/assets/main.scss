@@ -8,7 +8,7 @@ $danger: #db5b5b;
 
 
 .home{
-  margin-bottom: 3rem;
+  padding-bottom: 3rem;
 }
 #app {
   text-align: center;
@@ -123,7 +123,118 @@ $danger: #db5b5b;
 // .navbar.is-primary{
 //   background-color: $primary;
 // }
+.table{
+  border-radius: 4px;
+}
 
+//Darkmode
+.dark{
+  .navbar.is-primary{
+    background-color: hsl(229deg 53% 35%);
+  }
+  .navbar.is-primary .navbar-brand>.navbar-item:hover,
+  .navbar.is-primary .navbar-brand>.navbar-item:focus{
+    background-color: transparent;
+  }
+  .navbar-item svg,
+  .navbar-item svg {
+    color:hsl(0deg 0% 85%);;
+  }
+  .box{
+    background-color: hsl(0deg 0% 15%);
+  }
+  .home{
+    background-color: hsl(0deg 0% 15%);
+    color:hsl(0deg 0% 85%);
+  }
+  .title,
+  .subtitle{
+    color:hsl(0deg 0% 85%);
+  }
+  .button.is-white{
+    background-color: hsl(0deg 0% 15%);
+    color: hsl(0deg 0% 85%);
+  }
+  .button.is-white:hover,
+  .button.is-white:focus{
+    background-color: hsl(0deg 0% 20%);
+    color: hsl(0deg 0% 85%);
+  }
+  .button,
+  .button .is-link{
+    background-color: hsl(229deg 53% 35%);
+    border-color: transparent;
+    color: hsl(0deg 0% 85%);
+  }
+  .user-list .button,
+  .item-list .button{
+    background-color: hsl(0deg 0% 20%);
+    border-color: transparent;
+    color: hsl(0deg 0% 85%);
+  }
+  .button:hover,
+  .button:focus,
+  .button .is-link:hover,
+  .button .is-link:focus{
+    background-color:hsl(49deg 100% 40%);
+    color:hsl(0deg 0% 15%);
+  }
+  .button.is-danger{
+    background-color: #db5b5b;
+    border-color: transparent;
+    color: #fff;
+  }
+  .button.is-danger:hover{
+    background-color: hsl(0, 64%, 80%);
+  }
+  .tabs a{
+    color: hsl(0deg 0% 85%);
+  }
+  .tabs a:hover,
+  .tabs a:focus{
+    color:hsl(49deg 100% 40%);
+    border-bottom-color: hsl(49deg 100% 40%);
+  }
+  input,
+  input:focus,
+  input::placeholder{
+    background-color: hsl(0deg 0% 20%);
+    color: hsl(0deg 0% 85%);
+    border-color: transparent;
+  }
+  input + .icon,
+  input:focus + .icon{
+    color: hsl(0deg 0% 85%);
+  }
+  .user-list::-webkit-scrollbar-track,
+  .item-list::-webkit-scrollbar-track{
+    background-color: hsl(0deg 0% 20%);
+  }
+  .user-list::-webkit-scrollbar-thumb,
+  .item-list::-webkit-scrollbar-thumb{
+    background-color: hsl(0deg 0% 100% / 10%);
+  }
+  .table{
+    background-color: hsl(0deg 0% 20%);
+    color: hsl(0deg 0% 85%);
+  }
+  .table thead th,
+  .table tfoot th{
+    color: hsl(0deg 0% 85%);
+  }
+  .table.is-striped tbody tr:not(.is-selected):nth-child(2n){
+    background-color:hsl(0deg 0% 15%);
+  }
+  .table.is-hoverable tbody tr:hover{
+    color:hsl(0deg 0% 15%);
+  }
+  .has-text-black{
+    color: hsl(0deg 0% 85%) !important;
+  }
+  .message.is-link{
+    background-color: hsl(0deg 0% 20%);
+  }
+}
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
 $family-sans-serif: "Nunito", sans-serif;
