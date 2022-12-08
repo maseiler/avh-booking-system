@@ -7,6 +7,9 @@ $danger: #db5b5b;
 @import "~bulma/bulma";
 
 
+body{
+  min-height:100vh;
+}
 .home{
   padding-bottom: 3rem;
 }
@@ -129,8 +132,23 @@ $danger: #db5b5b;
 
 //Darkmode
 .dark{
+  $main-background:hsl(0deg 0% 15%);
+  $menu-background:hsl(229deg 53% 35%);
+  $button:hsl(229deg 53% 35%);
+  $FAicon:hsl(0deg 0% 85%);
+  $text:hsl(0deg 0% 85%);
+  $hover:hsl(49deg 100% 40%);
+  $hover-text:hsl(0deg 0% 15%);
+  $warning:hsl(49deg 100% 40%);
+  $warning-text:hsl(0deg 0% 15%);
+  $material-2:hsl(0deg 0% 20%);
+  $danger:#db5b5b;
+  $danger-text:hsl(0deg 0% 15%);
+  
+  background-color: $main-background;
+  
   .navbar.is-primary{
-    background-color: hsl(229deg 53% 35%);
+    background-color: $menu-background;
   }
   .navbar.is-primary .navbar-brand>.navbar-item:hover,
   .navbar.is-primary .navbar-brand>.navbar-item:focus{
@@ -138,101 +156,110 @@ $danger: #db5b5b;
   }
   .navbar-item svg,
   .navbar-item svg {
-    color:hsl(0deg 0% 85%);;
+    color:$FAicon;
   }
   .box{
-    background-color: hsl(0deg 0% 15%);
+    background-color:$main-background;
   }
   .home{
-    background-color: hsl(0deg 0% 15%);
-    color:hsl(0deg 0% 85%);
+    background-color: $main-background;
+    color:$text;
   }
   .title,
   .subtitle{
-    color:hsl(0deg 0% 85%);
+    color:$text;
   }
   .button.is-white{
-    background-color: hsl(0deg 0% 15%);
-    color: hsl(0deg 0% 85%);
+    background-color: $main-background;
+    color:$text;
   }
   .button.is-white:hover,
   .button.is-white:focus{
-    background-color: hsl(0deg 0% 20%);
-    color: hsl(0deg 0% 85%);
+    background-color: $material-2;
+    color: $text;
   }
   .button,
   .button .is-link{
-    background-color: hsl(229deg 53% 35%);
+    background-color: $button;
     border-color: transparent;
-    color: hsl(0deg 0% 85%);
-  }
-  .user-list .button,
-  .item-list .button{
-    background-color: hsl(0deg 0% 20%);
-    border-color: transparent;
-    color: hsl(0deg 0% 85%);
+    color: $text;
   }
   .button:hover,
   .button:focus,
   .button .is-link:hover,
   .button .is-link:focus{
-    background-color:hsl(49deg 100% 40%);
-    color:hsl(0deg 0% 15%);
+    background-color:lighten($button, 10%);
+  }
+  .user-list .button,
+  .item-list .button{
+    background-color: $material-2;
+    border-color: transparent;
+    color: $text;
+  }
+
+  .button.is-warning{
+    background-color: $warning;
+    color:$warning-text;
+  }
+  .button.is-warning:hover,
+  .button.is-warning:focus{
+    background-color: lighten($warning, 10%);
   }
   .button.is-danger{
-    background-color: #db5b5b;
+    background-color: $danger;
     border-color: transparent;
-    color: #fff;
+    color: $danger-text;
   }
-  .button.is-danger:hover{
-    background-color: hsl(0, 64%, 80%);
+  .button.is-danger:hover,
+  .button.is-danger:focus{
+    background-color: lighten($danger, 10%);
   }
   .tabs a{
-    color: hsl(0deg 0% 85%);
+    color: $text;
   }
   .tabs a:hover,
   .tabs a:focus{
-    color:hsl(49deg 100% 40%);
-    border-bottom-color: hsl(49deg 100% 40%);
+    color:$hover;
+    border-bottom-color: $hover;
   }
   input,
   input:focus,
   input::placeholder{
-    background-color: hsl(0deg 0% 20%);
-    color: hsl(0deg 0% 85%);
+    background-color: $material-2;
+    color: $text;
     border-color: transparent;
   }
   input + .icon,
   input:focus + .icon{
-    color: hsl(0deg 0% 85%);
+    color: $text;
   }
   .user-list::-webkit-scrollbar-track,
   .item-list::-webkit-scrollbar-track{
-    background-color: hsl(0deg 0% 20%);
+    background-color: $material-2;
   }
   .user-list::-webkit-scrollbar-thumb,
   .item-list::-webkit-scrollbar-thumb{
     background-color: hsl(0deg 0% 100% / 10%);
   }
   .table{
-    background-color: hsl(0deg 0% 20%);
-    color: hsl(0deg 0% 85%);
+    background-color: $material-2;
+    color: $text;
   }
   .table thead th,
   .table tfoot th{
-    color: hsl(0deg 0% 85%);
+    color: $text;
   }
   .table.is-striped tbody tr:not(.is-selected):nth-child(2n){
-    background-color:hsl(0deg 0% 15%);
+    background-color:$main-background;
   }
   .table.is-hoverable tbody tr:hover{
-    color:hsl(0deg 0% 15%);
+    color:$main-background;
   }
   .has-text-black{
-    color: hsl(0deg 0% 85%) !important;
+    color:$text !important;
   }
   .message.is-link{
-    background-color: hsl(0deg 0% 20%);
+    background-color: $material-2;
   }
 }
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");

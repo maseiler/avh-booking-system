@@ -3,7 +3,6 @@
     <div id="feedbackModal">
       <button
         class="button is-primary"
-        :style="{ color: 'black' }"
         @click="showFeedbackModal = true"
       >
         <span class="icon is-small">
