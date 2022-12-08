@@ -6,7 +6,7 @@
       aria-label="main navigation"
     >
       <div class="navbar-brand">
-        <a class="navbar-item" @click="() => switchColorScheme(false)">
+        <a class="navbar-item" @click="() => switchColorScheme(false, -1)">
           <font-awesome-icon
             icon="beer"
             size="lg"
@@ -37,6 +37,10 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
+            <input type="checkbox" class="darkSwitch" id="darkSwitch" @click="darkSwitchClick"/>
+            <label for="darkSwitch"></label>
+          </div>
+          <div class="navbar-item">
             <router-link v-bind:to="'/login'">
               <font-awesome-icon
                 icon="user-secret"
@@ -52,7 +56,7 @@
 <script>
 export default {
   methods: {
-    switchColorScheme(stored){
+    switchColorScheme(stored, nextItem){
       let body = document.getElementsByTagName("body")[0]
       //posibility to add more themes
       let themeList = ["light", "dark"]
@@ -65,20 +69,40 @@ export default {
       }
       if(stored){
         body.classList.replace(themeList[currentThemeIndex], localStorage.getItem("colorScheme"))
+        this.setDarkSwitch(localStorage.getItem("colorScheme"));
         return
       }
       //rotate to next Theme, start over if out of bounds
-      let nextThemeIndex = currentThemeIndex +1
+      let nextThemeIndex = currentThemeIndex +1;
+      if(nextItem != -1){
+        nextThemeIndex = nextItem;
+      }
       if(nextThemeIndex == themeList.length){
         nextThemeIndex = 0
       }
       //set next Theme
       localStorage.setItem("colorScheme", themeList[nextThemeIndex])
       body.classList.replace(themeList[currentThemeIndex], themeList[nextThemeIndex])
+      this.setDarkSwitch(themeList[nextThemeIndex]);
+    },
+    darkSwitchClick(){
+      let switchCB = document.getElementById('darkSwitch');
+      if(switchCB.checked){
+        this.switchColorScheme(false, 1);
+        return;
+      }
+      this.switchColorScheme(false, 0);
+    },
+    setDarkSwitch(dark){
+      let switchCB = document.getElementById('darkSwitch');
+      switchCB.checked = false;
+      if(dark == "dark"){
+        switchCB.checked = true;
+      }
     }
   },
   mounted: function() {      
-    this.switchColorScheme(localStorage.getItem("colorScheme") != null)
+    this.switchColorScheme(localStorage.getItem("colorScheme") != null, -1)
   }
 }
 </script>
