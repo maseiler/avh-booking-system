@@ -196,6 +196,12 @@ body{
     border-color: transparent;
     color: $text;
   }
+  .user-list .button:hover,
+  .user-list .button:focus,
+  .item-list .button:hover,
+  .item-list .button:focus{
+    background-color: lighten($material-2, 10%);
+  }
 
   .button.is-warning{
     background-color: $warning;
@@ -230,7 +236,8 @@ body{
     border-color: transparent;
   }
   input + .icon,
-  input:focus + .icon{
+  input:focus + .icon,
+  .control.has-icons-left input:focus~.icon{
     color: $text;
   }
   .user-list::-webkit-scrollbar-track,
