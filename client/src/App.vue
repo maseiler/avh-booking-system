@@ -17,7 +17,7 @@ export default {
   components: {
     NavBar,
     Notification,
-    FeedbackButton,
+    FeedbackButton
   }
 };
 </script>

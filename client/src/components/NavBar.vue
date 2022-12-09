@@ -36,9 +36,11 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
+          <div class="navbar-item darkLightSwitch">
+            <font-awesome-icon icon="sun" />
             <input type="checkbox" class="darkSwitch" id="darkSwitch" @click="darkSwitchClick"/>
             <label for="darkSwitch"></label>
+            <font-awesome-icon icon="moon" />
           </div>
           <div class="navbar-item">
             <router-link v-bind:to="'/login'">
