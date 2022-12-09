@@ -186,7 +186,8 @@ input[type="checkbox"].darkSwitch + label::before{
   align-items:center;
 }
 input[type="checkbox"].darkSwitch + label::after{
-  content:"\2715";
+  //content:"\2715";*/
+  content:"";
   position:absolute;
   height:1.49em;
   width:1.49em;
@@ -205,7 +206,8 @@ input[type="checkbox"].darkSwitch + label::after{
 input[type="checkbox"].darkSwitch:checked + label::after{
   transform: translateX(100%);
   background-color:var(--on-circle);
-  content:"\2713";
+  // content:"\2713";
+  content:"";
 }
 input[type="checkbox"].darkSwitch:checked + label::before{
   background-color:var(--on-bg);
