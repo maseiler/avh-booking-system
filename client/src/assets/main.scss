@@ -268,6 +268,16 @@ input[type="checkbox"].darkSwitch:focus-within + label::before{
   .subtitle{
     color:$text;
   }
+
+  .menu-list{
+    a{
+      color:$text;
+      &:hover,
+      &:focus{
+        color:$main-background;
+      }
+    }
+  }
   .button.is-white{
     background-color: $main-background;
     color:$text;
