@@ -57,10 +57,17 @@
 </template>
 <script>
 export default {
+  data: function () {
+    return {
+      timeInterval:null
+    };
+  },
   methods: {
     switchColorScheme(stored, nextItem){
       let body = document.getElementsByTagName("body")[0]
-      //posibility to add more themes
+      //to add more themes, simply add them to this array.
+      // TODO: Add the setting for Admin in UI to add themes and store the names in the database
+      // TODO: Add color settings for Admin in UI to simply build own color themes in UI 
       let themeList = ["light", "dark"]
       let currentThemeIndex = 0
       //get current Theme
@@ -101,10 +108,28 @@ export default {
       if(dark == "dark"){
         switchCB.checked = true;
       }
+    },
+    timeHandler(){
+      let currentTime = Date();
+      let currentTimeInt = parseInt(currentTime.substr(16, 24).split(":").join());
+      // TODO: either get the day/night Start Values from the Database or use the sunrise/sunset time directly from weather API
+      // TODO: check in database if automatic theme switching is enabled
+      let dayStart = 80000; // 8 Uhr in the morning
+      let nightStart = 180000; // 6 in the evening
+      if(currentTimeInt < dayStart || currentTimeInt > nightStart ){
+        //make it dark
+        this.switchColorScheme(false, 1);
+        return
+      }
+      //make it light
+      this.switchColorScheme(false, 0);
     }
   },
   mounted: function() {      
-    this.switchColorScheme(localStorage.getItem("colorScheme") != null, -1)
+    this.switchColorScheme(localStorage.getItem("colorScheme") != null, -1);
+    if(this.timeInterval == null){
+      this.timeInterval = window.setInterval(this.timeHandler, 10000);
+    }
   }
 }
 </script>
