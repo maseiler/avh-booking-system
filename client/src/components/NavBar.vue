@@ -36,7 +36,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item darkLightSwitch">
+          <div class="navbar-item darkLightSwitch" v-if="!automaticThemeSwitching">
             <font-awesome-icon icon="sun" />
             <input type="checkbox" class="darkSwitch" id="darkSwitch" @click="darkSwitchClick"/>
             <label for="darkSwitch"></label>
@@ -59,7 +59,8 @@
 export default {
   data: function () {
     return {
-      timeInterval:null
+      timeInterval:null,
+      automaticThemeSwitching:true
     };
   },
   methods: {
@@ -95,6 +96,7 @@ export default {
       this.setDarkSwitch(themeList[nextThemeIndex]);
     },
     darkSwitchClick(){
+      if(this.automaticThemeSwitching){return}
       let switchCB = document.getElementById('darkSwitch');
       if(switchCB.checked){
         this.switchColorScheme(false, 1);
@@ -103,6 +105,7 @@ export default {
       this.switchColorScheme(false, 0);
     },
     setDarkSwitch(dark){
+      if(this.automaticThemeSwitching){return}
       let switchCB = document.getElementById('darkSwitch');
       switchCB.checked = false;
       if(dark == "dark"){
@@ -127,7 +130,7 @@ export default {
   },
   mounted: function() {      
     this.switchColorScheme(localStorage.getItem("colorScheme") != null, -1);
-    if(this.timeInterval == null){
+    if(this.timeInterval == null && this.automaticThemeSwitching){
       this.timeInterval = window.setInterval(this.timeHandler, 10000);
     }
   }
