@@ -136,6 +136,8 @@ body{
 .darkLightSwitch{
   --gap:0.5em;
   color:hsl(202, 23%, 23%);
+  display: flex;
+  align-items: center;
   :first-child{
     margin-right:var(--gap);
   }

@@ -36,7 +36,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item darkLightSwitch" v-if="!automaticThemeSwitching">
+          <div class="navbar-item darkLightSwitch">
             <font-awesome-icon icon="sun" />
             <input type="checkbox" class="darkSwitch" id="darkSwitch" @click="darkSwitchClick"/>
             <label for="darkSwitch"></label>
@@ -59,8 +59,7 @@
 export default {
   data: function () {
     return {
-      timeInterval:null,
-      automaticThemeSwitching:true
+      timeInterval:null
     };
   },
   methods: {
@@ -96,7 +95,6 @@ export default {
       this.setDarkSwitch(themeList[nextThemeIndex]);
     },
     darkSwitchClick(){
-      if(this.automaticThemeSwitching){return}
       let switchCB = document.getElementById('darkSwitch');
       if(switchCB.checked){
         this.switchColorScheme(false, 1);
@@ -105,7 +103,6 @@ export default {
       this.switchColorScheme(false, 0);
     },
     setDarkSwitch(dark){
-      if(this.automaticThemeSwitching){return}
       let switchCB = document.getElementById('darkSwitch');
       switchCB.checked = false;
       if(dark == "dark"){
@@ -119,18 +116,23 @@ export default {
       // TODO: check in database if automatic theme switching is enabled
       let dayStart = 80000; // 8 Uhr in the morning
       let nightStart = 180000; // 6 in the evening
-      if(currentTimeInt < dayStart || currentTimeInt > nightStart ){
+      //19 Second time period, so it must run once in the 10s Interval
+      if(currentTimeInt < nightStart + 9 && currentTimeInt > nightStart - 10 ){
         //make it dark
         this.switchColorScheme(false, 1);
-        return
+        return;
       }
-      //make it light
-      this.switchColorScheme(false, 0);
+      if(currentTimeInt < dayStart + 9 && currentTimeInt > dayStart - 10 ){
+        //make it light
+        this.switchColorScheme(false, 0);
+        return;
+      }
+      return;
     }
   },
   mounted: function() {      
     this.switchColorScheme(localStorage.getItem("colorScheme") != null, -1);
-    if(this.timeInterval == null && this.automaticThemeSwitching){
+    if(this.timeInterval == null){
       this.timeInterval = window.setInterval(this.timeHandler, 10000);
     }
   }
