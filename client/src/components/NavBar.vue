@@ -36,11 +36,18 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item darkLightSwitch">
+          <div class="navbar-item darkLightSwitch" v-if="!automaticThemeSwitching">
             <font-awesome-icon icon="sun" />
-            <input type="checkbox" class="darkSwitch" id="darkSwitch" @click="darkSwitchClick"/>
+            <input type="checkbox" class="cbSwitch" id="darkSwitch" @click="darkSwitchClick"/>
             <label for="darkSwitch"></label>
             <font-awesome-icon icon="moon" />
+          </div>
+          <div class="navbar-item autoManualSwitch" title="Automatische Umschaltung aktivieren
+zwischen Dark/Light Theme">
+            <font-awesome-icon icon="palette" />
+            <input type="checkbox" class="cbSwitch" id="autoSwitch" v-model="automaticThemeSwitching" @click="automaticThemeSwitchClick"/>
+            <label for="autoSwitch"></label>
+            <font-awesome-icon icon="clock" />
           </div>
           <div class="navbar-item">
             <router-link v-bind:to="'/login'">
@@ -59,7 +66,8 @@
 export default {
   data: function () {
     return {
-      timeInterval:null
+      timeInterval:null,
+      automaticThemeSwitching:null
     };
   },
   methods: {
@@ -103,37 +111,44 @@ export default {
       this.switchColorScheme(false, 0);
     },
     setDarkSwitch(dark){
+      if(this.automaticThemeSwitching){return}
       let switchCB = document.getElementById('darkSwitch');
       switchCB.checked = false;
       if(dark == "dark"){
         switchCB.checked = true;
       }
     },
+    automaticThemeSwitchClick(){
+      localStorage.setItem("automaticThemeSwitching", !this.automaticThemeSwitching);
+      if(this.automaticThemeSwitching){
+        setTimeout(() => {this.setDarkSwitch(localStorage.getItem("colorScheme"));}, 300); 
+      }
+    },
     timeHandler(){
+      if(!this.automaticThemeSwitching){return}
       let currentTime = Date();
-      let currentTimeInt = parseInt(currentTime.substr(16, 24).split(":").join());
+      let currentTimeInt = parseInt(currentTime.substr(16, 5).split(":").join(""));
       // TODO: either get the day/night Start Values from the Database or use the sunrise/sunset time directly from weather API
-      // TODO: check in database if automatic theme switching is enabled
-      let dayStart = 80000; // 8 Uhr in the morning
-      let nightStart = 180000; // 6 in the evening
-      //19 Second time period, so it must run once in the 10s Interval
-      if(currentTimeInt < nightStart + 9 && currentTimeInt > nightStart - 10 ){
+      let dayStart = 800; // 8 Uhr in the morning
+      let nightStart = 1800; // 6 in the evening
+      if(currentTimeInt < dayStart || currentTimeInt > nightStart){
         //make it dark
         this.switchColorScheme(false, 1);
         return;
       }
-      if(currentTimeInt < dayStart + 9 && currentTimeInt > dayStart - 10 ){
-        //make it light
-        this.switchColorScheme(false, 0);
-        return;
-      }
-      return;
+      //make it light
+      this.switchColorScheme(false, 0);
     }
   },
-  mounted: function() {      
+  mounted: function() {     
     this.switchColorScheme(localStorage.getItem("colorScheme") != null, -1);
     if(this.timeInterval == null){
-      this.timeInterval = window.setInterval(this.timeHandler, 10000);
+      this.timeInterval = window.setInterval(this.timeHandler, 1000);
+    }
+    this.automaticThemeSwitching = localStorage.getItem("automaticThemeSwitching") == "true";
+    if(localStorage.getItem("automaticThemeSwitching") == null){
+      this.automaticThemeSwitching = true;
+      localStorage.setItem("automaticThemeSwitching", this.automaticThemeSwitching);
     }
   }
 }

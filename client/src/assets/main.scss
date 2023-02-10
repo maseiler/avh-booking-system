@@ -133,7 +133,8 @@ body{
   color:hsl(202, 23%, 23%);
 }
 
-.darkLightSwitch{
+.darkLightSwitch,
+.autoManualSwitch{
   --gap:0.5em;
   color:hsl(202, 23%, 23%);
   display: flex;
@@ -146,13 +147,13 @@ body{
   }
 }
 
-input[type="checkbox"].darkSwitch{
+input[type="checkbox"].cbSwitch{
   opacity:0;
   position:relative;
   width:0px;
   height:0px;
 }
-input[type="checkbox"].darkSwitch + label{
+input[type="checkbox"].cbSwitch + label{
   --disabled-bg:gray;
   --disabled-circle:silver;
   --off-bg:hsl(202, 23%, 23%);
@@ -171,11 +172,11 @@ input[type="checkbox"].darkSwitch + label{
   padding-left:2em;
   font-size:1em;
 }
-input[type="checkbox"].darkSwitch:disabled + label{
+input[type="checkbox"].cbSwitch:disabled + label{
   color:var(--disabled-bg);
   cursor:default;
 }
-input[type="checkbox"].darkSwitch + label::before{
+input[type="checkbox"].cbSwitch + label::before{
   content:"";
   position:absolute;
   height:1em;
@@ -189,7 +190,7 @@ input[type="checkbox"].darkSwitch + label::before{
   display:flex;
   align-items:center;
 }
-input[type="checkbox"].darkSwitch + label::after{
+input[type="checkbox"].cbSwitch + label::after{
   //content:"\2715";*/
   content:"";
   position:absolute;
@@ -207,24 +208,24 @@ input[type="checkbox"].darkSwitch + label::after{
   align-items:center;
 }
 
-input[type="checkbox"].darkSwitch:checked + label::after{
+input[type="checkbox"].cbSwitch:checked + label::after{
   transform: translateX(100%);
   background-color:var(--on-circle);
   // content:"\2713";
   content:"";
 }
-input[type="checkbox"].darkSwitch:checked + label::before{
+input[type="checkbox"].cbSwitch:checked + label::before{
   background-color:var(--on-bg);
 }
-input[type="checkbox"].darkSwitch:checked:disabled + label::before,
-input[type="checkbox"].darkSwitch:disabled + label::before{
+input[type="checkbox"].cbSwitch:checked:disabled + label::before,
+input[type="checkbox"].cbSwitch:disabled + label::before{
   background-color:var(--disabled-bg);
 }
-input[type="checkbox"].darkSwitch:checked:disabled + label::after,
-input[type="checkbox"].darkSwitch:disabled + label::after{
+input[type="checkbox"].cbSwitch:checked:disabled + label::after,
+input[type="checkbox"].cbSwitch:disabled + label::after{
   background-color:var(--disabled-circle);
 }
-input[type="checkbox"].darkSwitch:focus-within + label::before{
+input[type="checkbox"].cbSwitch:focus-within + label::before{
   outline:0.1em solid var(--outline);
 }
 
@@ -380,6 +381,15 @@ input[type="checkbox"].darkSwitch:focus-within + label::before{
   }
   .message.is-link{
     background-color: $material-2;
+  }
+  input[type="checkbox"].cbSwitch + label{
+    --disabled-bg:gray;
+    --disabled-circle:silver;
+    --off-bg: #{$FAicon};
+    --off-circle: #{$main-background};
+    --on-bg:green;
+    --on-circle:lime;
+    --outline:hsl(0deg 0% 85%);
   }
 }
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
