@@ -73,14 +73,11 @@
                     option === 'optUserPayments'
                   "
                 >
-                  <p class="p has-text-grey-light">
-                    Time span can be left empty or in format <br />YYYY-MM-DD
-                  </p>
                   <div class="field">
                     <div class="control">
                       <input
                         class="input is-info"
-                        type="Text"
+                        type="date"
                         placeholder="From"
                         v-model="from"
                       />
@@ -90,7 +87,7 @@
                       <div class="control">
                         <input
                           class="input is-info"
-                          type="Text"
+                          type="date"
                           placeholder="To"
                           v-model="to"
                         />
