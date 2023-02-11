@@ -38,6 +38,15 @@
               </div>
             </h6>
           </div>
+          <div class="column has-text-left">
+            <h6 class="subtitle is-6">
+              <div>
+                <font-awesome-icon v-if="item.Enabled" icon="check-circle"/>
+                <font-awesome-icon v-if="!item.Enabled" icon="times"/>
+                &nbsp;&nbsp;{{ item.Enabled }}
+              </div>
+            </h6>
+          </div>
         </div>
       </div>
     </article>

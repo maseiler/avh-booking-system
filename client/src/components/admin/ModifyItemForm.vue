@@ -82,6 +82,13 @@
               </div>
             </div>
           </div>
+          <div class="field">
+            <label class="label">Enabled</label>
+            <div class="control">
+              <input type="checkbox" id="ItemEnabled" v-model="item.Enabled" class="cbSwitch">
+              <label for="ItemEnabled"></label>
+            </div>
+          </div>
 
           <div class="modal-footer">
             <article v-if="validationError !== ''" class="message is-danger">
@@ -131,6 +138,7 @@ export default {
   },
   methods: {
     modifyItem() {
+      //if(this.item.Enabled == true){this.item.Enabled = 1} else if(this.item.Enabled == false) {this.item.Enabled = 0}
       if (Object.keys(this.item).length === 0) {
         this.validationError = "Please select an item first.";
       } else {

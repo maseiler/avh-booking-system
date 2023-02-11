@@ -49,9 +49,17 @@ func CreateDatabase() {
 		type VARCHAR(20),
 		size DECIMAL(6,2),
 		unit VARCHAR(10),
-		price DECIMAL(6,2)
+		price DECIMAL(6,2),
+		enabled BOOLEAN
 	);`
 	_, err = db.Exec(createItemsTable)
+	HandleDatabaseError(err)
+
+	// Altering because of a new Column
+	alterItemsTable := `
+	ALTER TABLE items ADD COLUMN IF NOT EXISTS enabled BOOLEAN NOT NULL DEFAULT '1' AFTER price
+	;`
+	_, err = db.Exec(alterItemsTable)
 	HandleDatabaseError(err)
 
 	createFavoriteItemsTable := `

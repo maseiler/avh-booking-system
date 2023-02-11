@@ -8,6 +8,7 @@
           <th style="text-align: right">Size</th>
           <th>Unit</th>
           <th style="text-align: right">Price</th>
+          <th>Enabled</th>
         </tr>
       </thead>
       <tbody>
@@ -22,6 +23,10 @@
           <td style="text-align: right">{{ item.Size }}</td>
           <td>{{ item.Unit }}</td>
           <td style="text-align: right">{{ item.Price }} €</td>
+          <td>
+            <font-awesome-icon v-if="item.Enabled" icon="check-circle"/>
+            <font-awesome-icon v-if="!item.Enabled" icon="times"/>
+          </td>
         </tr>
       </tbody>
     </table>

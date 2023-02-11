@@ -83,13 +83,28 @@ const store = new Vuex.Store({
       return state.users.filter(user => user["Status"] === "Gast");
     },
     itemsAlc: state => {
-      return state.items.filter(item => item["Type"] === "alcoholic")
+      return state.items.filter(function(item){
+        if(item["Type"] === "alcoholic" && item["Enabled"] == 1){
+          return true;
+        }
+        return false;
+      })
     },
     itemsNonAlc: state => {
-      return state.items.filter(item => item["Type"] === "non-alcoholic")
+      return state.items.filter(function(item) {
+        if(item["Type"] === "non-alcoholic" && item["Enabled"] == 1){
+          return true;
+        }
+        return false;
+      })
     },
     itemsFood: state => {
-      return state.items.filter(item => item["Type"] === "food")
+      return state.items.filter(function (item) {
+        if(item["Type"] === "food" && item["Enabled"] == 1){
+          return true;
+        }
+        return false;
+      })
     }
   }
 })

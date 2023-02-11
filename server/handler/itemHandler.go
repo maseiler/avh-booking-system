@@ -66,6 +66,7 @@ func validateNewItemArguments(newItem dataP.Item) (validation string, item dataP
 	} else {
 		return "ok", newItem
 	}
+	//no check for Enabled because its default value is true
 }
 
 // DeleteItem forwards API call to delete item from database

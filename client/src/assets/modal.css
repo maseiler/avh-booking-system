@@ -50,6 +50,11 @@
   .modal-default-button {
     float: right;
   }
+
+  #ItemEnabled+label{
+    width:0px;
+    margin:0 auto;
+  }
   
   /*
    * The following styles are auto-applied to elements with

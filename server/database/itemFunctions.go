@@ -14,7 +14,7 @@ func getItemsByQuery(query string) []data.Item {
 	defer rows.Close()
 	for rows.Next() {
 		item := data.Item{}
-		err := rows.Scan(&item.ID, &item.Name, &item.Type, &item.Size, &item.Unit, &item.Price)
+		err := rows.Scan(&item.ID, &item.Name, &item.Type, &item.Size, &item.Unit, &item.Price, &item.Enabled)
 		items = append(items, item)
 		HandleDatabaseError(err)
 	}
@@ -67,10 +67,17 @@ func AddItem(newItem data.Item) {
 	// todo: get info from input
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("INSERT INTO items(name, price, size, unit, type) VAlUES(?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO items(name, price, size, unit, type, enabled) VAlUES(?, ?, ?, ?, ?, ?)")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(newItem.Name, newItem.Price, newItem.Size, newItem.Unit, newItem.Type)
+	//need to convert go Boolean to SQL tinyint
+	var tempEnabled int
+	tempEnabled = 0
+	if newItem.Enabled {
+		tempEnabled = 1
+	}
+
+	res, err := stmt.Exec(newItem.Name, newItem.Price, newItem.Size, newItem.Unit, newItem.Type, tempEnabled)
 	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()
@@ -79,7 +86,13 @@ func AddItem(newItem data.Item) {
 
 // ModifyItem replaces all values of a item
 func ModifyItem(item data.Item) {
-	query := fmt.Sprintf("UPDATE items SET name = \"%s\", price = \"%f\", size = \"%f\", unit = \"%s\", type = \"%s\" WHERE id = %d;", item.Name, item.Price, item.Size, item.Unit, item.Type, item.ID)
+	//need to convert go Boolean to SQL tinyint
+	var tempEnabled int
+	tempEnabled = 0
+	if item.Enabled {
+		tempEnabled = 1
+	}
+	query := fmt.Sprintf("UPDATE items SET name = \"%s\", price = \"%f\", size = \"%f\", unit = \"%s\", type = \"%s\", enabled =\"%d\" WHERE id = %d;", item.Name, item.Price, item.Size, item.Unit, item.Type, tempEnabled, item.ID)
 	rows, err := db.Query(query)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
