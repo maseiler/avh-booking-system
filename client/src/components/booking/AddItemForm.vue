@@ -80,6 +80,14 @@
                 </div>
               </div>
             </div>
+            <div class="field">
+              <label class="label">Enabled</label>
+              <div class="control">
+                <input type="checkbox" id="ItemEnabled" v-model="newItem.Enabled" class="cbSwitch">
+                <label for="ItemEnabled"></label>
+              </div>
+            </div>
+            
           </div>
 
           <div class="modal-footer">
