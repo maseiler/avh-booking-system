@@ -60,10 +60,10 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	/* if len(os.Getenv("AVHBS_SSL_CRT_FILE_PATH")) > 0 {
+	if len(os.Getenv("AVHBS_SSL_CRT_FILE_PATH")) > 0 {
 		log.Fatal(server.ListenAndServeTLS(os.Getenv("AVHBS_SSL_CRT_FILE_PATH"), os.Getenv("AVHBS_SSL_KEY_FILE_PATH")))
 	} else {
 		log.Fatal(server.ListenAndServe())
-	} */
+	}
 	log.Fatal(server.ListenAndServe())
 }
