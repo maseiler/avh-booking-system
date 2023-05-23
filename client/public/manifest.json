@@ -9,32 +9,40 @@
         "sizes": "16x15"
       },
       {
-        "src": "/img/Icon3.png",
+        "src": "/img/StartIcon200x200.png",
         "type": "image/png",
-        "sizes": "174x174"
+        "sizes": "200x200"
+      },
+      {
+        "src": "/img/StartIcon400x400.png",
+        "type": "image/png",
+        "sizes": "400x400"
+      },
+      {
+        "src": "/img/StartIcon800x800.png",
+        "type": "image/png",
+        "sizes": "800x800"
       }
     ],
     "id": "/#/?source=pwa",
     "start_url": "/#/?source=pwa",
-    "background_color": "#3367D6",
+    "background_color": "#2A3B89",
+    "theme_color": "#262626",
     "display": "standalone",
     "scope": "/",
-    "theme_color": "#3367D6",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "shortcuts": [
       {
         "name": "Startseite",
         "short_name": "Home",
         "description": "Gehe zur Startseite",
-        "url": "/#/?source=pwa",
-        "icons": [{ "src": "/img/Icon1.png", "sizes": "144x144" }]
+        "url": "/#/?source=pwa"
       },
       {
         "name": "Booking",
         "short_name": "Booking",
         "description": "Buchungen vornehmen",
-        "url": "/#/booking?source=pwa",
-        "icons": [{ "src": "/img/Icon2.png", "sizes": "144x144" }]
+        "url": "/#/booking?source=pwa"
       }
     ]
   }
