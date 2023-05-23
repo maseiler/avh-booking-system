@@ -1,37 +1,33 @@
 {
   "name": "avhbs-booking-system-client",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --openssl-legacy-provider",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^2.0.6",
-    "bulma": "^0.9.3",
+    "@vitejs/plugin-vue": "^1.6.1",
+    "autoprefixer": "^10.4.14",
+    "bulma": "^0.9.4",
     "chart.js": "^2.9.4",
+    "eslint": "^8.41.0",
+    "eslint-plugin-vue": "^8.7.1",
     "express": "^4.17.1",
     "sass": "^1.56.1",
-    "sass-loader": "^10",
     "underscore": "^1.13.1",
+    "vite": "^2.5.4",
+    "vite-plugin-vue2": "1.9.0",
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.1",
-    "vue-cli": "^2.9.6",
     "vue-resource": "^1.5.3",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.15",
-    "@vue/cli-plugin-eslint": "^4.5.15",
-    "@vue/cli-service": "^4.5.15",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^8.1.1",
-    "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
     "root": true,

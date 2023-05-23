@@ -5,6 +5,7 @@ import store from './store.js'
 import mixin from './mixin.js'
 import router from './router.js'
 import Chart from 'chart.js';
+import "./assets/main.scss"
 
 // font awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -25,8 +26,6 @@ Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
 
 
 Vue.use(VueResource)
-
-require("./assets/main.scss")
 
 Vue.config.devtools = true
 
