@@ -138,6 +138,18 @@ export default {
       }
       //make it light
       this.switchColorScheme(false, 0);
+    },
+    clientMadeInput(){
+      // TODO: fetch needed afk time from database instead of hard coding it.
+      let minutes = 5;
+      let afkTime = minutes * 1000 * 60;
+      clearTimeout(this.goToHomeTimeout);
+      this.goToHomeTimeout = setTimeout(this.returnToHome, afkTime);
+    },
+    returnToHome(){
+      if(this.$route.name != "home"){
+        this.$router.push({ name: 'home' });
+      }
     }
   },
   mounted: function() {     
@@ -150,6 +162,7 @@ export default {
       this.automaticThemeSwitching = true;
       localStorage.setItem("automaticThemeSwitching", this.automaticThemeSwitching);
     }
+    window.addEventListener("mousemove", this.clientMadeInput);
   }
 }
 </script>

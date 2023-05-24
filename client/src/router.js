@@ -11,7 +11,7 @@ import Statistics from './pages/Statistics.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: Home, name: 'home' },
   {
     path: '/booking', component: Booking, name: 'booking',
     beforeEnter: (to, from, next) => {
