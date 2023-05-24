@@ -67,7 +67,8 @@ export default {
   data: function () {
     return {
       timeInterval:null,
-      automaticThemeSwitching:null
+      automaticThemeSwitching:null,
+      goToHomeTimeout:null
     };
   },
   methods: {
