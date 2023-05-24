@@ -2,11 +2,14 @@
   "name": "avhbs-booking-system-client",
   "version": "0.1.0",
   "private": true,
+  "description": "## Project setup ``` npm install ```",
+  "author": "https://github.com/maseiler",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --openssl-legacy-provider",
     "lint": "vue-cli-service lint"
   },
+  "main": "babel.config.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -14,6 +17,7 @@
     "bulma": "^0.9.3",
     "chart.js": "^2.9.4",
     "express": "^4.17.1",
+    "register-service-worker": "^1.7.2",
     "sass": "^1.56.1",
     "sass-loader": "^10",
     "underscore": "^1.13.1",
@@ -27,6 +31,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.15",
     "@vue/cli-plugin-eslint": "^4.5.15",
+    "@vue/cli-plugin-pwa": "~4.5.17",
     "@vue/cli-service": "^4.5.15",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
@@ -60,9 +65,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "description": "## Project setup ``` npm install ```",
-  "main": "babel.config.js",
-  "author": "https://github.com/maseiler",
-  "license": "ISC",
-  "keywords": []
+  "keywords": [],
+  "license": "ISC"
 }

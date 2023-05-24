@@ -9,11 +9,14 @@ import Chart from 'chart.js';
 // font awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
+
 import {
   faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,
   faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock
 } from '@fortawesome/free-solid-svg-icons'
+
+import './registerServiceWorker'
 
 library.add(faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,

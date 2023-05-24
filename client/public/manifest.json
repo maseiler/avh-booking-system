@@ -1,0 +1,48 @@
+{
+    "short_name": "AVHBS",
+    "name": "Buchungssystem AV-Hütte",
+    "description": "Booking System based on liabilities for AV Hütte",
+    "icons": [
+      {
+        "src": "/favicon.ico",
+        "type": "image/ico",
+        "sizes": "16x15"
+      },
+      {
+        "src": "/img/StartIcon200x200.png",
+        "type": "image/png",
+        "sizes": "200x200"
+      },
+      {
+        "src": "/img/StartIcon400x400.png",
+        "type": "image/png",
+        "sizes": "400x400"
+      },
+      {
+        "src": "/img/StartIcon800x800.png",
+        "type": "image/png",
+        "sizes": "800x800"
+      }
+    ],
+    "id": "/#/?source=pwa",
+    "start_url": "/#/?source=pwa",
+    "background_color": "#2A3B89",
+    "theme_color": "#262626",
+    "display": "standalone",
+    "scope": "/",
+    "version": "0.0.8",
+    "shortcuts": [
+      {
+        "name": "Startseite",
+        "short_name": "Home",
+        "description": "Gehe zur Startseite",
+        "url": "/#/?source=pwa"
+      },
+      {
+        "name": "Booking",
+        "short_name": "Booking",
+        "description": "Buchungen vornehmen",
+        "url": "/#/booking?source=pwa"
+      }
+    ]
+  }
