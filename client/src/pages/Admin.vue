@@ -4,41 +4,41 @@
       <div class="column is-2 is-sidebar-menu">
         <div class="box max-height-scroll-y">
           <aside class="menu">
-            <p class="menu-label">Administration</p>
+            <p class="menu-label">{{ $t("admin.menuLabel") }}</p>
             <ul class="menu-list">
               <li>
                 <a
                   @click="showSetting('userSettings')"
                   :class="[showUserSettings ? 'is-active' : '']"
-                  >User Settings</a
+                  >{{ $t("admin.userSettings") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('itemSettings')"
                   :class="[showItemSettings ? 'is-active' : '']"
-                  >Item Settings</a
+                  >{{ $t("admin.itemSettings") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('bookingSettings')"
                   :class="[showBookingSettings ? 'is-active' : '']"
-                  >Booking Settings</a
+                  >{{ $t("admin.bookingSettings") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('otherSettings')"
                   :class="[showOtherSettings ? 'is-active' : '']"
-                  >Other Settings</a
+                  >{{ $t("admin.otherSettings") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('feedbackList')"
                   :class="[showFeedbackList ? 'is-active' : '']"
-                  >Feedback</a
+                  >{{ $t("admin.feedbackList") }}</a
                 >
               </li>
             </ul>

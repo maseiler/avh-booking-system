@@ -3,5 +3,19 @@
     "title": "Academic Association Hütte",
     "subtitle": "Booking System",
     "slogan": "Vivat Crescat Floreat Hütte"
+  },
+  "admin":{
+    "menuLabel": "Administration",
+    "userSettings": "User Settings",
+    "itemSettings": "Item Settings",
+    "bookingSettings": "Booking Settings",
+    "otherSettings": "Other Settings",
+    "feedbackList": "Feedback"
+  },
+  "statistics":{
+    "menuLabel": "Statistics",
+    "showBookingsStats":"Book Entries",
+    "showFavoriteItemsStats":"Favorite Items"
+
   }
 }

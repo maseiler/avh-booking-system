@@ -4,21 +4,19 @@
       <div class="column is-1 is-sidebar-menu">
         <div class="box max-height-scroll-y">
           <aside class="menu">
-            <p class="menu-label">Statistics</p>
+            <p class="menu-label">{{ $t("statistics.menuLabel") }}</p>
             <ul class="menu-list">
               <li>
                 <a
                   @click="showSetting('showBookingsStats')"
                   :class="[showBookingsStats ? 'is-active' : '']"
-                  >Book Entries</a
-                >
+                  >{{ $t("statistics.showBookingsStats") }}</a>
               </li>
               <li>
                 <a
                   @click="showSetting('showFavoriteItemsStats')"
                   :class="[showFavoriteItemsStats ? 'is-active' : '']"
-                  >Favorite Items</a
-                >
+                  >{{ $t("statistics.showFavoriteItemsStats") }}</a>
               </li>
             </ul>
           </aside>
