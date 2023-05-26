@@ -7,7 +7,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --openssl-legacy-provider",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "main": "babel.config.js",
   "dependencies": {
@@ -24,11 +25,14 @@
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.1",
     "vue-cli": "^2.9.6",
+    "vue-i18n": "^8.26.3",
+    "vue-i18n-bridge": "^9.2.0-beta.10",
     "vue-resource": "^1.5.3",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@intlify/vue-i18n-loader": "^3.2.0",
     "@vue/cli-plugin-babel": "^4.5.15",
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-pwa": "~4.5.17",
@@ -36,6 +40,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-vue": "^8.1.1",
+    "vue-cli-plugin-i18n": "~2.3.2",
     "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {

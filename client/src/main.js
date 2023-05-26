@@ -17,6 +17,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import './registerServiceWorker'
+import i18n from './i18n'
 
 library.add(faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,
@@ -38,5 +39,6 @@ new Vue({
   store,
   router,
   mixin,
+  i18n,
   Chart
 }).$mount('#app')
