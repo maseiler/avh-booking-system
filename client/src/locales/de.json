@@ -1,20 +1,106 @@
 {
-    "home":{
-        "title": "Akademischer Verein Hütte",
-        "subtitle": "Buchungssystem",
-        "slogan": "Vivat Crescat Floreat Hütte"
+  "home":{
+    "title": "Akademischer Verein Hütte",
+    "subtitle": "Buchungssystem",
+    "slogan": "Vivat Crescat Floreat Hütte"
+  },
+  "admin":{
+    "userSettings": "Benutzereinstellungen",
+    "itemSettings": "Wareneinstellungen",
+    "bookingSettings": "Buchungseinstellungen",
+    "otherSettings": "Sonstige Einstellungen",
+    "feedbackList": "Rückmeldungen",
+    "menuLabel": "Administration"
+  },
+  "statistics":{
+    "menuLabel": "Statistiken",
+    "showBookingsStats":"Buchungseinträge",
+    "showFavoriteItemsStats":"Lieblingswaren"
+  },
+  "feedback":{
+    "button": "Rückmeldung",
+    "title": "Rückmeldung",
+    "subtitle": "Du hast Kommentare, einen Fehler gefunden oder eine Idee für eine neue Funktion? Lass es uns wissen!",
+    "PHName": "Name (optional)",
+    "PHComment": "Kommentar hier..."
+  },
+  "generic":{
+    "submit": "Senden",
+    "cancel": "Abbrechen",
+    "alcoholic":"alkoholisch",
+    "nonAlcoholic":"alkoholfrei",
+    "food":"Essen",
+    "favorites":"Favoriten",
+    "refresh":"Neu laden",
+    "comment":"Kommentar",
+    "credit":"Guthaben",
+    "debt":"Schulden"
+  },
+  "navigation":{
+    "home":"Start",
+    "booking": "Buchungen",
+    "statistics": "Statistiken"
+  },
+  "notification":{
+    "success":"Erfolgreich",
+    "error":"Fehler"
+  },
+  "booking":{
+    "addItem":{
+      "title":"Neue Ware hinzufügen"
     },
-    "admin":{
-        "userSettings": "Benutzereinstellungen",
-        "itemSettings": "Wareneinstellungen",
-        "bookingSettings": "Buchungseinstellungen",
-        "otherSettings": "Sonstige Einstellungen",
-        "feedbackList": "Rückmeldungen",
-        "menuLabel": "Administration"
+    "addUser":{
+      "title":"Neuen Benutzer hinzufügen"
+    },
+    "search":{
+      "items":"Waren durchsuchen",
+      "users":"Benutzer durchsuchen"
+    },
+    "entries":{
+      "payment":"Zahlung",
+      "undid":"Ungemachter Buchungseintrag"
+    },
+    "payment":{
+      "title":"Zahlung",
+      "htp":"muss noch bezahlen",
+      "subtitle":"Bitte tu das Geld in die Kasse!",
+      "cash":"Bar",
+      "card":"Karte",
+      "lastPayment":"Letzte Zahlungen",
+      "timestamp":"Zeitstempel",
+      "recharge":{
+        "title":"Aufladen",
+        "sub1":"kann nicht bezahlen.",
+        "sub2":"Verfügbares Guthaben ist",
+        "sub3":"€",
+        "addCreditNotice":"Um Guthaben aufzuladen, Betrag unten eingeben und bezahlen."
       },
-    "statistics":{
-        "menuLabel": "Statistiken",
-        "showBookingsStats":"Buchungseinträge",
-        "showFavoriteItemsStats":"Lieblingswaren"
-      }
+      "pay":"Bezahlen"
+    }
+  },
+  "item":{
+    "item":"Ware",
+    "name":"Name",
+    "price":"Preis",
+    "size":"Größe",
+    "unit":"Einheit",
+    "unitL":"l",
+    "unitPiece":"Stück",
+    "type":"Typ"
+  },
+  "user":{
+    "status":"Status",
+    "nickname":"Biername",
+    "firstName":"Vorname",
+    "lastName":"Nachname",
+    "boatName":"Boots Name",
+    "eMail":"E-Mail",
+    "phoneNumber":"Telefonnummer",
+    "password":"Passwort"
+  },
+  "cart":{
+    "amount":"Anzahl",
+    "checkout":"Einbuchen",
+    "total":"Summe"
+  }
 }

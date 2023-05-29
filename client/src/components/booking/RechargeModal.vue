@@ -4,18 +4,19 @@
       <div class="paymentModal-wrapper big">
         <div class="paymentModal-container big">
           <div class="paymentModal-header big">
-            <h1 class="title is-4">Recharge</h1>
+            <h1 class="title is-4">{{$t('booking.payment.recharge.title')}}</h1>
             <hr />
           </div>
 
           <div class="paymentModal-body big">
             <p class="subtitle is-4">
-              <b>{{ displayUserName(user) }}</b> cannot pay.<br />Available
-              credit is <b>{{ this.invertBalance(user.Balance) }}€</b>.
+              <b>{{ displayUserName(user) }}</b> {{$t('booking.payment.recharge.sub1')}}<br />
+              {{$t('booking.payment.recharge.sub2')}}
+              <b>{{ this.invertBalance(user.Balance) }}{{$t('booking.payment.recharge.sub3')}}</b>.
             </p>
             <br />
             <p class="subtitle is-5">
-              To add more credit, enter and pay amount below.
+              {{$t('booking.payment.recharge.addCreditNotice')}}
             </p>
             <div class="columns">
               <div class="column is-1"></div>
@@ -40,12 +41,12 @@
               </div>
               <div class="column">
                 <button class="button is-success is-fullwidth" @click="payCash">
-                  Cash
+                  {{$t('booking.payment.cash')}}
                 </button>
               </div>
               <div class="column">
                 <button class="button is-link is-fullwidth" @click="payEC">
-                  EC
+                  {{$t('booking.payment.card')}}
                 </button>
               </div>
               <div class="column">
@@ -53,7 +54,7 @@
                   class="button is-danger is-outlined is-fullwidth"
                   @click="cancel"
                 >
-                  Cancel
+                {{$t('generic.cancel')}}
                 </button>
               </div>
               <div class="column is-1"></div>
@@ -66,7 +67,7 @@
                     <input
                       class="input"
                       type="password"
-                      placeholder="Password"
+                      v-bind:placeholder="$t('user.password')"
                       v-model="password"
                       @keyup.enter="loginAndPay"
                     />
@@ -81,7 +82,7 @@
               v-if="userBookEntries.LastPayment !== '0001-01-01T00:00:00Z'"
               class="subtitle is-6"
             >
-              Last Payment: {{ printDateTime(userBookEntries.LastPayment) }}
+            {{$t('booking.payment.lastPayment')}}: {{ printDateTime(userBookEntries.LastPayment) }}
             </p>
           </div>
 
@@ -89,11 +90,11 @@
             <table class="table is-hoverable is-striped">
               <thead>
                 <tr>
-                  <th>Timestamp</th>
-                  <th>Item</th>
-                  <th>Amount</th>
-                  <th>Total Price</th>
-                  <th>Comment</th>
+                  <th>{{$t('booking.payment.timestamp')}}</th>
+                  <th>{{$t('item.item')}}</th>
+                  <th>{{$t('cart.amount')}}</th>
+                  <th>{{$t('cart.total')}}</th>
+                  <th>{{$t('generic.comment')}}</th>
                 </tr>
               </thead>
               <tbody>

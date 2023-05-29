@@ -3,7 +3,7 @@
   <div class="columns search-input-area">
       <UserSearch />
       <button class="button is-link" @click="showAddUserForm = true">
-        Add User
+        {{$t('booking.addUser.title')}}
       </button>
     <AddUserForm v-if="showAddUserForm" @close="showAddUserForm = false" />
   </div>

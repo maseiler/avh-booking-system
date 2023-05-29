@@ -31,19 +31,19 @@
         </div>
         <div class="column is-one-quarter">
           <h6 class="title is-5" style="color: #1a9000" v-if="user.Balance < 0">
-            Credit:<br />{{ this.invertBalance(user.Balance) }} €
+            {{$t('generic.credit')}}:<br />{{ this.invertBalance(user.Balance) }} €
           </h6>
           <h6
             class="title is-5"
             style="color: #c10404"
             v-else-if="user.Balance > 0"
           >
-            Debt:<br />{{ user.Balance }} €
+          {{$t('generic.debt')}}:<br />{{ user.Balance }} €
           </h6>
           <h6 class="title is-5" v-else>Debt:<br />{{ user.Balance }} €</h6>
         </div>
         <div class="column is-one-quarter">
-          <button class="button" @click="showModal()">Pay</button>
+          <button class="button" @click="showModal()">{{$t('booking.payment.pay')}}</button>
           <PaymentModal
             v-if="showPaymentModal"
             @close="showPaymentModal = false"

@@ -2,6 +2,8 @@
   <div>
     <div class="tabs">
       <ul>
+        <!-- No internationalisation here because of hardcoded values that should come from the database anyway.
+        ToDo: Fetch Categorys from DB instead of hardcoding -->
         <li :class="[activeTab === 'tab0' ? 'is-active' : '']">
           <a @click="activeTab = 'tab0'">Alle</a>
         </li>

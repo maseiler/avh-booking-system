@@ -4,14 +4,13 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <h1 class="title is-4">Feedback</h1>
+            <h1 class="title is-4">{{ $t("feedback.title") }}</h1>
             <hr />
           </div>
 
           <div class="modal-body">
             <p class="subtitle is-5">
-              Do you have comments, feature requests or found a bug? Please let
-              us know!
+              {{ $t("feedback.subtitle") }}
               <span class="icon">
                 <font-awesome-icon icon="heart" :style="{ color: '#a50303' }" />
               </span>
@@ -21,7 +20,7 @@
                 <input
                   class="input"
                   type="text"
-                  placeholder="Name (optional)"
+                  v-bind:placeholder="$t('feedback.PHName')"
                   v-model="name"
                 />
                 <span class="icon is-small is-left">
@@ -31,7 +30,7 @@
             </div>
             <textarea
               class="textarea is-info is-focused"
-              placeholder="Comment here..."
+              v-bind:placeholder="$t('feedback.PHComment')"
               rows="7"
               v-model="text"
             ></textarea>
@@ -42,13 +41,13 @@
               <div class="level-left">
                 <div class="level-item">
                   <button class="button is-link" @click="submitFeedback">
-                    Submit
+                    {{ $t("generic.submit") }}
                   </button>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <button class="button" @click="cancel">Cancel</button>
+                  <button class="button" @click="cancel">{{ $t("generic.cancel") }}</button>
                 </div>
               </div>
             </div>

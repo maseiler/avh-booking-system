@@ -8,7 +8,7 @@
         <span class="icon is-small">
           <font-awesome-icon icon="bullhorn" />
         </span>
-        <p>Feedback</p>
+        <p>{{ $t("feedback.button") }}</p>
       </button>
     </div>
     <FeedbackModal v-if="showFeedbackModal" @close="showFeedbackModal = false" />

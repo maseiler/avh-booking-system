@@ -4,17 +4,17 @@
       <div class="paymentModal-wrapper big">
         <div class="paymentModal-container big">
           <div class="paymentModal-header big">
-            <h1 class="title is-4">Payment</h1>
+            <h1 class="title is-4">{{$t('booking.payment.title')}}</h1>
             <hr />
           </div>
 
           <div class="paymentModal-body big">
             <p class="subtitle is-4">
-              <b>{{ displayUserName(user) }}</b> has to pay
+              <b>{{ displayUserName(user) }}</b> {{$t('booking.payment.htp')}}
               <b>{{ user.Balance }}€</b>.
             </p>
             <br />
-            <p class="subtitle is-4">Please place the cash in the money box!</p>
+            <p class="subtitle is-4">{{$t('booking.payment.subtitle')}}</p>
             <div class="columns">
               <div class="column is-1"></div>
               <div class="column is-3">
@@ -38,12 +38,12 @@
               </div>
               <div class="column">
                 <button class="button is-success is-fullwidth" @click="payCash">
-                  Cash
+                  {{$t('booking.payment.cash')}}
                 </button>
               </div>
               <div class="column">
                 <button class="button is-link is-fullwidth" @click="payEC">
-                  EC
+                  {{$t('booking.payment.card')}}
                 </button>
               </div>
               <div class="column">
@@ -51,7 +51,7 @@
                   class="button is-danger is-outlined is-fullwidth"
                   @click="cancel"
                 >
-                  Cancel
+                {{$t('generic.cancel')}}
                 </button>
               </div>
               <div class="column is-1"></div>
@@ -79,7 +79,7 @@
               v-if="userBookEntries.LastPayment !== '0001-01-01T00:00:00Z'"
               class="subtitle is-6"
             >
-              Last Payment: {{ printDateTime(userBookEntries.LastPayment) }}
+            {{$t('booking.payment.lastPayment')}}: {{ printDateTime(userBookEntries.LastPayment) }}
             </p>
           </div>
 
@@ -87,11 +87,11 @@
             <table class="table is-hoverable is-striped">
               <thead>
                 <tr>
-                  <th>Timestamp</th>
-                  <th>Item</th>
-                  <th>Amount</th>
-                  <th>Total Price</th>
-                  <th>Comment</th>
+                  <th>{{$t('booking.payment.timestamp')}}</th>
+                  <th>{{$t('item.item')}}</th>
+                  <th>{{$t('cart.amount')}}</th>
+                  <th>{{$t('cart.total')}}</th>
+                  <th>{{$t('generic.comment')}}</th>
                 </tr>
               </thead>
               <tbody>

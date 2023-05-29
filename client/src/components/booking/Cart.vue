@@ -3,9 +3,9 @@
     <table class="table is-fullwidth is-hoverable">
       <thead>
         <tr>
-          <th>Item</th>
-          <th>Price</th>
-          <th>Amount</th>
+          <th>{{ $t("item.item") }}</th>
+          <th>{{ $t("item.price") }}</th>
+          <th>{{ $t("cart.amount") }}</th>
         </tr>
       </thead>
       <tfoot>
@@ -14,7 +14,7 @@
           <th>{{ sum }} €</th>
           <th>
             <button class="button is-success" @click="checkout">
-              Checkout
+              {{ $t("cart.checkout") }}
             </button>
           </th>
         </tr>

@@ -7,7 +7,7 @@
             <icon class="icon is-small is-left">
               <font-awesome-icon icon="star" />
             </icon>
-            Favorites
+            {{ $t("generic.favorites") }}
           </a>
         </li>
         <li :class="[activeTab === 'tab1' ? 'is-active' : '']">
@@ -15,7 +15,7 @@
             <icon class="icon is-small is-left">
               <font-awesome-icon icon="beer" />
             </icon>
-            Alcoholic
+            {{ $t("generic.alcoholic") }}
           </a>
         </li>
         <li :class="[activeTab === 'tab2' ? 'is-active' : '']">
@@ -23,7 +23,7 @@
             <icon class="icon is-small is-left">
               <font-awesome-icon icon="glass-whiskey" />
             </icon>
-            Non-Alcoholic
+            {{ $t("generic.nonAlcoholic") }}
           </a>
         </li>
         <li :class="[activeTab === 'tab3' ? 'is-active' : '']">
@@ -31,7 +31,7 @@
             <icon class="icon is-small is-left">
               <font-awesome-icon icon="utensils" />
             </icon>
-            Food
+            {{ $t("generic.food") }}
           </a>
         </li>
       </ul>

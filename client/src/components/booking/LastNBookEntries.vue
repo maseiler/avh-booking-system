@@ -6,13 +6,12 @@
           <button class="button is-multiline">
             {{ printDateTime(entry.TimeStamp) }}<br />
             <span v-if="entry.ItemID === 0 && entry.PaymentMethod.length > 0">
-              {{ displayUserName(getUserByID(entry.UserID)) }} ~ Payment
+              {{ displayUserName(getUserByID(entry.UserID)) }} ~ {{$t('booking.entries.payment')}}
             </span>
             <span
               v-else-if="entry.ItemID === 0 && entry.Comment.startsWith('Undo')"
             >
-              {{ displayUserName(getUserByID(entry.UserID)) }} ~ Undid book
-              entry
+              {{ displayUserName(getUserByID(entry.UserID)) }} ~ {{$t('booking.entries.undid')}}
             </span>
             <span v-else>
               {{ displayUserName(getUserByID(entry.UserID)) }} ~

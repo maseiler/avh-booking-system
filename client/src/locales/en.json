@@ -16,6 +16,91 @@
     "menuLabel": "Statistics",
     "showBookingsStats":"Book Entries",
     "showFavoriteItemsStats":"Favorite Items"
-
+  },
+  "feedback":{
+    "button": "Feedback",
+    "title": "Feedback",
+    "subtitle": "Do you have comments, feature requests or found a bug? Please let us know!",
+    "PHName": "Name (optional)",
+    "PHComment": "Comment here..."
+  },
+  "generic":{
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "alcoholic":"alcoholic",
+    "nonAlcoholic":"non-Alcoholic",
+    "food":"Food",
+    "favorites":"Favorites",
+    "refresh":"Refresh",
+    "comment":"Comment",
+    "credit":"Credit",
+    "debt":"Debt"
+  },
+  "navigation":{
+    "home":"Home",
+    "booking": "Booking",
+    "statistics": "Statistics"
+  },
+  "notification":{
+    "success":"Success",
+    "error":"Error"
+  },
+  "booking":{
+    "addItem":{
+      "title":"Add new item"
+    },
+    "addUser":{
+      "title":"Add new user"
+    },
+    "search":{
+      "items":"Search Items",
+      "users":"Search Users"
+    },
+    "entries":{
+      "payment":"Payment",
+      "undid":"Undid book entry"
+    },
+    "payment":{
+      "title":"Payment",
+      "htp":"has to pay",
+      "subtitle":"Please place the cash in the money box!",
+      "cash":"Cash",
+      "card":"EC",
+      "lastPayment":"Last Payment",
+      "timestamp":"Timestamp",
+      "recharge":{
+        "title":"Recharge",
+        "sub1":"cannot pay.",
+        "sub2":"Available credit is",
+        "sub3":"€",
+        "addCreditNotice":"To add more credit, enter and pay amount below."
+      },
+      "pay":"Pay"
+    }
+  },
+  "item":{
+    "item":"Item",
+    "name":"Name",
+    "price":"Price",
+    "size":"Size",
+    "unit":"Unit",
+    "unitL":"l",
+    "unitPiece":"Piece",
+    "type":"Type"
+  },
+  "user":{
+    "status":"Status",
+    "nickname":"Nickname",
+    "firstName":"First Name",
+    "lastName":"Last Name",
+    "boatName":"Boat Name",
+    "eMail":"E-Mail",
+    "phoneNumber":"Phone Number",
+    "password":"Password"
+  },
+  "cart":{
+    "amount":"Amount",
+    "checkout":"Checkout",
+    "total":"Total Price"
   }
 }

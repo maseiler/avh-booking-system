@@ -4,7 +4,7 @@
       <icon class="icon is-small">
         <font-awesome-icon icon="redo" />
       </icon>
-      <p>Refresh</p>
+      <p>{{$t('generic.refresh')}}</p>
     </button>
     <br />
     <div

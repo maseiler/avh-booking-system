@@ -18,19 +18,19 @@
         <div class="navbar-start">
           <div class="navbar-item">
             <router-link class="button is-white" v-bind:to="'/'">
-              Home
+              {{ $t("navigation.home") }}
             </router-link>
           </div>
 
           <div class="navbar-item">
             <router-link class="button is-white" v-bind:to="'/booking'">
-              Booking
+              {{ $t("navigation.booking") }}
             </router-link>
           </div>
 
           <div class="navbar-item">
             <router-link class="button is-white" v-bind:to="'/statistics'">
-              Statistics
+              {{ $t("navigation.statistics") }}
             </router-link>
           </div>
         </div>

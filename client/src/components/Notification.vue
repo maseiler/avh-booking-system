@@ -11,9 +11,11 @@
             <header class="card-header">
               <div class="card-header-title">
                 <p v-if="messageType == 'success'" class="title is-4">
-                  Success
+                  {{ $t("notification.success") }}
                 </p>
-                <p v-else class="title is-4">Error</p>
+                <p v-else class="title is-4">
+                  {{ $t("notification.error") }}
+                </p>
               </div>
               <button
                 class="button is-rounded"

@@ -4,18 +4,20 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <h1 class="title is-4">Add new item</h1>
+            <h1 class="title is-4">
+              {{ $t("booking.addItem.title") }}
+              </h1>
             <hr />
           </div>
 
           <div class="modal-body">
             <div class="field">
-              <label class="label">Name</label>
+              <label class="label">{{ $t("item.name") }}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Name"
+                  v-bind:placeholder="$t('item.name')"
                   v-model.lazy="newItem.Name"
                 />
                 <span class="icon is-small is-left">
@@ -25,12 +27,12 @@
             </div>
 
             <div class="field">
-              <label class="label">Price</label>
+              <label class="label">{{ $t("item.price") }}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Price"
+                  v-bind:placeholder="$t('item.price')"
                   v-model.number="newItem.Price"
                 />
                 <span class="icon is-small is-left">
@@ -40,12 +42,12 @@
             </div>
 
             <div class="field">
-              <label class="label">Size</label>
+              <label class="label">{{ $t("item.size") }}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Size"
+                  v-bind:placeholder="$t('item.size')"
                   v-model.number="newItem.Size"
                 />
                 <span class="icon is-small is-left">
@@ -55,27 +57,27 @@
             </div>
 
             <div class="field">
-              <label class="label">Unit</label>
+              <label class="label">{{ $t("item.unit") }}</label>
               <div class="control">
                 <div class="select">
                   <select v-model="newItem.Unit">
-                    <option disabled value>Unit</option>
-                    <option>l</option>
-                    <option>piece</option>
+                    <option disabled value>{{ $t("item.unit") }}</option>
+                    <option>{{ $t("item.unitL") }}</option>
+                    <option>{{ $t("item.unitPiece") }}</option>
                   </select>
                 </div>
               </div>
             </div>
 
             <div class="field">
-              <label class="label">Type</label>
+              <label class="label">{{ $t("item.type") }}</label>
               <div class="control">
                 <div class="select">
                   <select v-model="newItem.Type">
-                    <option disabled value>Type</option>
-                    <option>alcoholic</option>
-                    <option>non-alcoholic</option>
-                    <option>food</option>
+                    <option disabled value>{{ $t("item.type") }}</option>
+                    <option>{{ $t("generic.alcoholic") }}</option>
+                    <option>{{ $t("generic.nonAlcoholic") }}</option>
+                    <option>{{ $t("generic.food") }}</option>
                   </select>
                 </div>
               </div>
@@ -97,14 +99,14 @@
               <div class="level-left">
                 <div class="level-item">
                   <button class="button is-link" @click="submitItem">
-                    Submit
+                    {{ $t("generic.submit") }}
                   </button>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
                   <button class="button is-text" @click="resetAndCloseForm">
-                    Cancel
+                    {{ $t("generic.cancel") }}
                   </button>
                 </div>
               </div>
