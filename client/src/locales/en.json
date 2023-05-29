@@ -6,16 +6,58 @@
   },
   "admin":{
     "menuLabel": "Administration",
-    "userSettings": "User Settings",
-    "itemSettings": "Item Settings",
-    "bookingSettings": "Booking Settings",
-    "otherSettings": "Other Settings",
-    "feedbackList": "Feedback"
+    "loginTitle":"Login to Admin",
+    "userSettings":{
+      "menuLabel":"User Settings",
+      "deleteUserTitle":"Delete user",
+      "selectFirst":"Select user first.",
+      "deleteShure":"Do you really want to delete",
+      "add":"Add User",
+      "modify":"Modify user"
+    },
+    "itemSettings":{
+      "menuLabel": "Item Settings",
+      "deleteItemTitle":"Delete Item",
+      "selectFirst":"Select item first.",
+      "deleteShure":"Do you really want to delete",
+      "add":"Add Item",
+      "modify":"Modify Item"
+    },
+    "bookingSettings":{
+      "menuLabel":"Booking Settings",
+      "getBookEntries":"Get Book Entries",
+      "lastN":"Last N",
+      "ofUser":"Of User",
+      "ofItem":"Of Item",
+      "userPayments":"User Payments",
+      "undoEntry":"Undo Entry",
+      "delEntry":"Delete Entry"
+    },
+    "otherSettings":{
+      "menuLabel": "Other Settings"
+    },
+    "feedbackList": "Feedback",
+    "addUser":{
+      "title":"Add new User"
+    },
+    "password":{
+      "old":"Old password",
+      "new":"New password",
+      "confirm":"Confirm new password",
+      "change":"Change Password"
+    }
   },
   "statistics":{
     "menuLabel": "Statistics",
     "showBookingsStats":"Book Entries",
-    "showFavoriteItemsStats":"Favorite Items"
+    "showFavoriteItemsStats":"Favorite Items",
+    "numDays":"# Days",
+    "createChart":"Create Chart",
+    "selectDays":"Select number of last days you want to display",
+    "clickToDisEn":"Click on item to disable/enable",
+    "from":"From",
+    "to":"To",
+    "n":"N"
   },
   "feedback":{
     "button": "Feedback",
@@ -34,7 +76,16 @@
     "refresh":"Refresh",
     "comment":"Comment",
     "credit":"Credit",
-    "debt":"Debt"
+    "debt":"Debt",
+    "balance":"Balance",
+    "max":"Max",
+    "id":"ID",
+    "download":"Download",
+    "change":"Change",
+    "delete":"Delete",
+    "name":"Name",
+    "text":"Text",
+    "modify":"Modify"
   },
   "navigation":{
     "home":"Home",
@@ -75,7 +126,8 @@
         "sub3":"€",
         "addCreditNotice":"To add more credit, enter and pay amount below."
       },
-      "pay":"Pay"
+      "pay":"Pay",
+      "method":"Payment Method"
     }
   },
   "item":{
@@ -86,9 +138,11 @@
     "unit":"Unit",
     "unitL":"l",
     "unitPiece":"Piece",
-    "type":"Type"
+    "type":"Type",
+    "enabled":"Enabled"
   },
   "user":{
+    "user":"User",
     "status":"Status",
     "nickname":"Nickname",
     "firstName":"First Name",

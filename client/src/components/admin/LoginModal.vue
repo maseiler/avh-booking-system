@@ -5,7 +5,7 @@
         <div class="modal-wrapper">
           <div class="modal-container">
             <div class="modal-header">
-              <h1 class="title is-4">Login to Admin</h1>
+              <h1 class="title is-4">{{$t('admin.loginTitle')}}</h1>
             </div>
             <div class="modal-body">
               <div class="field">
@@ -13,7 +13,7 @@
                   <input
                     class="input"
                     type="password"
-                    placeholder="Password"
+                    v-bind:placeholder="$t('user.password')"
                     v-model="password"
                     @keyup.enter="login"
                   />
@@ -39,13 +39,13 @@
                 <div class="level-left">
                   <div class="level-item">
                     <button class="button is-link" @click="login">
-                      Submit
+                      {{$t('generic.submit')}}
                     </button>
                   </div>
                 </div>
                 <div class="level-right">
                   <div class="level-item">
-                    <button class="button" @click="cancel">Cancel</button>
+                    <button class="button" @click="cancel">{{$t('generic.cancel')}}</button>
                   </div>
                 </div>
               </div>

@@ -7,20 +7,20 @@
           <input
             class="input"
             type="number"
-            placeholder="# Days"
+            v-bind:placeholder="$t('statistics.numDays')"
             style="width: 6em; text-align: right"
             v-model="days"
           />
-          <Button class="button is-link" @click="fillData">Create Chart</Button>
+          <Button class="button is-link" @click="fillData">{{$t('statistics.createChart')}}</Button>
           <p class="p has-text-grey-light">
-            &nbsp;&nbsp;Select number of last days you want to display
+            &nbsp;&nbsp;{{$t('statistics.selectDays')}}
           </p>
         </div>
       </div>
     </div>
     <div clas="level-item has-text-centered">
       <p class="p has-text-grey-light">
-        &nbsp;&nbsp;Click on item to disable/enable
+        &nbsp;&nbsp;{{$t('statistics.clickToDisEn')}}
       </p>
     </div>
     <div clas="level-item"></div>

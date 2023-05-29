@@ -10,28 +10,28 @@
                 <a
                   @click="showSetting('userSettings')"
                   :class="[showUserSettings ? 'is-active' : '']"
-                  >{{ $t("admin.userSettings") }}</a
+                  >{{ $t("admin.userSettings.menuLabel") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('itemSettings')"
                   :class="[showItemSettings ? 'is-active' : '']"
-                  >{{ $t("admin.itemSettings") }}</a
+                  >{{ $t("admin.itemSettings.menuLabel") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('bookingSettings')"
                   :class="[showBookingSettings ? 'is-active' : '']"
-                  >{{ $t("admin.bookingSettings") }}</a
+                  >{{ $t("admin.bookingSettings.menuLabel") }}</a
                 >
               </li>
               <li>
                 <a
                   @click="showSetting('otherSettings')"
                   :class="[showOtherSettings ? 'is-active' : '']"
-                  >{{ $t("admin.otherSettings") }}</a
+                  >{{ $t("admin.otherSettings.menuLabel") }}</a
                 >
               </li>
               <li>

@@ -12,7 +12,7 @@
                     class="button is-link is-fullwidth"
                     @click="showChangePasswordForm = true"
                   >
-                    Change Password
+                  {{$t('admin.password.change')}}
                   </button>
                 </div>
               </div>

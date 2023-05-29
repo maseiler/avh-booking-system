@@ -15,21 +15,21 @@
         <article class="tile is-child">
           <div class="box field is-grouped">
             <button class="button is-link is-1" @click="showAddItemForm = true">
-              Add Item
+              {{$t('admin.itemSettings.add')}}
             </button>
             &nbsp;
             <button
               class="button is-link is-1"
               @click="showModifyItemForm = true"
             >
-              Modify Item
+            {{$t('admin.itemSettings.modify')}}
             </button>
             &nbsp;
             <button
               class="button is-link is-1"
               @click="showDeleteItemForm = true"
             >
-              Delete Item
+            {{$t('admin.itemSettings.deleteItemTitle')}}
             </button>
           </div>
         </article>

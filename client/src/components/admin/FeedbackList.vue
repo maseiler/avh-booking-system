@@ -14,10 +14,10 @@
             <table class="table is-hoverable is-striped">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Timestamp</th>
-                  <th>Name</th>
-                  <th>Text</th>
+                  <th>{{$t('generic.id')}}</th>
+                  <th>{{$t('booking.payment.timestamp')}}</th>
+                  <th>{{$t('generic.name')}}</th>
+                  <th>{{$t('generic.text')}}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -44,7 +44,7 @@
                       class="button is-link"
                       @click="deleteEntry(entry.ID)"
                     >
-                      Delete
+                    {{$t('generic.delete')}}
                     </button>
                   </td>
                 </tr>

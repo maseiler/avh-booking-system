@@ -9,7 +9,7 @@
             <columns class="columns">
               <div class="column is-2">
                 <button class="button is-link" @click="getBookEntries">
-                  Get Book Entries
+                  {{$t('admin.bookingSettings.getBookEntries')}}
                 </button>
               </div>
               <div class="column" align="left">
@@ -17,28 +17,28 @@
                   class="button is-link is-outlined"
                   @click="option = 'optLastN'"
                 >
-                  Last N
+                {{$t('admin.bookingSettings.lastN')}}
                 </button>
                 &nbsp;
                 <button
                   class="button is-link is-outlined"
                   @click="option = 'optFromUser'"
                 >
-                  Of User
+                {{$t('admin.bookingSettings.ofUser')}}
                 </button>
                 &nbsp;
                 <button
                   class="button is-link is-outlined"
                   @click="option = 'optFromItem'"
                 >
-                  Of Item
+                {{$t('admin.bookingSettings.ofItem')}}
                 </button>
                 &nbsp;
                 <button
                   class="button is-link is-outlined"
                   @click="option = 'optUserPayments'"
                 >
-                  User Payments
+                {{$t('admin.bookingSettings.userPayments')}}
                 </button>
               </div>
               <div class="column is-1">
@@ -46,20 +46,20 @@
                   class="button is-warning is-outlined"
                   v-on:click="downloadCsv"
                 >
-                  Download
+                {{$t('generic.download')}}
                 </button>
               </div>
               <div class="column">
                 &nbsp;
                 <button class="button is-danger is-outlined" @click="undoEntry">
-                  Undo Entry
+                  {{$t('admin.bookingSettings.undoEntry')}}
                 </button>
                 &nbsp;
                 <button
                   class="button is-danger is-outlined"
                   @click="deleteEntry"
                 >
-                  Delete Entry
+                {{$t('admin.bookingSettings.delEntry')}}
                 </button>
               </div>
             </columns>
@@ -78,7 +78,7 @@
                       <input
                         class="input is-info"
                         type="date"
-                        placeholder="From"
+                        v-bind:placeholder="$t('statistics.from')"
                         v-model="from"
                       />
                     </div>
@@ -88,7 +88,7 @@
                         <input
                           class="input is-info"
                           type="date"
-                          placeholder="To"
+                          v-bind:placeholder="$t('statistics.to')"
                           v-model="to"
                         />
                       </div>
@@ -102,7 +102,7 @@
                     <input
                       class="input is-info"
                       type="number"
-                      placeholder="N"
+                      v-bind:placeholder="$t('statistics.n')"
                       v-model="n"
                       style="width: 20em"
                     />

@@ -3,14 +3,14 @@
     <table class="table is-hoverable is-striped is-fullwidth">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Timestamp</th>
-          <th>User</th>
-          <th>Item</th>
-          <th>Amount</th>
-          <th style="text-align: right">Price</th>
-          <th>Comment</th>
-          <th>Payment Method</th>
+          <th>{{$t('generic.id')}}</th>
+          <th>{{$t('booking.payment.timestamp')}}</th>
+          <th>{{$t('user.user')}}</th>
+          <th>{{$t('item.item')}}</th>
+          <th>{{$t('cart.amount')}}</th>
+          <th style="text-align: right">{{$t('item.price')}}</th>
+          <th>{{$t('generic.comment')}}</th>
+          <th>{{$t('booking.payment.method')}}</th>
           <th></th>
         </tr>
       </thead>

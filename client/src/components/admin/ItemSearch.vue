@@ -7,7 +7,7 @@
           <input
             class="input"
             type="text"
-            placeholder="Search items"
+            v-bind:placeholder="$t('booking.search.items')"
             v-model="search"
             v-on:keyup="searchItems"
           />

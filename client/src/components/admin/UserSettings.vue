@@ -21,21 +21,21 @@
               class="button is-link is-1"
               @click="showAddUserFormAdmin = true"
             >
-              Add User
+            {{$t('admin.userSettings.add')}}
             </button>
             &nbsp;
             <button
               class="button is-link is-1"
               @click="showModifyUserForm = true"
             >
-              Modify User
+            {{$t('admin.userSettings.modify')}}
             </button>
             &nbsp;
             <button
               class="button is-link is-1"
               @click="showDeleteUserForm = true"
             >
-              Delete User
+            {{$t('admin.userSettings.deleteUserTitle')}}
             </button>
           </div>
         </article>

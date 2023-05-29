@@ -4,7 +4,7 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <h1 class="title is-4">Delete Item</h1>
+            <h1 class="title is-4">{{$t('admin.itemSettings.deleteItemTitle')}}</h1>
             <hr />
           </div>
 
@@ -18,13 +18,13 @@
                   <p class="icon is-small is-left">
                     <font-awesome-icon icon="exclamation" size="lg" />
                   </p>
-                  <p>Select item first.</p>
+                  <p>{{$t('admin.itemSettings.selectFirst')}}</p>
                 </div>
               </div>
             </article>
             <div v-else>
               <p>
-                Do you really want to delete
+                {{$t('admin.itemSettings.deleteShure')}}
                 <b>{{ displayItem(item) }}</b
                 >?
               </p>
@@ -35,11 +35,11 @@
             <div class="field is-grouped">
               <div class="control" v-if="Object.keys(item).length !== 0">
                 <button class="button is-link" @click="deleteItem">
-                  Delete
+                  {{$t('generic.delete')}}
                 </button>
               </div>
               <div class="control">
-                <button class="button" @click="closeForm">Cancel</button>
+                <button class="button" @click="closeForm">{{$t('generic.cancel')}}</button>
               </div>
             </div>
           </div>

@@ -3,12 +3,12 @@
     <table class="table is-hoverable is-striped">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th style="text-align: right">Size</th>
-          <th>Unit</th>
-          <th style="text-align: right">Price</th>
-          <th>Enabled</th>
+          <th>{{$t('generic.id')}}</th>
+          <th>{{$t('item.name')}}</th>
+          <th style="text-align: right">{{$t('item.size')}}</th>
+          <th>{{$t('item.unit')}}</th>
+          <th style="text-align: right">{{$t('item.price')}}</th>
+          <th>{{$t('item.enabled')}}</th>
         </tr>
       </thead>
       <tbody>

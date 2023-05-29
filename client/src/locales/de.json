@@ -5,17 +5,59 @@
     "slogan": "Vivat Crescat Floreat Hütte"
   },
   "admin":{
-    "userSettings": "Benutzereinstellungen",
-    "itemSettings": "Wareneinstellungen",
-    "bookingSettings": "Buchungseinstellungen",
-    "otherSettings": "Sonstige Einstellungen",
+    "menuLabel": "Administration",
+    "loginTitle":"Als Admin einloggen",
+    "userSettings":{
+      "menuLabel":"Benutzereinstellungen",
+      "deleteUserTitle":"Benutzer löschen",
+      "selectFirst":"Zuerst Nutzer auswählen",
+      "deleteShure":"Möchtest du das wirklich Löschen?",
+      "add":"Benutzer hinzufügen",
+      "modify":"Benutzer bearbeiten"
+    },
+    "itemSettings":{
+      "menuLabel": "Wareneinstellungen",
+      "deleteItemTitle":"Ware Löschen",
+      "selectFirst":"Zuerst Elemet auswählen.",
+      "deleteShure":"Möchtest du das wirklich Löschen?",
+      "add":"Ware hinzufügen",
+      "modify":"Ware bearbeiten"
+    },
+    "bookingSettings":{
+      "menuLabel":"Buchungseinstellungen",
+      "getBookEntries":"Buchungseinträge abfragen",
+      "lastN":"Letzte N",
+      "ofUser":"Von Benutzer",
+      "ofItem":"Von Ware",
+      "userPayments":"Benutzer Zahlungen",
+      "undoEntry":"Eintrag zurücknehmen",
+      "delEntry":"Eintrag löschen"
+    },
+    "otherSettings":{
+      "menuLabel": "Sonstige Einstellungen"
+    },
     "feedbackList": "Rückmeldungen",
-    "menuLabel": "Administration"
+    "addUser":{
+      "title":"Neuen Benutzer hinzufügen"
+    },
+    "password":{
+      "old":"Altes Passwort",
+      "new":"Neues Passwort",
+      "confirm":"Neues Passwort bestätigen",
+      "change":"Passwort ändern"
+    }
   },
   "statistics":{
     "menuLabel": "Statistiken",
     "showBookingsStats":"Buchungseinträge",
-    "showFavoriteItemsStats":"Lieblingswaren"
+    "showFavoriteItemsStats":"Lieblingswaren",
+    "numDays":"# Tage",
+    "createChart":"Erzeuge Diagramm",
+    "selectDays":"Wähle die Anzahl an vergangenen Tagen, die angezeigt werden sollen",
+    "clickToDisEn":"Klicke auf eine Ware um sie zu aktivieren oder deaktivieren",
+    "from":"Von",
+    "to":"Bis",
+    "n":"N"
   },
   "feedback":{
     "button": "Rückmeldung",
@@ -34,7 +76,16 @@
     "refresh":"Neu laden",
     "comment":"Kommentar",
     "credit":"Guthaben",
-    "debt":"Schulden"
+    "debt":"Schulden",
+    "balance":"Saldo",
+    "max":"Max",
+    "id":"ID",
+    "download":"Herunterladen",
+    "change":"Ändern",
+    "delete":"Löschen",
+    "name":"Name",
+    "text":"Text",
+    "modify":"Ändern"
   },
   "navigation":{
     "home":"Start",
@@ -75,7 +126,8 @@
         "sub3":"€",
         "addCreditNotice":"Um Guthaben aufzuladen, Betrag unten eingeben und bezahlen."
       },
-      "pay":"Bezahlen"
+      "pay":"Bezahlen",
+      "method":"Zahlungsmethode"
     }
   },
   "item":{
@@ -86,9 +138,11 @@
     "unit":"Einheit",
     "unitL":"l",
     "unitPiece":"Stück",
-    "type":"Typ"
+    "type":"Typ",
+    "enabled":"Aktiviert"
   },
   "user":{
+    "user":"Benutzer",
     "status":"Status",
     "nickname":"Biername",
     "firstName":"Vorname",

@@ -4,18 +4,18 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <h1 class="title is-4">Add new user</h1>
+            <h1 class="title is-4">{{$t('admin.addUser.title')}}</h1>
             <hr />
           </div>
 
           <div class="modal-body">
             <div class="field">
-              <label class="label">Biername</label>
+              <label class="label">{{$t('user.nickname')}}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Biername"
+                  v-bind:placeholder="$t('user.nickname')"
                   v-model.lazy="newUser.BierName"
                 />
                 <span class="icon is-small is-left">
@@ -25,12 +25,12 @@
             </div>
 
             <div class="field">
-              <label class="label">First name</label>
+              <label class="label">{{$t('user.firstName')}}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="First name"
+                  v-bind:placeholder="$t('user.firstName')"
                   v-model.lazy="newUser.FirstName"
                 />
                 <span class="icon is-small is-left">
@@ -40,12 +40,12 @@
             </div>
 
             <div class="field">
-              <label class="label">Last name</label>
+              <label class="label">{{$t('user.lastName')}}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Last name"
+                  v-bind:placeholder="$t('user.lastName')"
                   v-model.lazy="newUser.LastName"
                 />
                 <span class="icon is-small is-left">
@@ -55,12 +55,12 @@
             </div>
 
             <div v-if="newUser.Status == 'Steganleger'" class="field">
-              <label class="label">Boat Name</label>
+              <label class="label">{{$t('user.boatName')}}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Boat Name"
+                  v-bind:placeholder="$t('user.boatName')"
                   v-model.lazy="newUser.BoatName"
                 />
                 <span class="icon is-small is-left">
@@ -70,12 +70,12 @@
             </div>
 
             <div class="field">
-              <label class="label">Email</label>
+              <label class="label">{{$t('user.eMail')}}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="email"
-                  placeholder="Email Address"
+                  v-bind:placeholder="$t('user.eMail')"
                   v-model.lazy="newUser.Email"
                 />
                 <span class="icon is-small is-left">
@@ -85,12 +85,12 @@
             </div>
 
             <div class="field">
-              <label class="label">Phone Number</label>
+              <label class="label">{{$t('user.phoneNumber')}}</label>
               <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
-                  placeholder="Phone Number"
+                  v-bind:placeholder="$t('user.phoneNumber')"
                   v-model.lazy="newUser.Phone"
                 />
                 <span class="icon is-small is-left">
@@ -100,11 +100,12 @@
             </div>
 
             <div class="field">
-              <label class="label">Status</label>
+              <label class="label">{{$t('user.status')}}</label>
               <div class="control">
                 <div class="select">
                   <select v-model="newUser.Status">
-                    <option disabled value>Status</option>
+                    <option disabled value>{{$t('user.status')}}</option>
+                    <!-- ToDo: Fetch Status from DB instead of hard code -->
                     <option>Aktiv B</option>
                     <option>Aktiv KA</option>
                     <option>AH</option>
@@ -117,12 +118,12 @@
           </div>
 
           <div class="field">
-            <label class="label">Balance</label>
+            <label class="label">{{$t('generic.balance')}}</label>
             <div class="control has-icons-left">
               <input
                 class="input"
                 type="text"
-                placeholder="Balance"
+                v-bind:placeholder="$t('generic.balance')"
                 v-model.number="newUser.Balance"
               />
               <span class="icon is-small is-left">
@@ -132,12 +133,12 @@
           </div>
 
           <div class="field">
-            <label class="label">Max Debt</label>
+            <label class="label">{{$t('generic.max')}} {{$t('generic.debt')}}</label>
             <div class="control has-icons-left">
               <input
                 class="input"
                 type="text"
-                placeholder="Max Debt"
+                v-bind:placeholder="`${$t('generic.max')} ${$t('generic.debt')}`"
                 v-model.number="newUser.MaxDebt"
               />
               <span class="icon is-small is-left">
@@ -161,14 +162,14 @@
               <div class="level-left">
                 <div class="level-item">
                   <button class="button is-link" @click="submitUser">
-                    Submit
+                    {{$t('generic.submit')}}
                   </button>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
                   <button class="button is-text" @click="resetAndCloseForm">
-                    Cancel
+                    {{$t('generic.cancel')}}
                   </button>
                 </div>
               </div>
