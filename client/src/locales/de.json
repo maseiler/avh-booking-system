@@ -156,5 +156,32 @@
     "amount":"Anzahl",
     "checkout":"Einbuchen",
     "total":"Summe"
+  },
+  "messages":{
+    "success":{
+      "newUserAdded":"Neuer Benutzer wurde hinzugefügt",
+      "newItemAdded":"Neues Item wurde hinzugefügt",
+      "checkoutFrom":"Buchung von",
+      "paid":"bezahlte",
+      "newFeedbackAdded":"Dankeschön! ❤",
+      "passwordChangedAdmin":"Passwort geändert. \n \n Bitte stelle sicher, dass alle verantwortlichen Personen das neue Passwort kennen.",
+      "deletedItem":"Gelöschte Ware",
+      "deleteUser":"Gelöschter Benutzer",
+      "deleteFeedback":"Feedback Eintrag gelöscht.",
+      "modifiedItem":"Bearbeitete Ware",
+      "modifiedUser":"Bearbeiteter Benutzer"
+    },
+    "failure":{
+      "noFavoriteItems":"Es konnten keine Favoriten abgerufen werden.",
+      "negativePaymentNotAlowed":"Zahlungen die kleiner oder gleich 0 sind, sind nicht erlaubt.",
+      "error":"Error",
+      "wrongPassword":"Falsches Passwort?",
+      "noDebts":"Es konnten keine Schulden abgerufen werden.",
+      "submitFeedback":"Senden des Feedacks war nicht erfolgreich.",
+      "passwordNoMatch":"Die neuen Passwörter stimmen nicht überein.",
+      "itemDelete":"Ware konnte nicht gelöscht werden.",
+      "userDelete":"Benutzer konnte nicht gelöscht werden.",
+      "feedbackDelete":"Feedback Eintrag konnte nicht gelöscht werden."
+    }
   }
 }

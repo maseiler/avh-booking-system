@@ -192,15 +192,13 @@ export default {
       this.$http
         .post("addUser", this.newUser)
         .then(() => {
-          var message = "".concat(
-            "Added new user: ",
-            this.displayUserNameFull(this.newUser)
-          );
+          let message = `${this.$t("messages.success.newUserAdded")}: ${this.displayUserNameFull(this.newUser)}`;
           this.resetAndCloseForm();
           this.$store.commit("getUsers");
           this.$responseEventBus.$emit("successMessage", message);
         })
         .catch((response) => {
+          //ToDo: Internationalize this message
           this.validationError = response.data;
         });
     },

@@ -138,13 +138,11 @@ export default {
       await this.$http
         .post("checkout", packedCart)
         .then(() => {
-          var message = "".concat(
-            "Checkout from ",
-            this.displayUserName(this.user)
-          );
+          let message = `${this.$t("messages.success.checkoutFrom")}: ${this.displayUserName(this.user)}`;
           this.$responseEventBus.$emit("successMessage", message);
         })
         .catch((response) => {
+          //ToDo: Failure Message internationalisation
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
       await this.emptyCart();

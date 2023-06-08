@@ -97,7 +97,7 @@ export default {
           console.log(e);
           this.$responseEventBus.$emit(
             "failureMessage",
-            "Couldn't get favorite items."
+            this.$t('messages.failure.noFavoriteItems')
           );
         });
       this.favoriteItemDict = helper.getFavoriteItemsAsDict(result);

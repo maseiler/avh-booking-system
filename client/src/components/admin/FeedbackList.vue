@@ -76,14 +76,14 @@ export default {
         .then(() => {
           this.$responseEventBus.$emit(
             "successMessage",
-            "Deleted feedback entry."
+            this.$t('messages.success.deleteFeedback')
           );
           this.$store.commit("getFeedbackList");
         })
         .catch(() => {
           this.$responseEventBus.$emit(
             "failureMessage",
-            "Couldn't delete feedback."
+            this.$t('messages.failure.feedbackDelete')
           );
         });
     },

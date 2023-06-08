@@ -62,14 +62,15 @@ export default {
           .then(() => {
             this.$responseEventBus.$emit(
               "successMessage",
-              "Changed password.\n\nPlease make sure that all responsible persons know the new password."
+              this.$t('messages.success.passwordChangedAdmin')
             );
           })
           .catch((response) => {
+            //ToDo: Internationalize this failure Message
             this.$responseEventBus.$emit("failureMessage", response.body);
           });
       } else {
-        this.validationError = "New passwords do not match!";
+        this.validationError = this.$t('messages.failure.passwordNoMatch');
       }
     },
   },
