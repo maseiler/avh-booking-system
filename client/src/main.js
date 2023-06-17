@@ -1,42 +1,102 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
-import VueResource from 'vue-resource'
-import store from './store.js'
-import mixin from './mixin.js'
-import router from './router.js'
-import Chart from 'chart.js';
 
-// font awesome
+// Router
+import { createRouter, createWebHashHistory } from 'vue-router'
+import Home from './pages/HomePage.vue'
+import Booking from './pages/BookingPage.vue'
+
+const routes = [
+  { path: '/', name: 'Home', component: Home },
+  { path: '/booking', component: Booking, name: 'booking' },
+]
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: routes,
+})
+
+// Stores
+import { createPinia } from 'pinia'
+
+// Icons
+// TODO refactor to dedicated file
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
-
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
-  faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
-  faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,
-  faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock
+  faUser,
+  faUserCircle,
+  faPhone,
+  faBeer,
+  faEnvelope,
+  faUserSecret,
+  faEuroSign,
+  faSearch,
+  faExclamation,
+  faMoneyBill,
+  faFont,
+  faExpandArrowsAlt,
+  faInfoCircle,
+  faTrash,
+  faCreditCard,
+  faBalanceScale,
+  faFingerprint,
+  faUtensils,
+  faStar,
+  faAnchor,
+  faGlassWhiskey,
+  faBullhorn,
+  faHeart,
+  faLock,
+  faRedo,
+  faSadTear,
+  faTimes,
+  faCheckCircle,
+  faMoon,
+  faSun,
+  faPalette,
+  faClock,
 } from '@fortawesome/free-solid-svg-icons'
 
-import './registerServiceWorker'
+library.add(
+  faUser,
+  faUserCircle,
+  faPhone,
+  faBeer,
+  faEnvelope,
+  faUserSecret,
+  faEuroSign,
+  faSearch,
+  faExclamation,
+  faMoneyBill,
+  faFont,
+  faExpandArrowsAlt,
+  faInfoCircle,
+  faTrash,
+  faCreditCard,
+  faBalanceScale,
+  faFingerprint,
+  faUtensils,
+  faStar,
+  faAnchor,
+  faGlassWhiskey,
+  faBullhorn,
+  faHeart,
+  faLock,
+  faRedo,
+  faSadTear,
+  faTimes,
+  faCheckCircle,
+  faMoon,
+  faSun,
+  faPalette,
+  faClock
+)
 
-library.add(faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
-  faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,
-  faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock)
+// import CSS styles
+import './styles/main.scss'
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-Vue.component('font-awesome-layers', FontAwesomeLayers)
-Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
-
-
-Vue.use(VueResource)
-
-require("./assets/main.scss")
-
-Vue.config.devtools = true
-
-new Vue({
-  render: h => h(App),
-  store,
-  router,
-  mixin,
-  Chart
-}).$mount('#app')
+createApp(App)
+  .use(router)
+  .use(createPinia())
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .mount('#app')

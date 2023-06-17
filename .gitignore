@@ -10,8 +10,10 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
 # miscellaneous
 .vscode
+.idea
 
 # Application specifc
 client/dist/
