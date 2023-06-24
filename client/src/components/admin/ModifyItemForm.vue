@@ -140,21 +140,19 @@ export default {
     modifyItem() {
       //if(this.item.Enabled == true){this.item.Enabled = 1} else if(this.item.Enabled == false) {this.item.Enabled = 0}
       if (Object.keys(this.item).length === 0) {
-        this.validationError = "Please select an item first.";
+        this.validationError = this.$t('admin.itemSettings.selectFirst');
       } else {
         this.$http
           .post("modifyItem", this.item)
           .then(() => {
-            var message = "".concat(
-              "Modified item: ",
-              this.displayItem(this.item)
-            );
+            let message = `${this.$t('messages.success.modifiedItem')}: ${this.displayItem(this.item)}`;
             this.closeForm();
             this.$store.commit("getItems");
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch((response) => {
             if (response.data !== undefined) {
+              //ToDo: Internationalize this failure Message
               this.validationError = response.data;
             } else {
               this.$store.commit("getItems");

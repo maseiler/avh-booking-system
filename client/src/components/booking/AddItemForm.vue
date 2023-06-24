@@ -137,15 +137,13 @@ export default {
       this.$http
         .post("addItem", this.newItem)
         .then(() => {
-          var message = "".concat(
-            "Added new item: ",
-            this.displayItem(this.newItem)
-          );
+          let message = `${this.$t("messages.success.newItemAdded")}: ${this.displayItem(this.newItem)}`;
           this.resetAndCloseForm();
           this.$store.commit("getItems");
           this.$responseEventBus.$emit("successMessage", message);
         })
         .catch((response) => {
+          //ToDo: Internationalize this message
           this.validationError = response.data;
         });
     },

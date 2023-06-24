@@ -70,10 +70,7 @@ export default {
         this.$http
           .post("deleteUser", this.user)
           .then(() => {
-            var message = "".concat(
-              "Deleted user: ",
-              this.displayUserNameFull(this.user)
-            );
+            let message = `${this.$t('messages.success.deleteUser')}: ${this.displayUserNameFull(this.user)}`;
             this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");
             this.closeForm();
@@ -82,7 +79,7 @@ export default {
           .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Couldn't delete user."
+              this.$t('messages.failure.userDelete')
             );
           });
       }

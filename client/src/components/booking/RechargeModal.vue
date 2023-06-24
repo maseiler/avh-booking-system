@@ -150,7 +150,7 @@ export default {
         this.$emit("close");
         this.$responseEventBus.$emit(
           "failureMessage",
-          "Payments smaller or equal 0 are not allowed"
+          this.$t('messages.failure.negativePaymentNotAllowed')
         );
         return;
       }
@@ -171,12 +171,8 @@ export default {
           PaymentMethod: this.paymentMethod,
         })
         .then(() => {
-          var message = "".concat(
-            this.displayUserName(this.user),
-            " paid ",
-            this.newCredit,
-            " €"
-          );
+          //ToDo: remove currency Symbol and use internationalisation on payment
+          let message = `${this.displayUserName(this.user)} ${this.$t('messages.success.paid')} ${this.newCredit}€`;
           this.$store.commit("getLastNBookEntries", 5);
           this.$store.commit("getUsers");
           this.$store.commit("selectUser", {});
@@ -184,6 +180,7 @@ export default {
           this.$responseEventBus.$emit("successMessage", message);
         })
         .catch((response) => {
+          //ToDo: internationalize this failure message
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
@@ -201,7 +198,7 @@ export default {
           this.submitPayment();
         })
         .catch(() => {
-          this.validationError = "Error. Wrong password?";
+          this.validationError = `${this.$t('messages.failure.error')}. ${this.$t('messages.failure.wrongPassword')}`;
         });
     },
     cancel() {
@@ -215,7 +212,7 @@ export default {
         this.userBookEntries = response.body;
       })
       .catch(() => {
-        this.$responseEventBus.$emit("failureMessage", "Couldn't get debts.");
+        this.$responseEventBus.$emit("failureMessage", this.$t('messages.failure.noDebts'));
       });
   },
 };

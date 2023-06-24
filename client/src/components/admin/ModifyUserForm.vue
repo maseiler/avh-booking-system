@@ -212,21 +212,19 @@ export default {
   methods: {
     modifyUser() {
       if (Object.keys(this.user).length === 0) {
-        this.validationError = "Please select a user first.";
+        this.validationError = this.$t('admin.userSettings.selectFirst');
       } else {
         this.$http
           .post("modifyUser", this.user)
           .then(() => {
-            var message = "".concat(
-              "Modified user: ",
-              this.displayUserNameFull(this.user)
-            );
+            let message = `${this.$t('messages.success.modifiedUser')}: ${this.displayUserNameFull(this.user)}`;
             this.$store.commit("selectUser", {});
             this.$store.commit("getUsers");
             this.closeForm();
             this.$responseEventBus.$emit("successMessage", message);
           })
           .catch((response) => {
+            //ToDo: internationalize this failure message
             this.validationError = response.body;
           });
       }

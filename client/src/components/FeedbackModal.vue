@@ -73,12 +73,12 @@ export default {
         .post("addFeedback", feedback)
         .then(() => {
           this.$store.commit("getFeedbackList");
-          this.$responseEventBus.$emit("successMessage", "Thank you! <3");
+          this.$responseEventBus.$emit("successMessage", this.$t('messages.success.newFeedbackAdded'));
         })
         .catch(() => {
           this.$responseEventBus.$emit(
             "failureMessage",
-            "Couldn't submit feedback."
+            this.$t('submitFeedback')
           );
         });
       this.resetData();

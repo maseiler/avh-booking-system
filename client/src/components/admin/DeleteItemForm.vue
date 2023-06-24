@@ -59,15 +59,12 @@ export default {
   methods: {
     deleteItem() {
       if (Object.keys(this.item).length === 0) {
-        this.error = "Please select an item first.";
+        this.error = this.$t('admin.itemSettings.selectFirst');
       } else {
         this.$http
           .post("deleteItem", this.item)
           .then(() => {
-            var message = "".concat(
-              "Deleted item: ",
-              this.displayItem(this.item)
-            );
+            let message = `${this.$t('deletedItem')}: ${this.displayItem(this.item)}`;
             this.closeForm();
             this.$store.commit("getItems");
             this.$store.commit("selectSingleItem", {});
@@ -76,7 +73,7 @@ export default {
           .catch(() => {
             this.$responseEventBus.$emit(
               "failureMessage",
-              "Couldn't delete item."
+              this.$t('messages.failure.itemDelete')
             );
           });
       }

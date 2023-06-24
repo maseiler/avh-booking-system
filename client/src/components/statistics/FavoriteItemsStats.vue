@@ -64,6 +64,7 @@ export default {
           this.loaded = true;
         })
         .catch(response => {
+          //ToDo: Internationalize failure message
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },

@@ -156,5 +156,32 @@
     "amount":"Amount",
     "checkout":"Checkout",
     "total":"Total Price"
+  },
+  "messages":{
+    "success":{
+      "newUserAdded":"Added new user",
+      "newItemAdded":"Added new item",
+      "checkoutFrom":"Checkout from",
+      "paid":"paid",
+      "newFeedbackAdded":"Thank you! <3",
+      "passwordChangedAdmin":"Changed password.\n\nPlease make sure that all responsible persons know the new password.",
+      "deletedItem":"Deleted item",
+      "deleteUser":"Deleted user",
+      "deleteFeedback":"Deleted feedback entry.",
+      "modifiedItem":"Modified item",
+      "modifiedUser":"Modified user"
+    },
+    "failure":{
+      "noFavoriteItems":"Couldn't get favorite items.",
+      "negativePaymentNotAlowed":"Payments smaller or equal 0 are not allowed",
+      "error":"Error",
+      "wrongPassword":"Wrong password?",
+      "noDebts":"Couldn't get debts.",
+      "submitFeedback":"Couldn't submit feedback.",
+      "passwordNoMatch":"New passwords do not match!",
+      "itemDelete":"Couldn't delete item.",
+      "userDelete":"Couldn't delete user.",
+      "feedbackDelete":"Couldn't delete feedback."
+    }
   }
 }
