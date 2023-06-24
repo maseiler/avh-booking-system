@@ -11,7 +11,7 @@
           <div class="paymentModal-body big">
             <p class="subtitle is-4">
               <b>{{ displayUserName(user) }}</b> {{$t('booking.payment.htp')}}
-              <b>{{ user.Balance }}€</b>.
+              <b>{{ $n(user.Balance, "currency", "de-DE") }}</b>.
             </p>
             <br />
             <p class="subtitle is-4">{{$t('booking.payment.subtitle')}}</p>
@@ -21,9 +21,9 @@
                 <div class="field">
                   <p class="control has-icons-right">
                     <input
-                      class="input"
-                      type="text"
-                      placeholder="€"
+                      class="input no-controls"
+                      type="number"
+                      placeholder="00.00"
                       v-model.number="balancePart"
                       style="text-align: right; font-weight: bold"
                     />
@@ -208,7 +208,7 @@ export default {
         this.userBookEntries = response.body;
       })
       .catch(() => {
-        this.$responseEventBus.$emit("failureMessage", "Couldn't get debts.");
+        this.$responseEventBus.$emit("failureMessage", this.$t('messages.failure.noDebts'));
       });
   },
 };

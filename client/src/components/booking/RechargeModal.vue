@@ -24,9 +24,9 @@
                 <div class="field">
                   <p class="control has-icons-right">
                     <input
-                      class="input"
-                      type="text"
-                      placeholder="€"
+                      class="input no-controls"
+                      type="number"
+                      placeholder="00.00"
                       v-model.number="newCredit"
                       style="text-align: right; font-weight: bold"
                     />

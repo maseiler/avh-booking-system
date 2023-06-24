@@ -30,9 +30,10 @@
               <div class="control has-icons-left">
                 <input
                   class="input"
-                  type="text"
+                  type="number"
                   v-bind:placeholder="$t('item.price')"
                   v-model.number="item.Price"
+                  step=".01"
                 />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign" />

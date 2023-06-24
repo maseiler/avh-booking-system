@@ -173,7 +173,7 @@
     },
     "failure":{
       "noFavoriteItems":"Es konnten keine Favoriten abgerufen werden.",
-      "negativePaymentNotAlowed":"Zahlungen die kleiner oder gleich 0 sind, sind nicht erlaubt.",
+      "negativePaymentNotAllowed":"Zahlungen die kleiner oder gleich 0 sind, sind nicht erlaubt.",
       "error":"Error",
       "wrongPassword":"Falsches Passwort?",
       "noDebts":"Es konnten keine Schulden abgerufen werden.",

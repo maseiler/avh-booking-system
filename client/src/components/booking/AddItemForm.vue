@@ -30,10 +30,11 @@
               <label class="label">{{ $t("item.price") }}</label>
               <div class="control has-icons-left">
                 <input
-                  class="input"
-                  type="text"
+                  class="input no-controls"
+                  type="number"
                   v-bind:placeholder="$t('item.price')"
                   v-model.number="newItem.Price"
+                  step=".01"
                 />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="euro-sign" />
