@@ -26,7 +26,7 @@
           <td>{{ displayUserName(getUserByID(entry.UserID)) }}</td>
           <td>{{ displayItem(getItemByID(items, entry.ItemID)) }}</td>
           <td>{{ entry.Amount }}</td>
-          <td style="text-align: right">{{ entry.TotalPrice }} €</td>
+          <td style="text-align: right">{{ $n(entry.TotalPrice, "currency", "de-DE" ) }}</td>
           <td>{{ entry.Comment }}</td>
           <td>{{ entry.PaymentMethod }}</td>
         </tr>
@@ -37,7 +37,7 @@
         <th></th>
         <th></th>
         <th></th>
-        <th style="text-align: right">{{ sum }} €</th>
+        <th style="text-align: right">{{ $n(sum, "currency", "de-DE") }}</th>
         <th></th>
         <th></th>
       </tfoot>

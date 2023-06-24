@@ -22,7 +22,7 @@
           <td>{{ item.Name }}</td>
           <td style="text-align: right">{{ item.Size }}</td>
           <td>{{ item.Unit }}</td>
-          <td style="text-align: right">{{ item.Price }} €</td>
+          <td style="text-align: right">{{ $n(item.Price, "currency", "de-DE") }}</td>
           <td>
             <font-awesome-icon v-if="item.Enabled" icon="check-circle"/>
             <font-awesome-icon v-if="!item.Enabled" icon="times"/>

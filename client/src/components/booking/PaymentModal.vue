@@ -99,7 +99,7 @@
                   <td>{{ printDateTime(entry.TimeStamp) }}</td>
                   <td>{{ displayItem(getItemByID(items, entry.ItemID)) }}</td>
                   <td>{{ entry.Amount }}</td>
-                  <td>{{ entry.TotalPrice }}</td>
+                  <td>{{ $n(entry.TotalPrice, "currency", "de-DE") }}</td>
                   <td>{{ entry.Comment }}</td>
                 </tr>
               </tbody>

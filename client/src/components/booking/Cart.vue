@@ -11,7 +11,7 @@
       <tfoot>
         <tr>
           <th></th>
-          <th>{{ sum }} €</th>
+          <th>{{ $n(sum, "currency", "de-DE") }}</th>
           <th>
             <button class="button is-success" @click="checkout">
               {{ $t("cart.checkout") }}
@@ -24,7 +24,7 @@
         <tr v-for="i in cart" :key="i">
           <td v-if="i.item.Type === 'food'">{{ i.item.Name }}</td>
           <td v-else>{{ i.item.Name }} {{ i.item.Size }}{{ i.item.Unit }}</td>
-          <td>{{ i.item.Price }} €</td>
+          <td>{{ $n(i.item.Price, "currency", "de-DE")}}</td>
           <td>
             <input
               class="input is-small has-text-black"

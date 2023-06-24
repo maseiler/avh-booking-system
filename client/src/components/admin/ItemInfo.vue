@@ -18,7 +18,7 @@
               </div>
               <div>
                 <font-awesome-icon icon="euro-sign" />
-                &nbsp;&nbsp;{{ item.Price }}&nbsp;€
+                &nbsp;&nbsp;{{ $n(item.Price, "currency", "de-DE") }}
               </div>
             </h6>
           </div>
