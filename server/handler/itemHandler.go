@@ -22,6 +22,7 @@ func AddItem(w http.ResponseWriter, r *http.Request) {
 
 	if dbP.NewItemExists(newItem) {
 		w.WriteHeader(http.StatusBadRequest)
+		// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 		fmt.Fprint(w, "Item already exists")
 		return
 	}
@@ -82,5 +83,6 @@ func DeleteItem(w http.ResponseWriter, r *http.Request) {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }

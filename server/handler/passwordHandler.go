@@ -21,6 +21,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		validation = "Denied"
 	}
 	w.Header().Set("Content-Type", "application/json")
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
 
@@ -55,5 +56,6 @@ func ChangeAdminPassword(w http.ResponseWriter, r *http.Request) {
 		validation = "Old password is not valid."
 	}
 	w.Header().Set("Content-Type", "application/json")
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }

@@ -71,11 +71,13 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	cart := UnmarshalCart(r.Body)
 	if itemsAreEmpty(cart.CartItems) {
 		w.WriteHeader(http.StatusBadRequest)
+		// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 		fmt.Fprint(w, "Select an Item.")
 		return
 	}
 	if userIsEmpty(cart.User) {
 		w.WriteHeader(http.StatusBadRequest)
+		// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 		fmt.Fprint(w, "Select a User.")
 		return
 	}
@@ -85,6 +87,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
+		// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 		validation = "Reached max balance."
 	}
 	fmt.Fprint(w, validation)
@@ -102,6 +105,7 @@ func Pay(w http.ResponseWriter, r *http.Request) {
 		validation = "Couldn't pay."
 		w.WriteHeader(http.StatusBadRequest)
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
 
@@ -116,6 +120,7 @@ func DeleteBookEntry(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		validation = "Couldn't delete book entry."
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
 
@@ -130,6 +135,7 @@ func UndoBookEntry(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		validation = "Couldn't undo book entry."
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
 

@@ -78,6 +78,7 @@ func ModifyUser(w http.ResponseWriter, r *http.Request) {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
 
@@ -94,5 +95,6 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
