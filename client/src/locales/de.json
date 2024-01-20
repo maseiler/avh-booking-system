@@ -147,7 +147,7 @@
     "nickname":"Biername",
     "firstName":"Vorname",
     "lastName":"Nachname",
-    "boatName":"Boots Name",
+    "boatName":"Bootsname",
     "eMail":"E-Mail",
     "phoneNumber":"Telefonnummer",
     "password":"Passwort"
@@ -177,7 +177,7 @@
       "error":"Error",
       "wrongPassword":"Falsches Passwort?",
       "noDebts":"Es konnten keine Schulden abgerufen werden.",
-      "submitFeedback":"Senden des Feedacks war nicht erfolgreich.",
+      "submitFeedback":"Senden des Feedbacks war nicht erfolgreich.",
       "passwordNoMatch":"Die neuen Passwörter stimmen nicht überein.",
       "itemDelete":"Ware konnte nicht gelöscht werden.",
       "userDelete":"Benutzer konnte nicht gelöscht werden.",
