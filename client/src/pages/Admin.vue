@@ -41,6 +41,13 @@
                   >{{ $t("admin.feedbackList") }}</a
                 >
               </li>
+              <li>
+                <a
+                  @click="showSetting('reportSettings')"
+                  :class="[showReportSettings ? 'is-active' : '']"
+                  >{{ $t("admin.reportSettings.menuLabel") }}</a
+                >
+              </li>
             </ul>
           </aside>
         </div>
@@ -51,6 +58,7 @@
         <BookingSettings v-if="showBookingSettings" />
         <OtherSettings v-if="showOtherSettings" />
         <FeedbackList v-if="showFeedbackList" />
+        <ReportSettings v-if="showReportSettings" />
       </div>
     </div>
   </div>
@@ -62,6 +70,7 @@ import ItemSettings from "../components/admin/ItemSettings.vue";
 import BookingSettings from "../components/admin/BookingSettings.vue";
 import OtherSettings from "../components/admin/OtherSettings.vue";
 import FeedbackList from "../components/admin/FeedbackList.vue";
+import ReportSettings from "../components/admin/ReportSettings.vue";
 
 export default {
   components: {
@@ -70,6 +79,7 @@ export default {
     BookingSettings,
     OtherSettings,
     FeedbackList,
+    ReportSettings
   },
   data() {
     return {
@@ -78,6 +88,7 @@ export default {
       showBookingSettings: false,
       showOtherSettings: false,
       showFeedbackList: false,
+      showReportSettings: false
     };
   },
   methods: {
@@ -89,6 +100,7 @@ export default {
           this.showBookingSettings = false;
           this.showOtherSettings = false;
           this.showFeedbackList = false;
+          this.showReportSettings = false;
           break;
         case "itemSettings":
           this.showUserSettings = false;
@@ -96,6 +108,7 @@ export default {
           this.showBookingSettings = false;
           this.showOtherSettings = false;
           this.showFeedbackList = false;
+          this.showReportSettings = false;
           break;
         case "bookingSettings":
           this.showUserSettings = false;
@@ -103,6 +116,7 @@ export default {
           this.showBookingSettings = true;
           this.showOtherSettings = false;
           this.showFeedbackList = false;
+          this.showReportSettings = false;
           break;
         case "otherSettings":
           this.showUserSettings = false;
@@ -110,6 +124,7 @@ export default {
           this.showBookingSettings = false;
           this.showOtherSettings = true;
           this.showFeedbackList = false;
+          this.showReportSettings = false;
           break;
         case "feedbackList":
           this.showUserSettings = false;
@@ -117,9 +132,17 @@ export default {
           this.showBookingSettings = false;
           this.showOtherSettings = false;
           this.showFeedbackList = true;
+          this.showReportSettings = false;
           break;
-        default:
+        case "reportSettings":
+        this.showUserSettings = false;
+          this.showItemSettings = false;
+          this.showBookingSettings = false;
+          this.showOtherSettings = false;
+          this.showFeedbackList = false;
+          this.showReportSettings = true;
           break;
+          default:
       }
     },
   },

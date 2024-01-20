@@ -37,6 +37,10 @@
       "menuLabel": "Other Settings"
     },
     "feedbackList": "Feedback",
+    "reportSettings":{
+      "menuLabel":"Report Settings",
+      "sendCurrentDebts":"Send current debts Report"
+    },
     "addUser":{
       "title":"Add new User"
     },
@@ -169,7 +173,8 @@
       "deleteUser":"Deleted user",
       "deleteFeedback":"Deleted feedback entry.",
       "modifiedItem":"Modified item",
-      "modifiedUser":"Modified user"
+      "modifiedUser":"Modified user",
+      "emailSend":"E-Mail send successully"
     },
     "failure":{
       "noFavoriteItems":"Couldn't get favorite items.",

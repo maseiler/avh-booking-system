@@ -114,3 +114,24 @@ func GetFavoriteItemsStats() []data.ItemStat {
 
 	return stats
 }
+
+// Get All Debts and Credits based on the Categorys
+func GetAllCategoryDebts(until string) map[string]float32 {
+	var (
+		status string
+		debt   float32
+	)
+	queryString := fmt.Sprintf("SELECT users.status, SUM(user_debts) AS debts FROM (SELECT user_id, SUM(total_price) AS user_debts FROM bookings WHERE time_stamp < '%s' GROUP BY user_id) subq JOIN users ON subq.user_id = users.id GROUP BY status;", until)
+	rows, err := db.Query(queryString)
+	HandleDatabaseError(err)
+	result := make(map[string]float32)
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&status, &debt)
+		HandleDatabaseError(err)
+		result[status] = debt
+	}
+	err = rows.Err()
+	HandleDatabaseError(err)
+	return result
+}

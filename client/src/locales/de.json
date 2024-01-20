@@ -37,6 +37,10 @@
       "menuLabel": "Sonstige Einstellungen"
     },
     "feedbackList": "Rückmeldungen",
+    "reportSettings":{
+      "menuLabel":"Berichteinstellungen",
+      "sendCurrentDebts":"Sende Schuldenbericht"
+    },
     "addUser":{
       "title":"Neuen Benutzer hinzufügen"
     },
@@ -169,7 +173,8 @@
       "deleteUser":"Gelöschter Benutzer",
       "deleteFeedback":"Feedback Eintrag gelöscht.",
       "modifiedItem":"Bearbeitete Ware",
-      "modifiedUser":"Bearbeiteter Benutzer"
+      "modifiedUser":"Bearbeiteter Benutzer",
+      "emailSend":"E-Mail wurde gesendet"
     },
     "failure":{
       "noFavoriteItems":"Es konnten keine Favoriten abgerufen werden.",
