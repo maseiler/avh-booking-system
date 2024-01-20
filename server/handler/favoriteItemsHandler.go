@@ -18,6 +18,7 @@ func UpdateFavoriteItems(w http.ResponseWriter, r *http.Request) {
 		validation = fmt.Sprintf("Couldn't update favorite items for user %d.", cart.User.ID)
 		w.WriteHeader(http.StatusBadRequest)
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
 
@@ -41,5 +42,6 @@ func DeleteUserFromFavoriteItems(w http.ResponseWriter, r *http.Request) {
 		validation = fmt.Sprintf("Couldn't delete user %d from favorite items.", user.ID)
 		w.WriteHeader(http.StatusBadRequest)
 	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
 }
