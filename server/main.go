@@ -48,6 +48,8 @@ func main() {
 	r.HandleFunc("/sendTestMail", handler.SendTestMail)
 	r.HandleFunc("/getDebts", handler.GetAllCategoryDebts)
 	r.HandleFunc("/sendCurrentDebts", handler.SendCurrentDebts)
+	r.HandleFunc("/getSettings", handler.GetSettings)
+	r.HandleFunc("/updateSetting", handler.UpdateSetting)
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains")

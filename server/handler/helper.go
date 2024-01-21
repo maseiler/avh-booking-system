@@ -178,6 +178,19 @@ func UnmarshalFeedback(body io.ReadCloser) dataP.Feedback {
 	return feedback
 }
 
+// UnmarshalFeedback unmarshals JSON object to Feedback
+func UnmarshalSetting(body io.ReadCloser) dataP.Setting {
+	decoder := json.NewDecoder(body)
+
+	var setting dataP.Setting
+	err := decoder.Decode(&setting)
+
+	if err != nil {
+		panic(err)
+	}
+	return setting
+}
+
 // ConvertStringToTime converts string of format YYY-MM-DD to time
 func ConvertStringToTime(str string) time.Time {
 	layout := "2006-01-02"

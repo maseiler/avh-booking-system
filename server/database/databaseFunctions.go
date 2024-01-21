@@ -115,6 +115,7 @@ func CreateDatabase() {
 	);`
 	_, err = db.Exec(createSettingsTable)
 	HandleDatabaseError(err)
+	// INSERT INTO `settings` (`name`, `value`) VALUES ('EMail-Host', 'mail.gmx.net');
 
 	var version string
 	db.QueryRow("SELECT VERSION()").Scan(&version)
