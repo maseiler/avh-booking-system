@@ -108,6 +108,14 @@ func CreateDatabase() {
 		HandleDatabaseError(err)
 	}
 
+	createSettingsTable := `
+	CREATE TABLE IF NOT EXISTS settings(
+		name VARCHAR(50) NOT NULL PRIMARY KEY,
+		value VARCHAR(254) NOT NULL
+	);`
+	_, err = db.Exec(createSettingsTable)
+	HandleDatabaseError(err)
+
 	var version string
 	db.QueryRow("SELECT VERSION()").Scan(&version)
 	newLoginInfo := fmt.Sprintf("%s:***@tcp(%s:%s)/%s", os.Getenv("AVHBS_DB_USER"), os.Getenv("AVHBS_DB_IP"), os.Getenv("AVHBS_DB_PORT"), os.Getenv("AVHBS_DB_NAME"))
