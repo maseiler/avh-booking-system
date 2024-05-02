@@ -135,3 +135,29 @@ func GetAllCategoryDebts(until string) map[string]float32 {
 	HandleDatabaseError(err)
 	return result
 }
+
+// Get amount of sold items in the last week
+// Ich krig den Rückgabewert nicht ordentlich hin... Brauche hilfe mit go.
+func GetLasWeekSoldItems() {
+	// var (
+	// 	Ware    string
+	// 	Groeße  string
+	// 	Einheit string
+	// 	Anzahl  string
+	// )
+	// // ToDo: Reduziere die Abfrage auf die letzte Woche - aktuell wird noch alles abgefragt
+	// queryString := "SELECT items.name as 'Ware', items.size as 'Groeße', items.unit as 'Einheit' , SUM(amount) as 'Anzahl' FROM bookings LEFT JOIN items on item_id=items.id GROUP BY item_id;"
+	// rows, err := db.Query(queryString)
+	// HandleDatabaseError(err)
+	// var result [][]
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	err := rows.Scan(&Ware, &Groeße, &Einheit, &Anzahl)
+	// 	HandleDatabaseError(err)
+	// 	row := [4]string{Ware, Groeße, Einheit, Anzahl}
+	// 	result = append(result, row)
+	// }
+	// err = rows.Err()
+	// HandleDatabaseError(err)
+	// return result
+}
