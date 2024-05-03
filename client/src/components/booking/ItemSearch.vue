@@ -62,9 +62,12 @@ export default {
     searchItems() {
       if (this.search != "") {
         var tmpSearch = this.search.toLowerCase();
-        this.searchResults = this.items.filter((item) =>
-          item["Name"].toLowerCase().includes(tmpSearch)
-        );
+        this.searchResults = this.items.filter((item) => {
+          if(item["Name"].toLowerCase().includes(tmpSearch) && item["Enabled"] == 1){
+            return true
+          }
+          return false
+        });
       } else {
         this.searchResults = [];
       }

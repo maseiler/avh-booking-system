@@ -75,9 +75,9 @@
                 <div class="select">
                   <select v-model="item.Type">
                     <option disabled value>{{$t('item.type')}}</option>
-                    <option>{{$t('generic.alcoholic')}}</option>
-                    <option>{{$t('generic.nonAlcoholic')}}</option>
-                    <option>{{$t('generic.food')}}</option>
+                    <option value="alcoholic">{{$t('generic.alcoholic')}}</option>
+                    <option value="non-alcoholic">{{$t('generic.nonAlcoholic')}}</option>
+                    <option value="food">{{$t('generic.food')}}</option>
                   </select>
                 </div>
               </div>
