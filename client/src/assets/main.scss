@@ -425,3 +425,8 @@ input.no-controls {
 
 $family-sans-serif: "Nunito", sans-serif;
 
+.control.has-icons-right .icon.is-right{
+  pointer-events: all;
+  cursor: pointer;
+  /* right:0; */
+}
