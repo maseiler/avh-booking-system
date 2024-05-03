@@ -95,10 +95,8 @@
             </div>
 
             <div
-              v-if="
-                newUser.Status === 'Steganleger' || newUser.Status === 'Gast'
-              "
               class="field"
+              v-if="newUser.Status !== ''"
             >
               <label class="label">{{ $t('user.eMail') }}</label>
               <div class="control has-icons-left">
@@ -107,6 +105,7 @@
                   type="email"
                   v-bind:placeholder="$t('user.eMail')"
                   v-model.lazy="newUser.Email"
+                  required
                 />
                 <span class="icon is-small is-left">
                   <font-awesome-icon icon="envelope" />
