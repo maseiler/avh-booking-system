@@ -1,5 +1,5 @@
 # build client spa with npm
-FROM node:lts-alpine as build-npm
+FROM node:16-alpine as build-npm
 WORKDIR /app
 COPY ./client .
 RUN npm install
@@ -31,6 +31,11 @@ ENV AVHBS_DB_NAME avhbs_db
 ENV AVHBS_DB_IP db
 ENV AVHBS_DB_PORT 3306
 ENV AVHBS_FRONTEND_PATH /app/dist/
+ENV AVHBS_EMAIL_HOST email_host
+ENV AVHBS_EMAIL_PORT 465
+ENV AVHBS_EMAIL_USER email_user
+ENV AVHBS_EMAIL_NAME email_name
+ENV AVHBS_EMAIL_PASS email_pass
 
 RUN echo -e '#!/bin/sh\necho "Sleeping..."\nsleep 20\necho "Starting app"!\n/app/avh_bs_main\n' > /start.sh && chmod +x /start.sh && cat /start.sh
 

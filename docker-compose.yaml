@@ -8,6 +8,11 @@ services:
       MYSQL_PASSWORD: db_pass
       MYSQL_DATABASE: avhbs_db
       MYSQL_ROOT_PASSWORD: db_pass
+      AVHBS_EMAIL_HOST: email_host
+      AVHBS_EMAIL_PORT: 465
+      AVHBS_EMAIL_USER: email_user
+      AVHBS_EMAIL_NAME: email_name
+      AVHBS_EMAIL_PASS: email_pass
     volumes: 
       - mysql:/var/lib/mysql
   avhbs:
