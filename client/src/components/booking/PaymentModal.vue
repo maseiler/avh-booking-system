@@ -37,9 +37,9 @@
                 </div>
               </div>
               <div class="column">
-                <button class="button is-success is-fullwidth" @click="payCash">
+                <!-- <button class="button is-success is-fullwidth" @click="payCash">
                   {{$t('booking.payment.cash')}}
-                </button>
+                </button> -->
               </div>
               <div class="column">
                 <button class="button is-link is-fullwidth" @click="payEC">
