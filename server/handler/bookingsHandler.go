@@ -6,6 +6,8 @@ import (
 
 	data "github.com/maseiler/avh-booking-system/server/data"
 	dbP "github.com/maseiler/avh-booking-system/server/database"
+	"github.com/stripe/stripe-go/v78"
+	"github.com/stripe/stripe-go/v78/paymentintent"
 )
 
 // GetLastNBookEntries forwards API call to get the n latest bookings from database
@@ -96,17 +98,22 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 // Pay forwards API call to databse to pay current balance
 func Pay(w http.ResponseWriter, r *http.Request) {
 	payment := UnmarshalPayment(r.Body)
-	cardPayment := data.PayByCard(payment)
+	paymentIntent := data.PayByCard(payment)
+	response := marshalToJSON(paymentIntent, w)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+	return
+
 	validation := ""
-	for cardPayment.Status != "succeeded" {
-		// wait until succeeded
-	}
-	if cardPayment.Status == "succeeded" {
-		validation = "Could not pay by card."
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, validation)
-		return
-	}
+	// for cardPayment.Status != "succeeded" {
+	// 	// wait until succeeded
+	// }
+	// if cardPayment.Status == "succeeded" {
+	// 	validation = "Could not pay by card."
+	// 	w.WriteHeader(http.StatusBadRequest)
+	// 	fmt.Fprint(w, validation)
+	// 	return
+	// }
 	success := dbP.Pay(payment)
 	if success {
 		validation = "ok"
@@ -117,6 +124,38 @@ func Pay(w http.ResponseWriter, r *http.Request) {
 	}
 	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
 	fmt.Fprint(w, validation)
+}
+
+// Get payment intent
+func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
+	// ToDo Load Stripe Private Key from Database
+	stripe.Key = "sk_test_51PBL0dCnA8pi9zjTAvmZX3sWiXme7mgL7uLZkW1yGU1Rw9DJcQvjySUShmb2y2ew76P9NmlmBFcgVHQZqEMpuzW100Rj3PgeDz"
+
+	payment := UnmarshalPayment(r.Body)
+	params := &stripe.PaymentIntentConfirmParams{}
+	result, err := paymentintent.Confirm(payment.IntentID, params)
+	if err != nil {
+		// Error
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if result.Status != "succeeded" {
+		w.Write(marshalToJSON(result, w))
+		return
+	}
+	// validation := ""
+	success := dbP.Pay(payment)
+	if success {
+		// validation = "ok"
+		w.WriteHeader(http.StatusOK)
+	} else {
+		// validation = "Couldn't pay."
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
+	// ToDo: switch from fmt.Fprint to w.Write and give json response for frontend to figure out the right message in correct language
+	w.Write(marshalToJSON(result, w))
+	// fmt.Fprint(w, validation)
 }
 
 // DeleteBookEntry forwards API call to databse to delete book entry from database

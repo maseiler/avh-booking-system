@@ -1,8 +1,9 @@
 package data
 
-// Payment 
+// Payment
 type Payment struct {
-	User User
-	Balance float32
+	User          User
+	Balance       float32
 	PaymentMethod string
+	IntentID      string
 }

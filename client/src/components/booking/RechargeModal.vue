@@ -169,6 +169,7 @@ export default {
           User: this.user,
           Balance: this.newCredit,
           PaymentMethod: this.paymentMethod,
+          IntentID: null,
         })
         .then(() => {
           //ToDo: remove currency Symbol and use internationalisation on payment

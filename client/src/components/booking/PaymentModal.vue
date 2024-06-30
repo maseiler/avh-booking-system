@@ -163,6 +163,7 @@ export default {
           User: this.user,
           Balance: this.balancePart,
           PaymentMethod: this.paymentMethod,
+          IntentID: null,
         })
         .then(() => {
           //ToDo: response will return a webook that has to be monitored until the payment by card is fullfilled.

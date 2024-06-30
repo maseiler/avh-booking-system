@@ -7,4 +7,4 @@ require (
 	github.com/gorilla/mux v1.8.0
 )
 
-require github.com/stripe/stripe-go/v78 v78.6.0 // indirect
+require github.com/stripe/stripe-go/v78 v78.12.0 // indirect
