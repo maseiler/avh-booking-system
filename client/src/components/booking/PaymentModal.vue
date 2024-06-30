@@ -165,13 +165,22 @@ export default {
           PaymentMethod: this.paymentMethod,
         })
         .then(() => {
+          //ToDo: response will return a webook that has to be monitored until the payment by card is fullfilled.
+          // Only then it should show a success or a failure Message.
+
+
           //ToDo: remove currency Symbol and use internationalisation on payment
           let message = `${this.displayUserName(this.user)} ${this.$t('messages.success.paid')} ${this.balancePart}€`;
+
+          // close Payment dialog
+          this.$emit("close");
+          // show Message on Screen
+          this.$responseEventBus.$emit("successMessage", message);
+
+          // Reload Data in Frontend (not neccessarily a payment part)
           this.$store.commit("getLastNBookEntries", 5);
           this.$store.commit("getUsers");
           this.$store.commit("selectUser", {});
-          this.$emit("close");
-          this.$responseEventBus.$emit("successMessage", message);
         })
         .catch((response) => {
           //ToDo: interlationalize Failure Message

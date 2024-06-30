@@ -96,8 +96,18 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 // Pay forwards API call to databse to pay current balance
 func Pay(w http.ResponseWriter, r *http.Request) {
 	payment := UnmarshalPayment(r.Body)
-	success := dbP.Pay(payment)
+	cardPayment := data.PayByCard(payment)
 	validation := ""
+	for cardPayment.Status != "succeeded" {
+		// wait until succeeded
+	}
+	if cardPayment.Status == "succeeded" {
+		validation = "Could not pay by card."
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, validation)
+		return
+	}
+	success := dbP.Pay(payment)
 	if success {
 		validation = "ok"
 		w.WriteHeader(http.StatusOK)
