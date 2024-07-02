@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	dbP "github.com/maseiler/avh-booking-system/server/database"
+	"github.com/stripe/stripe-go/v78"
+	"github.com/stripe/stripe-go/v78/terminal/reader"
 )
 
 // GetSettings forwards API call to get all settings from database
@@ -19,4 +21,20 @@ func UpdateSetting(w http.ResponseWriter, r *http.Request) {
 	setting := UnmarshalSetting(r.Body)
 	dbP.UpdateSetting(setting)
 	w.WriteHeader(http.StatusOK)
+}
+
+func GetStripeCardReader(w http.ResponseWriter, r *http.Request) {
+	allSettings := dbP.GetSettings()
+	for i := range allSettings {
+		if allSettings[i].Name == "StripeAPIKey" {
+			stripe.Key = allSettings[i].Value
+		}
+	}
+
+	readParams := &stripe.TerminalReaderListParams{}
+	readParams.Limit = stripe.Int64(10)
+	allReaders := reader.List(readParams)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(marshalToJSON(allReaders, w))
 }

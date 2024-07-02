@@ -25,7 +25,7 @@ func GetSettings() []data.Setting {
 func UpdateSetting(setting data.Setting) {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("UPDATE settings SET value = '?' WHERE settings.name = '?';")
+	stmt, err := tx.Prepare("UPDATE settings SET value = ? WHERE settings.name = ?;")
 	HandleTxError(tx, err)
 	defer stmt.Close()
 	res, err := stmt.Exec(setting.Value, setting.Name)

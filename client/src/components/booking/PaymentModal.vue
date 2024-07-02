@@ -163,6 +163,7 @@ export default {
           Balance: this.newCredit,
           PaymentMethod: this.paymentMethod,
           IntentID: null,
+          CardReader: localStorage.getItem("StripeCardReader")
         };
       this.$http
         .post("pay", AVHBS_payment)

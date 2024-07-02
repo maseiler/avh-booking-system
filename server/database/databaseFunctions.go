@@ -115,6 +115,11 @@ func CreateDatabase() {
 	);`
 	_, err = db.Exec(createSettingsTable)
 	HandleDatabaseError(err)
+
+	if !settingExists(db, "StripeAPIKey") {
+		_, err = db.Exec("INSERT INTO settings VALUES('StripeAPIKey', '');")
+		HandleDatabaseError(err)
+	}
 	// INSERT INTO `settings` (`name`, `value`) VALUES ('EMail-Host', 'mail.gmx.net');
 
 	var version string
@@ -136,6 +141,22 @@ func passwordExists(db *sql.DB) bool {
 		HandleDatabaseError(err)
 	}
 	if len(pws) == 1 {
+		return true
+	}
+	return false
+}
+
+func settingExists(db *sql.DB, name string) bool {
+	query := fmt.Sprintf("SELECT * FROM settings WHERE name = '%s';", name)
+	rows, err := db.Query(query)
+	HandleDatabaseError(err)
+	fmt.Println(rows)
+	var set []string
+	if rows.Next() {
+		set = append(set, "exists")
+		HandleDatabaseError(err)
+	}
+	if len(set) == 1 {
 		return true
 	}
 	return false

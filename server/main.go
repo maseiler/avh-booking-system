@@ -51,6 +51,7 @@ func main() {
 	r.HandleFunc("/getSettings", handler.GetSettings)
 	r.HandleFunc("/updateSetting", handler.UpdateSetting)
 	r.HandleFunc("/confirmPaymentIntent", handler.ConfirmPaymentIntent)
+	r.HandleFunc("/getStripeCardReader", handler.GetStripeCardReader)
 
 	serveIndexHTML := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubDomains")

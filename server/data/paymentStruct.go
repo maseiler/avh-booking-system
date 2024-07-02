@@ -6,4 +6,5 @@ type Payment struct {
 	Balance       float32
 	PaymentMethod string
 	IntentID      string
+	CardReader    string
 }

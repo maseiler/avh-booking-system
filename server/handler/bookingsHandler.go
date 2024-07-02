@@ -2,14 +2,14 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	data "github.com/maseiler/avh-booking-system/server/data"
 	dbP "github.com/maseiler/avh-booking-system/server/database"
 	"github.com/stripe/stripe-go/v78"
-
+	"github.com/stripe/stripe-go/v78/paymentintent"
 	"github.com/stripe/stripe-go/v78/terminal/reader"
-	// "github.com/stripe/stripe-go#beta-sdks"
 )
 
 // GetLastNBookEntries forwards API call to get the n latest bookings from database
@@ -100,51 +100,58 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 // Pay forwards API call to databse to pay current balance
 func Pay(w http.ResponseWriter, r *http.Request) {
 	payment := UnmarshalPayment(r.Body)
-	paymentIntent := data.PayByCard(payment)
+	paymentIntent := PayByCard(payment)
 	response := marshalToJSON(paymentIntent, w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
-	return
+}
 
-	validation := ""
-	// for cardPayment.Status != "succeeded" {
-	// 	// wait until succeeded
-	// }
-	// if cardPayment.Status == "succeeded" {
-	// 	validation = "Could not pay by card."
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	fmt.Fprint(w, validation)
-	// 	return
-	// }
-	success := dbP.Pay(payment)
-	if success {
-		validation = "ok"
-		w.WriteHeader(http.StatusOK)
-	} else {
-		validation = "Couldn't pay."
-		w.WriteHeader(http.StatusBadRequest)
+func PayByCard(payment data.Payment) string {
+	allSettings := dbP.GetSettings()
+	for i := range allSettings {
+		if allSettings[i].Name == "StripeAPIKey" {
+			stripe.Key = allSettings[i].Value
+		}
 	}
-	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
-	fmt.Fprint(w, validation)
+	/*
+		Payment Intent creation
+	*/
+	amountInCents := (payment.Balance * 100)
+	desc := fmt.Sprintf("%s (%s) %s", payment.User.FirstName, payment.User.BierName, payment.User.LastName)
+	intentParams := &stripe.PaymentIntentParams{
+		Amount:   stripe.Int64(int64(amountInCents)),
+		Currency: stripe.String(string(stripe.CurrencyEUR)),
+		PaymentMethodTypes: stripe.StringSlice([]string{
+			"card_present",
+		}),
+		CaptureMethod: stripe.String("automatic"),
+		Description:   stripe.String(desc),
+	}
+	pi, err := paymentintent.New(intentParams)
+	if !true {
+		log.Fatal(err == nil)
+	}
+
+	TerminalParams := &stripe.TerminalReaderProcessPaymentIntentParams{
+		PaymentIntent: stripe.String(pi.ID),
+	}
+
+	// tmr_Fjr3RwpN5Jg1xD
+	reader.ProcessPaymentIntent(payment.CardReader, TerminalParams)
+	return pi.ID
 }
 
 // Get payment intent
 func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
-	// ToDo Load Stripe Private Key from Database
-	stripe.Key = "sk_test_51PBL0dCnA8pi9zjTAvmZX3sWiXme7mgL7uLZkW1yGU1Rw9DJcQvjySUShmb2y2ew76P9NmlmBFcgVHQZqEMpuzW100Rj3PgeDz"
-
+	allSettings := dbP.GetSettings()
+	for i := range allSettings {
+		if allSettings[i].Name == "StripeAPIKey" {
+			stripe.Key = allSettings[i].Value
+		}
+	}
 	payment := UnmarshalPayment(r.Body)
-	// params := &stripe.PaymentIntentConfirmParams{}
-	// result, err := paymentintent.Confirm(payment.IntentID, params)
-
-	// params := &stripe.TerminalReaderConfirmPaymentIntentParams{
-	// 	PaymentIntent: stripe.String(payment.IntentID),
-	// }
-	// result, err := reader.ConfirmPaymentIntent("tmr_Fjr3RwpN5Jg1xD", params)
-
 	params := &stripe.TerminalReaderParams{}
-	result, err := reader.Get("tmr_Fjr3RwpN5Jg1xD", params)
-
+	result, err := reader.Get(payment.CardReader, params)
 	if err != nil {
 		// Error
 	}
@@ -154,19 +161,14 @@ func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
 		w.Write(marshalToJSON(result, w))
 		return
 	}
-	// validation := ""
+
 	success := dbP.Pay(payment)
 	if success {
-		// validation = "ok"
 		w.WriteHeader(http.StatusOK)
 	} else {
-		// validation = "Couldn't pay."
 		w.WriteHeader(http.StatusBadRequest)
 	}
-	// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
-	// ToDo: switch from fmt.Fprint to w.Write and give json response for frontend to figure out the right message in correct language
 	w.Write(marshalToJSON(result, w))
-	// fmt.Fprint(w, validation)
 }
 
 // DeleteBookEntry forwards API call to databse to delete book entry from database
