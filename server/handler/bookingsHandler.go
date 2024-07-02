@@ -7,7 +7,9 @@ import (
 	data "github.com/maseiler/avh-booking-system/server/data"
 	dbP "github.com/maseiler/avh-booking-system/server/database"
 	"github.com/stripe/stripe-go/v78"
-	"github.com/stripe/stripe-go/v78/paymentintent"
+
+	"github.com/stripe/stripe-go/v78/terminal/reader"
+	// "github.com/stripe/stripe-go#beta-sdks"
 )
 
 // GetLastNBookEntries forwards API call to get the n latest bookings from database
@@ -132,14 +134,23 @@ func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
 	stripe.Key = "sk_test_51PBL0dCnA8pi9zjTAvmZX3sWiXme7mgL7uLZkW1yGU1Rw9DJcQvjySUShmb2y2ew76P9NmlmBFcgVHQZqEMpuzW100Rj3PgeDz"
 
 	payment := UnmarshalPayment(r.Body)
-	params := &stripe.PaymentIntentConfirmParams{}
-	result, err := paymentintent.Confirm(payment.IntentID, params)
+	// params := &stripe.PaymentIntentConfirmParams{}
+	// result, err := paymentintent.Confirm(payment.IntentID, params)
+
+	// params := &stripe.TerminalReaderConfirmPaymentIntentParams{
+	// 	PaymentIntent: stripe.String(payment.IntentID),
+	// }
+	// result, err := reader.ConfirmPaymentIntent("tmr_Fjr3RwpN5Jg1xD", params)
+
+	params := &stripe.TerminalReaderParams{}
+	result, err := reader.Get("tmr_Fjr3RwpN5Jg1xD", params)
+
 	if err != nil {
 		// Error
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if result.Status != "succeeded" {
+	if result.Action.Status != "succeeded" {
 		w.Write(marshalToJSON(result, w))
 		return
 	}

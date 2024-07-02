@@ -98,7 +98,8 @@
   },
   "notification":{
     "success":"Success",
-    "error":"Error"
+    "error":"Error",
+    "processing":"Processing"
   },
   "booking":{
     "addItem":{
@@ -131,7 +132,9 @@
         "addCreditNotice":"To add more credit, enter and pay amount below."
       },
       "pay":"Pay",
-      "method":"Payment Method"
+      "method":"Payment Method",
+      "processing": "Payment in process",
+      "failed": "Payment failed!"
     }
   },
   "item":{

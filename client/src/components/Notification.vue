@@ -13,8 +13,11 @@
                 <p v-if="messageType == 'success'" class="title is-4">
                   {{ $t("notification.success") }}
                 </p>
-                <p v-else class="title is-4">
+                <p v-if="messageType == 'failure'" class="title is-4">
                   {{ $t("notification.error") }}
+                </p>
+                <p v-if="messageType == 'processing'" class="title is-4">
+                  {{ $t("notification.processing") }}
                 </p>
               </div>
               <button
@@ -34,7 +37,17 @@
                   icon="check-circle"
                   size="3x"
                 />
-                <font-awesome-icon v-else icon="sad-tear" size="3x" />
+                <font-awesome-icon
+                  v-if="messageType == 'failure'"
+                  icon="sad-tear"
+                  size="3x"
+                />
+                <font-awesome-icon
+                  v-if="messageType == 'processing'"
+                  icon="spinner"
+                  size="3x"
+                  class="spinning"
+                />
               </div>
             </div>
           </div>
@@ -43,6 +56,21 @@
     </transition>
   </div>
 </template>
+
+<style scoped>
+.spinning{
+  animation: spin 1000ms ease-in-out infinite forwards;
+}
+@keyframes spin {
+  from{
+    transform: rotate(0deg);
+  }
+  to{
+    transform: rotate(359deg);
+  }
+}
+
+</style>
 
 <script>
 import Vue from "vue";
@@ -80,10 +108,18 @@ export default {
       this.textColor = "is-danger";
       this.backgroundColor = "has-background-danger";
     },
+    processingMessage(message) {
+      this.messageType = "processing";
+      this.content = message;
+      this.textColor = "is-success";
+      this.backgroundColor = "has-background-info";
+    }
   },
   created() {
     this.$responseEventBus.$on("successMessage", this.successMessage);
     this.$responseEventBus.$on("failureMessage", this.failureMessage);
+    this.$responseEventBus.$on("processingMessage", this.processingMessage);
+    this.$responseEventBus.$on("close", this.close);
   },
 };
 

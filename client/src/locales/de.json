@@ -98,7 +98,8 @@
   },
   "notification":{
     "success":"Erfolgreich",
-    "error":"Fehler"
+    "error":"Fehler",
+    "processing":"Wird bearbeitet"
   },
   "booking":{
     "addItem":{
@@ -131,7 +132,9 @@
         "addCreditNotice":"Um Guthaben aufzuladen, Betrag unten eingeben und bezahlen."
       },
       "pay":"Bezahlen",
-      "method":"Zahlungsmethode"
+      "method":"Zahlungsmethode",
+      "processing": "Bezahlung im Gange",
+      "failed": "Zahlung fehlgeschlagen"
     }
   },
   "item":{

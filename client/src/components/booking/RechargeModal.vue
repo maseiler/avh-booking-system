@@ -164,33 +164,64 @@ export default {
       }
     },
     submitPayment() {
-      this.$http
-        .post("pay", {
+      let AVHBS_payment = {
           User: this.user,
           Balance: this.newCredit,
           PaymentMethod: this.paymentMethod,
           IntentID: null,
-        })
-        .then(() => {
-          //ToDo: remove currency Symbol and use internationalisation on payment
-          let message = `${this.displayUserName(this.user)} ${this.$t('messages.success.paid')} ${this.newCredit}€`;
-          this.$store.commit("getLastNBookEntries", 5);
-          this.$store.commit("getUsers");
-          this.$store.commit("selectUser", {});
+        };
+      this.$http
+        .post("pay", AVHBS_payment)
+        .then((response) => {
+          AVHBS_payment.IntentID = response.data;
           this.$emit("close");
-          this.$responseEventBus.$emit("successMessage", message);
+          this.handlePaymentIntent(AVHBS_payment);
         })
         .catch((response) => {
           //ToDo: internationalize this failure message
           this.$responseEventBus.$emit("failureMessage", response.data);
         });
     },
+    handlePaymentIntent(payment){
+      // payment.IntentID
+      let status = ""; 
+      let pi_data = {};
+      this.$http.post("confirmPaymentIntent", payment)
+        .then((resp) => {
+          pi_data = resp.data;
+          status = pi_data.action.status;
+          let message = `${this.$t('booking.payment.processing')}`// Standard is Processing
+          this.$responseEventBus.$emit("close");
+          this.$responseEventBus.$emit("processingMessage", message);
+          if (status == "in_progress") {
+            setTimeout(() => {this.handlePaymentIntent(payment)}, 1000);
+          }
+          if(status == "failed"){
+            let message = `${this.$t('booking.payment.failed')} ${pi_data.action.failure_message}`; // Internationalize the Message
+            this.$responseEventBus.$emit("failureMessage", message);
+          }
+          if(status == "succeeded"){
+            //ToDo: remove currency Symbol and use internationalisation on payment
+            this.$store.commit("getLastNBookEntries", 5);
+            this.$store.commit("getUsers");
+            this.$store.commit("selectUser", {});
+            let message = `${this.displayUserName(this.user)} ${this.$t('messages.success.paid')} ${this.newCredit}€`;
+            this.$responseEventBus.$emit("successMessage", message);
+          }
+        }).catch(() => {
+          this.$responseEventBus.$emit("failureMessage", status);
+          return;
+        })
+    },
     weekdayIsMonday() {
       var day = new Date().getDay();
       if (day === 1) {
         return true;
       }
-      return false;
+      return true;
+      // Return False to only allow Payment on Mondays.
+      // Currently Payment is allowed on all Weekdays.
+      // return false;
     },
     loginAndPay() {
       this.$http
