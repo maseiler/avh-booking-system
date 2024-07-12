@@ -16,14 +16,23 @@
                 <p v-if="messageType == 'failure'" class="title is-4">
                   {{ $t("notification.error") }}
                 </p>
-                <p v-if="messageType == 'processing'" class="title is-4">
+                <p v-if="messageType == 'paymentProcessing'" class="title is-4">
                   {{ $t("notification.processing") }}
                 </p>
               </div>
               <button
+                v-if="this.messageType != 'paymentProcessing'"
                 class="button is-rounded"
                 v-bind:class="textColor"
                 v-on:click="close()"
+              >
+                <font-awesome-icon icon="times" />
+              </button>
+              <button
+              v-if="this.messageType == 'paymentProcessing'"
+                class="button is-rounded"
+                v-bind:class="textColor"
+                v-on:click="cancelAction()"
               >
                 <font-awesome-icon icon="times" />
               </button>
@@ -43,7 +52,7 @@
                   size="3x"
                 />
                 <font-awesome-icon
-                  v-if="messageType == 'processing'"
+                  v-if="messageType == 'paymentProcessing'"
                   icon="spinner"
                   size="3x"
                   class="spinning"
@@ -89,6 +98,15 @@ export default {
       this.backgroundColor = "";
       this.$emit("close");
     },
+    cancelAction() {
+      this.content = "";
+      this.textColor = "";
+      this.backgroundColor = "";
+      this.$emit("close");
+      if(this.messageType == "paymentProcessing"){
+        this.$http.post("cancelReaderAction", localStorage.getItem("StripeCardReader"))
+      }
+    },
     closeModal() {
       if (this.messageType == "success") {
         this.close();
@@ -109,7 +127,7 @@ export default {
       this.backgroundColor = "has-background-danger";
     },
     processingMessage(message) {
-      this.messageType = "processing";
+      this.messageType = "paymentProcessing";
       this.content = message;
       this.textColor = "is-success";
       this.backgroundColor = "has-background-info";

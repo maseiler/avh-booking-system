@@ -171,6 +171,20 @@ func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
 	w.Write(marshalToJSON(result, w))
 }
 
+// Cancel the current Action on the reader
+func CancelReaderAction(w http.ResponseWriter, r *http.Request) {
+	// Zusätzlich kann hier erst das Payment Intent gestoppt werden, bevor man die ReaderAction beendet.
+	// Aktuell noch nicht nötig
+	readerid := UnmarshalString(r.Body)
+	params := &stripe.TerminalReaderCancelActionParams{}
+	result, err := reader.CancelAction(readerid, params)
+	if err != nil || result == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 // DeleteBookEntry forwards API call to databse to delete book entry from database
 func DeleteBookEntry(w http.ResponseWriter, r *http.Request) {
 	entry := UnmarshalBookEntry(r.Body)
