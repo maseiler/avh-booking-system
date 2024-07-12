@@ -13,7 +13,7 @@ import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fort
 import {
   faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,
-  faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock, faSpinner
+  faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock, faSpinner, faKey, faCashRegister
 } from '@fortawesome/free-solid-svg-icons'
 
 import './registerServiceWorker'
@@ -21,7 +21,7 @@ import i18n from './i18n'
 
 library.add(faUser, faUserCircle, faPhone, faBeer, faEnvelope, faUserSecret, faEuroSign, faSearch, faExclamation,
   faMoneyBill, faFont, faExpandArrowsAlt, faInfoCircle, faTrash, faCreditCard, faBalanceScale, faFingerprint,
-  faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock, faSpinner)
+  faUtensils, faStar, faAnchor, faGlassWhiskey, faBullhorn, faHeart, faLock, faRedo, faSadTear, faTimes, faCheckCircle, faMoon, faSun, faPalette, faClock, faSpinner, faKey, faCashRegister)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)

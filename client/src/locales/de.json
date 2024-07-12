@@ -49,6 +49,11 @@
       "new":"Neues Passwort",
       "confirm":"Neues Passwort bestätigen",
       "change":"Passwort ändern"
+    },
+    "paymentSettings": {
+      "menuLabel": "Zahlungseinstellungen",
+      "stripeAPILabel": "Stripe API Schlüssel",
+      "stripeCardReaderLabel": "Kartenlesegerät"
     }
   },
   "statistics":{

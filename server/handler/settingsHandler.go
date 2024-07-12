@@ -32,9 +32,10 @@ func GetStripeCardReader(w http.ResponseWriter, r *http.Request) {
 	}
 
 	readParams := &stripe.TerminalReaderListParams{}
-	readParams.Limit = stripe.Int64(10)
-	allReaders := reader.List(readParams)
+	// readParams.Limit = stripe.Int64(10)
+	result := reader.List(readParams)
 
+	allReadersJSON := marshalToJSON(result.List(), w)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(marshalToJSON(allReaders, w))
+	w.Write(allReadersJSON)
 }

@@ -1,25 +1,37 @@
 <template>
     <div>
       <br />
-      <div class="tile is-ancestor is-narrow">
+      <div class="tile is-ancestor is-narrow has-text-left">
         <div class="tile is-parent is-vertical">
           <article class="tile is-child">
-            <div class="row">
-                <label for="stripeAPI">Stripe Payment API:</label>
-                <input id="stripeAPI" class="input" type="text" placeholder="Stripe API-Key" v-model.lazy="stripeAPIKey" @change="changeAPI" />
+            <div class="field">
+                <label for="stripeAPI" class="label">{{ $t("admin.paymentSettings.stripeAPILabel") }}:</label>
+                <div class="control has-icons-left">
+                  <input id="stripeAPI" class="input" type="text" :placeholder="$t('admin.paymentSettings.stripeAPILabel')" v-model.lazy="stripeAPIKey" @change="changeAPI" />
+                  <span class="icon is-small is-left">
+                    <font-awesome-icon icon="key" />
+                  </span>
+                </div>
             </div>
-            <div class="row">
-                <label for="stripeCardReader">Card Reader:</label>
-                <select id="stripeCardReader" v-model.lazy="selectedCardReader" @change="changeCardReader">
-                    <option value="tmr_Fjr3RwpN5Jg1xD">Simulierter Test-Leser</option>
-                    <option
-                        v-for="reader in availableCardReaders"
-                        :key="reader.data.id"
-                        :value="reader.data.id"
-                        >
-                        {{ reader.data.label }}
-                    </option>
-                </select>
+            <div class="field">
+                <label for="stripeCardReader" class="label">{{ $t("admin.paymentSettings.stripeCardReaderLabel") }}:</label>
+                <div class="control has-icons-left">
+                  <div class="select is-normal">
+                    <select id="stripeCardReader" v-model.lazy="selectedCardReader" @change="changeCardReader">
+                        <!-- <option value="tmr_Fjr3RwpN5Jg1xD">Simulierter Test-Leser</option> -->
+                        <option
+                            v-for="reader in availableCardReaders"
+                            :key="reader.id"
+                            :value="reader.id"
+                            >
+                            {{ reader.label }}
+                        </option>
+                    </select>
+                    <span class="icon is-small is-left">
+                      <font-awesome-icon icon="cash-register" />
+                    </span>
+                  </div>
+                </div>
             </div>
           </article>
         </div>
@@ -51,7 +63,8 @@
             });
         this.$http.post("getStripeCardReader").then(
             (resp) => {
-                this.availableCardReaders = resp.data;
+                this.availableCardReaders = resp.data.data;
+                console.log(this.availableCardReaders)
             }
         )
         this.selectedCardReader = localStorage.getItem("StripeCardReader");

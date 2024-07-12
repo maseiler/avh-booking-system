@@ -49,6 +49,11 @@
       "new":"New password",
       "confirm":"Confirm new password",
       "change":"Change Password"
+    },
+    "paymentSettings": {
+      "menuLabel": "Payment Settings",
+      "stripeAPILabel": "Stripe API Key",
+      "stripeCardReaderLabel": "Card Reader"
     }
   },
   "statistics":{
