@@ -61,7 +61,7 @@ func main() {
 	r.PathPrefix("/").Handler(handler.CustomFileServer(http.Dir(os.Getenv("AVHBS_FRONTEND_PATH")), serveIndexHTML))
 
 	server := &http.Server{
-		Addr:           ":8082",
+		Addr:           ":8081",
 		Handler:        r,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,

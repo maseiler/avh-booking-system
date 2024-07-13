@@ -160,7 +160,7 @@ export default {
     submitPayment() {
       let AVHBS_payment = {
           User: this.user,
-          Balance: this.newCredit,
+          Balance: this.balancePart,
           PaymentMethod: this.paymentMethod,
           IntentID: null,
           CardReader: localStorage.getItem("StripeCardReader")
