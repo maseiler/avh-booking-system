@@ -184,10 +184,11 @@ export default {
         .then((resp) => {
           pi_data = resp.data;
           status = pi_data.action.status;
-          let message = `${this.$t('booking.payment.processing')}`// Standard is Processing
           this.$responseEventBus.$emit("close");
-          this.$responseEventBus.$emit("processingMessage", message);
+          
           if (status == "in_progress") {
+            let message = `${this.$t('booking.payment.processing')}`// Standard is Processing
+            this.$responseEventBus.$emit("processingMessage", message);
             setTimeout(() => {this.handlePaymentIntent(payment)}, 1000);
           }
           if(status == "failed"){

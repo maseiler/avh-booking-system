@@ -64,7 +64,6 @@
         this.$http.post("getStripeCardReader").then(
             (resp) => {
                 this.availableCardReaders = resp.data.data;
-                console.log(this.availableCardReaders)
             }
         )
         this.selectedCardReader = localStorage.getItem("StripeCardReader");
