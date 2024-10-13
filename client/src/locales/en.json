@@ -39,7 +39,14 @@
     "feedbackList": "Feedback",
     "reportSettings":{
       "menuLabel":"Report Settings",
-      "sendCurrentDebts":"Send current debts Report"
+      "sendCurrentDebts":"Send current debts Report",
+      "eMailLabel" : "E-Mail Settings",
+      "eMailServer": "E-Mail Server Host",
+      "eMailPort": "E-Mail Server Port",
+      "eMailUser": "E-Mail Username",
+      "eMailPass": "E-Mail Password",
+      "eMailSender": "E-Mail Sender name",
+      "reportLabel": "E-Mail Reports"
     },
     "addUser":{
       "title":"Add new User"

@@ -25,10 +25,11 @@ func GetSettings() []data.Setting {
 func UpdateSetting(setting data.Setting) {
 	tx, err := db.Begin()
 	HandleDatabaseError(err)
-	stmt, err := tx.Prepare("UPDATE settings SET value = ? WHERE settings.name = ?;")
+	// stmt, err := tx.Prepare("UPDATE settings SET value = ? WHERE settings.name = ?;")
+	stmt, err := tx.Prepare("REPLACE INTO settings (name, value) VALUES(?, ?);")
 	HandleTxError(tx, err)
 	defer stmt.Close()
-	res, err := stmt.Exec(setting.Value, setting.Name)
+	res, err := stmt.Exec(setting.Name, setting.Value)
 	HandleDatabaseError(err)
 	TxRowsAffected(res, tx)
 	err = tx.Commit()

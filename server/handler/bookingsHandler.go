@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	data "github.com/maseiler/avh-booking-system/server/data"
 	dbP "github.com/maseiler/avh-booking-system/server/database"
@@ -144,9 +145,13 @@ func PayByCard(payment data.Payment) string {
 // Get payment intent
 func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
 	allSettings := dbP.GetSettings()
+	eMailUser := ""
 	for i := range allSettings {
 		if allSettings[i].Name == "StripeAPIKey" {
 			stripe.Key = allSettings[i].Value
+		}
+		if allSettings[i].Name == "EMailUser" {
+			eMailUser = allSettings[i].Value
 		}
 	}
 	payment := UnmarshalPayment(r.Body)
@@ -162,13 +167,43 @@ func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	success := dbP.Pay(payment)
+	success := dbP.Pay(payment) // Log the payment in the Database
 	if success {
 		w.WriteHeader(http.StatusOK)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	w.Write(marshalToJSON(result, w))
+
+	if !true { // ToDo: Check if sending an EMail after every payment is activated in the settings.
+		//
+	}
+	// Send an E-Mail to the User, with all payment information included.
+	receiver := payment.User.Email
+	if len(receiver) == 0 {
+		log.Println("Mail to " + payment.User.FirstName + " (" + payment.User.BierName + ") " + payment.User.LastName + " failed. Because no E-Mail is configured for the user.")
+	} else {
+		receiverCC := ""  //Normally noone needs to receive this mail in CC
+		receiverBCC := "" //But it could be possible to set a BCC receiver to the one in charge with the Bank Account
+		sender := eMailUser
+
+		timeStamp := time.Now().Format("2006-01-02 15:04:05")
+		// Set new User.Balance based on the payment amount.
+		newBalance := payment.User.Balance - payment.Balance
+
+		//From here on think of internationalisation or Database Settings for the texts.
+		subject := "New Payment received"
+		message := "<p>Hello dear " + payment.User.FirstName + " (" + payment.User.BierName + ") " + payment.User.LastName + ",<br>" +
+			"We received a payment from you.</p>" +
+			"<table><tbody>" +
+			"<tr><td>User Balance:</td><td>" + fmt.Sprintf("%.2f", (payment.User.Balance*-1)) + "</td></tr>" +
+			"<tr><td>Amount Payed:</td><td>" + fmt.Sprintf("%.2f", payment.Balance) + "</td></tr>" +
+			"<tr><td>New User Balance:</td><td>" + fmt.Sprintf("%.2f", (newBalance*-1)) + "</td></tr>" +
+			"<tr><td>Payment method:</td><td>" + payment.PaymentMethod + "</td></tr>" +
+			"</tbody></table><br>" +
+			"<p>Thank you for your payment on " + timeStamp + "</p>"
+		EmailController(receiver, receiverCC, receiverBCC, sender, subject, message)
+	}
 }
 
 // Cancel the current Action on the reader

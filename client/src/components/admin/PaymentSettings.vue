@@ -4,21 +4,29 @@
       <div class="tile is-ancestor is-narrow has-text-left">
         <div class="tile is-parent is-vertical">
           <article class="tile is-child">
-            <div class="field">
-                <label for="stripeAPI" class="label">{{ $t("admin.paymentSettings.stripeAPILabel") }}:</label>
-                <div class="control has-icons-left">
-                  <input id="stripeAPI" class="input" type="text" :placeholder="$t('admin.paymentSettings.stripeAPILabel')" v-model.lazy="stripeAPIKey" @change="changeAPI" />
-                  <span class="icon is-small is-left">
-                    <font-awesome-icon icon="key" />
-                  </span>
+            <div class="box">
+              <div class="columns field">
+                <div class="clumn is-2">
+                  <label for="stripeAPI" class="label">{{ $t("admin.paymentSettings.stripeAPILabel") }}:</label>
                 </div>
-            </div>
-            <div class="field">
-                <label for="stripeCardReader" class="label">{{ $t("admin.paymentSettings.stripeCardReaderLabel") }}:</label>
-                <div class="control has-icons-left">
+                <div class="column is-6">
+                  <div class="control has-icons-left">
+                    <input id="stripeAPI" class="input" type="text" :placeholder="$t('admin.paymentSettings.stripeAPILabel')" v-model.lazy="stripeAPIKey" @change="changeAPI" />
+                    <span class="icon is-small is-left">
+                      <font-awesome-icon icon="key" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="columns field">
+                <div class="column is-2">
+                  <label for="stripeCardReader" class="label">{{ $t("admin.paymentSettings.stripeCardReaderLabel") }}:</label>
+                </div>
+                <div class="column is-4">
+                  <div class="control has-icons-left">
                   <div class="select is-normal">
                     <select id="stripeCardReader" v-model.lazy="selectedCardReader" @change="changeCardReader">
-                        <!-- <option value="tmr_Fjr3RwpN5Jg1xD">Simulierter Test-Leser</option> -->
                         <option
                             v-for="reader in availableCardReaders"
                             :key="reader.id"
@@ -31,7 +39,9 @@
                       <font-awesome-icon icon="cash-register" />
                     </span>
                   </div>
+                  </div>
                 </div>
+              </div>
             </div>
           </article>
         </div>

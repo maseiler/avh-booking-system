@@ -39,7 +39,14 @@
     "feedbackList": "Rückmeldungen",
     "reportSettings":{
       "menuLabel":"Berichteinstellungen",
-      "sendCurrentDebts":"Sende Schuldenbericht"
+      "sendCurrentDebts":"Sende Schuldenbericht",
+      "eMailLabel" : "E-Mail Einstellungen",
+      "eMailServer": "E-Mail Server Host",
+      "eMailPort": "E-Mail Server Port",
+      "eMailUser": "E-Mail Benutzername",
+      "eMailPass": "E-Mail Passwort",
+      "eMailSender": "E-Mail Absendername",
+      "reportLabel": "E-Mail Berichte"
     },
     "addUser":{
       "title":"Neuen Benutzer hinzufügen"
