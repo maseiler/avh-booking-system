@@ -62,8 +62,8 @@
                 <div class="select">
                   <select v-model="item.Unit">
                     <option disabled value>{{$t('item.unit')}}</option>
-                    <option>{{$t('item.unitL')}}</option>
-                    <option>{{$t('item.unitPiece')}}</option>
+                    <option value="l">{{$t('item.unitL')}}</option>
+                    <option value="piece">{{$t('item.unitPiece')}}</option>
                   </select>
                 </div>
               </div>
