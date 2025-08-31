@@ -49,7 +49,7 @@
 
         <!-- Component OrderControls -->
         <div class="buttons">
-          <button class="button is-warning is-inverted is-outlined" @click="cancelOrder">
+          <button class="button is-warning is-inverted is-outlined" @click="cancelOrder" title="discard cart and unselect account">
             <span class="icon"><icon :icon="['fas', 'trash']" /></span>
             <span>Cancel Order</span>
           </button>

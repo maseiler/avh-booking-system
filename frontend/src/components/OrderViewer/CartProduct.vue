@@ -6,16 +6,16 @@
           <button class="button" @click="cart$.removeFromCart(content.product)"><icon :icon="['fas', 'trash']" /></button>
         </p>
         <p class="control has-icons-left has-icons-right">
-          <input v-model="content.amount" type="number" class="input"></input>
+          <input v-model="content.quantity" type="number" class="input"></input>
           <span class="icon is-left" @click="reduceQuant()"><icon :icon="['fas', 'circle-minus']" /></span>
-          <span class="icon is-right" @click="content.amount ++"><icon :icon="['fas', 'circle-plus']" /></span>
+          <span class="icon is-right" @click="content.quantity ++"><icon :icon="['fas', 'circle-plus']" /></span>
         </p>
       </div>
     </td>
     <td class="cell productName"><span>{{ content.product.name }} ({{ content.product.size }})</span></td>
     <td class="cell productTax has-text-right"><span>{{ content.product.tax }}%</span></td>
-    <td class="cell productPrice has-text-right"><span>{{ $n(content.product.price / 100, 'currency', 'de-DE') }}</span></td>
-    <td class="cell productAmount has-text-right"><span>{{ $n(content.product.price * content.amount / 100, 'currency', 'de-DE') }}</span></td>
+    <td class="cell productPrice has-text-right"><span>{{ $n(content.productPrice / 100, 'currency', 'de-DE') }}</span></td>
+    <td class="cell productAmount has-text-right"><span>{{ $n(content.productPrice * content.quantity / 100, 'currency', 'de-DE') }}</span></td>
   </tr>
 </template>
 
@@ -70,8 +70,8 @@ export default{
   },
   methods: {
     reduceQuant(){
-      this.content.amount --;
-      if(this.content.amount == 0){
+      this.content.quantity --;
+      if(this.content.quantity == 0){
         this.cart$.removeFromCart(this.content.product);
       }
     },
