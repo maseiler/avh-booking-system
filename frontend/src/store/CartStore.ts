@@ -29,6 +29,11 @@ export const useCartStore = defineStore('cart', {
         return;
       }
       this.cartContents.push({product: product, amount: 1} as CartContent);
+    },
+    removeFromCart(product: Product){
+      this.cartContents = this.cartContents.filter((cont) => {
+        return cont.product != product
+      })
     }
   }
 })
