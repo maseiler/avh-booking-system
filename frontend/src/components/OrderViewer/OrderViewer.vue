@@ -19,10 +19,11 @@
         </div>
       </div>
 
-      <div class="cartList">
-        <p v-if="account$.selected.length == 0">Please select an Accout first</p>
+      <!-- Component Cart List -->
+      <p v-if="account$.selected.length == 0">Please select an Accout first</p>
+      <div class="cartList" v-if="account$.selected.length != 0">
         <div class="table-container">
-          <table v-if="account$.selected.length != 0" class="table is-striped">
+          <table class="table is-striped">
             <thead><tr>
               <th>Quantity</th>
               <th>Product</th>
