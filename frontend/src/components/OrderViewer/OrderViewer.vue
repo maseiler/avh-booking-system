@@ -19,46 +19,8 @@
         </div>
       </div>
 
-      <!-- Component Cart List -->
-      <p v-if="account$.selected.length == 0">Please select an Accout first</p>
-      <div class="cartList" v-if="account$.selected.length != 0">
-        <div class="table-container">
-          <table class="table is-striped">
-            <thead><tr>
-              <th>Quantity</th>
-              <th>Product</th>
-              <th class="has-text-right">Tax</th>
-              <th class="has-text-right">Price</th>
-              <th class="has-text-right">Amount</th>
-            </tr></thead>
-            <tbody>
-              <CartProduct v-for="content in cart$.cartContents" :content="content"/>
-            </tbody>
-          </table>
-        </div>
-        <div class="dblhr"></div>
-        <!-- Component CartSums -->
-        <p class="cartSum">
-          Summe:
-          <span>{{ $n(cart$.getTotals[0] / 100, 'currency', 'de-DE') }}</span>
-        </p>
-        <p class="cartTax">
-          Davon Steuer:
-          <span>{{ $n(cart$.getTotals[1] / 100, 'currency', 'de-DE') }}</span>
-        </p>
+      <CartList @cancelOrder="cancelOrder()"/>
 
-        <!-- Component OrderControls -->
-        <div class="buttons">
-          <button class="button is-warning is-inverted is-outlined" @click="cancelOrder" title="discard cart and unselect account">
-            <span class="icon"><icon :icon="['fas', 'trash']" /></span>
-            <span>Cancel Order</span>
-          </button>
-          <button class="button is-success is-inverted is-outlined" @click="checkoutOrder">
-            <span>Book now</span>
-            <span class="icon"><icon :icon="['fas', 'beer']"/></span>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -66,34 +28,6 @@
 <style scoped>
 .selectedAccounts{
   margin-bottom:.5rem;
-}
-.buttons{
-  margin-top:.5rem;
-  justify-content: end;
-}
-.cartSum,
-.cartTax{
-  font-size:1.2rem;
-  text-align: right;
-  span{
-    font-weight:600;
-  }
-}
-.cartTax{
-  font-size:.8rem;
-}
-.table-container{
-  border-radius: var(--bulma-control-radius);
-  margin-bottom:.5rem;
-  .table{
-    width:100%;
-  }
-}
-.dblhr{
-  --_height:6px;
-  height:var(--_height);
-  border-top:calc(var(--_height) / 3) solid var(--bulma-scheme-main);;
-  border-bottom:calc(var(--_height) / 3) solid var(--bulma-scheme-main);;
 }
 .order{
   position:relative;
@@ -169,7 +103,8 @@
 import { useAccountStore } from '../../store/AccountStore';
 import type { Account } from '../../composables/account';
 import { useCartStore } from '../../store/CartStore';
-import CartProduct from './CartProduct.vue';
+import CartList from './CartList.vue';
+
 
 export default {
   data() {
@@ -180,7 +115,7 @@ export default {
     }
   },
   components: {
-    CartProduct
+    CartList
   },
   methods: {
     unselectAccount(account: Account){
