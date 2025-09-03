@@ -46,11 +46,15 @@
             <div>
               &nbsp;
               <font-awesome-icon icon="euro-sign" />
-              &nbsp;&nbsp;{{ user.Balance }}&nbsp;€
+              &nbsp;&nbsp;{{ $n(user.Balance, 'currency', 'de-DE' ) }}
             </div>
             <div>
               <font-awesome-icon icon="credit-card" />
-              &nbsp;{{ user.MaxDebt }}&nbsp;€
+              &nbsp;{{ $n(user.MaxDebt, 'currency', 'de-DE' ) }}
+            </div>
+            <div>
+              <font-awesome-icon icon="envelope" />
+              &nbsp;{{ user.WantsReceipts }}
             </div>
           </h6>
         </div>

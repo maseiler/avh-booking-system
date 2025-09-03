@@ -171,7 +171,8 @@
     "boatName":"Bootsname",
     "eMail":"E-Mail",
     "phoneNumber":"Telefonnummer",
-    "password":"Passwort"
+    "password":"Passwort",
+    "wantsReceipts": "möchte Quittungen"
   },
   "cart":{
     "amount":"Anzahl",

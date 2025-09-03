@@ -89,8 +89,57 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	}
 	success := dbP.Checkout(cart)
 	validation := "ok"
+
+	allSettings := dbP.GetSettings()
+	eMailUser := ""
+	for i := range allSettings {
+		if allSettings[i].Name == "EMailUser" {
+			eMailUser = allSettings[i].Value
+		}
+	}
+
 	if success {
 		w.WriteHeader(http.StatusOK)
+
+		newUserInfo := dbP.GetUserById(cart.User.ID)
+
+		// Sende eine E-Mail an den Nutzer, falls aktiviert
+		receiver := cart.User.Email
+		if len(receiver) == 0 {
+			log.Println("Mail to " + cart.User.FirstName + " (" + cart.User.BierName + ") " + cart.User.LastName + " failed. Because no E-Mail is configured for the user.")
+		} else {
+			receiverCC := ""  //Normally noone needs to receive this mail in CC
+			receiverBCC := "" //But it could be possible to set a BCC receiver to the one in charge with the Bank Account
+			sender := eMailUser
+
+			timeStamp := time.Now().Format("2006-01-02 15:04:05")
+
+			//Build HTML for the Cart Items
+			cartItemHTML := ""
+			for _, cartItem := range cart.CartItems {
+				cartItemHTML = cartItemHTML +
+					"<tr><td>" + cartItem.Item.Name + " (" + fmt.Sprintf("%.1f", cartItem.Item.Size) + cartItem.Item.Unit + ")</td>" +
+					"<td>" + fmt.Sprintf("%.2f", cartItem.Item.Price) + "€</td><td>" + fmt.Sprintf("%d", cartItem.Amount) + "</td>" +
+					"</tr>"
+			}
+
+			subject := "Neue Bestellung erhalten"
+			message := "<p>Hallo " + cart.User.FirstName + " (" + cart.User.BierName + ") " + cart.User.LastName + ",<br><br>" +
+				"Wir haben eine Bestellung von dir erhalten.</p>" +
+				"<table><tbody>" +
+				"<tr><th>Produkt</th><th>Einzelpreis</th><th>Anzahl</th></tr>" +
+				cartItemHTML +
+				"</tbody></table><br>" +
+				"<p>Zeitpunkt der Buchung: " + timeStamp + "<br>Alter Kontostand: " + fmt.Sprintf("%.2f", cart.User.Balance*-1) + "€<br>" +
+				"Neuer Kontostand: " + fmt.Sprintf("%.2f", newUserInfo.Balance*-1) + "€ </p>" +
+				"<p>Wenn diese Buchung nicht von dir kam bzw. du diese Buchung verdächtig findest, kontaktiere bitte so schnell wie möglich die Aktivitas, um der Ursache auf den Grund zu gehen.</p>"
+			log.Println("User möchte Quittung: ", newUserInfo.WantsReceipts)
+			if newUserInfo.WantsReceipts {
+				// Do not send Mails if the User do not want to receive Receipts
+				EmailController(receiver, receiverCC, receiverBCC, sender, subject, message)
+			}
+
+		}
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		// ToDo: internaitonalize this message - maybe send only error-codes and do the text at client side
@@ -169,6 +218,8 @@ func ConfirmPaymentIntent(w http.ResponseWriter, r *http.Request) {
 	result, err := reader.Get(payment.CardReader, params)
 	if err != nil {
 		// Error
+		w.Write(marshalToJSON(result, w))
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")

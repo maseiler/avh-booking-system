@@ -135,6 +135,7 @@ export default {
     },
     async checkout() {
       var packedCart = { cartItems: this.cart, user: this.user };
+      console.log(this.user);
       await this.$http
         .post("checkout", packedCart)
         .then(() => {

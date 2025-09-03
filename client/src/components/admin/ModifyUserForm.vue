@@ -161,6 +161,14 @@
                 </span>
               </div>
             </div>
+
+            <div class="field">
+              <label class="label">{{$t('user.wantsReceipts')}}</label>
+              <div class="control">
+                <input type="checkbox" id="wantsReceipts" v-model="user.WantsReceipts" class="cbSwitch">
+                <label for="wantsReceipts"></label>
+              </div>
+            </div>
           </div>
 
           <div class="modal-footer">

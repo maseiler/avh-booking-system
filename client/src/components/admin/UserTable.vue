@@ -14,6 +14,7 @@
             <th>{{$t('user.phoneNumber')}}</th>
             <th style="text-align: right">{{$t('generic.balance')}}</th>
             <th style="text-align: right">{{$t('generic.max')}} {{$t('generic.debt')}}</th>
+            <th>{{ $t('user.wantsReceipts') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -31,8 +32,9 @@
             <td>{{ user.Status }}</td>
             <td>{{ user.Email }}</td>
             <td>{{ user.Phone }}</td>
-            <td style="text-align: right">{{ user.Balance }} €</td>
-            <td style="text-align: right">{{ user.MaxDebt }} €</td>
+            <td style="text-align: right">{{ $n(user.Balance, 'currency', 'de-DE') }}</td>
+            <td style="text-align: right">{{ $n(user.MaxDebt, 'currency', 'de-DE') }}</td>
+            <td>{{ user.WantsReceipts }}</td>
           </tr>
         </tbody>
       </table>

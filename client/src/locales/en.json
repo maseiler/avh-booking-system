@@ -172,7 +172,8 @@
     "boatName":"Boat Name",
     "eMail":"E-Mail",
     "phoneNumber":"Phone Number",
-    "password":"Password"
+    "password":"Password",
+    "wantsReceipts": "wants receipts"
   },
   "cart":{
     "amount":"Amount",

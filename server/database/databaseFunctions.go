@@ -37,9 +37,17 @@ func CreateDatabase() {
 		email VARCHAR(50),
 		phone VARCHAR(30),
 		balance DECIMAL(6,2),
-		max_debt INT
+		max_debt INT,
+		wants_receipts BOOLEAN NOT NULL DEFAULT '0'
 	);`
 	_, err = db.Exec(createUsersTable)
+	HandleDatabaseError(err)
+
+	// Altering because of a new Column
+	alterUsersTable := `
+	ALTER TABLE users ADD COLUMN IF NOT EXISTS wants_receipts BOOLEAN NOT NULL DEFAULT '0' AFTER max_debt
+	;`
+	_, err = db.Exec(alterUsersTable)
 	HandleDatabaseError(err)
 
 	createItemsTable := `

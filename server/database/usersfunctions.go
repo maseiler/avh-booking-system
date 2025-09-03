@@ -15,7 +15,7 @@ func getUsersByQuery(query string) []data.User {
 	defer rows.Close()
 	for rows.Next() {
 		user := data.User{}
-		err := rows.Scan(&user.ID, &user.BierName, &user.FirstName, &user.LastName, &user.BoatName, &user.Status, &user.Email, &user.Phone, &user.Balance, &user.MaxDebt)
+		err := rows.Scan(&user.ID, &user.BierName, &user.FirstName, &user.LastName, &user.BoatName, &user.Status, &user.Email, &user.Phone, &user.Balance, &user.MaxDebt, &user.WantsReceipts)
 		users = append(users, user)
 		HandleDatabaseError(err)
 	}
@@ -23,6 +23,12 @@ func getUsersByQuery(query string) []data.User {
 	HandleDatabaseError(err)
 	// fmt.Printf("Performed user query: \"%s\"\n", query)
 	return users
+}
+
+// Get a single User from ID
+func GetUserById(id int) data.User {
+	foundUsers := getUsersByQuery("SELECT * FROM users WHERE id =\"" + strconv.Itoa(id) + "\"")
+	return foundUsers[0]
 }
 
 // GetUsersOfColumnWithValue returns all users where value matches in specific column
@@ -77,7 +83,12 @@ func AddUser(newUser data.User) {
 
 // ModifyUser replaces all values of a user
 func ModifyUser(user data.User) {
-	queryString := fmt.Sprintf("UPDATE users SET bier_name = \"%s\", first_name = \"%s\", last_name = \"%s\", status = \"%s\", email = \"%s\", balance = %f, phone = \"%s\", max_debt = %d, boat_name = \"%s\" WHERE id = %d", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.BoatName, user.ID)
+
+	tempWantRecp := 0
+	if user.WantsReceipts {
+		tempWantRecp = 1
+	}
+	queryString := fmt.Sprintf("UPDATE users SET bier_name = \"%s\", first_name = \"%s\", last_name = \"%s\", status = \"%s\", email = \"%s\", balance = %f, phone = \"%s\", max_debt = %d, boat_name = \"%s\", wants_receipts = %d WHERE id = %d", user.BierName, user.FirstName, user.LastName, user.Status, user.Email, user.Balance, user.Phone, user.MaxDebt, user.BoatName, tempWantRecp, user.ID)
 	rows, err := db.Query(queryString)
 	HandleDatabaseError(err)
 	fmt.Println(rows)
