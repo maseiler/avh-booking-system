@@ -10,7 +10,6 @@
       <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" title="discard cart and unselect account"></button>
     </div>
 
-    <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
     <div :class="showOrderDetails ? 'showDetails' : ''" class="message-body fixed-grid has-3-cols">
       <div class="selectedAccounts">
         <div class="tag" v-for="account in account$.selected">
@@ -22,6 +21,7 @@
       <CartList @cancelOrder="cancelOrder()"/>
 
     </div>
+    <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
   </div>
 </template>
 

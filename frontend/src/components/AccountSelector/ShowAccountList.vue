@@ -9,8 +9,8 @@
           <th>Last Name</th>
           <th>E-Mail</th>
           <th>Phone</th>
-          <th>Balance</th>
-          <th>MaxDebt</th>
+          <th class="has-text-right">Balance</th>
+          <th class="has-text-right">MaxDebt</th>
           <th>Category</th>
           <th>Enabled</th>
           <th>Created At</th>
@@ -22,8 +22,8 @@
           <td>{{ account.lastName }}</td>
           <td class="has-copy-btn">{{ account.email }} <span class="icon is-small" @click="copyText(account.email)"><icon :icon="['fas', 'copy']" /></span></td>
           <td class="has-copy-btn">{{ account.phone }} <span class="icon is-small"><icon :icon="['fas', 'copy']" /></span></td>
-          <td>{{ account.balance }}</td>
-          <td>{{ account.maxDebt }}</td>
+          <td class="has-text-right">{{ $n(account.balance / 100, 'currency', 'de-DE') }}</td>
+          <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency', 'de-DE') }}</td>
           <td>{{ account.category }}</td>
           <td>{{ account.enabled }}</td>
           <td>{{ account.createdAt }}</td>

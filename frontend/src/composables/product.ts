@@ -51,3 +51,7 @@ export function generateTestData(){
 
   return [p1, p2];
 }
+
+// export function formatPrice(price: number){
+
+// }

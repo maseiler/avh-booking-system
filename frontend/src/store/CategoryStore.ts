@@ -14,7 +14,10 @@ export const useCategoryStore = defineStore('category', {
     },
     productCategorys(state){
       return state.categorys.filter((cat) => cat.type == CategoryType.PRODUCT)
-    }
+    },
+    byId(state){
+      return (id: number) => state.categorys.find((cat) => cat.id == id)
+    },
   },
   actions: {
     generateTestData(){

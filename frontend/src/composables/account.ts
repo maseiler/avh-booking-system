@@ -35,7 +35,7 @@ export class Account implements Account{
   }
 
   public getFullName(): string {
-    if(this.nickName !== null && this.nickName !== undefined && this.nickName.length >= 0){
+    if(this.hasNickname()){
       return `${this.firstName} (${this.nickName}) ${this.lastName}`;
     }
     return `${this.firstName} ${this.lastName}`;
@@ -56,7 +56,7 @@ export function generateTestData(): Account[]{
     firstName: "Nomen",
     lastName: "Omen",
     email: "test@test.de",
-    balance: Math.random() * 100,
+    balance: Math.trunc(Math.random() * 10000),
     maxDebt: 0,
     enabled: true,
     category: 1
@@ -67,7 +67,7 @@ export function generateTestData(): Account[]{
     firstName: "Peter",
     lastName: "Super",
     email: "test@test.de",
-    balance: Math.random() * 100,
+    balance: Math.trunc(Math.random() * 10000),
     maxDebt: 0,
     enabled: true,
     category: 2
@@ -79,7 +79,7 @@ export function generateTestData(): Account[]{
     nickName: "Saufi",
     lastName: "Theke",
     email: "test@test.de",
-    balance: Math.random() * 100,
+    balance: Math.trunc(Math.random() * 10000),
     maxDebt: 0,
     enabled: true,
     category: 2

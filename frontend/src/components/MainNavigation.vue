@@ -23,6 +23,10 @@
         Booking
       </router-link>
 
+      <router-link class="navbar-item" to="/payment" @click="burgerActive = false">
+        Payment
+      </router-link>
+
       <a class="navbar-item">Orders</a>
 
       <a class="navbar-item">Statistics</a>
