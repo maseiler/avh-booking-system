@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { type CartContent } from '../composables/cartContent'
 import { Product } from '../composables/product'
+import { useAccountStore } from './AccountStore'
 
 export const useCartStore = defineStore('cart', {
   state: () => {
@@ -19,6 +20,11 @@ export const useCartStore = defineStore('cart', {
         tax += subTax;
       })
       return [total, tax];
+    },
+    isOverdrawn(): Boolean{
+      const account$ = useAccountStore();
+      if (account$.selected.length > 1) {return false}
+      return account$.selected[0].balance - this.getTotals[0] < account$.selected[0].maxDebt
     }
   },
   actions: {

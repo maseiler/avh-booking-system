@@ -19,13 +19,16 @@
       </div>
 
       <CartList @cancelOrder="cancelOrder()"/>
-
     </div>
     <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
   </div>
 </template>
 
 <style scoped>
+
+.buttons{
+  justify-content: end;
+}
 .selectedAccounts{
   margin-bottom:.5rem;
 }

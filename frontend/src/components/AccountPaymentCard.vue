@@ -1,6 +1,9 @@
 <template>
   <div class="panel" v-if="account$.selected.length > 0">
-    <p class="panel-heading">{{ account$.selected[0].getFullName() }}</p>
+    <div class="panel-heading">
+      <span>{{ account$.selected[0].getFullName() }}</span>
+      <button class="delete" aria-label="delete" @click="account$.unselect();"></button>
+    </div>
     <div class="panel-block">
       <div class="account-id-area">
         <div class="account-id-grid">
@@ -50,6 +53,7 @@
         </button>
         <button class="button is-skeleton">
           <span class="icon"><icon :icon="['fas', 'coins']"/></span>
+          <span>Pay Now</span>
         </button>
       </div>
     </div>
@@ -73,6 +77,7 @@
 .panel{
   max-width: 80ch;
   margin-inline: auto;
+  position:relative;
 }
 .panel-block{
   display:block;
@@ -87,6 +92,10 @@
 .balance{
   font-size:2rem;
   font-weight:600;
+}
+.delete{
+  position:absolute;
+  right:25px;
 }
 </style>
 

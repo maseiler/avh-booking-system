@@ -79,7 +79,7 @@ export function generateTestData(): Account[]{
     nickName: "Saufi",
     lastName: "Theke",
     email: "test@test.de",
-    balance: Math.trunc(Math.random() * 10000),
+    balance: 500,
     maxDebt: 0,
     enabled: true,
     category: 2
