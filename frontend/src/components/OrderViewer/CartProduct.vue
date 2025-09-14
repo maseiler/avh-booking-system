@@ -4,13 +4,14 @@
       <span class="productName cell is-col-span-3 is-row-start-1">{{ content.product.name }} ({{ content.product.size }})</span>
       <input v-model="content.amount" type="number" class="input cell is-col-start-4 is-col-span-1 is-row-start-1 productAmount"></input>
       <span class="productTax cell is-col-start-5 is-col-span-1 is-row-start-1">{{ content.product.tax }}%</span>
-      <span class="productTax cell is-col-start-6 is-col-span-2 is-row-start-1">{{ content.product.price }}€</span>
+      <span class="productPrice cell is-col-start-6 is-col-span-2 is-row-start-1">{{ $n(content.product.price / 100, 'currency', 'de-DE') }}</span>
     </div>
   </div>
 </template>
 
 <style scoped>
-.productTax{
+.productTax,
+.productPrice {
   justify-self: end;
 }
 .cartProduct{

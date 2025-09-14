@@ -65,9 +65,6 @@ export default {
   computed: {
     products(){
       let selectedAccountCategorys = [...new Set(this.account$.selected.map(a => a.category))] as number[];
-      console.log("Selected Account Categorys: ", selectedAccountCategorys);
-      console.log("Selected Product Category: ", this.selectedCategory);
-      console.log("Search String: ", this.search);
       // return this.product$.products;
       return this.product$.getBySearchAndCategory(this.search, this.selectedCategory, selectedAccountCategorys);
     },

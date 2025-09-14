@@ -55,10 +55,11 @@ function loadLocaleNumbers(){
 }
 
 const i18n = createI18n({
+  legacy: true,
   locale: 'de',
   fallbackLocale: 'en',
   messages: loadLocaleMessages(),
-  NumberFormats: loadLocaleNumbers()
+  numberFormats: loadLocaleNumbers(),
 })
 
 import { library } from '@fortawesome/fontawesome-svg-core'

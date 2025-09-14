@@ -22,7 +22,7 @@
           <div v-if="account$.selected.length != 0">
             <CartProduct v-for="content in cart$.cartContents" :content="content"/>
             <!-- Component CartSums -->
-            <p>Summe: {{ cart$.getTotals[0] }} <br> Davon Steuer: {{ cart$.getTotals[1] }}</p>
+            <p>Summe: {{ $n(cart$.getTotals[0] / 100, 'currency', 'de-DE') }} <br> Davon Steuer: {{ cart$.getTotals[1] }}</p>
             <!-- Component OrderControls -->
              <button class="button is-warning" @click="cancelOrder">Cancel Order</button>
              <button class="button is-success" @click="checkoutOrder">Book now</button>

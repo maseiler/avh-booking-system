@@ -14,12 +14,17 @@ export const useProductStore = defineStore('product', {
       console.log(this.products);
     },
     getByCategory(categoryId: number, selectedAccountCategorys: number[]): Product[]{
-      let visibleProducts = this.products.filter(prod =>
-        prod.visibility.some(cat => selectedAccountCategorys.includes(cat))
-      );
+      let visibleProducts = this.products.filter((prod) => {
+        // Union of all Products / User Categorys
+        // return prod.visibility.some(cat => selectedAccountCategorys.includes(cat))
 
-      console.log("Visible Products: ", visibleProducts);
+        // Intersection    
+        let intersection = selectedAccountCategorys.filter(aCat => prod.visibility.includes(aCat));
+        return JSON.stringify(intersection.sort()) == JSON.stringify(selectedAccountCategorys.sort());
+      });
+
       const currentCategoryProducts = visibleProducts.filter((prod) => prod.category == categoryId);
+
       if(categoryId == 0){
         return visibleProducts;
       }
