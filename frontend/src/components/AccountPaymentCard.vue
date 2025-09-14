@@ -7,7 +7,7 @@
           <icon class="" :icon="['fas', 'user-secret']" /><span>{{ account$.selected[0].nickName }}</span>
           <icon class="" :icon="['fas', 'user']" /><span>{{ account$.selected[0].firstName }}</span>
           <icon class="" :icon="['fas', 'id-card']" /><span>{{ account$.selected[0].lastName }}</span>
-          <icon class="" :icon="category$.byId(account$.selected[0].category).icon" /><span>{{ category$.byId(account$.selected[0].category).title }}</span>
+          <icon class="" :icon="categoryIcon" /><span>{{ category$.byId(account$.selected[0].category)?.title }}</span>
         </div>
         <div class="balance-area">
           <span>Balance</span><br>
@@ -19,7 +19,7 @@
           <span class="icon"><icon :icon="['fas', 'list']" /></span>
           <span>List Orders</span>
         </button>
-        <button class="button is-success is-inverted is-outlined" @click="checkoutOrder">
+        <button class="button is-success is-inverted is-outlined">
           <span>Pay now</span>
           <span class="icon"><icon :icon="['fas', 'coins']"/></span>
         </button>
@@ -48,8 +48,7 @@
           <span class="icon"><icon :icon="['fas', 'list']" /></span>
           <span>List Orders</span>
         </button>
-        <button class="button is-skeleton" @click="checkoutOrder">
-          <span>Pay now</span>
+        <button class="button is-skeleton">
           <span class="icon"><icon :icon="['fas', 'coins']"/></span>
         </button>
       </div>
@@ -100,6 +99,16 @@ export default {
     return {
       account$: useAccountStore(),
       category$: useCategoryStore()
+    }
+  },
+  computed: {
+    categoryIcon(){
+      let hasSelectedAccount = this.account$.selected.length > 0;
+      let undefindedCategoryIcon = ['fas', 'circle-info'];
+      if (!hasSelectedAccount){
+        return undefindedCategoryIcon
+      }
+      return this.category$.byId(this.account$.selected[0].category)?.icon ?? undefindedCategoryIcon;
     }
   }
 }
