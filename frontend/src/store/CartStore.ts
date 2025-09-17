@@ -15,7 +15,7 @@ export const useCartStore = defineStore('cart', {
       let tax = 0;
       this.cartContents.forEach((cont) => {
         let subTotal = cont.product.price * cont.quantity;
-        let subTax = subTotal*cont.product.tax;
+        let subTax = subTotal*(cont.product.tax / 100);
         total += subTotal;
         tax += subTax;
       })

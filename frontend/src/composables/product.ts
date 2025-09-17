@@ -33,7 +33,7 @@ export function generateTestData(){
     name: "Beer",
     price: 120,
     size: 0.5,
-    tax: 0,
+    tax: 19,
     category: 3,
     visibility: [2]
   } as Product
