@@ -4,56 +4,90 @@
       <tbody>
         <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Nick Name</th>
-          <th>Last Name</th>
-          <th>E-Mail</th>
-          <th>Phone</th>
-          <th>Balance</th>
-          <th>MaxDebt</th>
+          <th>Name</th>
+          <th>Size</th>
+          <th>Unit</th>
           <th>Category</th>
-          <th>Enabled</th>
-          <th>Created At</th>
+          <th>Group</th>
+          <th>Visibility</th>
+          <th v-show="hasEditProductRights">Actions</th>
         </tr>
-        <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accounts" @click="account$.select(account)">
-          <td>{{ account.id }}</td>
-          <td>{{ account.firstName }}</td>
-          <td>{{ account.nickName }}</td>
-          <td>{{ account.lastName }}</td>
-          <td class="has-copy-btn">{{ account.email }} <span class="icon is-small" @click="copyText(account.email)"><icon :icon="['fas', 'copy']" /></span></td>
-          <td class="has-copy-btn">{{ account.phone }} <span class="icon is-small"><icon :icon="['fas', 'copy']" /></span></td>
-          <td>{{ account.balance }}</td>
-          <td>{{ account.maxDebt }}</td>
-          <td>{{ account.category }}</td>
-          <td>{{ account.enabled }}</td>
-          <td>{{ account.createdAt }}</td>
+        <tr :class="product$.selected == product ? 'is-primary' : ''" v-for="product in products" @click="product$.select(product)">
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.size }}</td>
+          <td>{{ product.unit }}</td>
+          <td>
+            <button class="tag">
+              <span class="icon"><icon :icon="category$.byId(product.category)?.icon" /></span>
+              <span>{{ category$.byId(product.category)?.title }}</span>
+            </button>            
+          </td>
+          <td>{{ product.group }}</td>
+          <td>
+            <button v-for="categoryNumber in product.visibility" class="tag">
+              <span class="icon"><icon :icon="category$.byId(categoryNumber)?.icon"/></span>
+              <span>{{ category$.byId(categoryNumber)?.title }}</span>
+            </button>
+          </td>
+          <td v-show="hasEditProductRights">
+            <button class="tag">
+              <router-link :to="{ name: 'ProductSettingsSingle', params: { productId: product.id } }">
+                <span class="icon"><icon :icon="['fas', 'pen']"/></span>
+              </router-link>
+              </button>  
+            <button class="tag">
+              <span class="icon"><icon :icon="['fas', 'trash']"/></span>
+            </button>
+          </td>
         </tr>
-
       </tbody>
     </table>
   </div>
 </template>
 
+<style scoped>
+.tag:not(:last-child){
+  margin-right:.5em;
+}
+</style>
+
 <script lang="ts">
-import type { Account } from '../../composables/account';
-import { useAccountStore } from '../../store/AccountStore';
+import type { Product } from '../../composables/product';
+import { useProductStore } from '../../store/ProductStore';
+import { useCategoryStore } from '../../store/CategoryStore';
 import type { PropType } from 'vue';
 
 export default {
   data(){
     return {
-      account$: useAccountStore()
+      product$: useProductStore(),
+      category$: useCategoryStore(),
+      dev: false
     }
   },
   props: {
-    accounts: {
-      type: Array as PropType<Account[]>
+    products: {
+      type: Array as PropType<Product[]>
     }
   },
   methods: {
     copyText(txt: string){
       navigator.clipboard.writeText(txt);
     }
+  },
+  computed: {
+    hasEditProductRights(){
+      if(this.dev){
+        console.warn("User has elevated privileges to edit products because you are running this in development environment")
+        return true;
+      }
+      //ToDo Check if currently loged in user is allowed to edit products
+      return false
+    }
+  },
+  mounted() {
+    this.dev = import.meta.env.DEV;
   }
 }
 </script>

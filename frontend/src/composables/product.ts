@@ -30,6 +30,7 @@ export class Product implements Product{
 
 export function generateTestData(){
   let p1 = {
+    id: 1,
     name: "Beer",
     price: 120,
     size: 0.5,
@@ -40,6 +41,7 @@ export function generateTestData(){
   p1 = new Product(p1);
 
   let p2 = {
+    id: 2,
     name: "Bread",
     price: 250,
     size: 1,
