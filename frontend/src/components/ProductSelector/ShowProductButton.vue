@@ -4,7 +4,10 @@
       <span class="title is-1">{{ key }}</span>
       <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-flex-start is-gap-1">
         <div v-for="product in dict">
-          <button class="button is-fullwidth" title="select product" @click="cart$.addToCart(product)">{{ product.name }} {{ product.size }} {{ product.unit }}</button>
+          <button class="button is-fullwidth" title="select product" @click="cart$.addToCart(product)">
+            {{ product.name }} {{ product.size }} {{ product.unit }}
+            <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -23,6 +26,30 @@
   .title{
     justify-self: center;
     margin-bottom:0;
+  }
+}
+
+.button:has(span){
+  padding-right:1.8em;
+}
+.cartHint{
+  position:absolute;
+  right:.25em;
+  top:50%;
+  transform: translateY(-50%);
+  font-size:.8em;
+  background-color:rgba(255,255,255,.3);
+  border-radius: 100vh;
+  width:1.6em;
+  aspect-ratio: 1;
+}
+
+@media screen and (min-width: 768px) {
+  .button:has(span){
+    padding: calc(var(--bulma-button-padding-vertical) - var(--bulma-button-border-width)) calc(var(--bulma-button-padding-horizontal) - var(--bulma-button-border-width));
+  }
+  .cartHint{
+    display:none;
   }
 }
 </style>

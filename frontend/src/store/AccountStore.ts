@@ -47,6 +47,10 @@ export const useAccountStore = defineStore('account', {
         )
       })
       return searchResults;
+    },
+    byId(id: number | undefined): Account | undefined {
+      let foundAcc = this.accounts.find((acc) => acc.id == id);
+      return foundAcc
     }
   }
 })

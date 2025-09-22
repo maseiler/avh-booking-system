@@ -14,6 +14,7 @@
           <th>Category</th>
           <th>Enabled</th>
           <th>Created At</th>
+          <th v-show="hasEditAccountRights">Actions</th>
         </tr>
         <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accounts" @click="account$.select(account)">
           <td>{{ account.id }}</td>
@@ -24,9 +25,24 @@
           <td class="has-copy-btn">{{ account.phone }} <span class="icon is-small"><icon :icon="['fas', 'copy']" /></span></td>
           <td class="has-text-right">{{ $n(account.balance / 100, 'currency', 'de-DE') }}</td>
           <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency', 'de-DE') }}</td>
-          <td>{{ account.category }}</td>
+          <td>
+            <button class="tag">
+              <span class="icon"><icon :icon="category$.byId(account.category)?.icon" /></span>
+              <span>{{ category$.byId(account.category)?.title }}</span>
+            </button>  
+          </td>
           <td>{{ account.enabled }}</td>
           <td>{{ account.createdAt }}</td>
+          <td v-show="hasEditAccountRights">
+            <button class="tag">
+              <router-link :to="{ name: 'AccountSettingsSingle', params: { accountId: account.id } }">
+                <span class="icon"><icon :icon="['fas', 'pen']"/></span>
+              </router-link>
+              </button>  
+            <button class="tag">
+              <span class="icon"><icon :icon="['fas', 'trash']"/></span>
+            </button>
+          </td>
         </tr>
 
       </tbody>
@@ -38,11 +54,14 @@
 import type { Account } from '../../composables/account';
 import { useAccountStore } from '../../store/AccountStore';
 import type { PropType } from 'vue';
+import { useCategoryStore } from '../../store/CategoryStore';
 
 export default {
   data(){
     return {
-      account$: useAccountStore()
+      account$: useAccountStore(),
+      category$: useCategoryStore(),
+      dev: false
     }
   },
   props: {
@@ -54,6 +73,19 @@ export default {
     copyText(txt: string){
       navigator.clipboard.writeText(txt);
     }
+  },
+  computed: {
+    hasEditAccountRights(){
+      if(this.dev){
+        console.warn("User has elevated privileges to edit products because you are running this in development environment")
+        return true;
+      }
+      //ToDo Check if currently loged in user is allowed to edit products
+      return false
+    }
+  },
+  mounted() {
+    this.dev = import.meta.env.DEV;
   }
 }
 </script>

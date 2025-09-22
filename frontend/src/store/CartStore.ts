@@ -40,6 +40,16 @@ export const useCartStore = defineStore('cart', {
       this.cartContents = this.cartContents.filter((cont) => {
         return cont.product != product
       })
+    },
+    productCartQuantity(product: Product): number{
+      let result = -1;
+      this.cartContents.forEach((cont) => {
+        if (cont.product != product){
+          return;
+        }
+        result = cont.quantity;
+      })
+      return result;
     }
   }
 })

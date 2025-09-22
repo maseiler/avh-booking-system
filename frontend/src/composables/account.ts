@@ -53,6 +53,7 @@ export class Account implements Account{
 
 export function generateTestData(): Account[]{
   let a1 = {
+    id: 1,
     firstName: "Nomen",
     lastName: "Omen",
     email: "test@test.de",
@@ -64,6 +65,7 @@ export function generateTestData(): Account[]{
   a1 = new Account(a1);
 
   let a2 = {
+    id: 2,
     firstName: "Peter",
     lastName: "Super",
     email: "test@test.de",
@@ -75,6 +77,7 @@ export function generateTestData(): Account[]{
   a2 = new Account(a2)
 
   let a3= {
+    id: 3,
     firstName: "Andi",
     nickName: "Saufi",
     lastName: "Theke",
