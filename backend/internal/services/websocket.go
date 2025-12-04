@@ -12,6 +12,24 @@ type WebSocketService struct {
 	hub *models.Hub
 }
 
+type Message struct {
+	Type    string `json:"type"`
+	Payload interface{}
+}
+type Query struct {
+	Table string `json:"table"`
+	Id    int    `json:"id"`
+}
+
+func getQueryFromMessage(data interface{}) Query {
+	m := data.(map[string]interface{})
+	query := Query{}
+	if table, ok := m["table"].(string); ok {
+		query.Table = table
+	}
+	return query
+}
+
 func NewWebSocketService() *WebSocketService {
 	hub := &models.Hub{
 		Clients:    make(map[*models.Client]bool),
@@ -54,19 +72,31 @@ func ReadPump(c *models.Client) {
 		}
 
 		// Process message
-		var msg map[string]interface{}
+		//var msg map[string]interface{}
+		msg := Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
 			log.Printf("JSON parse error: %v", err)
 			continue
 		}
 
 		// Handle different message types
-		switch msg["type"] {
+		switch msg.Type {
 		case "broadcast":
 			c.Hub.Broadcast <- message
 		case "ping":
 			pong, _ := json.Marshal(map[string]string{"type": "pong"})
 			c.Send <- pong
+		case "query":
+			query := getQueryFromMessage(msg.Payload)
+			log.Printf("%v", query.Table)
+			/*
+				switch payload["table"] {
+				case "accounts":
+					log.Println("Query accounts")
+				default:
+					panic("Invalid table")
+				}
+			*/
 		default:
 			// Echo to sender
 			log.Printf("Message: %v", msg)
