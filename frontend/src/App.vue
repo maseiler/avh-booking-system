@@ -7,8 +7,7 @@
 </template>
 
 <script lang="ts">
-  import { connectWebSocket, closeConnection } from './api/ws';
-  import MainNavigation from './components/MainNavigation.vue';
+    import MainNavigation from './components/MainNavigation.vue';
   import DevModeBar from './components/DevModeBar.vue';
   import { useSocketStore } from './store/socketStore';
   
@@ -23,18 +22,12 @@
         dev: false
       }
     },
-    created() {
-      connectWebSocket();
-    },
-    unmounted() {
-      closeConnection();
-    },
     mounted() {
         this.dev = import.meta.env.DEV;
     },
     methods: {
       sendTestMessage(){
-        this.store.sendMessage('Test Message from Store');
+        //this.store.sendMessage('Test Message from Store');
       }
     }
   }

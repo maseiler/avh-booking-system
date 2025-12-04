@@ -11,7 +11,7 @@
   </div>
   <div class="box">
     Test
-    <button>TEst</button>
+    <button class="button" @click="sendMessage">Send Message</button>
   </div>
   <button class="button" @click="listCategorys">List Categorys</button>
   <p v-for="category in categorys" :key="category.title">{{category.title}} <icon :icon="category.icon" /></p>
@@ -43,13 +43,15 @@ import {
 } from '../composables/confetti.ts';
 import { getTestCategorys, type Category } from '../composables/category.ts';
 import { useAccountStore } from '../store/AccountStore.ts';
+import { useSocketStore } from '../store/socketStore.ts';
 
 export default {
   data() {
     return{
       count: 0,
       categorys: [] as Category[],
-      account$: useAccountStore()
+      account$: useAccountStore(),
+      socketStore: useSocketStore()
     }
   },
   props: {
@@ -62,6 +64,9 @@ export default {
     },
     huetteConfetti(){
       huetteConfetti();
+    },
+    sendMessage(){
+      this.socketStore.sendMessage("ABC")
     }
   },
   mounted() {

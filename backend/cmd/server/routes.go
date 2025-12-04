@@ -12,8 +12,14 @@ func (app *application) routes() http.Handler {
 
 	// set up routes
 	mux := http.NewServeMux()
-	mux.Handle("GET /", fileServer)
+
+	// HTTP handler
+	mux.Handle("GET /{$}", fileServer)
 	mux.HandleFunc("GET /account/{id}", app.getAccount)
+
+	// WebSocket handler
+	wsHandler := NewWebSocketHandler(app.wsService)
+	mux.HandleFunc("/ws", wsHandler.HandleConnections)
 
 	return app.logRequest(app.securityHeaders(mux))
 }
