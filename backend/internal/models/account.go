@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/database"
@@ -64,29 +63,9 @@ func (m *AccountModel) Insert(account Account) (int, error) {
 	return id, err
 }
 
-func (m *AccountModel) Get(accountId int) (*Account, error) {
+func (m *AccountModel) Get(query *Query) ([]Account, error) {
 	ctx := context.Background()
-	stmt := `SELECT account_id, first_name, nickname, last_name, email, phone, balance,
-       max_debt, category, enabled, created_at FROM account WHERE account_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, accountId)
-
-	var account Account
-	err := row.Scan(&account.Id, &account.FirstName, &account.Nickname, &account.LastName, &account.Email,
-		&account.Phone, &account.Balance, &account.MaxDebt, &account.Category, &account.Enabled, &account.CreatedAt)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
-		} else {
-			return nil, err
-		}
-	}
-
-	return &account, nil
-}
-
-func (m *AccountModel) GetAll() ([]Account, error) {
-	ctx := context.Background()
-	stmt := `SELECT * FROM account`
+	stmt := query.SqlStatement()
 	rows, err := m.DB.Query(ctx, stmt)
 
 	if err != nil {

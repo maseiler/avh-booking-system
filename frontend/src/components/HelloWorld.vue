@@ -13,8 +13,9 @@
     </p>
   </div>
   <div class="box">
-    Test
-    <button class="button" @click="sendMessage">Send Message</button>
+    <button class="button" @click="queryAccounts">Get Accounts via WebSocket</button>
+    <br>
+    <p v-for="a in accounts">{{ a }} </p>
   </div>
   <button class="button" @click="listCategorys">List Categorys</button>
   <p v-for="category in categorys" :key="category.title">{{ category.title }}
@@ -49,6 +50,7 @@ import {
 import {getTestCategorys, type Category} from '../composables/category.ts';
 import {useAccountStore} from '../store/AccountStore.ts';
 import {useSocketStore} from '../store/socketStore.ts';
+import type {Account} from "../composables/account.ts";
 
 export default {
   data() {
@@ -56,7 +58,8 @@ export default {
       count: 0,
       categorys: [] as Category[],
       account$: useAccountStore(),
-      socketStore: useSocketStore()
+      socketStore: useSocketStore(),
+      accounts: [] as Account[]
     }
   },
   props: {
@@ -70,13 +73,16 @@ export default {
     huetteConfetti() {
       huetteConfetti();
     },
-    sendMessage() {
-      //this.socketStore.sendMessage("ABC")
-      this.socketStore.queryAccount(1)
-    }
+    queryAccounts() {
+      this.socketStore.queryAccounts()
+    },
   },
   mounted() {
     console.log(import.meta.env.DEV);
+
+    this.socketStore.wsClient.on('message', (data) => {
+      this.accounts = data
+    });
   },
 }
 

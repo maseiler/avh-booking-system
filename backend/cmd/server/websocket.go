@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"log"
 
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -13,22 +14,7 @@ type WebSocketService struct {
 	hub *models.Hub
 }
 
-type Message struct {
-	Type    string `json:"type"`
-	Payload interface{}
-}
-type Query struct {
-	Table  string   `json:"table"`
-	Filter []Filter `json:"filter"`
-}
-
-type Filter struct {
-	Column   string `json:"column"`
-	Operator string `json:"operator"`
-	Value    string `json:"value"`
-}
-
-func getQueryFromMessage(data interface{}) (*Query, error) {
+func getQueryFromMessage(data interface{}) (*models.Query, error) {
 	// Convert the interface{} back to JSON bytes
 	jsonBytes, err := json.Marshal(data)
 	if err != nil {
@@ -36,63 +22,50 @@ func getQueryFromMessage(data interface{}) (*Query, error) {
 	}
 
 	// Unmarshal directly into the Query struct
-	var query Query
+	var query models.Query
 	if err := json.Unmarshal(jsonBytes, &query); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal query: %w", err)
 	}
+
+	validate := validator.New(validator.WithRequiredStructEnabled())
 	/*
-		m := data.(map[string]interface{})
-		query := Query{}
-		if table, ok := m["table"].(string); ok {
-			query.Table = table
-		} else {
-			return nil, models.BadJson
+		err = validate.RegisterValidation("validate_operator", func(fl validator.FieldLevel) bool {
+			value := fl.Field().Interface().(string)
+			switch value {
+			case "eq":
+				fallthrough
+			case "gt":
+				fallthrough
+			case "gte":
+				fallthrough
+			case "lt":
+				fallthrough
+			case "lte":
+				fallthrough
+			case "ne":
+				return true
+			default:
+				return false
+			}
+		})
+		if err != nil {
+			fmt.Printf("Err(s):\n%+v\n", err)
 		}
 	*/
+	err = validate.Struct(query)
+	if err != nil {
+		fmt.Printf("Err(s):\n%+v\n", err)
+	}
 	/*
-		if _, ok := m["filter"]; ok {
-			filters, ok := m["filter"].(map[string]interface{})
-			if !ok {
-				return nil, fmt.Errorf("not a map[string]interface{}")
+		for i, filter := range query.Filter {
+			err = validate.Struct(filter)
+			if err != nil {
+				fmt.Printf("Error validating filter %d: %+v\n", i, err)
+			} else {
+				fmt.Printf("Filter %d ok\n", i)
 			}
-			filter := &Filter{
-				Column:   filters["column"].(string),
-				Operator: filters["operator"].(string),
-				Value:    filters["value"].(string),
-			}
-			query.Filter = *filter
-		} else {
-			return nil, models.BadJson
 		}
 	*/
-
-	/*
-		slice, ok := m["filter"].([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("not a slice")
-		}
-
-		filters := make([]Filter, 0, len(slice))
-
-		for idx, item := range slice {
-			// Convert each item to a map
-			f, ok := item.(map[string]interface{})
-			if !ok {
-				return nil, fmt.Errorf("item at index %d is not a map", idx)
-			}
-
-			filter := Filter{
-				Operator: f["operator"].(string),
-				Column:   f["column"].(string),
-				Value:    f["value"].(string),
-			}
-			filters = append(filters, filter)
-		}
-
-		fmt.Println(filters)
-		query.Filter = filters
-	*/
-
 	fmt.Printf("XXXXX: %v\n", query)
 	return &query, nil
 }
@@ -119,7 +92,7 @@ func (ws *WebSocketService) BroadcastMessage(message []byte) {
 }
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
-func processQuery(message Message, dbModels *dbModels) ([]byte, error) {
+func processQuery(message models.Message, dbModels *dbModels) ([]byte, error) {
 	query, err := getQueryFromMessage(message.Payload)
 	if err != nil {
 		return nil, err
@@ -127,24 +100,14 @@ func processQuery(message Message, dbModels *dbModels) ([]byte, error) {
 	log.Printf("%v", query)
 
 	switch query.Table {
-	case "accounts":
+	case "account":
 		{
-			accounts, _ := dbModels.account.GetAll()
-			for _, account := range accounts {
-				log.Println(account)
+			accounts, _ := dbModels.account.Get(query)
+			b, err := json.Marshal(accounts)
+			if err != nil {
+				return nil, err
 			}
-			/*
-				account, err := dbModels.account.Get(1)
-				if err != nil {
-					return nil, err
-				}
-
-				b, err := json.Marshal(account)
-				if err != nil {
-					return nil, err
-				}
-				return b, nil
-			*/
+			return b, nil
 		}
 	}
 	return nil, models.UnknownError
@@ -172,7 +135,7 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 
 		// Process message
 		//var msg map[string]interface{}
-		msg := Message{}
+		msg := models.Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
 			log.Printf("JSON parse error: %v", err)
 			continue
@@ -186,27 +149,6 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 			pong, _ := json.Marshal(map[string]string{"type": "pong"})
 			c.Send <- pong
 		case "query":
-			/*
-				query := getQueryFromMessage(msg.Payload)
-				log.Printf("%v", query.Table)
-				account, err := dbModels.account.Get(1)
-				if err != nil {
-					if errors.Is(err, models.ErrNoRecord) {
-						panic("not found")
-					} else {
-						panic(err)
-					}
-
-					return
-				}
-				fmt.Printf("%v", account)
-
-				b, err := json.Marshal(account)
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-			*/
 			b, err := processQuery(msg, dbModels)
 			if err != nil {
 				log.Printf("Query error: %v", err)

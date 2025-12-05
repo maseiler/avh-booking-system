@@ -1,48 +1,47 @@
 package main
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
 func (app *application) getAccount(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil || id < 1 {
-		app.notFound(w)
-		return
-	}
-
-	account, err := app.dbModels.account.Get(id)
-	if err != nil {
-		if errors.Is(err, models.ErrNoRecord) {
+	/*
+		id, err := strconv.Atoi(r.PathValue("id"))
+		if err != nil || id < 1 {
 			app.notFound(w)
-		} else {
-			app.serverError(w, r, err)
+			return
 		}
 
-		return
-	}
+		account, err := app.dbModels.account.Get(id)
+		if err != nil {
+			if errors.Is(err, models.ErrNoRecord) {
+				app.notFound(w)
+			} else {
+				app.serverError(w, r, err)
+			}
 
-	response, err := json.Marshal(account)
-	if err != nil {
-		app.log.Error("Could not marshal account")
+			return
+		}
 
-		return
-	}
+		response, err := json.Marshal(account)
+		if err != nil {
+			app.log.Error("Could not marshal account")
 
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	_, err = w.Write(response)
-	if err != nil {
-		app.log.Error("Could not write response")
-	}
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+		_, err = w.Write(response)
+		if err != nil {
+			app.log.Error("Could not write response")
+		}
+	*/
 }
 
 var upgrader = websocket.Upgrader{
