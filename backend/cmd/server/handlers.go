@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/av-huette/avh-booking-system/internal/services"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -56,14 +55,14 @@ var upgrader = websocket.Upgrader{
 }
 
 type WebSocketHandler struct {
-	wsService *services.WebSocketService
+	wsService *WebSocketService
 }
 
-func NewWebSocketHandler(wsService *services.WebSocketService) *WebSocketHandler {
+func NewWebSocketHandler(wsService *WebSocketService) *WebSocketHandler {
 	return &WebSocketHandler{wsService: wsService}
 }
 
-func (h *WebSocketHandler) HandleConnections(w http.ResponseWriter, r *http.Request) {
+func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Printf("Upgrade error: %v", err)
@@ -80,14 +79,14 @@ func (h *WebSocketHandler) HandleConnections(w http.ResponseWriter, r *http.Requ
 		ID:   clientID,
 		Conn: conn,
 		Send: make(chan []byte, 256),
-		Hub:  h.wsService.GetHub(),
+		Hub:  app.wsHandler.wsService.GetHub(),
 	}
 
 	client.Hub.Register <- client
 
 	// Start goroutines for reading and writing
-	go services.WritePump(client)
-	go services.ReadPump(client)
+	go WritePump(client)
+	go ReadPump(client, &app.dbModels)
 }
 
 func generateID() string {

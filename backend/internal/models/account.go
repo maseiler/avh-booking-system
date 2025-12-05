@@ -4,22 +4,25 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/database"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Account struct {
-	Id        int              `json:"id"`
-	FirstName string           `json:"firstName"`
-	Nickname  string           `json:"nickname"`
-	LastName  string           `json:"lastName"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Balance   pgtype.Numeric   `json:"balance"`
-	MaxDebt   int              `json:"maxDebt"`
-	Category  int              `json:"category"`
-	Enabled   bool             `json:"enabled"`
-	CreatedAt pgtype.Timestamp `json:"createdAt"`
+	Id        int              `json:"id" db:"account_id"`
+	FirstName string           `json:"firstName" db:"first_name"`
+	Nickname  string           `json:"nickname" db:"nickname"`
+	LastName  string           `json:"lastName" db:"last_name"`
+	Email     string           `json:"email" db:"email"`
+	Phone     string           `json:"phone" db:"phone"`
+	Balance   pgtype.Numeric   `json:"balance" db:"balance"`
+	MaxDebt   int              `json:"maxDebt" db:"max_debt"`
+	Category  int              `json:"category" db:"category"`
+	Enabled   bool             `json:"enabled" db:"enabled"`
+	CreatedAt pgtype.Timestamp `json:"createdAt" db:"created_at"`
 }
 
 func CreateAccount(firstName string, nickName string, lastName string,
@@ -79,4 +82,26 @@ func (m *AccountModel) Get(accountId int) (*Account, error) {
 	}
 
 	return &account, nil
+}
+
+func (m *AccountModel) GetAll() ([]Account, error) {
+	ctx := context.Background()
+	stmt := `SELECT * FROM account`
+	rows, err := m.DB.Query(ctx, stmt)
+
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			fmt.Println(pgErr.Message)
+			fmt.Println(pgErr.Code)
+		}
+	}
+
+	accounts, err := pgx.CollectRows(rows, pgx.RowToStructByName[Account])
+	if err != nil {
+		fmt.Printf("CollectRows error: %v", err)
+		return nil, err
+	}
+
+	return accounts, nil
 }

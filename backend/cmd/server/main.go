@@ -5,7 +5,6 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/logger"
 	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/av-huette/avh-booking-system/internal/services"
 	"log/slog"
 	"os"
 )
@@ -22,12 +21,14 @@ type dbModels struct {
 type application struct {
 	conf      *config.AppConfig
 	log       *slog.Logger
-	wsService *services.WebSocketService
+	wsHandler *WebSocketHandler
 	db        *database.DB
 	dbModels  dbModels
 }
 
 func main() {
+	wsHandler := NewWebSocketHandler(NewWebSocketService())
+
 	dbPool, err := database.NewFromConfig()
 	if err != nil {
 		panic(err)
@@ -38,7 +39,7 @@ func main() {
 		conf:      config.LoadConfig(),
 		log:       logger.CreateLogger(),
 		db:        dbPool,
-		wsService: services.NewWebSocketService(),
+		wsHandler: wsHandler,
 		dbModels: dbModels{
 			&models.AccountModel{DB: dbPool},
 			&models.AccountOptionModel{DB: dbPool},
