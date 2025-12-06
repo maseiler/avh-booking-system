@@ -12,11 +12,7 @@
       <code>components/HelloWorld.vue</code> to test HMR {{ $t('home.title') }}
     </p>
   </div>
-  <div class="box">
-    <button class="button" @click="queryAccounts">Get Accounts via WebSocket</button>
-    <br>
-    <p v-for="a in accounts">{{ a }} </p>
-  </div>
+
   <button class="button" @click="listCategorys">List Categorys</button>
   <p v-for="category in categorys" :key="category.title">{{ category.title }}
     <icon :icon="category.icon"/>
@@ -58,7 +54,7 @@ export default {
       count: 0,
       categorys: [] as Category[],
       account$: useAccountStore(),
-      socketStore: useSocketStore(),
+      socket$: useSocketStore(),
       accounts: [] as Account[]
     }
   },
@@ -72,9 +68,6 @@ export default {
     },
     huetteConfetti() {
       huetteConfetti();
-    },
-    queryAccounts() {
-      this.socketStore.queryAccounts()
     },
   },
   mounted() {

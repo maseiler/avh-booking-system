@@ -93,7 +93,10 @@ export class WebSocketClient {
         };
 
         this.ws.onmessage = (event: MessageEvent): void => {
-            console.log('Message received:', event.data);
+            if ( import.meta.env.DEV ) {
+                // Only Log WS Messages, when running in Dev Environment
+                console.log('Message received:', event.data);
+            }
 
             // Try to parse JSON messages
             let data: any = event.data;

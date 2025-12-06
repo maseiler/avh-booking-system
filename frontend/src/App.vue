@@ -9,7 +9,6 @@
 <script lang="ts">
     import MainNavigation from './components/MainNavigation.vue';
   import DevModeBar from './components/DevModeBar.vue';
-  import { useSocketStore } from './store/socketStore';
   
   export default {
     components: {
@@ -18,17 +17,11 @@
     },
     data() {
       return {
-        store: useSocketStore(),
         dev: false
       }
     },
     mounted() {
         this.dev = import.meta.env.DEV;
-    },
-    methods: {
-      sendTestMessage(){
-        //this.store.sendMessage('Test Message from Store');
-      }
     }
   }
 </script>

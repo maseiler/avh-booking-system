@@ -17,6 +17,7 @@
     <div class="navbar-start">
 
       <a class="navbar-item" @click="generateTestData()">Generate Test Data</a>
+      <a class="navbar-item" @click="socket$.queryAccounts()">(Re)Request Accounts from DB/WS</a>
     </div>
 
     <div class="navbar-end">
@@ -36,6 +37,7 @@
 import { useAccountStore } from '../store/AccountStore';
 import { useCategoryStore } from '../store/CategoryStore';
 import { useProductStore } from '../store/ProductStore';
+import { useSocketStore } from '../store/socketStore';
 
   export default {
     data() {
@@ -43,6 +45,7 @@ import { useProductStore } from '../store/ProductStore';
         account$: useAccountStore(),
         category$: useCategoryStore(),
         product$: useProductStore(),
+        socket$: useSocketStore(),
         burgerActive: false as Boolean
       }
     },
