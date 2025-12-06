@@ -80,9 +80,9 @@ export default {
   mounted() {
     console.log(import.meta.env.DEV);
 
-    this.socketStore.wsClient.on('message', (data) => {
-      this.accounts = data
-    });
+    // this.socketStore.wsClient.on('message', (data) => {
+    //   this.accounts = data
+    // });
   },
 }
 

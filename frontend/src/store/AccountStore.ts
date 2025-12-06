@@ -51,6 +51,16 @@ export const useAccountStore = defineStore('account', {
     byId(id: number | undefined): Account | undefined {
       let foundAcc = this.accounts.find((acc) => acc.id == id);
       return foundAcc
+    },
+    loadAllAccounts(accJsonObj: []){
+      let accObjArray = [] as Account[];
+      accJsonObj.forEach((accObj) => {
+        // let newAccount = {} as Account;
+        let newAccount = new Account({} as Account);
+        newAccount.jsonToClass(accObj);
+        accObjArray.push(newAccount);
+      })
+      this.accounts = accObjArray;
     }
   }
 })

@@ -1,3 +1,5 @@
+import type { Account } from "../composables/account";
+import { useAccountStore } from "../store/AccountStore";
 interface WebSocketClientOptions {
     reconnectInterval?: number;
     maxReconnectAttempts?: number;
@@ -104,6 +106,11 @@ export class WebSocketClient {
             // Handle ping/pong for heartbeat
             if (data.type === 'pong') {
                 this.lastPong = Date.now();
+                return;
+            }
+
+            if (data.type === 'accounts') {
+                useAccountStore().loadAllAccounts(data.accounts);
                 return;
             }
 

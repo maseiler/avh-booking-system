@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/go-playground/validator/v10"
 	"log"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/gorilla/websocket"
@@ -67,7 +68,10 @@ func processQuery(message models.Message, dbModels *dbModels) ([]byte, *models.W
 	case "account":
 		{
 			accounts, _ := dbModels.account.Get(query)
-			b, err := json.Marshal(accounts)
+			b, err := json.Marshal(map[string]interface{}{
+				"type":     "accounts",
+				"accounts": accounts,
+			})
 			if err != nil {
 				return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal []Account"}
 			}

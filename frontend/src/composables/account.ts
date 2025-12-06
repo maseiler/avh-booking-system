@@ -48,6 +48,20 @@ export class Account implements Account{
       this.nickName !== ""
     );
   }
+
+  public jsonToClass(obj: any){
+    this.id = 'id' in obj ? obj.id : null;
+    this.firstName = 'firstName' in obj ? obj.firstName : "";
+    this.lastName = 'lastName' in obj ? obj.lastName : "";
+    this.nickName = 'nickName' in obj ? obj.nickName : "";
+    this.email = 'email' in obj ? obj.email : "";
+    this.phone = 'phone' in obj ? obj.phone : "";
+    this.balance = 'balance' in obj ? obj.balance : 0;
+    this.maxDebt = 'maxDebt' in obj ? obj.maxDebt : 0;
+    this.category = 'category' in obj ? obj.category : 0;
+    this.enabled = 'enabled' in obj ? obj.enabled : false;
+    this.createdAt = 'createdAt' in obj ? obj.createdAt : null;
+  }
   
 }
 

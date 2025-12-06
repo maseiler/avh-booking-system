@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -13,7 +14,7 @@ import (
 type Account struct {
 	Id        int              `json:"id" db:"account_id"`
 	FirstName string           `json:"firstName" db:"first_name"`
-	Nickname  string           `json:"nickname" db:"nickname"`
+	Nickname  string           `json:"nickName" db:"nickname"`
 	LastName  string           `json:"lastName" db:"last_name"`
 	Email     string           `json:"email" db:"email"`
 	Phone     string           `json:"phone" db:"phone"`
