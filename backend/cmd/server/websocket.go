@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/go-playground/validator/v10"
 	"log"
 
@@ -14,59 +13,25 @@ type WebSocketService struct {
 	hub *models.Hub
 }
 
-func getQueryFromMessage(data interface{}) (*models.Query, error) {
+func getQueryFromMessage(data interface{}) (*models.Query, *models.WsError) {
 	// Convert the interface{} back to JSON bytes
 	jsonBytes, err := json.Marshal(data)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal data: %w", err)
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
 	}
 
 	// Unmarshal directly into the Query struct
 	var query models.Query
 	if err := json.Unmarshal(jsonBytes, &query); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal query: %w", err)
+		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal to Query"}
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
-	/*
-		err = validate.RegisterValidation("validate_operator", func(fl validator.FieldLevel) bool {
-			value := fl.Field().Interface().(string)
-			switch value {
-			case "eq":
-				fallthrough
-			case "gt":
-				fallthrough
-			case "gte":
-				fallthrough
-			case "lt":
-				fallthrough
-			case "lte":
-				fallthrough
-			case "ne":
-				return true
-			default:
-				return false
-			}
-		})
-		if err != nil {
-			fmt.Printf("Err(s):\n%+v\n", err)
-		}
-	*/
 	err = validate.Struct(query)
 	if err != nil {
-		fmt.Printf("Err(s):\n%+v\n", err)
+		return nil, &models.WsError{Code: models.WsBadStruct, Message: err.Error(), Details: "Invalid struct"}
 	}
-	/*
-		for i, filter := range query.Filter {
-			err = validate.Struct(filter)
-			if err != nil {
-				fmt.Printf("Error validating filter %d: %+v\n", i, err)
-			} else {
-				fmt.Printf("Filter %d ok\n", i)
-			}
-		}
-	*/
-	fmt.Printf("XXXXX: %v\n", query)
+
 	return &query, nil
 }
 
@@ -92,12 +57,11 @@ func (ws *WebSocketService) BroadcastMessage(message []byte) {
 }
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
-func processQuery(message models.Message, dbModels *dbModels) ([]byte, error) {
+func processQuery(message models.Message, dbModels *dbModels) ([]byte, *models.WsError) {
 	query, err := getQueryFromMessage(message.Payload)
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("%v", query)
 
 	switch query.Table {
 	case "account":
@@ -105,12 +69,15 @@ func processQuery(message models.Message, dbModels *dbModels) ([]byte, error) {
 			accounts, _ := dbModels.account.Get(query)
 			b, err := json.Marshal(accounts)
 			if err != nil {
-				return nil, err
+				return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal []Account"}
 			}
 			return b, nil
 		}
+	case "product":
+		// ...
 	}
-	return nil, models.UnknownError
+
+	return nil, &models.WsError{Code: models.WsUnknown, Message: "Unknown error", Details: "Could not process query"}
 }
 
 // ReadPump pumps messages from the websocket connection to the hub
@@ -137,7 +104,10 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 		//var msg map[string]interface{}
 		msg := models.Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
-			log.Printf("JSON parse error: %v", err)
+			wsErr := models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
+			log.Printf("%v", wsErr)
+			errBytes, _ := json.Marshal(wsErr)
+			c.Send <- errBytes
 			continue
 		}
 
@@ -151,11 +121,23 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 		case "query":
 			b, err := processQuery(msg, dbModels)
 			if err != nil {
-				log.Printf("Query error: %v", err)
-				// TODO send error to client
+				errBytes, _ := json.Marshal(err)
+				c.Send <- errBytes
 				continue
 			}
 			c.Send <- b
+		case "mutation":
+			/*
+				b, err := processMutation(msg, dbModels)
+				if err != nil {
+					log.Printf("Mutation error: %v", err)
+					// TODO send error to client
+					errBytes, _ := json.Marshal(err)
+					c.Send <- errBytes
+					continue
+				}
+				c.Send <- true
+			*/
 		default:
 			// Echo to sender
 			c.Send <- message
