@@ -10,35 +10,60 @@
   <div class="columns">
     <div class="column is-3">First Name:</div>
     <div class="column">
-      <input type="text" class="input" v-model="account.firstName">
+      <p class="control has-icons-left">
+        <input type="text" class="input" v-model="account.firstName">
+        <span class="icon is-small is-left">
+          <icon :icon="['fas', 'user']" />
+        </span>
+      </p>
     </div>
   </div>
 
   <div class="columns">
     <div class="column is-3">Last Name:</div>
     <div class="column">
-      <input type="text" class="input" v-model="account.lastName">
+      <p class="control has-icons-left">
+        <input type="text" class="input" v-model="account.lastName">
+        <span class="icon is-small is-left">
+        <icon :icon="['fas', 'id-card']" />
+        </span>
+      </p>
     </div>
   </div>
 
   <div class="columns">
     <div class="column is-3">Nickname:</div>
     <div class="column">
-      <input type="text" class="input" v-model="account.nickName">
+      <p class="control has-icons-left">
+        <input type="text" class="input" v-model="account.nickName">
+        <span class="icon is-small is-left">
+          <icon :icon="['fas', 'user-secret']" />
+        </span>
+      </p>
     </div>
   </div>
 
   <div class="columns">
     <div class="column is-3">E-Mail:</div>
     <div class="column">
-      <input type="email" class="input" v-model="account.email">
+      <p class="control has-icons-left">
+        <input type="email" class="input" v-model="account.email">
+        <span class="icon is-small is-left">
+          <icon :icon="['fas', 'envelope']" />
+        </span>
+      </p>
     </div>
   </div>
 
   <div class="columns">
     <div class="column is-3">Phone Number:</div>
     <div class="column">
-      <input type="tel" class="input" v-model="account.phone">
+      <p class="control has-icons-left">
+        <input type="tel" class="input" v-model="account.phone">
+        <span class="icon is-small is-left">
+          <icon :icon="['fas', 'phone']" />
+        </span>
+      </p>
     </div>
   </div>
 
