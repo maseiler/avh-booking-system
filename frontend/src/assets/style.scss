@@ -1,10 +1,2 @@
-@import './bulma.min.css';
-$section-padding: 1.5rem;
-
-* {
-  user-select:none;
-}
-
-.allow-select{
-  user-select: text;
-}
+@import "./variables.scss";
+@import "bulma/bulma";

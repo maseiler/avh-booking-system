@@ -1,5 +1,6 @@
 <template>
   <div class="order message is-info">
+
     <div class="message-header" @click="toggleOrderDetails">
       <span>
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon details" :icon="['fas', 'arrow-up-short-wide']" />
@@ -8,32 +9,29 @@
       </span>
       <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" title="discard cart and unselect account"></button>
     </div>
-    <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
+
     <div :class="showOrderDetails ? 'showDetails' : ''" class="message-body fixed-grid has-3-cols">
-      <div class="grid">
-        <div class="cell is-col-span-1">
-          <div class="tag" v-for="account in account$.selected">
-            {{ account.getFullName() }}
-            <button class="delete is-small" @click="unselectAccount(account)"></button>
-          </div>
-        </div>
-        <div class="cell is-col-span-2">
-          <p v-if="account$.selected.length == 0">Please select an Accout first</p>
-          <div v-if="account$.selected.length != 0">
-            <CartProduct v-for="content in cart$.cartContents" :content="content"/>
-            <!-- Component CartSums -->
-            <p>Summe: {{ $n(cart$.getTotals[0] / 100, 'currency', 'de-DE') }} <br> Davon Steuer: {{ cart$.getTotals[1] }}</p>
-            <!-- Component OrderControls -->
-             <button class="button is-warning" @click="cancelOrder">Cancel Order</button>
-             <button class="button is-success" @click="checkoutOrder">Book now</button>
-          </div>
+      <div class="selectedAccounts">
+        <div class="tag" v-for="account in account$.selected">
+          {{ account.getFullName() }}
+          <button class="delete is-small" @click="unselectAccount(account)"></button>
         </div>
       </div>
+
+      <CartList @cancelOrder="cancelOrder()"/>
     </div>
+    <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
   </div>
 </template>
 
 <style scoped>
+
+.buttons{
+  justify-content: end;
+}
+.selectedAccounts{
+  margin-bottom:.5rem;
+}
 .order{
   position:relative;
 }
@@ -108,7 +106,8 @@
 import { useAccountStore } from '../../store/AccountStore';
 import type { Account } from '../../composables/account';
 import { useCartStore } from '../../store/CartStore';
-import CartProduct from './CartProduct.vue';
+import CartList from './CartList.vue';
+
 
 export default {
   data() {
@@ -119,7 +118,7 @@ export default {
     }
   },
   components: {
-    CartProduct
+    CartList
   },
   methods: {
     unselectAccount(account: Account){

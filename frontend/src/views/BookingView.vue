@@ -16,7 +16,7 @@
         <li :class="visiblePart == 1 ? 'is-active' : ''">
           <a @click="setVisiblePart(1)">
             <span class="icon is-small"><icon :icon="['fas', 'th-large']" /></span>
-            Items
+            Products
           </a>
         </li>
       </ul>
@@ -30,6 +30,7 @@
       <!-- ToDo: Develop Item Selector -->
       <ProductSelector show="button" />
     </div>
+    
     </div>
   </section>
 </template>

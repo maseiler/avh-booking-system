@@ -23,6 +23,10 @@
         Booking
       </router-link>
 
+      <router-link class="navbar-item" to="/payment" @click="burgerActive = false">
+        Payment
+      </router-link>
+
       <a class="navbar-item">Orders</a>
 
       <a class="navbar-item">Statistics</a>
@@ -31,9 +35,9 @@
         <a class="navbar-link">Settings</a>
 
         <div class="navbar-dropdown">
-          <a class="navbar-item" @click="burgerActive = false">Wareneinstellungen</a>
-          <a class="navbar-item" @click="burgerActive = false">Benutzereinstellungen</a>
-          <a class="navbar-item" @click="burgerActive = false">Zahlungseinstellungen</a>
+          <router-link to="/settings/products" class="navbar-item" @click="burgerActive = false">Wareneinstellungen</router-link>
+          <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">Benutzereinstellungen</router-link>
+          <router-link to="/settings/payments" class="navbar-item" @click="burgerActive = false">Zahlungseinstellungen</router-link>
           <a class="navbar-item" @click="burgerActive = false">Systemeinstellungen</a>
         </div>
       </div>

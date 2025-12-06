@@ -4,7 +4,8 @@ import { Product, generateTestData } from '../composables/product'
 export const useProductStore = defineStore('product', {
   state: () => {
     return {
-      products: [] as Product[]
+      products: [] as Product[],
+      selected: {} as Product
     }
   },
   actions: {
@@ -35,6 +36,13 @@ export const useProductStore = defineStore('product', {
       let byCategory = this.getByCategory(categoryId, selectedAccountCategorys);
       let searchResults = byCategory.filter((prod) => prod.name.toLowerCase().includes(search));
       return searchResults;
+    },
+    select(p: Product){
+      this.selected = p;
+    },
+    byId(id: number | undefined): Product | undefined {
+      let foundProd = this.products.find((prod) => prod.id == id);
+      return foundProd
     }
   }
 })

@@ -1,0 +1,17 @@
+:root{
+  --primary: hsl(110, 76%, 59%);
+}
+
+
+* {
+  user-select: none;
+}
+
+.allow-select{
+  user-select: text;
+}
+
+.button.is-primary,
+.tag.is-primary{
+  background-color: var(--primary);
+}

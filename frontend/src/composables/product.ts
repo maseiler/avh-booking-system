@@ -30,16 +30,18 @@ export class Product implements Product{
 
 export function generateTestData(){
   let p1 = {
+    id: 1,
     name: "Beer",
     price: 120,
     size: 0.5,
-    tax: 0,
+    tax: 19,
     category: 3,
     visibility: [2]
   } as Product
   p1 = new Product(p1);
 
   let p2 = {
+    id: 2,
     name: "Bread",
     price: 250,
     size: 1,
@@ -51,3 +53,7 @@ export function generateTestData(){
 
   return [p1, p2];
 }
+
+// export function formatPrice(price: number){
+
+// }
