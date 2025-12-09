@@ -36,6 +36,28 @@ func getQueryFromMessage(data interface{}) (*models.Query, *models.WsError) {
 	return &query, nil
 }
 
+func getMutationFromMessage(data interface{}) (*models.Mutation, *models.WsError) {
+	// Convert the interface{} back to JSON bytes
+	jsonBytes, err := json.Marshal(data)
+	if err != nil {
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
+	}
+
+	// Unmarshal directly into the Mutation struct
+	var mutation models.Mutation
+	if err := json.Unmarshal(jsonBytes, &mutation); err != nil {
+		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal to Mutation"}
+	}
+
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	err = validate.Struct(mutation)
+	if err != nil {
+		return nil, &models.WsError{Code: models.WsBadStruct, Message: err.Error(), Details: "Invalid struct"}
+	}
+
+	return &mutation, nil
+}
+
 func NewWebSocketService() *WebSocketService {
 	hub := &models.Hub{
 		Clients:    make(map[*models.Client]bool),
@@ -82,6 +104,58 @@ func processQuery(message models.Message, dbModels *dbModels) ([]byte, *models.W
 	}
 
 	return nil, &models.WsError{Code: models.WsUnknown, Message: "Unknown error", Details: "Could not process query"}
+}
+
+// processMutation unmarshals the message and initiates a database mutation
+func processMutation(message models.Message, dbModels *dbModels) ([]byte, *models.WsError) {
+
+	mutation, err := getMutationFromMessage(message.Payload)
+	if err != nil {
+		return nil, err
+	}
+
+	switch mutation.Operation {
+	case models.OpInsert:
+		{
+			switch mutation.Table {
+			case "account":
+				jsonBytes, err := json.Marshal(mutation.Values)
+				if err != nil {
+					return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
+				}
+
+				// Convert the interface{} back to JSON bytes
+				account := models.Account{}
+				err = json.Unmarshal(jsonBytes, &account)
+				if err != nil {
+					panic(err)
+				}
+				row, err := dbModels.account.Insert(account)
+				if err != nil {
+					return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
+				}
+				b, err := json.Marshal(map[string]interface{}{
+					"type": "response",
+					"payload": map[string]interface{}{
+						"row": row},
+				})
+				if err != nil {
+					return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal response"}
+				}
+				return b, nil
+			}
+		}
+	case models.OpUpdate:
+		{
+			return nil, &models.WsError{Code: models.WsUnknown, Message: "Not yet implemented", Details: "TBD"}
+		}
+	case models.OpDelete:
+		{
+			return nil, &models.WsError{Code: models.WsUnknown, Message: "Not yet implemented", Details: "TBD"}
+		}
+	}
+
+	return nil, &models.WsError{Code: models.WsUnknown, Message: "Unknown error", Details: "Could not process mutation"}
 }
 
 // ReadPump pumps messages from the websocket connection to the hub
@@ -131,17 +205,14 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 			}
 			c.Send <- b
 		case "mutation":
-			/*
-				b, err := processMutation(msg, dbModels)
+			response, wsErr := processMutation(msg, dbModels)
+			if wsErr != nil {
+				response, err = json.Marshal(wsErr)
 				if err != nil {
-					log.Printf("Mutation error: %v", err)
-					// TODO send error to client
-					errBytes, _ := json.Marshal(err)
-					c.Send <- errBytes
-					continue
+					panic(err)
 				}
-				c.Send <- true
-			*/
+			}
+			c.Send <- response
 		default:
 			// Echo to sender
 			c.Send <- message

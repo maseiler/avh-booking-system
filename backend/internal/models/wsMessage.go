@@ -16,6 +16,26 @@ type Query struct {
 	Sort   Sorting  `json:"sort,omitempty"`
 }
 
+type Filter struct {
+	Column   string   `json:"column" validate:"required"`
+	Operator Operator `json:"operator" validate:"required"`
+	//Operator string `json:"operator" validate:"required,validate_operator"`
+	Value string `json:"value" validate:"required"`
+}
+
+type Sorting struct {
+	Column string `json:"column" validate:"required"`
+	Order  Order  `json:"order" validate:"required"`
+}
+
+type Mutation struct {
+	Operation Operation         `json:"operation" validate:"required"`
+	Table     string            `json:"table" validate:"required"`
+	Where     map[string]string `json:"where"`
+	//Values    map[string]string `json:"values" validate:"required"`
+	Values interface{} `json:"values" validate:"required"`
+}
+
 // SqlStatement returns the SQL statement for this query
 func (q *Query) SqlStatement() string {
 	stmt := "SELECT * FROM " + q.Table
@@ -43,16 +63,4 @@ func (q *Query) SqlStatement() string {
 	log.Printf("Query statement: %s\n", stmt) // TODO debug mode
 
 	return stmt
-}
-
-type Filter struct {
-	Column   string   `json:"column" validate:"required"`
-	Operator Operator `json:"operator" validate:"required"`
-	//Operator string `json:"operator" validate:"required,validate_operator"`
-	Value string `json:"value" validate:"required"`
-}
-
-type Sorting struct {
-	Column string `json:"column" validate:"required"`
-	Order  Order  `json:"order" validate:"required"`
 }

@@ -15,9 +15,7 @@ export const useSocketStore = defineStore("notificationStore", {
         sendMessage(msg: string) {
             this.wsClient.send({type: "hello", content: msg})
         },
-        queryAccount(accountId: number) {
-            //let payload = {"table": "accounts"}
-            //let payload = {"table": "accounts", "filter": [{"column": "account_id", "operator": "eq", "value": "1"}]}
+        queryAccountExample() {
             let payload = {
                 "table": "account",
                 "filter": [{"column": "account_id", "operator": "gt", "value": "1"}, {
@@ -28,17 +26,37 @@ export const useSocketStore = defineStore("notificationStore", {
                 "limit": 10,
                 "sort": {"column": "account_id", "order": "desc"}
             }
-            //let payload = {"table": "accounts", "filter": [{"column": "account_id", "operator": "gt", "value": "1"}, {"column": "balance", "operator": "gt", "value": "12.04"}]}
-            //let payload = {"table": "accounts", "id": accountId}
-            //let payload = {"table": "accounts", "filter": {"Id": accountId}}
             this.wsClient.send({type: "query", payload: payload})
         },
-        queryAccounts(){
+        queryAccounts() {
             let payload = {
                 "table": "account",
                 "sort": {"column": "nickname", "order": "asc"}
             }
             this.wsClient.send({type: "query", payload: payload})
+        },
+        addAccount() {
+            let now = Date.now();
+            let newAccount = {
+                "id": 0,
+                "firstName": "Darude",
+                "nickname": now.toString(),
+                "lastName": "Sandstorm",
+                "email": "ohsofunny@troll.lol",
+                "phone": "12345678",
+                "balance": 0,
+                "maxDebt": 99,
+                "category": 3,
+                "enabled": true,
+                "createdAt": new Date(now).toISOString()
+            }
+            console.log(newAccount)
+            let payload = {
+                "operation": "insert",
+                "table": "account",
+                "values": newAccount
+            }
+            this.wsClient.send({type: "mutation", payload: payload})
         }
     }
 })
