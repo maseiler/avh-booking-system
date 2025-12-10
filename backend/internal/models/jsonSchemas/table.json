@@ -13,5 +13,6 @@
     "product_group",
     "product_visibility",
     "unit"
-  ]
+  ],
+  "additionalProperties": false
 }

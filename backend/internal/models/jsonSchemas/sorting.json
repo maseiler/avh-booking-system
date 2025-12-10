@@ -21,5 +21,6 @@
   "required": [
     "column",
     "order"
-  ]
+  ],
+  "additionalProperties": false
 }

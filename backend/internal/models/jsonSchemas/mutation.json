@@ -30,5 +30,6 @@
   "required": [
     "operation",
     "table"
-  ]
+  ],
+  "additionalProperties": false
 }

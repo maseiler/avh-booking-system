@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "id": {
-      "type": "number",
+      "type": "integer",
       "description": "The unique ID"
     },
     "firstName": {
@@ -58,5 +58,6 @@
     "balance",
     "maxDebt",
     "category"
-  ]
+  ],
+  "additionalProperties": false
 }
