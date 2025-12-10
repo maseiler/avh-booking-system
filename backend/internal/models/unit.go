@@ -45,7 +45,7 @@ func (m *UnitModel) Get(id int) (*Unit, error) {
 	err := row.Scan(&unit.Id, &unit.Name)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
 		}

@@ -57,7 +57,7 @@ func (m *ProductGroupModel) Get(id int) (*ProductGroup, error) {
 	err := row.Scan(&productGroup.Id, &productGroup.Name, &parentId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
 		}

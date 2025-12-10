@@ -69,7 +69,7 @@ func (m *ProductModel) Get(productId int) (*Product, error) {
 		&product.Size, &product.UnitId, &product.Tax, &product.CategoryId, &product.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
 		}

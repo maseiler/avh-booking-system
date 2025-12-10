@@ -53,7 +53,7 @@ func (m *AccountOptionModel) Get(accountId int, key string) (*AccountOption, err
 	err := row.Scan(&opt.AccountId, &opt.Key, &opt.Value)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
 		}

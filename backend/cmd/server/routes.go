@@ -15,7 +15,7 @@ func (app *application) routes() http.Handler {
 
 	// HTTP handler
 	mux.Handle("GET /{$}", fileServer)
-	mux.HandleFunc("GET /account/{id}", app.getAccount)
+	//mux.HandleFunc("GET /account/{id}", app.getAccount)
 
 	// WebSocket handler
 	mux.HandleFunc("/ws", app.HandleConnections)

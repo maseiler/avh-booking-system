@@ -55,7 +55,7 @@ func (m *CategoryModel) Get(id int) (*Category, error) {
 	err := row.Scan(&cat.Id, &cat.Name, &cat.Enabled, &cat.Icon, &cat.Type)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
 		}

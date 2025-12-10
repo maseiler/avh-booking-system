@@ -218,20 +218,6 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 			pong, _ := json.Marshal(response)
 			c.Send <- pong
 		case models.MsgTypeQuery:
-
-			// Convert the interface{} back to JSON bytes (Query)
-			jsonBytes, err := json.Marshal(msg.Payload)
-			if err != nil {
-				panic(err)
-			}
-
-			err = wsValidator.ValidateQuery(jsonBytes)
-			if err != nil {
-				panic(err)
-			}
-
-			// --------------------------------------
-
 			b, wsErr := processQuery(msg, dbModels)
 			if wsErr != nil {
 				sendError(c, wsErr)

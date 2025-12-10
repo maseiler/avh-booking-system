@@ -47,7 +47,7 @@ func (m *ProductVisibilityModel) Get(id int) (*ProductVisibility, error) {
 	err := row.Scan(&productVisibility.Id, &productVisibility.CategoryId, &productVisibility.ProductId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
 		}

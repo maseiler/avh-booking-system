@@ -5,13 +5,12 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/validation"
 	"github.com/gorilla/websocket"
-	"log"
 	"net/http"
 	"time"
 )
 
+/*
 func (app *application) getAccount(w http.ResponseWriter, r *http.Request) {
-	/*
 		id, err := strconv.Atoi(r.PathValue("id"))
 		if err != nil || id < 1 {
 			app.notFound(w)
@@ -42,8 +41,9 @@ func (app *application) getAccount(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			app.log.Error("Could not write response")
 		}
-	*/
+
 }
+*/
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -65,7 +65,7 @@ func NewWebSocketHandler(wsService *WebSocketService) *WebSocketHandler {
 func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("Upgrade error: %v", err)
+		app.log.Warn("Upgrade error: %v", err)
 		return
 	}
 
