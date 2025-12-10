@@ -3,7 +3,34 @@ package ws
 import (
 	"encoding/json"
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"log"
 )
+
+func (s *Service) processPing(message models.Message) ([]byte, *models.WsError) {
+	b, err := json.Marshal(message.Payload)
+	if err != nil {
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Marshal payload"}
+	}
+
+	var ping models.PingPong
+	if err := json.Unmarshal(b, &ping); err != nil {
+		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to PingPong"}
+	}
+
+	log.Printf("Received ping with timestamp %v", ping.Timestamp)
+
+	// TODO send timestamp
+	pong := models.PingPong{}
+	response := models.Message{Type: models.MsgTypePong, Payload: pong}
+	b, _ = json.Marshal(response)
+
+	err = s.validator.ValidateMessage(b)
+	if err != nil {
+		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+	}
+
+	return b, nil
+}
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
 func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError) {

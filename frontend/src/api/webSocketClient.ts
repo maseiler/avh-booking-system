@@ -1,5 +1,6 @@
-import type { Account } from "../composables/account";
-import { useAccountStore } from "../store/AccountStore";
+import type {Account} from "../composables/account";
+import {useAccountStore} from "../store/AccountStore";
+
 interface WebSocketClientOptions {
     reconnectInterval?: number;
     maxReconnectAttempts?: number;
@@ -93,7 +94,7 @@ export class WebSocketClient {
         };
 
         this.ws.onmessage = (event: MessageEvent): void => {
-            if ( import.meta.env.DEV ) {
+            if (import.meta.env.DEV) {
                 // Only Log WS Messages, when running in Dev Environment
                 console.log('Message received:', event.data);
             }
@@ -162,7 +163,7 @@ export class WebSocketClient {
         this.stopHeartbeat();
         this.heartbeatTimer = setInterval(() => {
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                this.send({type: 'ping', timestamp: Date.now()});
+                this.send({type: 'ping', payload: {timestamp: new Date(Date.now()).toISOString()}});
 
                 // Check for pong timeout
                 setTimeout(() => {

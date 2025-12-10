@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"github.com/jackc/pgx/v5/pgtype"
 	"log"
 	"strconv"
 )
@@ -33,6 +34,10 @@ func (t MessageType) String() string {
 type Message struct {
 	Type    MessageType `json:"type" validate:"required"`
 	Payload interface{} `json:"payload,omitempty"`
+}
+
+type PingPong struct {
+	Timestamp *pgtype.Timestamp `json:"timestamp,omitempty"`
 }
 
 // ============================================================================

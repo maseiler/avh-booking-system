@@ -36,6 +36,25 @@
       "if": {
         "properties": {
           "type": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "error.json"
+          }
+        },
+        "required": [
+          "payload"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
             "const": "query"
           }
         }
@@ -90,19 +109,19 @@
       "if": {
         "properties": {
           "type": {
-            "enum": [
-              "ping",
-              "pong"
-            ]
+            "const": "ping"
           }
         }
       },
       "then": {
-        "not": {
-          "required": [
-            "payload"
-          ]
-        }
+        "properties": {
+          "payload": {
+            "$ref": "ping.json"
+          }
+        },
+        "required": [
+          "payload"
+        ]
       }
     }
   ]

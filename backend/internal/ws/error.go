@@ -6,16 +6,26 @@ import (
 	"log"
 )
 
-func sendError(c *models.Client, wsErr *models.WsError) {
+func (s *Service) sendError(c *models.Client, wsErr *models.WsError) {
 	log.Printf("%v", wsErr)
+
+	// Create error message
 	msg := models.Message{
-		Type: models.MsgTypeError,
-		Payload: map[string]interface{}{
-			"error": wsErr},
+		Type:    models.MsgTypeError,
+		Payload: wsErr,
 	}
+
+	// Marshal error message
 	errBytes, err := json.Marshal(msg)
 	if err != nil {
 		panic(err)
 	}
+
+	// Validate error message
+	err = s.validator.ValidateMessage(errBytes)
+	if err != nil {
+		panic(err)
+	}
+
 	c.Send <- errBytes
 }

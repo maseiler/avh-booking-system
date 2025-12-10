@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ping.json",
+  "title": "Ping",
+  "description": "A ping message for heartbeat",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "description": "The date and time this ping was sent. It expects the ISO 8601 format"
+    }
+  },
+  "additionalProperties": false
+}
