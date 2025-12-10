@@ -16,8 +16,9 @@
         "ping",
         "pong",
         "query",
-        "mutation",
-        "response"
+        "result",
+        "resultInsertion",
+        "mutation"
       ],
       "description": "The message type"
     },
@@ -48,6 +49,22 @@
         "required": [
           "payload"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "result"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "sql/result.json"
+          }
+        }
       }
     },
     {

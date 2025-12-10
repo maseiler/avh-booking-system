@@ -16,15 +16,13 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 	case models.TableAccount:
 		{
 			accounts, _ := s.dbModels.Account.Get(query)
-			msg := models.Message{
-				Type:    models.MsgTypeResponse,
-				Payload: map[string]interface{}{"accounts": accounts},
+			var rawJsonSlice []json.RawMessage
+			for _, account := range accounts {
+				rawAccount, _ := json.Marshal(account)
+				rawJsonSlice = append(rawJsonSlice, rawAccount)
 			}
-			b, err := json.Marshal(msg)
-			if err != nil {
-				return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal response including Account"}
-			}
-			return b, nil
+
+			return s.marshalResult(models.TableAccount, &rawJsonSlice)
 		}
 
 	case models.TableProduct:
@@ -41,9 +39,9 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 // processMutation unmarshals the message and initiates a database mutation
 func (s *Service) processMutation(message models.Message) ([]byte, *models.WsError) {
 
-	mutation, err := getMutation(message.Payload)
-	if err != nil {
-		return nil, err
+	mutation, wsErr := getMutation(message.Payload)
+	if wsErr != nil {
+		return nil, wsErr
 	}
 
 	switch mutation.Operation {
@@ -51,30 +49,17 @@ func (s *Service) processMutation(message models.Message) ([]byte, *models.WsErr
 		{
 			switch mutation.Table {
 			case models.TableAccount:
-				jsonBytes, err := json.Marshal(mutation.Values)
-				if err != nil {
-					return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
+				account, wsErr := unmarshalAccount(&mutation.Values)
+				if wsErr != nil {
+					return nil, wsErr
 				}
 
-				// Convert the interface{} back to JSON bytes
-				account := models.Account{}
-				err = json.Unmarshal(jsonBytes, &account)
-				if err != nil {
-					return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal JSON"}
-				}
-				row, err := s.dbModels.Account.Insert(account)
+				newId, err := s.dbModels.Account.Insert(*account)
 				if err != nil {
 					return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
-				msg := models.Message{
-					Type:    models.MsgTypeResponse,
-					Payload: map[string]interface{}{"row": row},
-				}
-				b, err := json.Marshal(msg)
-				if err != nil {
-					return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal response"}
-				}
-				return b, nil
+
+				return s.marshalResultInsertion(newId)
 			}
 
 			return nil, &models.WsError{

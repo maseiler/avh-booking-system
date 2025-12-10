@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "resultInsertion.json",
+  "title": "ResultInsertion",
+  "description": "The result of an insertion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "The ID of the inserted object"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false
+}

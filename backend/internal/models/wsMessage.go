@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"log"
 	"strconv"
 )
@@ -12,16 +13,17 @@ import (
 type MessageType string
 
 const (
-	MsgTypeAuth       MessageType = "auth"
-	MsgTypeRegister   MessageType = "register"
-	MsgTypeUnRegister MessageType = "unregister"
-	MsgTypeError      MessageType = "error"
-	MsgTypeBroadcast  MessageType = "broadcast"
-	MsgTypePing       MessageType = "ping"
-	MsgTypePong       MessageType = "pong"
-	MsgTypeQuery      MessageType = "query"
-	MsgTypeMutation   MessageType = "mutation"
-	MsgTypeResponse   MessageType = "response"
+	MsgTypeAuth            MessageType = "auth"
+	MsgTypeRegister        MessageType = "register"
+	MsgTypeUnRegister      MessageType = "unregister"
+	MsgTypeError           MessageType = "error"
+	MsgTypeBroadcast       MessageType = "broadcast"
+	MsgTypePing            MessageType = "ping"
+	MsgTypePong            MessageType = "pong"
+	MsgTypeQuery           MessageType = "query"
+	MsgTypeMutation        MessageType = "mutation"
+	MsgTypeResult          MessageType = "result"
+	MsgTypeResultInsertion MessageType = "resultInsertion"
 )
 
 func (t MessageType) String() string {
@@ -49,6 +51,15 @@ const (
 	TableProductVisibility TableName = "product_visibility"
 	TableUnit              TableName = "unit"
 )
+
+type Result struct {
+	Table TableName         `json:"table" validate:"required"`
+	Data  []json.RawMessage `json:"data,omitempty"`
+}
+
+type ResultInsertion struct {
+	Id int `json:"id" validate:"required"`
+}
 
 type Query struct {
 	Table  TableName `json:"table" validate:"required"`
