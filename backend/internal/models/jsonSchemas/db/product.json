@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "product.json",
+  "title": "Product",
+  "description": "A product that can be bought",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "The unique ID"
+    },
+    "TODO": {
+      "type": "string",
+      "description": "TODO"
+    }
+  },
+  "required": [
+    "TODO"
+  ],
+  "additionalProperties": false
+}

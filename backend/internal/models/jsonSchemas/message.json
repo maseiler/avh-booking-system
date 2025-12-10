@@ -42,7 +42,7 @@
       "then": {
         "properties": {
           "payload": {
-            "$ref": "query.json"
+            "$ref": "sql/query.json"
           }
         },
         "required": [
@@ -61,7 +61,7 @@
       "then": {
         "properties": {
           "payload": {
-            "$ref": "mutation.json"
+            "$ref": "sql/mutation.json"
           }
         },
         "required": [

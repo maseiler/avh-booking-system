@@ -45,27 +45,27 @@ func NewWebSocketValidator() *WebSocketValidator {
 		panic(fmt.Errorf("failed to compile schema: %w", err))
 	}
 
-	schemas.filter, err = jsonCompiler.Compile(schemaDir + "filter.json")
+	schemas.filter, err = jsonCompiler.Compile(schemaDir + "sql/filter.json")
 	if err != nil {
 		panic(fmt.Errorf("failed to compile schema: %w", err))
 	}
 
-	schemas.sorting, err = jsonCompiler.Compile(schemaDir + "sorting.json")
+	schemas.sorting, err = jsonCompiler.Compile(schemaDir + "sql/sorting.json")
 	if err != nil {
 		panic(fmt.Errorf("failed to compile schema: %w", err))
 	}
 
-	schemas.query, err = jsonCompiler.Compile(schemaDir + "query.json")
+	schemas.query, err = jsonCompiler.Compile(schemaDir + "sql/query.json")
 	if err != nil {
 		panic(fmt.Errorf("failed to compile schema: %w", err))
 	}
 
-	schemas.mutation, err = jsonCompiler.Compile(schemaDir + "mutation.json")
+	schemas.mutation, err = jsonCompiler.Compile(schemaDir + "sql/mutation.json")
 	if err != nil {
 		panic(fmt.Errorf("failed to compile schema: %w", err))
 	}
 
-	schemas.account, err = jsonCompiler.Compile(schemaDir + "account.json")
+	schemas.account, err = jsonCompiler.Compile(schemaDir + "db/account.json")
 	if err != nil {
 		panic(fmt.Errorf("failed to compile schema: %w", err))
 	}

@@ -6,7 +6,7 @@
   "type": "object",
   "properties": {
     "table": {
-      "$ref": "table.json",
+      "$ref": "../db/_tableNames.json",
       "description": "The table name"
     },
     "filter": {

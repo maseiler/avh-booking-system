@@ -15,7 +15,7 @@
       "description": "The database operation to execute"
     },
     "table": {
-      "$ref": "table.json",
+      "$ref": "../db/_tableNames.json",
       "description": "The table name"
     },
     "where": {
