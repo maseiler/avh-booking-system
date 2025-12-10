@@ -25,10 +25,8 @@ func (h *Hub) Run() {
 			log.Printf("Client %s registered", client.ID)
 
 			// Notify others about new client
-			notification, _ := json.Marshal(map[string]string{
-				"type": "user_joined",
-				"id":   client.ID,
-			})
+			msg := Message{Type: MsgTypeRegister, Payload: map[string]string{"id": client.ID}}
+			notification, _ := json.Marshal(msg)
 			h.broadcastMessage(notification, client)
 
 		case client := <-h.Unregister:
@@ -41,10 +39,8 @@ func (h *Hub) Run() {
 				log.Printf("Client %s unregistered", client.ID)
 
 				// Notify others about disconnection
-				notification, _ := json.Marshal(map[string]string{
-					"type": "user_left",
-					"id":   client.ID,
-				})
+				msg := Message{Type: MsgTypeUnRegister, Payload: map[string]string{"id": client.ID}}
+				notification, _ := json.Marshal(msg)
 				h.broadcastMessage(notification, nil)
 			} else {
 				h.Mu.Unlock()

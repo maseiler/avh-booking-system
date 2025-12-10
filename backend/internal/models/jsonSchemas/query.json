@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "query.json",
+  "title": "Query",
+  "description": "A message that defines a database query",
+  "type": "object",
+  "properties": {
+    "table": {
+      "$ref": "table.json",
+      "description": "The table name"
+    },
+    "filter": {
+      "type": "array",
+      "description": "A list of filters that make up the WHERE clause",
+      "items": {
+        "$ref": "filter.json"
+      }
+    },
+    "limit": {
+      "type": "number",
+      "description": "The LIMIT clause"
+    },
+    "sort" : {
+      "$ref": "sorting.json"
+    }
+  },
+  "required": [
+    "table"
+  ]
+}

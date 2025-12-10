@@ -1,0 +1,13 @@
+{
+  "id": 0,
+  "firstName": "Darude",
+  "nickname": "1765292194804",
+  "lastName": "Sandstorm",
+  "email": "ohsofunny@troll.lol",
+  "phone": "12345678",
+  "balance": 0,
+  "maxDebt": 99,
+  "category": 3,
+  "enabled": true,
+  "createdAt": "2025-12-09T14:56:34.804Z"
+}

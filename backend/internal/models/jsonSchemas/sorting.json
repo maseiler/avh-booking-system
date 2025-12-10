@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sorting.json",
+  "title": "Sorting",
+  "description": "The ORDER BY clause of a database query",
+  "type": "object",
+  "properties": {
+    "column": {
+      "type": "string",
+      "description": "The column that is subject of sorting"
+    },
+    "order": {
+      "type": "string",
+      "description": "The order direction",
+      "enum": [
+        "asc",
+        "desc"
+      ]
+    }
+  },
+  "required": [
+    "column",
+    "order"
+  ]
+}

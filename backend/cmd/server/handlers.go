@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/validation"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -75,10 +76,11 @@ func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request
 	}
 
 	client := &models.Client{
-		ID:   clientID,
-		Conn: conn,
-		Send: make(chan []byte, 256),
-		Hub:  app.wsHandler.wsService.GetHub(),
+		ID:        clientID,
+		Conn:      conn,
+		Send:      make(chan []byte, 256),
+		Hub:       app.wsHandler.wsService.GetHub(),
+		Validator: validation.NewWebSocketValidator(),
 	}
 
 	client.Hub.Register <- client

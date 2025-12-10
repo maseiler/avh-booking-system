@@ -2,16 +2,16 @@ package main
 
 import (
 	"encoding/json"
-	"log"
-
-	"github.com/go-playground/validator/v10"
-
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/validation"
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/websocket"
+	"log"
 )
 
 type WebSocketService struct {
-	hub *models.Hub
+	hub       *models.Hub
+	validator *validation.WebSocketValidator
 }
 
 func getQueryFromMessage(data interface{}) (*models.Query, *models.WsError) {
@@ -68,7 +68,7 @@ func NewWebSocketService() *WebSocketService {
 
 	go hub.Run()
 
-	return &WebSocketService{hub: hub}
+	return &WebSocketService{hub: hub, validator: validation.NewWebSocketValidator()}
 }
 
 func (ws *WebSocketService) GetHub() *models.Hub {
@@ -87,19 +87,20 @@ func processQuery(message models.Message, dbModels *dbModels) ([]byte, *models.W
 	}
 
 	switch query.Table {
-	case "account":
+	case models.TableAccount:
 		{
 			accounts, _ := dbModels.account.Get(query)
-			b, err := json.Marshal(map[string]interface{}{
-				"type":     "accounts",
-				"accounts": accounts,
-			})
+			msg := models.Message{
+				Type:    models.MsgTypeResponse,
+				Payload: map[string]interface{}{"accounts": accounts},
+			}
+			b, err := json.Marshal(msg)
 			if err != nil {
-				return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal []Account"}
+				return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal response including Account"}
 			}
 			return b, nil
 		}
-	case "product":
+	case models.TableProduct:
 		// ...
 	}
 
@@ -118,7 +119,7 @@ func processMutation(message models.Message, dbModels *dbModels) ([]byte, *model
 	case models.OpInsert:
 		{
 			switch mutation.Table {
-			case "account":
+			case models.TableAccount:
 				jsonBytes, err := json.Marshal(mutation.Values)
 				if err != nil {
 					return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
@@ -128,17 +129,17 @@ func processMutation(message models.Message, dbModels *dbModels) ([]byte, *model
 				account := models.Account{}
 				err = json.Unmarshal(jsonBytes, &account)
 				if err != nil {
-					panic(err)
+					return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal JSON"}
 				}
 				row, err := dbModels.account.Insert(account)
 				if err != nil {
 					return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
-				b, err := json.Marshal(map[string]interface{}{
-					"type": "response",
-					"payload": map[string]interface{}{
-						"row": row},
-				})
+				msg := models.Message{
+					Type:    models.MsgTypeResponse,
+					Payload: map[string]interface{}{"row": row},
+				}
+				b, err := json.Marshal(msg)
 				if err != nil {
 					return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal response"}
 				}
@@ -158,6 +159,20 @@ func processMutation(message models.Message, dbModels *dbModels) ([]byte, *model
 	return nil, &models.WsError{Code: models.WsUnknown, Message: "Unknown error", Details: "Could not process mutation"}
 }
 
+func sendError(c *models.Client, wsErr *models.WsError) {
+	log.Printf("%v", wsErr)
+	msg := models.Message{
+		Type: models.MsgTypeError,
+		Payload: map[string]interface{}{
+			"error": wsErr},
+	}
+	errBytes, err := json.Marshal(msg)
+	if err != nil {
+		panic(err)
+	}
+	c.Send <- errBytes
+}
+
 // ReadPump pumps messages from the websocket connection to the hub
 func ReadPump(c *models.Client, dbModels *dbModels) {
 	defer func() {
@@ -166,6 +181,8 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 	}()
 
 	c.Conn.SetReadLimit(512 * 1024) // 512KB max message size
+
+	wsValidator := validation.NewWebSocketValidator()
 
 	for {
 		_, message, err := c.Conn.ReadMessage()
@@ -178,44 +195,58 @@ func ReadPump(c *models.Client, dbModels *dbModels) {
 			break
 		}
 
-		// Process message
-		//var msg map[string]interface{}
+		err = wsValidator.ValidateMessage(message)
+		if err != nil {
+			wsErr := &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+			sendError(c, wsErr)
+		}
+
+		// unmarshal message
 		msg := models.Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
-			wsErr := models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
-			log.Printf("%v", wsErr)
-			errBytes, _ := json.Marshal(wsErr)
-			c.Send <- errBytes
+			wsErr := &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
+			sendError(c, wsErr)
 			continue
 		}
 
 		// Handle different message types
 		switch msg.Type {
-		case "broadcast":
+		case models.MsgTypeBroadcast:
 			c.Hub.Broadcast <- message
-		case "ping":
-			pong, _ := json.Marshal(map[string]string{"type": "pong"})
+		case models.MsgTypePing:
+			response := models.Message{Type: models.MsgTypePong}
+			pong, _ := json.Marshal(response)
 			c.Send <- pong
-		case "query":
-			b, err := processQuery(msg, dbModels)
+		case models.MsgTypeQuery:
+
+			// Convert the interface{} back to JSON bytes (Query)
+			jsonBytes, err := json.Marshal(msg.Payload)
 			if err != nil {
-				errBytes, _ := json.Marshal(err)
-				c.Send <- errBytes
+				panic(err)
+			}
+
+			err = wsValidator.ValidateQuery(jsonBytes)
+			if err != nil {
+				panic(err)
+			}
+
+			// --------------------------------------
+
+			b, wsErr := processQuery(msg, dbModels)
+			if wsErr != nil {
+				sendError(c, wsErr)
 				continue
 			}
 			c.Send <- b
-		case "mutation":
+		case models.MsgTypeMutation:
 			response, wsErr := processMutation(msg, dbModels)
 			if wsErr != nil {
-				response, err = json.Marshal(wsErr)
-				if err != nil {
-					panic(err)
-				}
+				sendError(c, wsErr)
+				continue
 			}
 			c.Send <- response
 		default:
-			// Echo to sender
-			c.Send <- message
+			log.Fatalf("Unknown message type: %v", msg.Type)
 		}
 	}
 }

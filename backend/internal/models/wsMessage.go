@@ -5,40 +5,65 @@ import (
 	"strconv"
 )
 
+// ============================================================================
+// Message Types and Protocol
+// ============================================================================
+
+type MessageType string
+
+const (
+	MsgTypeAuth       MessageType = "auth"
+	MsgTypeRegister   MessageType = "register"
+	MsgTypeUnRegister MessageType = "unregister"
+	MsgTypeError      MessageType = "error"
+	MsgTypeBroadcast  MessageType = "broadcast"
+	MsgTypePing       MessageType = "ping"
+	MsgTypePong       MessageType = "pong"
+	MsgTypeQuery      MessageType = "query"
+	MsgTypeMutation   MessageType = "mutation"
+	MsgTypeResponse   MessageType = "response"
+)
+
+func (t MessageType) String() string {
+	return string(t)
+}
+
 type Message struct {
-	Type    string      `json:"type" validate:"required"`
+	Type    MessageType `json:"type" validate:"required"`
 	Payload interface{} `json:"payload,omitempty"`
 }
+
+// ============================================================================
+// Database Access/Manipulation Types and Protocol
+// ============================================================================
+
+type TableName string
+
+const (
+	TableAccount           TableName = "account"
+	TableAccountOption     TableName = "account_option"
+	TableCategory          TableName = "category"
+	TableOrder             TableName = "order"
+	TableProduct           TableName = "product"
+	TableProductGroup      TableName = "product_group"
+	TableProductVisibility TableName = "product_visibility"
+	TableUnit              TableName = "unit"
+)
+
+func (t TableName) String() string {
+	return string(t)
+}
+
 type Query struct {
-	Table  string   `json:"table" validate:"required"`
-	Filter []Filter `json:"filter,omitempty"`
-	Limit  int      `json:"limit,omitempty"`
-	Sort   Sorting  `json:"sort,omitempty"`
-}
-
-type Filter struct {
-	Column   string   `json:"column" validate:"required"`
-	Operator Operator `json:"operator" validate:"required"`
-	//Operator string `json:"operator" validate:"required,validate_operator"`
-	Value string `json:"value" validate:"required"`
-}
-
-type Sorting struct {
-	Column string `json:"column" validate:"required"`
-	Order  Order  `json:"order" validate:"required"`
-}
-
-type Mutation struct {
-	Operation Operation         `json:"operation" validate:"required"`
-	Table     string            `json:"table" validate:"required"`
-	Where     map[string]string `json:"where"`
-	//Values    map[string]string `json:"values" validate:"required"`
-	Values interface{} `json:"values" validate:"required"`
+	Table  TableName `json:"table" validate:"required"`
+	Filter []Filter  `json:"filter,omitempty"`
+	Limit  *int      `json:"limit,omitempty"`
+	Sort   *Sorting  `json:"sort,omitempty"`
 }
 
 // SqlStatement returns the SQL statement for this query
 func (q *Query) SqlStatement() string {
-	stmt := "SELECT * FROM " + q.Table
+	stmt := "SELECT * FROM " + q.Table.String()
 
 	if len(q.Filter) > 0 {
 		stmt += " WHERE "
@@ -52,15 +77,33 @@ func (q *Query) SqlStatement() string {
 		}
 	}
 
-	if &q.Sort != nil {
+	if q.Sort != nil {
 		stmt += " ORDER BY " + q.Sort.Column + " " + q.Sort.Order.SqlString()
 	}
 
-	if q.Limit != 0 {
-		stmt += " LIMIT " + strconv.Itoa(q.Limit)
+	if q.Limit != nil {
+		stmt += " LIMIT " + strconv.Itoa(*q.Limit)
 	}
 
 	log.Printf("Query statement: %s\n", stmt) // TODO debug mode
 
 	return stmt
+}
+
+type Filter struct {
+	Column   string   `json:"column" validate:"required"`
+	Operator Operator `json:"operator" validate:"required"`
+	Value    string   `json:"value" validate:"required"`
+}
+
+type Sorting struct {
+	Column string `json:"column" validate:"required"`
+	Order  Order  `json:"order" validate:"required"`
+}
+
+type Mutation struct {
+	Operation Operation         `json:"operation" validate:"required"`
+	Table     TableName         `json:"table" validate:"required"`
+	Where     map[string]string `json:"where"`
+	Values    interface{}       `json:"values"`
 }
