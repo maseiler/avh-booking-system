@@ -9,26 +9,15 @@ import (
 	"os"
 )
 
-type dbModels struct {
-	account       *models.AccountModel
-	accountOption *models.AccountOptionModel
-	category      *models.CategoryModel
-	unit          *models.UnitModel
-	productGroup  *models.ProductGroupModel
-	product       *models.ProductModel
-}
-
 type application struct {
 	conf      *config.AppConfig
 	log       *slog.Logger
-	wsHandler *WebSocketHandler
 	db        *database.DB
-	dbModels  dbModels
+	DbModels  *models.DbModels
+	WsHandler *WebSocketHandler
 }
 
 func main() {
-	wsHandler := NewWebSocketHandler(NewWebSocketService())
-
 	dbPool, err := database.NewFromConfig()
 	if err != nil {
 		panic(err)
@@ -36,22 +25,22 @@ func main() {
 	defer dbPool.Close()
 
 	app := &application{
-		conf:      config.LoadConfig(),
-		log:       logger.CreateLogger(),
-		db:        dbPool,
-		wsHandler: wsHandler,
-		dbModels: dbModels{
-			&models.AccountModel{DB: dbPool},
-			&models.AccountOptionModel{DB: dbPool},
-			&models.CategoryModel{DB: dbPool},
-			&models.UnitModel{DB: dbPool},
-			&models.ProductGroupModel{DB: dbPool},
-			&models.ProductModel{DB: dbPool},
+		conf: config.LoadConfig(),
+		log:  logger.CreateLogger(),
+		db:   dbPool,
+		DbModels: &models.DbModels{
+			Account:       models.AccountModel{DB: dbPool},
+			AccountOption: models.AccountOptionModel{DB: dbPool},
+			Category:      models.CategoryModel{DB: dbPool},
+			Unit:          models.UnitModel{DB: dbPool},
+			ProductGroup:  models.ProductGroupModel{DB: dbPool},
+			Product:       models.ProductModel{DB: dbPool},
 		},
 	}
 
-	err = app.serveHTTP()
-	if err != nil {
+	app.WsHandler = NewWebSocketHandler(app)
+
+	if err := app.serveHTTP(); err != nil {
 		app.log.Error(err.Error())
 		os.Exit(1)
 	}

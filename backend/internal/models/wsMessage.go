@@ -50,10 +50,6 @@ const (
 	TableUnit              TableName = "unit"
 )
 
-func (t TableName) String() string {
-	return string(t)
-}
-
 type Query struct {
 	Table  TableName `json:"table" validate:"required"`
 	Filter []Filter  `json:"filter,omitempty"`
@@ -63,7 +59,7 @@ type Query struct {
 
 // SqlStatement returns the SQL statement for this query
 func (q *Query) SqlStatement() string {
-	stmt := "SELECT * FROM " + q.Table.String()
+	stmt := "SELECT * FROM " + string(q.Table)
 
 	if len(q.Filter) > 0 {
 		stmt += " WHERE "

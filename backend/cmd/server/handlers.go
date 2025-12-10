@@ -54,14 +54,6 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-type WebSocketHandler struct {
-	wsService *WebSocketService
-}
-
-func NewWebSocketHandler(wsService *WebSocketService) *WebSocketHandler {
-	return &WebSocketHandler{wsService: wsService}
-}
-
 func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -79,15 +71,15 @@ func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request
 		ID:        clientID,
 		Conn:      conn,
 		Send:      make(chan []byte, 256),
-		Hub:       app.wsHandler.wsService.GetHub(),
+		Hub:       app.WsHandler.Service.Hub(),
 		Validator: validation.NewWebSocketValidator(),
 	}
 
 	client.Hub.Register <- client
 
 	// Start goroutines for reading and writing
-	go WritePump(client)
-	go ReadPump(client, &app.dbModels)
+	go app.WsHandler.Service.WritePump(client)
+	go app.WsHandler.Service.ReadPump(client)
 }
 
 func generateID() string {
