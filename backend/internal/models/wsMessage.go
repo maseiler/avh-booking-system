@@ -21,8 +21,8 @@ const (
 	MsgTypePing           MessageType = "ping"
 	MsgTypePong           MessageType = "pong"
 	MsgTypeQuery          MessageType = "query"
+	MsgTypeQueryResult    MessageType = "queryResult"
 	MsgTypeMutation       MessageType = "mutation"
-	MsgTypeResult         MessageType = "result"
 	MsgTypeMutationResult MessageType = "mutationResult"
 )
 
@@ -56,7 +56,7 @@ const (
 	TableUnit              TableName = "unit"
 )
 
-type Result struct {
+type QueryResult struct {
 	Table TableName         `json:"table" validate:"required"`
 	Data  []json.RawMessage `json:"data,omitempty"`
 }

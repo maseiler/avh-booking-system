@@ -20,7 +20,7 @@ interface Message {
     payload: Partial<any>
 }
 
-interface Result {
+interface QueryResult {
     table: string;
     data: Partial<any[]> // TODO only allow Account, Product, ...
 }
@@ -144,8 +144,8 @@ export class WebSocketClient {
                     return;
                 }
 
-                case 'result': {
-                    const result = message.payload as Result
+                case 'queryResult': {
+                    const result = message.payload as QueryResult
 
                     switch (result.table) {
                         case 'account': {

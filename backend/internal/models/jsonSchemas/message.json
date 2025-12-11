@@ -16,7 +16,7 @@
         "ping",
         "pong",
         "query",
-        "result",
+        "queryResult",
         "mutation",
         "mutationResult"
       ],
@@ -81,7 +81,7 @@
       "then": {
         "properties": {
           "payload": {
-            "$ref": "sql/result.json"
+            "$ref": "sql/queryResult.json"
           }
         }
       }

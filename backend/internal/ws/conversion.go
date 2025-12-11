@@ -39,18 +39,18 @@ func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
 	return &result, nil
 }
 
-func (s *Service) marshalResult(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
+func (s *Service) marshalQueryResult(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
 	// Create the message
-	result := models.Result{Table: table, Data: *data}
+	res := models.QueryResult{Table: table, Data: *data}
 	msg := models.Message{
-		Type:    models.MsgTypeResult,
-		Payload: result,
+		Type:    models.MsgTypeQueryResult,
+		Payload: res,
 	}
 
 	// Marshall message
 	b, err := json.Marshal(msg)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with Result containing []Account"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with QueryResult containing []Account"}
 	}
 
 	// Validate message
@@ -73,7 +73,7 @@ func (s *Service) marshalResultMutation(table models.TableName, operation models
 	// Marshall message
 	b, err := json.Marshal(msg)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with ResultMutation"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with MutationResult"}
 	}
 
 	// Validate message

@@ -34,7 +34,7 @@ export const useSocketStore = defineStore("notificationStore", {
                 "sort": {"column": "nickname", "order": "asc"}
             }
             let msg = {type: "query", payload: payload}
-            console.log(msg)
+            //console.debug(msg)
             this.wsClient.send(msg)
         },
         addAccount() {
@@ -52,14 +52,14 @@ export const useSocketStore = defineStore("notificationStore", {
                 "enabled": true,
                 "createdAt": new Date(now).toISOString()
             }
-            console.log(newAccount)
+            //console.debug(newAccount)
             let payload = {
                 "operation": "insert",
                 "table": "account",
                 "values": newAccount
             }
             let msg = {type: "mutation", payload: payload}
-            console.log(msg)
+            //console.debug(msg)
             this.wsClient.send(msg)
         }
     }

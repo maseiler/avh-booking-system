@@ -50,7 +50,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 				rawJsonSlice = append(rawJsonSlice, rawAccount)
 			}
 
-			return s.marshalResult(models.TableAccount, &rawJsonSlice)
+			return s.marshalQueryResult(models.TableAccount, &rawJsonSlice)
 		}
 
 	case models.TableProduct:
