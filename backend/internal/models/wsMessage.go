@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"github.com/jackc/pgx/v5/pgtype"
-	"log"
 	"strconv"
 )
 
@@ -96,8 +95,6 @@ func (q *Query) SqlStatement() string {
 	if q.Limit != nil {
 		stmt += " LIMIT " + strconv.Itoa(*q.Limit)
 	}
-
-	log.Printf("Query statement: %s\n", stmt) // TODO debug mode
 
 	return stmt
 }

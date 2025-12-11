@@ -34,6 +34,6 @@ type WebSocketHandler struct {
 func NewWebSocketHandler(app *application) *WebSocketHandler {
 	return &WebSocketHandler{
 		app:     app,
-		Service: ws.NewService(app.DbModels),
+		Service: ws.NewService(app.DbModels, app.log),
 	}
 }

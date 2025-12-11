@@ -4,48 +4,41 @@ import (
 	"encoding/json"
 
 	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/go-playground/validator/v10"
 )
 
-var structValidator = validator.New(validator.WithRequiredStructEnabled())
-
 func getQuery(payload interface{}) (*models.Query, *models.WsError) {
+	// Convert the interface{} to JSON bytes
 	b, err := json.Marshal(payload)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Marshal payload"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
 	}
 
+	// Convert JSON bytes to Query
 	var q models.Query
 	if err := json.Unmarshal(b, &q); err != nil {
 		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to Query"}
-	}
-
-	if err := structValidator.Struct(q); err != nil {
-		return nil, &models.WsError{Code: models.WsBadStruct, Message: err.Error(), Details: "Query struct invalid"}
 	}
 
 	return &q, nil
 }
 
 func getMutation(payload interface{}) (*models.Mutation, *models.WsError) {
+	// Convert the interface{} to JSON bytes
 	b, err := json.Marshal(payload)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Marshal payload"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
 	}
 
+	// Convert JSON bytes to Mutation
 	var m models.Mutation
 	if err := json.Unmarshal(b, &m); err != nil {
 		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to Mutation"}
 	}
 
-	if err := structValidator.Struct(m); err != nil {
-		return nil, &models.WsError{Code: models.WsBadStruct, Message: err.Error(), Details: "Mutation struct invalid"}
-	}
-
 	return &m, nil
 }
 
-func unmarshalAccount(mutationValues *interface{}) (*models.Account, *models.WsError) {
+func unmarshalAccount(mutationValues interface{}) (*models.Account, *models.WsError) {
 	// Convert the interface{} to JSON bytes
 	b, err := json.Marshal(mutationValues)
 	if err != nil {
@@ -63,18 +56,20 @@ func unmarshalAccount(mutationValues *interface{}) (*models.Account, *models.WsE
 }
 
 func (s *Service) marshalResult(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
+	// Create the message
 	result := models.Result{Table: table, Data: *data}
-
 	msg := models.Message{
 		Type:    models.MsgTypeResult,
 		Payload: result,
 	}
 
+	// Marshall message
 	b, err := json.Marshal(msg)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal response including Account"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with Result containing []Account"}
 	}
 
+	// Validate message
 	err = s.validator.ValidateMessage(b)
 	if err != nil {
 		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
@@ -94,7 +89,7 @@ func (s *Service) marshalResultInsertion(id int) ([]byte, *models.WsError) {
 	// Marshall message
 	b, err := json.Marshal(msg)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal ResultInsertion"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with ResultInsertion"}
 	}
 
 	// Validate message

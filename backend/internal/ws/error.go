@@ -3,11 +3,10 @@ package ws
 import (
 	"encoding/json"
 	"github.com/av-huette/avh-booking-system/internal/models"
-	"log"
 )
 
 func (s *Service) sendError(c *models.Client, wsErr *models.WsError) {
-	log.Printf("%v", wsErr)
+	s.log.Error("%v", wsErr)
 
 	// Create error message
 	msg := models.Message{

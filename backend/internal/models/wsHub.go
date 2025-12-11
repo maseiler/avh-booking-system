@@ -2,12 +2,13 @@ package models
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"sync"
 )
 
 // Hub maintains active clients and broadcasts messages
 type Hub struct {
+	Log        *slog.Logger
 	Clients    map[*Client]bool
 	Broadcast  chan []byte
 	Register   chan *Client
@@ -22,7 +23,7 @@ func (h *Hub) Run() {
 			h.Mu.Lock()
 			h.Clients[client] = true
 			h.Mu.Unlock()
-			log.Printf("Client %s registered", client.ID)
+			h.Log.Info("Client registered", slog.String("client.ID", client.ID))
 
 			// Notify others about new client
 			msg := Message{Type: MsgTypeRegister, Payload: map[string]string{"id": client.ID}}
@@ -36,7 +37,7 @@ func (h *Hub) Run() {
 				close(client.Send)
 				h.Mu.Unlock()
 
-				log.Printf("Client %s unregistered", client.ID)
+				h.Log.Info("Client unregistered", slog.String("client.ID", client.ID))
 
 				// Notify others about disconnection
 				msg := Message{Type: MsgTypeUnRegister, Payload: map[string]string{"id": client.ID}}
