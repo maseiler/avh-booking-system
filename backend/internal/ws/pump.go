@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/gorilla/websocket"
 	"log/slog"
@@ -42,7 +43,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			continue
 		}
 
-		s.log.Debug("Received message", msg)
+		s.log.Debug("Received message", slog.String("msg", fmt.Sprintf("%v", msg)))
 
 		// Route
 		switch msg.Type {

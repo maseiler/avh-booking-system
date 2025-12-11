@@ -34,7 +34,8 @@ func (s *Service) processPing(message models.Message) ([]byte, *models.WsError) 
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
 func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError) {
-	query, err := getQuery(message.Payload)
+	//query, err := getQuery(message.Payload)
+	query, err := unmarshalInterface[models.Query](message.Payload)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +67,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 // processMutation unmarshals the message and initiates a database mutation
 func (s *Service) processMutation(message models.Message) ([]byte, *models.WsError) {
 
-	mutation, wsErr := getMutation(message.Payload)
+	mutation, wsErr := unmarshalInterface[models.Mutation](message.Payload)
 	if wsErr != nil {
 		return nil, wsErr
 	}
@@ -76,7 +77,7 @@ func (s *Service) processMutation(message models.Message) ([]byte, *models.WsErr
 		{
 			switch mutation.Table {
 			case models.TableAccount:
-				account, wsErr := unmarshalAccount(mutation.Values)
+				account, wsErr := unmarshalInterface[models.Account](mutation.Values)
 				if wsErr != nil {
 					return nil, wsErr
 				}

@@ -2,57 +2,41 @@ package ws
 
 import (
 	"encoding/json"
+	"reflect"
 
 	"github.com/av-huette/avh-booking-system/internal/models"
 )
 
-func getQuery(payload interface{}) (*models.Query, *models.WsError) {
+func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
+	if payload == nil {
+		return nil, &models.WsError{
+			Code:    models.WsBadInterface,
+			Message: "Payload is nil",
+		}
+	}
+
 	// Convert the interface{} to JSON bytes
-	b, err := json.Marshal(payload)
-	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
+	var b []byte
+	var err error
+	if b, err = json.Marshal(payload); err != nil {
+		return nil, &models.WsError{
+			Code:    models.WsBadInterface,
+			Message: err.Error(),
+			Details: "Could not marshal interface",
+		}
 	}
 
-	// Convert JSON bytes to Query
-	var q models.Query
-	if err := json.Unmarshal(b, &q); err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to Query"}
+	// Convert JSON bytes to target type T
+	var result T
+	if err := json.Unmarshal(b, &result); err != nil {
+		return nil, &models.WsError{
+			Code:    models.WsBadJson,
+			Message: err.Error(),
+			Details: "Could not unmarshal to type " + reflect.TypeOf(result).Name(),
+		}
 	}
 
-	return &q, nil
-}
-
-func getMutation(payload interface{}) (*models.Mutation, *models.WsError) {
-	// Convert the interface{} to JSON bytes
-	b, err := json.Marshal(payload)
-	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
-	}
-
-	// Convert JSON bytes to Mutation
-	var m models.Mutation
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to Mutation"}
-	}
-
-	return &m, nil
-}
-
-func unmarshalAccount(mutationValues interface{}) (*models.Account, *models.WsError) {
-	// Convert the interface{} to JSON bytes
-	b, err := json.Marshal(mutationValues)
-	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal interface"}
-	}
-
-	// Convert JSON bytes to Account
-	account := &models.Account{}
-	err = json.Unmarshal(b, &account)
-	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal JSON to Account"}
-	}
-
-	return account, nil
+	return &result, nil
 }
 
 func (s *Service) marshalResult(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
