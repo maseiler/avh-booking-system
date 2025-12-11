@@ -28,7 +28,7 @@ func TestMain(m *testing.M) {
 
 func TestInsertAccount(t *testing.T) {
 	dummyAccount := models.CreateAccount("一嫂", "Lady Hurricane", "鄭",
-		"zheng.yi.sao@redfleet.cn", "+86 20 1807-2010", "12.34", 100, 1)
+		"zheng.yi.sao@redfleet.cn", "+86 20 1807-2010", 1234, 100, 1)
 	id, err := dbModels.account.Insert(dummyAccount)
 
 	require.NoError(t, err)
@@ -52,12 +52,7 @@ func TestGetAccountById(t *testing.T) {
 	require.Equal(t, daGama.LastName, "da Gama")
 	require.Equal(t, daGama.Email, "indianspice@capeofgoodhope.com")
 	require.Equal(t, daGama.Phone, "+351 914 97 1498")
-	var expectedBalance pgtype.Numeric
-	err = expectedBalance.Scan("33.55")
-	if err != nil {
-		t.Fatal("Could not convert string to Numeric")
-	}
-	require.Equal(t, daGama.Balance, expectedBalance)
+	require.Equal(t, daGama.Balance, 3355)
 	require.Equal(t, daGama.MaxDebt, 100)
 	require.Equal(t, daGama.Category, 1)
 	require.Equal(t, daGama.Enabled, true)
@@ -149,12 +144,11 @@ func TestGetProductById(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, product.Id, productId)
 	require.Equal(t, product.Name, "Rota das Especiarias")
-	expectedBalance := models.NewNumeric("18.00")
-	require.Equal(t, product.Price, expectedBalance)
+	require.Equal(t, product.Price, 1800)
 	require.Equal(t, product.ProductGroupId, 1)
 	require.Equal(t, product.Size, 150)
 	require.Equal(t, product.UnitId, 1)
-	expectedTax := models.NewNumeric("0.19")
+	expectedTax := 19
 	require.Equal(t, product.Tax, expectedTax)
 	require.Equal(t, product.CategoryId, 1)
 }

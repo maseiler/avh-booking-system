@@ -17,7 +17,7 @@ type Account struct {
 	LastName  string           `json:"lastName" db:"last_name"`
 	Email     string           `json:"email" db:"email"`
 	Phone     string           `json:"phone" db:"phone"`
-	Balance   pgtype.Numeric   `json:"balance" db:"balance"`
+	Balance   int              `json:"balance" db:"balance"`
 	MaxDebt   int              `json:"maxDebt" db:"max_debt"`
 	Category  int              `json:"category" db:"category"`
 	Enabled   bool             `json:"enabled" db:"enabled"`
@@ -25,14 +25,14 @@ type Account struct {
 }
 
 func CreateAccount(firstName string, nickName string, lastName string,
-	email string, phone string, balance string, maxDebt int, category int) Account {
+	email string, phone string, balance int, maxDebt int, category int) Account {
 	return Account{
 		FirstName: firstName,
 		Nickname:  nickName,
 		LastName:  lastName,
 		Email:     email,
 		Phone:     phone,
-		Balance:   NewNumeric(balance),
+		Balance:   balance,
 		MaxDebt:   maxDebt,
 		Category:  category,
 		Enabled:   true,
