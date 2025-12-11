@@ -2,8 +2,8 @@ package models
 
 import (
 	"encoding/json"
-	"github.com/jackc/pgx/v5/pgtype"
 	"strconv"
+	"time"
 )
 
 // ============================================================================
@@ -36,7 +36,7 @@ type Message struct {
 }
 
 type PingPong struct {
-	Timestamp *pgtype.Timestamp `json:"timestamp,omitempty"`
+	Timestamp time.Time `json:"timestamp,omitempty"`
 }
 
 // ============================================================================

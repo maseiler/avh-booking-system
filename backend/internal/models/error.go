@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 type WsErrorCode string
 
 const (
@@ -18,4 +20,12 @@ type WsError struct {
 	Code    WsErrorCode `json:"code" validate:"required"`
 	Message string      `json:"message" validate:"required"`
 	Details string      `json:"details,omitempty"`
+}
+
+func (wse *WsError) String() string {
+	msg := fmt.Sprintf("code: %s, message: '%s'", wse.Code, wse.Message)
+	if wse.Details != "" {
+		msg += fmt.Sprintf(", details: '%s'", wse.Details)
+	}
+	return msg
 }

@@ -3,6 +3,8 @@ package ws
 import (
 	"encoding/json"
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"log/slog"
+	"time"
 )
 
 func (s *Service) processPing(message models.Message) ([]byte, *models.WsError) {
@@ -16,10 +18,9 @@ func (s *Service) processPing(message models.Message) ([]byte, *models.WsError) 
 		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to PingPong"}
 	}
 
-	s.log.Info("Received ping with timestamp %v", ping.Timestamp)
+	s.log.Info("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
 
-	// TODO send timestamp
-	pong := models.PingPong{}
+	pong := models.PingPong{Timestamp: time.Now()}
 	response := models.Message{Type: models.MsgTypePong, Payload: pong}
 	b, _ = json.Marshal(response)
 

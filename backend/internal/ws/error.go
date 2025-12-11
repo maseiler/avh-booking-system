@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Service) sendError(c *models.Client, wsErr *models.WsError) {
-	s.log.Error("%v", wsErr)
+	s.log.Error(wsErr.String())
 
 	// Create error message
 	msg := models.Message{

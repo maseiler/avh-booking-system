@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/gorilla/websocket"
+	"log/slog"
 )
 
 // ReadPump pumps messages from the ws connection to the hub
@@ -41,7 +42,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			continue
 		}
 
-		s.log.Debug("Received message: %v", msg)
+		s.log.Debug("Received message", msg)
 
 		// Route
 		switch msg.Type {
@@ -73,7 +74,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			c.Send <- response
 
 		default:
-			s.log.Error("Unknown message type: %v", msg.Type)
+			s.log.Error("Unknown message type:", slog.String("msg.Type", msg.Type.String()))
 		}
 	}
 }
