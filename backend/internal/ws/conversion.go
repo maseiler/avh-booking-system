@@ -39,18 +39,11 @@ func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
 	return &result, nil
 }
 
-func (s *Service) marshalQueryResult(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
-	// Create the message
-	res := models.QueryResult{Table: table, Data: *data}
-	msg := models.Message{
-		Type:    models.MsgTypeQueryResult,
-		Payload: res,
-	}
-
+func (s *Service) marshalAndValidateMessage(message *models.Message) ([]byte, *models.WsError) {
 	// Marshall message
-	b, err := json.Marshal(msg)
+	b, err := json.Marshal(message)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with QueryResult containing []Account"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message"}
 	}
 
 	// Validate message
@@ -62,25 +55,22 @@ func (s *Service) marshalQueryResult(table models.TableName, data *[]json.RawMes
 	return b, nil
 }
 
+func (s *Service) marshalQueryResult(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
+	res := models.QueryResult{Table: table, Data: *data}
+	msg := models.Message{
+		Type:    models.MsgTypeQueryResult,
+		Payload: res,
+	}
+
+	return s.marshalAndValidateMessage(&msg)
+}
+
 func (s *Service) marshalResultMutation(table models.TableName, operation models.Operation, id int) ([]byte, *models.WsError) {
-	// Create the message
 	res := models.ResultMutation{Table: table, Operation: operation, Id: id}
 	msg := models.Message{
 		Type:    models.MsgTypeMutationResult,
 		Payload: res,
 	}
 
-	// Marshall message
-	b, err := json.Marshal(msg)
-	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with MutationResult"}
-	}
-
-	// Validate message
-	err = s.validator.ValidateMessage(b)
-	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
-	}
-
-	return b, nil
+	return s.marshalAndValidateMessage(&msg)
 }
