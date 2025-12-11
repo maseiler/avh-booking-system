@@ -25,6 +25,12 @@ interface Result {
     data: Partial<any[]> // TODO only allow Account, Product, ...
 }
 
+interface ResultMutation {
+    table: string;
+    operation: string;
+    id: number;
+}
+
 interface Pong {
     timestamp: Partial<Date>
 }
@@ -129,7 +135,7 @@ export class WebSocketClient {
             switch (message.type) {
                 case 'pong': {
                     const pong = message.payload as Pong;
-                    if (pong.timestamp){
+                    if (pong.timestamp) {
                         console.log('Received pong with timestamp', pong.timestamp)
                     } else {
                         console.log('Received pong');
@@ -152,6 +158,12 @@ export class WebSocketClient {
                         }
                     }
                     break;
+                }
+
+                case 'mutationResult': {
+                    const res = message.payload as ResultMutation
+                    console.info(res)
+                    return
                 }
                 default: {
                     console.log('TODO handle message type', message.type);

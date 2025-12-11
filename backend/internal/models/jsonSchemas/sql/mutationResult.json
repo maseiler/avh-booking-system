@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "mutationResult.json",
+  "title": "MutationResult",
+  "description": "The result of a database mutation",
+  "type": "object",
+  "properties": {
+    "table": {
+      "$ref": "../db/_tableNames.json",
+      "description": "The table name"
+    },
+    "operation": {
+      "$ref": "_operations.json",
+      "description": "The executed operation"
+    },
+    "id": {
+      "type": "integer",
+      "description": "The ID of the mutated object"
+    }
+  },
+  "required": [
+    "table",
+    "id"
+  ],
+  "additionalProperties": false
+}

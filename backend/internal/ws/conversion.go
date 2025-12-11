@@ -62,18 +62,18 @@ func (s *Service) marshalResult(table models.TableName, data *[]json.RawMessage)
 	return b, nil
 }
 
-func (s *Service) marshalResultInsertion(id int) ([]byte, *models.WsError) {
+func (s *Service) marshalResultMutation(table models.TableName, operation models.Operation, id int) ([]byte, *models.WsError) {
 	// Create the message
-	resInsertion := models.ResultInsertion{Id: id}
+	res := models.ResultMutation{Table: table, Operation: operation, Id: id}
 	msg := models.Message{
-		Type:    models.MsgTypeResultInsertion,
-		Payload: resInsertion,
+		Type:    models.MsgTypeMutationResult,
+		Payload: res,
 	}
 
 	// Marshall message
 	b, err := json.Marshal(msg)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with ResultInsertion"}
+		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message with ResultMutation"}
 	}
 
 	// Validate message

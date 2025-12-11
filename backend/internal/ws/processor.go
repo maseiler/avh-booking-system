@@ -87,7 +87,7 @@ func (s *Service) processMutation(message models.Message) ([]byte, *models.WsErr
 					return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
 
-				return s.marshalResultInsertion(newId)
+				return s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
 			}
 
 			return nil, &models.WsError{

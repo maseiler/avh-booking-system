@@ -13,17 +13,17 @@ import (
 type MessageType string
 
 const (
-	MsgTypeAuth            MessageType = "auth"
-	MsgTypeRegister        MessageType = "register"
-	MsgTypeUnRegister      MessageType = "unregister"
-	MsgTypeError           MessageType = "error"
-	MsgTypeBroadcast       MessageType = "broadcast"
-	MsgTypePing            MessageType = "ping"
-	MsgTypePong            MessageType = "pong"
-	MsgTypeQuery           MessageType = "query"
-	MsgTypeMutation        MessageType = "mutation"
-	MsgTypeResult          MessageType = "result"
-	MsgTypeResultInsertion MessageType = "resultInsertion"
+	MsgTypeAuth           MessageType = "auth"
+	MsgTypeRegister       MessageType = "register"
+	MsgTypeUnRegister     MessageType = "unregister"
+	MsgTypeError          MessageType = "error"
+	MsgTypeBroadcast      MessageType = "broadcast"
+	MsgTypePing           MessageType = "ping"
+	MsgTypePong           MessageType = "pong"
+	MsgTypeQuery          MessageType = "query"
+	MsgTypeMutation       MessageType = "mutation"
+	MsgTypeResult         MessageType = "result"
+	MsgTypeMutationResult MessageType = "mutationResult"
 )
 
 func (t MessageType) String() string {
@@ -61,8 +61,10 @@ type Result struct {
 	Data  []json.RawMessage `json:"data,omitempty"`
 }
 
-type ResultInsertion struct {
-	Id int `json:"id" validate:"required"`
+type ResultMutation struct {
+	Table     TableName `json:"table" validate:"required"`
+	Operation Operation `json:"operation" validate:"required"`
+	Id        int       `json:"id" validate:"required"`
 }
 
 type Query struct {

@@ -7,11 +7,7 @@
   "properties": {
     "operation": {
       "type": "string",
-      "enum": [
-        "insert",
-        "update",
-        "delete"
-      ],
+      "$ref": "_operations.json",
       "description": "The database operation to execute"
     },
     "table": {

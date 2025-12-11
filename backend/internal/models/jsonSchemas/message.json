@@ -17,8 +17,8 @@
         "pong",
         "query",
         "result",
-        "resultInsertion",
-        "mutation"
+        "mutation",
+        "mutationResult"
       ],
       "description": "The message type"
     },
@@ -98,6 +98,25 @@
         "properties": {
           "payload": {
             "$ref": "sql/mutation.json"
+          }
+        },
+        "required": [
+          "payload"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "mutationResult"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "sql/mutationResult.json"
           }
         },
         "required": [
