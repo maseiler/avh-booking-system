@@ -52,7 +52,7 @@ export const useAccountStore = defineStore('account', {
       let foundAcc = this.accounts.find((acc) => acc.id == id);
       return foundAcc
     },
-    loadAllAccounts(accJsonObj: []){
+    loadAllAccounts(accJsonObj: any[]){
       let accObjArray = [] as Account[];
       accJsonObj.forEach((accObj) => {
         // let newAccount = {} as Account;

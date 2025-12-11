@@ -1,5 +1,7 @@
-import type {Account} from "../composables/account";
 import {useAccountStore} from "../store/AccountStore";
+import {compileSchema, draft07} from "json-schema-library";
+import type {SchemaNode} from "json-schema-library";
+import messageSchema from "../../../backend/internal/models/jsonSchemas/message.json";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -13,16 +15,14 @@ interface EventHandlers {
     [event: string]: EventHandler[];
 }
 
-interface PongMessage {
-    type: 'pong';
-
-    [key: string]: any;
+interface Message {
+    type: string;
+    payload: Partial<any>
 }
 
-interface TypedMessage {
-    type: string;
-
-    [key: string]: any;
+interface Result {
+    table: string;
+    data: Partial<any[]> // TODO only allow Account, Product, ...
 }
 
 export class WebSocketClient {
@@ -35,6 +35,7 @@ export class WebSocketClient {
     private ws: WebSocket | null;
     private heartbeatTimer: number | null;
     private lastPong: number;
+    private schema: SchemaNode;
 
     constructor(url: string, options: WebSocketClientOptions = {}) {
         this.url = url;
@@ -51,6 +52,7 @@ export class WebSocketClient {
         this.ws = null;
         this.heartbeatTimer = null;
         this.lastPong = 0;
+        this.schema = compileSchema(messageSchema, {drafts: [draft07]});
 
         this.connect();
     }
@@ -96,34 +98,62 @@ export class WebSocketClient {
         this.ws.onmessage = (event: MessageEvent): void => {
             if (import.meta.env.DEV) {
                 // Only Log WS Messages, when running in Dev Environment
-                console.log('Message received:', event.data);
+                console.debug('Message received:', event.data);
             }
 
-            // Try to parse JSON messages
-            let data: any = event.data;
+            // Try to parse JSON message (could be anything)
+            let parsedMsg: any;
             try {
-                data = JSON.parse(event.data);
+                parsedMsg = JSON.parse(event.data);
             } catch (e) {
-                // Not JSON, use as-is
+                console.error('Failed to parse json:', e);
+                // TODO handle error?
+                return
             }
 
-            // Handle ping/pong for heartbeat
-            if (data.type === 'pong') {
-                this.lastPong = Date.now();
-                return;
+            // Validate that message complies with JSON schema
+            const {valid, errors} = this.schema.validate(parsedMsg);
+            if (!valid) {
+                console.error('Invalid message schema:', errors);
+                // TODO handle error?
+                return
             }
 
-            if (data.type === 'accounts') {
-                useAccountStore().loadAllAccounts(data.accounts);
-                return;
+            // Create Message interface for type safety
+            const message = parsedMsg as Message
+
+            switch (message.type) {
+                case 'pong': {
+                    this.lastPong = Date.now();
+                    return;
+                }
+
+                case 'result': {
+                    const result = message.payload as Result
+
+                    switch (result.table) {
+                        case 'account': {
+                            useAccountStore().loadAllAccounts(result.data);
+                            return;
+                        }
+
+                        default: {
+                            console.error('TODO handle table', result.table)
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    console.log('TODO handle message type', message.type);
+                }
             }
 
             // Trigger custom message handlers
-            this.trigger('message', data);
+            this.trigger('message', message);
 
             // Trigger typed message handlers
-            if (data.type) {
-                this.trigger(data.type, data);
+            if (message.type) {
+                this.trigger(message.type, message);
             }
         };
 
