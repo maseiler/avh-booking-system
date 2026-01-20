@@ -149,7 +149,7 @@ export class WebSocketClient {
 
                     switch (result.table) {
                         case 'account': {
-                            useAccountStore().loadAllAccounts(result.data);
+                            useAccountStore().patchAccounts(result.data);
                             return;
                         }
 

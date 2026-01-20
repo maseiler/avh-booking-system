@@ -11,11 +11,11 @@ export const useAccountStore = defineStore('account', {
   },
   actions: {
     generateTestData(){
-      let testData = generateTestData();
-      this.accounts.push(...testData);
-      this.accounts.sort((a, b) => {
-        return a.getShortName() < b.getShortName() ? -1 : 1;
-      })
+      // let testData = generateTestData();
+      // this.accounts.push(...testData);
+      // this.accounts.sort((a, b) => {
+      //   return a.getShortName() < b.getShortName() ? -1 : 1;
+      // })
     },
     select(acc: Account){
       this.selected = [acc];
@@ -67,9 +67,22 @@ export const useAccountStore = defineStore('account', {
       this.accounts = accObjArray;
     },
     addAccount(newAccount: Account){
-      const socket$ = useSocketStore();
-      socket$.addAccount(newAccount);
-      socket$.queryAccounts();
+      this.accounts.push(newAccount);
+      // const socket$ = useSocketStore();
+      // socket$.addAccount(newAccount);
+      // socket$.queryAccounts();
+    },
+    patchAccounts(newAccounts: Account[]){
+      this.$patch(state => {
+        newAccounts.forEach(newAcc => {
+          const existing = state.accounts.find(a => a.id === newAcc.id);
+          if(existing){
+            Object.assign(existing, newAcc);
+          } else {
+            state.accounts.push(newAcc);
+          }
+        })
+      })
     }
   }
 })

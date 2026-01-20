@@ -76,3 +76,46 @@ app.use(router)
 app.use(i18n)
 app.use(pinia)
 app.mount('#app')
+
+
+/**
+ * Communication between Websocket and Pinia Stores
+ */
+import { useAccountStore } from './store/AccountStore.ts'
+import { useSocketStore } from './store/socketStore.ts'
+const accountStore = useAccountStore();
+const socketStore = useSocketStore();
+
+accountStore.$subscribe((mutation, state) => {
+  console.log("mutation: ", mutation)
+
+  // Called when an Account is added in the Store
+  if(mutation.storeId === "account" && mutation.events.type === "add"){
+    const table = "account";
+    const operation = "insert";
+    const values = mutation.events.newValue;
+    let payload = {
+      "operation": operation,
+      "table": table,
+      "values": values
+    }
+    let msg = {type: "mutation", payload: payload};
+    socketStore.wsClient.send(msg)
+  }
+
+  // Called when an Account gets Modified
+  if(mutation.storeId === "account" && mutation.events.type === "set" && mutation.events.key != "accounts" && mutation.events.key != "selected"){
+    const table = "account";
+    const operation = "update";
+    const values = {[mutation.events.key]: mutation.events.newValue};
+    const where = {"account_id": mutation.events.target.id.toString()};
+    let payload = {
+      "operation": operation,
+      "table": table,
+      "where": where,
+      "values": values
+    }
+    let msg = {type: "mutation", payload: payload};
+    socketStore.wsClient.send(JSON.stringify(msg));
+  }
+})

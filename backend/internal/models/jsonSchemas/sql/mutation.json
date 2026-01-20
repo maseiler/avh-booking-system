@@ -15,7 +15,7 @@
       "description": "The table name"
     },
     "where": {
-      "type": "string",
+      "type": "object",
       "description": "The WHERE clause. Only used for update and delete"
     },
     "values": {

@@ -154,7 +154,10 @@ export default {
         return;
       }
       this.account.maxDebt = Math.floor(this.account.maxDebt);
-      this.account$.addAccount(this.account);
+      this.account.enabled = false;
+      this.account.balance = 0;
+      this.account.id = Math.ceil((1 + Math.random()) * 100 );
+      this.account$.addAccount(this.account as Account);
       this.$router.push({name:'AccountSettings'})
     }
   }
