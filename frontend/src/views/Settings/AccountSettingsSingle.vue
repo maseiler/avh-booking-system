@@ -1,6 +1,12 @@
 <template>
-  <h1 class="title" v-if="doneMounting">Edit Account: {{ account.getFullName() }}</h1>
-  <div class="columns">
+  <h1 class="title" v-if="doneMounting && isEdit">
+    Edit Account:
+    {{ account.getFullName() }}
+  </h1>
+  <h1 class="title" v-if="doneMounting && !isEdit">
+    Neuen Account Erstellen
+  </h1>
+  <div class="columns" v-if="isEdit">
     <div class="column is-3">ID:</div>
     <div class="column">
       <input type="text" class="input" :value="account.id" disabled>
@@ -86,12 +92,31 @@
     </div>
   </div>
 
+  <div class="columns">
+    <div class="column is-3">Max Debt Allowance:</div>
+    <div class="column">
+      <p class="control has-icons-left">
+        <input type="number" class="input" v-model="account.maxDebt">
+        <span class="icon is-small is-left">
+          <icon :icon="['fas', 'usd']" />
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column is-3"></div>
+    <div class="column">
+      <button class="button is-primary" @click="actionButtonClicked">{{ actionButton }}</button>
+    </div>
+  </div>
+
 </template>
 
 <script lang="ts">
 import { useAccountStore } from '../../store/AccountStore';
 import { useCategoryStore } from '../../store/CategoryStore';
-import type { Account } from '../../composables/account';
+import { Account } from '../../composables/account';
 
 export default {
   data() {
@@ -99,19 +124,39 @@ export default {
       account$: useAccountStore(),
       category$: useCategoryStore(),
       account: {} as Account,
-      doneMounting: false
+      doneMounting: false,
     }
   },
   mounted() {
-    this.account = this.account$.byId(parseInt(this.$route.params.accountId.toString()))
+    if(this.isEdit){
+      this.account = this.account$.byId(parseInt(this.$route.params.accountId.toString()))
+    } else {
+      let newAccount = {} as Account;
+      this.account = new Account(newAccount);
+    }
     this.doneMounting = true;
   },
   computed: {
     categoryIcon(){
       return this.category$.byId(this.account.category)?.icon
+    },
+    isEdit(){
+      return this.$route.params.accountId?.toString().length > 0;
+    },
+    actionButton(){
+      return this.isEdit ? "Speichern" : "Neu Erstellen";
     }
   },
   methods: {
+    actionButtonClicked(){
+      if(this.isEdit){
+        // Update current User
+        return;
+      }
+      this.account.maxDebt = Math.floor(this.account.maxDebt);
+      this.account$.addAccount(this.account);
+      this.$router.push({name:'AccountSettings'})
+    }
   }
 }
 </script>

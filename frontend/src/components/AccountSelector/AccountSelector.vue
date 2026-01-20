@@ -48,7 +48,8 @@ export default {
     ShowAccountList
   },
   props: {
-    show: String
+    show: String,
+    all: Boolean
   },
   data() {
     return {
@@ -65,7 +66,7 @@ export default {
   },
   computed: {
     accounts(){
-      return this.account$.getBySearchAndCategory(this.search, this.selectedCategory);
+      return this.account$.getBySearchAndCategory(this.search, this.selectedCategory, this.all);
     },
     categorys(){
       return this.category$.accountCategorys;

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { Account, generateTestData } from '../composables/account'
+import { useSocketStore } from './socketStore'
 
 export const useAccountStore = defineStore('account', {
   state: () => {
@@ -29,16 +30,19 @@ export const useAccountStore = defineStore('account', {
     unselect(){
       this.selected = [];
     },
-    getByCategory(categoryId: number): Account[]{
-      const enabledUsers = this.accounts.filter((acc) => acc.enabled);
+    getByCategory(categoryId: number, all?: boolean): Account[]{
+      let enabledUsers = this.accounts as Account[];
+      if(!all){
+        enabledUsers = this.accounts.filter((acc) => acc.enabled) as Account[];
+      }
       if(categoryId == 0){
         return enabledUsers;
       }
       return enabledUsers.filter((acc) => acc.category == categoryId );
     },
-    getBySearchAndCategory(searchString: string, categoryId: number): Account[]{
+    getBySearchAndCategory(searchString: string, categoryId: number, all?: boolean): Account[]{      
       let search = searchString.toLowerCase();
-      let byCategory = this.getByCategory(categoryId);
+      let byCategory = this.getByCategory(categoryId, all);
       let searchResults = byCategory.filter((acc) => {
         return (
           acc.firstName.toLowerCase().includes(search) ||
@@ -61,6 +65,11 @@ export const useAccountStore = defineStore('account', {
         accObjArray.push(newAccount);
       })
       this.accounts = accObjArray;
+    },
+    addAccount(newAccount: Account){
+      const socket$ = useSocketStore();
+      socket$.addAccount(newAccount);
+      socket$.queryAccounts();
     }
   }
 })

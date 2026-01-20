@@ -15,8 +15,9 @@ const routes = [
   { path: '/payment', component: PaymentView },
   { path: '/settings/products', component: ProductSettings},
   { name: 'ProductSettingsSingle', path: '/settings/products/:productId', component: ProductSettingsSingle},
-  { path: '/settings/accounts', component: AccountSettings},
+  { name: 'AccountSettings', path: '/settings/accounts', component: AccountSettings},
   { name: 'AccountSettingsSingle', path: '/settings/accounts/:accountId', component: AccountSettingsSingle},
+  { name: 'AccountSettingsAdd', path: '/settings/accounts/add', component: AccountSettingsSingle},
   { path: '/settings/payments', component: PaymentSettings},
 ]
 

@@ -31,7 +31,10 @@
               <span>{{ category$.byId(account.category)?.title }}</span>
             </button>  
           </td>
-          <td>{{ account.enabled }}</td>
+          <td>
+            <ToggleSwitch v-model="account.enabled" :disabled="false">
+            </ToggleSwitch>  
+          </td>
           <td>{{ account.createdAt }}</td>
           <td v-show="hasEditAccountRights">
             <button class="tag">
@@ -55,6 +58,7 @@ import type { Account } from '../../composables/account';
 import { useAccountStore } from '../../store/AccountStore';
 import type { PropType } from 'vue';
 import { useCategoryStore } from '../../store/CategoryStore';
+import ToggleSwitch from '../../composables/elements/ToggleSwitch.vue';
 
 export default {
   data(){
@@ -73,6 +77,9 @@ export default {
     copyText(txt: string){
       navigator.clipboard.writeText(txt);
     }
+  },
+  components: {
+    ToggleSwitch
   },
   computed: {
     hasEditAccountRights(){

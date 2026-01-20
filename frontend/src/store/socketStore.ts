@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {type Notification} from "../composables/notification";
 import {WebSocketClient} from "../api/webSocketClient";
+import type { Account } from "../composables/account";
 
 export const useSocketStore = defineStore("notificationStore", {
     state: () => ({
@@ -37,7 +38,7 @@ export const useSocketStore = defineStore("notificationStore", {
             //console.debug(msg)
             this.wsClient.send(msg)
         },
-        addAccount() {
+        addTestAccount() {
             let now = Date.now();
             let newAccount = {
                 "id": 0,
@@ -48,11 +49,19 @@ export const useSocketStore = defineStore("notificationStore", {
                 "phone": "12345678",
                 "balance": 0,
                 "maxDebt": 99,
-                "category": 3,
+                "category": 1,
                 "enabled": true,
                 "createdAt": new Date(now).toISOString()
             }
-            //console.debug(newAccount)
+            let payload = {
+                "operation": "insert",
+                "table": "account",
+                "values": newAccount
+            }
+            let msg = {type: "mutation", payload: payload}
+            this.wsClient.send(msg)
+        },
+        addAccount(newAccount: Account){
             let payload = {
                 "operation": "insert",
                 "table": "account",
