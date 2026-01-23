@@ -23,7 +23,7 @@
     </div>
     
     <div class="accounts" :class="visiblePart==0 ? '' : 'unselected'">
-      <AccountSelector show="button"/>
+      <AccountSelector show="button" :all="false"/>
     </div>
 
     <div class="items" :class="visiblePart==1 ? '' : 'unselected'">

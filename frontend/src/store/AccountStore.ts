@@ -75,11 +75,12 @@ export const useAccountStore = defineStore('account', {
     patchAccounts(newAccounts: Account[]){
       this.$patch(state => {
         newAccounts.forEach(newAcc => {
-          const existing = state.accounts.find(a => a.id === newAcc.id);
+          const newAccObj = new Account(newAcc);
+          const existing = state.accounts.find(a => a.id === newAccObj.id);
           if(existing){
-            Object.assign(existing, newAcc);
+            Object.assign(existing, newAccObj);
           } else {
-            state.accounts.push(newAcc);
+            state.accounts.push(newAccObj);
           }
         })
       })

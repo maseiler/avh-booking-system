@@ -34,6 +34,10 @@ import type { PropType } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 import { useCartStore } from '../../store/CartStore';
 
+export interface dictionary {
+    [key: string]: Account[];
+}
+
 export default {
   data(){
     return {
@@ -50,9 +54,10 @@ export default {
     }
   },
   computed: {
-    accountsInOrder() {
-      var dict: {[key: string]: Account[]} = {};
+    accountsInOrder(): dictionary {
+      var dict: dictionary = {};
       this.accounts?.forEach(acc => {
+        console.log(acc);
       var char = acc.getShortName()[0].toUpperCase();
       var charCode = char.charCodeAt(0);
       if (charCode >= 65 && charCode <= 90) { // A-Z
