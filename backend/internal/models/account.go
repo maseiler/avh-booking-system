@@ -43,26 +43,6 @@ type AccountModel struct {
 	DB *database.DB
 }
 
-func (m *AccountModel) Insert(account Account) (int, error) {
-	ctx := context.Background()
-	query := `
-        INSERT INTO account (first_name, nickname, last_name, email, phone, balance, max_debt, category, enabled) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-        RETURNING account_id`
-	var id int
-	err := m.DB.QueryRow(ctx, query, account.FirstName,
-		account.Nickname,
-		account.LastName,
-		account.Email,
-		account.Phone,
-		account.Balance,
-		account.MaxDebt,
-		account.Category,
-		account.Enabled).Scan(&id)
-
-	return id, err
-}
-
 func (m *AccountModel) Get(query *Query) ([]Account, error) {
 	ctx := context.Background()
 	stmt := query.SqlStatement()
@@ -84,3 +64,47 @@ func (m *AccountModel) Get(query *Query) ([]Account, error) {
 
 	return accounts, nil
 }
+
+func (m *AccountModel) Insert(account Account) (int, error) {
+	ctx := context.Background()
+	query := `
+        INSERT INTO account (first_name, nickname, last_name, email, phone, balance, max_debt, category, enabled) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING account_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, account.FirstName,
+		account.Nickname,
+		account.LastName,
+		account.Email,
+		account.Phone,
+		account.Balance,
+		account.MaxDebt,
+		account.Category,
+		account.Enabled).Scan(&id)
+
+	return id, err
+}
+
+func (m *AccountModel) Update(account Account) (int, error) {
+	ctx := context.Background()
+	query := `
+        UPDATE account 
+        SET first_name = $1, nickname = $2, last_name = $3, email = $4, phone = $5, max_debt = $6, category = $7, enabled = $8
+        WHERE account_id = $9
+        RETURNING account_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query,
+		account.FirstName,
+		account.Nickname,
+		account.LastName,
+		account.Email,
+		account.Phone,
+		account.MaxDebt,
+		account.Category,
+		account.Enabled,
+		account.Id).Scan(&id)
+
+	return id, err
+}
+
+// Note: we do NOT support deletion of accounts

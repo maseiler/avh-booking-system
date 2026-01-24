@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "mutation.json",
   "title": "Mutation",
-  "description": "A message that requests a database mutation",
+  "description": "A message that requests a database mutation, i.e., insert, update, and delete.",
   "type": "object",
   "properties": {
     "operation": {
@@ -16,11 +16,11 @@
     },
     "where": {
       "type": "object",
-      "description": "The WHERE clause. Only used for update and delete"
+      "description": "The WHERE clause. Only used for delete"
     },
     "values": {
       "type": "object",
-      "description": "The values to insert/update"
+      "description": "The object to be mutated"
     }
   },
   "required": [

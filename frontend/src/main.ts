@@ -107,7 +107,7 @@ accountStore.$subscribe((mutation, state) => {
   if(mutation.storeId === "account" && mutation.events.type === "set" && mutation.events.key != "accounts" && mutation.events.key != "selected"){
     const table = "account";
     const operation = "update";
-    const values = {[mutation.events.key]: mutation.events.newValue};
+    const values = mutation.events.target;
     const where = {"account_id": mutation.events.target.id.toString()};
     let payload = {
       "operation": operation,

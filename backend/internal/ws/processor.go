@@ -98,14 +98,23 @@ func (s *Service) processMutation(message models.Message) ([]byte, *models.WsErr
 		}
 	case models.OpUpdate:
 		{
-			//TODO
-			return nil, &models.WsError{Code: models.WsUnknown, Message: "Not yet implemented", Details: "TBD"}
+			account, wsErr := unmarshalInterface[models.Account](mutation.Values)
+			if wsErr != nil {
+				return nil, wsErr
+			}
+
+			newId, err := s.dbModels.Account.Update(*account)
+			if err != nil {
+				return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not update account"}
+			}
+			return s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
 		}
 
 	case models.OpDelete:
 		{
-			// TODO
-			return nil, &models.WsError{Code: models.WsUnknown, Message: "Not yet implemented", Details: "TBD"}
+			return nil, &models.WsError{Code: models.WsInvalidOperation,
+				Message: "Invalid operation",
+				Details: "Deletion of accounts is not supported"}
 		}
 	}
 
