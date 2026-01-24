@@ -190,6 +190,12 @@ export default {
   mounted() {
     this.dev = import.meta.env.DEV;
     this.accountsSorted = this.accounts as Account[];
+  },
+  watch: {
+    accounts(newList, oldList){
+      this.accountsSorted = newList;
+      this.sortFor(this.sortedTo);
+    }
   }
 }
 </script>
