@@ -3,20 +3,47 @@
     <table class="table is-striped is-hoverable">
       <tbody>
         <tr>
-          <th>ID</th>
-          <th>Enabled</th>
-          <th>First Name</th>
-          <th>Nickname</th>
-          <th>Last Name</th>
-          <th>E-Mail</th>
-          <th>Phone</th>
-          <th class="has-text-right">Balance</th>
-          <th class="has-text-right">MaxDebt</th>
-          <th>Category</th>
-          <th>Created At</th>
+          <th @click="sortFor('id')">
+            ID
+            {{ sortedTo == "id" ? "⯆" : "" }}
+          </th>
+          <th @click="sortFor('enabled')">
+            Enabled
+            {{ sortedTo == "enabled" ? "⯆" : "" }}
+          </th>
+          <th @click="sortFor('fn')">
+            First Name
+            {{ sortedTo == "fn" ? "⯆" : "" }}
+          </th>
+          <th @click="sortFor('nn')">
+            Nickname
+          {{ sortedTo == "nn" ? "⯆" : "" }}</th>
+          <th @click="sortFor('ln')">
+            Last Name
+            {{ sortedTo == "ln" ? "⯆" : "" }}
+          </th>
+          <th @click="sortFor('mail')">
+            E-Mail
+          {{ sortedTo == "mail" ? "⯆" : "" }}
+          </th>
+          <th @click="sortFor('phone')">
+            Phone
+          {{ sortedTo == "phone" ? "⯆" : "" }}</th>
+          <th @click="sortFor('bal')" class="has-text-right">
+            Balance
+          {{ sortedTo == "bal" ? "⯆" : "" }}</th>
+          <th @click="sortFor('md')" class="has-text-right">
+            MaxDebt
+          {{ sortedTo == "md" ? "⯆" : "" }}</th>
+          <th @click="sortFor('cat')">
+            Category
+          {{ sortedTo == "cat" ? "⯆" : "" }}</th>
+          <th @click="sortFor('create')">
+            Created At
+          {{ sortedTo == "create" ? "⯆" : "" }}</th>
           <th v-show="hasEditAccountRights">Edit</th>
         </tr>
-        <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accounts" @click="account$.select(account)">
+        <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accountsSorted" @click="account$.select(account)">
           <td>{{ account.id }}</td>
           <td><ToggleSwitch v-model="account.enabled" :disabled="false" /></td>
           <td>{{ account.firstName }}</td>
@@ -59,7 +86,9 @@ export default {
     return {
       account$: useAccountStore(),
       category$: useCategoryStore(),
-      dev: false
+      dev: false,
+      accountsSorted: [] as Account[],
+      sortedTo: "",
     }
   },
   props: {
@@ -70,6 +99,79 @@ export default {
   methods: {
     copyText(txt: string){
       navigator.clipboard.writeText(txt);
+    },
+    sortFor(sortParam: string){
+      this.sortedTo = sortParam;
+      switch (sortParam) {
+        case("id"):{
+          this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.id - b.id;
+          }) as Account[];
+          return;
+        } 
+        case("enabled"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return (b.enabled ? 1 : 0) - (a.enabled ? 1 : 0);
+          }) as Account[];
+          return;
+        }
+        case("fn"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.firstName.localeCompare(b.firstName);
+          }) as Account[];
+          return;
+        }
+        case("nn"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.nickname.localeCompare(b.nickname);
+          }) as Account[];
+          return;
+        }
+        case("ln"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.lastName.localeCompare(b.lastName);
+          }) as Account[];
+          return;
+        }
+        case("mail"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.email.localeCompare(b.email);
+          }) as Account[];
+          return;
+        }
+        case("phone"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.phone.localeCompare(b.phone);
+          }) as Account[];
+          return;
+        }
+        case("bal"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.balance - b.balance;
+          }) as Account[];
+          return;
+        }
+        case("md"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.maxDebt - b.maxDebt;
+          }) as Account[];
+          return;
+        }
+        case("cat"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+            return a.category - b.category;
+          }) as Account[];
+          return;
+        }
+        case("create"): {
+            this.accountsSorted = this.accounts.sort((a, b) => {
+              let aDate = new Date(a.createdAt as string);
+              let bDate = new Date(b.createdAt as string);
+              if (aDate > bDate) { return -1} else { return 1};
+          }) as Account[];
+          return;
+        }
+      }
     }
   },
   components: {
@@ -87,6 +189,7 @@ export default {
   },
   mounted() {
     this.dev = import.meta.env.DEV;
+    this.accountsSorted = this.accounts as Account[];
   }
 }
 </script>
@@ -109,6 +212,12 @@ export default {
     &:hover .icon {
       visibility: visible;
       pointer-events: all;
+    }
+  }
+  th{
+    cursor: pointer;
+    &:hover{
+      background-color: rgba(255, 255, 255, .2);
     }
   }
   td{

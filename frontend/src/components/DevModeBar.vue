@@ -16,9 +16,9 @@
   <div class="navbar-menu" :class="{'is-active': burgerActive}">
     <div class="navbar-start">
 
-      <a class="navbar-item" @click="generateTestData()">Generate Test Data</a>
+      <a class="navbar-item" @click="generateTestData()">Generate Local Test Data</a>
       <a class="navbar-item" @click="socket$.queryAccounts()">(Re)Request Accounts from DB/WS</a>
-      <a class="navbar-item" @click="socket$.addTestAccount()">Add new account</a>
+      
     </div>
 
     <div class="navbar-end">
