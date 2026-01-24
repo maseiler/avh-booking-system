@@ -7,7 +7,7 @@
     <div class="panel-block">
       <div class="account-id-area">
         <div class="account-id-grid">
-          <icon class="" :icon="['fas', 'user-secret']" /><span>{{ account$.selected[0].nickName }}</span>
+          <icon class="" :icon="['fas', 'user-secret']" /><span>{{ account$.selected[0].nickname }}</span>
           <icon class="" :icon="['fas', 'user']" /><span>{{ account$.selected[0].firstName }}</span>
           <icon class="" :icon="['fas', 'id-card']" /><span>{{ account$.selected[0].lastName }}</span>
           <icon class="" :icon="categoryIcon" /><span>{{ category$.byId(account$.selected[0].category)?.title }}</span>

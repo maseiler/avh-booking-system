@@ -5,7 +5,7 @@
         <tr>
           <th>ID</th>
           <th>First Name</th>
-          <th>Nick Name</th>
+          <th>Nickname</th>
           <th>Last Name</th>
           <th>E-Mail</th>
           <th>Phone</th>
@@ -19,7 +19,7 @@
         <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accounts" @click="account$.select(account)">
           <td>{{ account.id }}</td>
           <td>{{ account.firstName }}</td>
-          <td>{{ account.nickName }}</td>
+          <td>{{ account.nickname }}</td>
           <td>{{ account.lastName }}</td>
           <td class="has-copy-btn">{{ account.email }} <span class="icon is-small" @click="copyText(account.email)"><icon :icon="['fas', 'copy']" /></span></td>
           <td class="has-copy-btn">{{ account.phone }} <span class="icon is-small"><icon :icon="['fas', 'copy']" /></span></td>

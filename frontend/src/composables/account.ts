@@ -2,7 +2,7 @@ export interface Account {
   id?: number
   firstName: string
   lastName: string
-  nickName?: string
+  nickname?: string
   email: string
   phone?: string
   balance: number
@@ -17,7 +17,7 @@ export class Account implements Account{
     this.id = acc.id;
     this.firstName = acc.firstName;
     this.lastName = acc.lastName ;
-    this.nickName = acc.nickName ;
+    this.nickname = acc.nickname ;
     this.email = acc.email ;
     this.phone = acc.phone ;
     this.balance = acc.balance ;
@@ -29,23 +29,23 @@ export class Account implements Account{
 
   public getShortName(): string{
     if(this.hasNickname()){
-      return `${this.nickName}`;
+      return `${this.nickname}`;
     }
     return `${this.firstName} ${this.lastName[0]}.`;
   }
 
   public getFullName(): string {
     if(this.hasNickname()){
-      return `${this.firstName} (${this.nickName}) ${this.lastName}`;
+      return `${this.firstName} (${this.nickname}) ${this.lastName}`;
     }
     return `${this.firstName} ${this.lastName}`;
   }
 
   private hasNickname(): boolean{
     return (
-      this.nickName !== null &&
-      this.nickName !== undefined &&
-      this.nickName !== ""
+      this.nickname !== null &&
+      this.nickname !== undefined &&
+      this.nickname !== ""
     );
   }
 
@@ -53,7 +53,7 @@ export class Account implements Account{
     this.id = 'id' in obj ? obj.id : null;
     this.firstName = 'firstName' in obj ? obj.firstName : "";
     this.lastName = 'lastName' in obj ? obj.lastName : "";
-    this.nickName = 'nickName' in obj ? obj.nickName : "";
+    this.nickname = 'nickname' in obj ? obj.nickname : "";
     this.email = 'email' in obj ? obj.email : "";
     this.phone = 'phone' in obj ? obj.phone : "";
     this.balance = 'balance' in obj ? obj.balance : 0;
@@ -93,7 +93,7 @@ export function generateTestData(): Account[]{
   let a3= {
     id: 3,
     firstName: "Andi",
-    nickName: "Saufi",
+    nickname: "Saufi",
     lastName: "Theke",
     email: "test@test.de",
     balance: 500,

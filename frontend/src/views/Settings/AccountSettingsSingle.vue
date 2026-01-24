@@ -41,7 +41,7 @@
     <div class="column is-3">Nickname:</div>
     <div class="column">
       <p class="control has-icons-left">
-        <input type="text" class="input" v-model="account.nickName">
+        <input type="text" class="input" v-model="account.nickname">
         <span class="icon is-small is-left">
           <icon :icon="['fas', 'user-secret']" />
         </span>
@@ -107,7 +107,9 @@
   <div class="columns">
     <div class="column is-3"></div>
     <div class="column">
+      <button class="button">Cancel</button>
       <button class="button is-primary" @click="actionButtonClicked">{{ actionButton }}</button>
+      
     </div>
   </div>
 
