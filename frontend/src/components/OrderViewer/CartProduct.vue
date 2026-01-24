@@ -14,8 +14,8 @@
     </td>
     <td class="cell productName"><span>{{ content.product.name }} ({{ content.product.size }})</span></td>
     <td class="cell productTax has-text-right"><span>{{ content.product.tax }}%</span></td>
-    <td class="cell productPrice has-text-right"><span>{{ $n(content.productPrice / 100, 'currency', 'de-DE') }}</span></td>
-    <td class="cell productAmount has-text-right"><span>{{ $n(content.productPrice * content.quantity / 100, 'currency', 'de-DE') }}</span></td>
+    <td class="cell productPrice has-text-right"><span>{{ $n(content.price / 100, 'currency', 'de-DE') }}</span></td>
+    <td class="cell productAmount has-text-right"><span>{{ $n(content.price * content.quantity / 100, 'currency', 'de-DE') }}</span></td>
   </tr>
 </template>
 

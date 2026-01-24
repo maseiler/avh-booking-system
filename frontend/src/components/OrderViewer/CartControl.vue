@@ -1,26 +1,46 @@
 <template>
-<div class="buttons">
-  <button class="button is-warning is-inverted is-outlined" @click="$emit('cancelOrder')" title="discard cart and unselect account">
-    <span class="icon"><icon :icon="['fas', 'trash']" /></span>
-    <span>Cancel Order</span>
-  </button>
 
-  <button class="button is-success is-inverted is-outlined" @click="checkoutOrder" v-if="!cart$.isOverdrawn">
-    <span>Book now</span>
-    <span class="icon"><icon :icon="['fas', 'beer']"/></span>
-  </button>
-  <button class="button is-inverted is-danger is-outlined" v-if="cart$.isOverdrawn">
-    <span>Pay for this order</span>
-    <span class="icon"><icon :icon="['fas', 'coins']" /></span>
-  </button>
-</div>
-<div class="message is-danger hint" v-if="cart$.isOverdrawn">
-  <div class="message-body">
+  <Buttons>
+    <Button
+    class="is-warning is-inverted is-outlined"
+    @click="$emit('cancelOrder')"
+    title="discard cart and unselect account"
+    :fa-icon="['fas', 'trash']"
+    icon-position="left"
+    >
+    Cancel Order
+    </Button>
+
+    <Button
+    v-if="!cart$.isOverdrawn"
+    class="is-success is-inverted is-outlined"
+    @click="checkoutOrder" 
+    title="discard cart and unselect account"
+    :fa-icon="['fas', 'beer']"
+    icon-position="right"
+    >
+    Book now
+    </Button>
+
+    <Button
+    v-if="cart$.isOverdrawn"
+    class="is-inverted is-danger is-outlined"
+    title="discard cart and unselect account"
+    :fa-icon="['fas', 'coins']"
+    icon-position="right"
+    >
+    Pay for this order
+    </Button>
+  </Buttons>
+
+  <Message
+  class="is-danger hint"
+  v-if="cart$.isOverdrawn"
+  >
     <icon :icon="['fas', 'warning']" />
     The Cart exceeds the allowance! <br>
     <router-link to="/payment">Top up the account</router-link> or pay for this order immediately with the button above.
-  </div>
-</div>
+  </Message>
 </template>
 
 <style scoped>
@@ -33,18 +53,28 @@
 <script lang="ts">
 import { useAccountStore } from '../../store/AccountStore';
 import { useCartStore } from '../../store/CartStore';
-
+import Button from '../../composables/elements/Button.vue';
+import Buttons from '../../composables/elements/Buttons.vue';
+import Message from '../../composables/elements/Message.vue';
+import { useBookingStore } from '../../store/BookingStore';
 
 export default{
   data() {
     return {
       account$: useAccountStore(),
-      cart$: useCartStore()
+      cart$: useCartStore(),
+      booking$: useBookingStore(),
     }
+  },
+  components: {
+    Button,
+    Buttons,
+    Message,
   },
   methods: {
     checkoutOrder(){
-      console.warn("Not yet implemented");
+      this.booking$.addBooking(this.cart$.cartContents, this.account$.selected[0], 0)
+      this.$emit('cancelOrder')
       // ToDo: this
     }
   },

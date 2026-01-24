@@ -3,9 +3,17 @@
     <div class="dictionary" v-for="(dict, key) of accountsInOrder" :key="key">
       <span class="title is-1">{{ key }}</span>
       <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-flex-start is-gap-1">
-        <div v-for="account in dict" @mousemove="changeSelectMode" @click="selectAccount($event, account)" >
+        <Button
+          v-for="account in dict"
+          @mousemove="changeSelectMode"
+          @click="selectAccount($event, account)"
+          :class="account$.selected.includes(account) ? 'is-primary' : ''"
+          title="select account">
+          {{ account.getShortName() }}
+        </Button>
+        <!-- <div v-for="account in dict" @mousemove="changeSelectMode" @click="selectAccount($event, account)" >
           <button class="button is-fullwidth" :class="account$.selected.includes(account) ? 'is-primary' : ''" title="select account">{{ account.getShortName() }}</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -33,6 +41,7 @@ import { useAccountStore } from '../../store/AccountStore';
 import type { PropType } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 import { useCartStore } from '../../store/CartStore';
+import Button from '../../composables/elements/Button.vue';
 
 export interface dictionary {
     [key: string]: Account[];
@@ -57,7 +66,6 @@ export default {
     accountsInOrder(): dictionary {
       var dict: dictionary = {};
       this.accounts?.forEach(acc => {
-        console.log(acc);
       var char = acc.getShortName()[0].toUpperCase();
       var charCode = char.charCodeAt(0);
       if (charCode >= 65 && charCode <= 90) { // A-Z
@@ -74,6 +82,9 @@ export default {
     })
     return dict;
     }
+  },
+  components: {
+    Button,
   },
   methods: {
     selectAccount(e: MouseEvent, account: Account) {

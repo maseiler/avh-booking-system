@@ -45,6 +45,9 @@
 .unselected{
   display:none;
 }
+.tabs{
+  margin-bottom: 0;
+}
 
 @media screen and (min-width: 768px) {
   .order{

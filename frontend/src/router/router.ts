@@ -8,6 +8,7 @@ import ProductSettingsSingle from '../views/Settings/ProductSettingsSingle.vue'
 import AccountSettings from '../views/Settings/AccountSettings.vue'
 import AccountSettingsSingle from '../views/Settings/AccountSettingsSingle.vue'
 import PaymentSettings from '../views/Settings/PaymentSettings.vue'
+import OrderView from '../views/OrderView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -19,6 +20,7 @@ const routes = [
   { name: 'AccountSettingsSingle', path: '/settings/accounts/:accountId', component: AccountSettingsSingle},
   { name: 'AccountSettingsAdd', path: '/settings/accounts/add', component: AccountSettingsSingle},
   { path: '/settings/payments', component: PaymentSettings},
+  { name: 'Orders', path: '/orders/', component: OrderView},
 ]
 
 const router = createRouter({

@@ -27,7 +27,9 @@
         Payment
       </router-link>
 
-      <a class="navbar-item">Orders</a>
+      <router-link class="navbar-item" to="/orders" @click="burgerActive = false">
+        Orders
+      </router-link>
 
       <a class="navbar-item">Statistics</a>
 

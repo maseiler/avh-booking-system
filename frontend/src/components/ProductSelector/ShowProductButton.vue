@@ -3,12 +3,13 @@
     <div class="dictionary" v-for="(dict, key) of productsInOrder" :key="key">
       <span class="title is-1">{{ key }}</span>
       <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-flex-start is-gap-1">
-        <div v-for="product in dict">
-          <button class="button is-fullwidth" title="select product" @click="cart$.addToCart(product)">
-            {{ product.name }} {{ product.size }} {{ product.unit }}
-            <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
-          </button>
-        </div>
+          <Button
+          v-for="product in dict"
+          @click="cart$.addToCart(product)"
+          title="select product">
+           {{ product.name }} {{ product.size }} {{ product.unit }}
+           <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
+        </Button>
       </div>
     </div>
   </div>
@@ -60,6 +61,7 @@ import { useProductStore } from '../../store/ProductStore';
 import type { PropType } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 import { useCartStore } from '../../store/CartStore';
+import Button from '../../composables/elements/Button.vue';
 
 export default {
   data(){
@@ -74,6 +76,9 @@ export default {
     products: {
       type: Array as PropType<Product[]>
     }
+  },
+  components: {
+    Button
   },
   computed: {
     productsInOrder() {

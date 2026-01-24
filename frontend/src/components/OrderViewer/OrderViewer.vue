@@ -14,7 +14,7 @@
       <div class="selectedAccounts">
         <div class="tag" v-for="account in account$.selected">
           {{ account.getFullName() }}
-          <button class="delete is-small" @click="unselectAccount(account)"></button>
+          <button class="delete is-small" @click="unselectAccount(account as Account)"></button>
         </div>
       </div>
 
@@ -107,6 +107,7 @@ import { useAccountStore } from '../../store/AccountStore';
 import type { Account } from '../../composables/account';
 import { useCartStore } from '../../store/CartStore';
 import CartList from './CartList.vue';
+import Message from '../../composables/elements/Message.vue';
 
 
 export default {
@@ -118,7 +119,8 @@ export default {
     }
   },
   components: {
-    CartList
+    CartList,
+    Message
   },
   methods: {
     unselectAccount(account: Account){

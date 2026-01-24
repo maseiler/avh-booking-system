@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { type CartContent } from '../composables/cartContent'
 import { Product } from '../composables/product'
 import { useAccountStore } from './AccountStore'
+import type { BookingTotals } from '../composables/booking'
 
 export const useCartStore = defineStore('cart', {
   state: () => {
@@ -10,7 +11,7 @@ export const useCartStore = defineStore('cart', {
     }
   },
   getters:{
-    getTotals(){
+    getTotals(): BookingTotals{
       let total = 0;
       let tax = 0;
       this.cartContents.forEach((cont) => {
@@ -19,12 +20,12 @@ export const useCartStore = defineStore('cart', {
         total += subTotal;
         tax += subTax;
       })
-      return [total, tax];
+      return [total, tax] as BookingTotals;
     },
     isOverdrawn(): Boolean{
       const account$ = useAccountStore();
       if (account$.selected.length > 1) {return false}
-      return account$.selected[0].balance - this.getTotals[0] < account$.selected[0].maxDebt
+      return account$.selected[0].balance - this.getTotals[0] < (account$.selected[0].maxDebt * -1)
     }
   },
   actions: {
@@ -34,7 +35,8 @@ export const useCartStore = defineStore('cart', {
         alreadySelected[0].quantity ++;
         return;
       }
-      this.cartContents.push({product: product, quantity: 1, productPrice: product.price} as CartContent);
+      let newCartContent = {product: product, quantity: 1, price: product.price, tax: product.tax} as CartContent;
+      this.cartContents.push(newCartContent);
     },
     removeFromCart(product: Product){
       this.cartContents = this.cartContents.filter((cont) => {

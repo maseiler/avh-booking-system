@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Account, generateTestData } from '../composables/account'
+import { Account, type Account, generateTestData } from '../composables/account'
 import { useSocketStore } from './socketStore'
 
 export const useAccountStore = defineStore('account', {

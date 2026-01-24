@@ -26,7 +26,7 @@
           <td class="has-text-right">{{ $n(account.balance / 100, 'currency', 'de-DE') }}</td>
           <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency', 'de-DE') }}</td>
           <td>
-            <button class="tag">
+            <button class="tag" :class="category$.byId(account.category) == undefined? 'is-skeleton' : ''">
               <span class="icon"><icon :icon="category$.byId(account.category)?.icon" /></span>
               <span>{{ category$.byId(account.category)?.title }}</span>
             </button>  

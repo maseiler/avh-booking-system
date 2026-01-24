@@ -17,16 +17,16 @@
           <span class="balance">{{ $n(account$.selected[0].balance / 100, 'currency', 'de-DE') }}</span>
         </div>
       </div>
-      <div class="buttons">
-        <button class="button" @click="$emit('cancelOrder')" title="discard cart and unselect account">
-          <span class="icon"><icon :icon="['fas', 'list']" /></span>
-          <span>List Orders</span>
-        </button>
-        <button class="button is-success is-inverted is-outlined">
-          <span>Pay now</span>
-          <span class="icon"><icon :icon="['fas', 'coins']"/></span>
-        </button>
-      </div>
+
+      <Buttons>
+        <Button :fa-icon="['fas', 'list']" icon-position="left" title="List all Orders of this Account">
+          List Orders
+        </Button>
+
+        <Button class="is-success is-inverted is-outlined" :fa-icon="['fas', 'coins']" icon-position="right">
+          Pay now
+        </Button>
+      </Buttons>
     </div>
   </div>
 
@@ -102,6 +102,8 @@
 <script lang="ts">
 import { useAccountStore } from '../store/AccountStore';
 import { useCategoryStore } from '../store/CategoryStore';
+import Button from '../composables/elements/Button.vue';
+import Buttons from '../composables/elements/Buttons.vue';
 
 export default {
   data(){
@@ -109,6 +111,10 @@ export default {
       account$: useAccountStore(),
       category$: useCategoryStore()
     }
+  },
+  components: {
+    Button,
+    Buttons
   },
   computed: {
     categoryIcon(){
