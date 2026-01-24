@@ -46,7 +46,7 @@ export const useAccountStore = defineStore('account', {
       let searchResults = byCategory.filter((acc) => {
         return (
           acc.firstName.toLowerCase().includes(search) ||
-          acc.nickName?.toLowerCase().includes(search) ||
+          acc.nickname?.toLowerCase().includes(search) ||
           acc.lastName.toLowerCase().includes(search)
         )
       })

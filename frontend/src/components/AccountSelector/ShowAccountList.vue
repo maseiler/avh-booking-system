@@ -4,6 +4,7 @@
       <tbody>
         <tr>
           <th>ID</th>
+          <th>Enabled</th>
           <th>First Name</th>
           <th>Nickname</th>
           <th>Last Name</th>
@@ -12,12 +13,12 @@
           <th class="has-text-right">Balance</th>
           <th class="has-text-right">MaxDebt</th>
           <th>Category</th>
-          <th>Enabled</th>
           <th>Created At</th>
-          <th v-show="hasEditAccountRights">Actions</th>
+          <th v-show="hasEditAccountRights">Edit</th>
         </tr>
         <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accounts" @click="account$.select(account)">
           <td>{{ account.id }}</td>
+          <td><ToggleSwitch v-model="account.enabled" :disabled="false" /></td>
           <td>{{ account.firstName }}</td>
           <td>{{ account.nickname }}</td>
           <td>{{ account.lastName }}</td>
@@ -31,20 +32,13 @@
               <span>{{ category$.byId(account.category)?.title }}</span>
             </button>  
           </td>
-          <td>
-            <ToggleSwitch v-model="account.enabled" :disabled="false">
-            </ToggleSwitch>  
-          </td>
           <td>{{ account.createdAt }}</td>
           <td v-show="hasEditAccountRights">
-            <button class="tag">
+            <button class="button">
               <router-link :to="{ name: 'AccountSettingsSingle', params: { accountId: account.id } }">
                 <span class="icon"><icon :icon="['fas', 'pen']"/></span>
               </router-link>
-              </button>  
-            <button class="tag">
-              <span class="icon"><icon :icon="['fas', 'trash']"/></span>
-            </button>
+              </button>
           </td>
         </tr>
 
@@ -116,5 +110,8 @@ export default {
       visibility: visible;
       pointer-events: all;
     }
+  }
+  td{
+    vertical-align: middle;
   }
 </style>

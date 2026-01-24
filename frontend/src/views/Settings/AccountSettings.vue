@@ -3,6 +3,13 @@
     <Button
       icon-position="left"
       :fa-icon="['fas', 'plus']"
+      @click="console.warn('Not yet implemented!')">
+      Kategorie hinzufügen
+    </Button>
+
+    <Button
+      icon-position="left"
+      :fa-icon="['fas', 'user-plus']"
       @click="$router.push({name: 'AccountSettingsAdd'})">
       Account hinzufügen
     </Button>

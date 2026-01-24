@@ -62,6 +62,22 @@ export class Account implements Account{
     this.enabled = 'enabled' in obj ? obj.enabled : false;
     this.createdAt = 'createdAt' in obj ? obj.createdAt : null;
   }
+
+  public copy(): Account{
+    let newAccount = new Account(this);
+    return newAccount;
+  }
+
+  public update(reference: Account): Account{
+    this.firstName = reference.firstName;
+    this.lastName = reference.lastName ;
+    this.nickname = reference.nickname ;
+    this.email = reference.email ;
+    this.phone = reference.phone ;
+    this.maxDebt = reference.maxDebt ;
+    this.category = reference.category ;
+    return this;
+  }
   
 }
 

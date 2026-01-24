@@ -80,6 +80,9 @@ app.mount('#app')
 
 /**
  * Communication between Websocket and Pinia Stores
+ * Could be moved into the Stores by writing a subscribe method with this.$subscribe
+ * this needs to be called from within the vue app context tho
+ * so it could be in App.vue and called from the onMounted() function
  */
 import { useAccountStore } from './store/AccountStore.ts'
 import { useSocketStore } from './store/socketStore.ts'
