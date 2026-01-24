@@ -1,6 +1,13 @@
 package models
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+// --------------------------------------------------
+// Websocket errors
+// --------------------------------------------------
 
 type WsErrorCode string
 
@@ -14,6 +21,7 @@ const (
 	WsInvalidFilter    = "INVALID_FILTER"
 	WsNotFound         = "NOT_FOUND"
 	WsInternalError    = "INTERNAL_ERROR"
+	WsDbQueryError     = "DB_QUERY_ERROR"
 )
 
 type WsError struct {
@@ -29,3 +37,9 @@ func (wse *WsError) String() string {
 	}
 	return msg
 }
+
+// --------------------------------------------------
+// Database errors
+// --------------------------------------------------
+
+var DbQueryError = errors.New("database query failed")

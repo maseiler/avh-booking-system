@@ -17,6 +17,7 @@
         "pong",
         "query",
         "queryResult",
+        "queryResultList",
         "mutation",
         "mutationResult"
       ],
@@ -81,7 +82,7 @@
       "then": {
         "properties": {
           "payload": {
-            "$ref": "sql/queryResult.json"
+            "$ref": "sql/queryResultList.json"
           }
         }
       }
@@ -141,6 +142,22 @@
         "required": [
           "payload"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "broadcast"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "$ref": "sql/queryResult.json"
+          }
+        }
       }
     }
   ]

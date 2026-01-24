@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"log/slog"
 	"time"
@@ -50,7 +51,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 				rawJsonSlice = append(rawJsonSlice, rawAccount)
 			}
 
-			return s.marshalQueryResult(models.TableAccount, &rawJsonSlice)
+			return s.marshalQueryResultList(models.TableAccount, &rawJsonSlice)
 		}
 
 	case models.TableProduct:
@@ -65,12 +66,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 }
 
 // processMutation unmarshals the message and initiates a database mutation
-func (s *Service) processMutation(message models.Message) ([]byte, *models.WsError) {
-
-	mutation, wsErr := unmarshalInterface[models.Mutation](message.Payload)
-	if wsErr != nil {
-		return nil, wsErr
-	}
+func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *models.WsError) {
 
 	switch mutation.Operation {
 	case models.OpInsert:
@@ -79,18 +75,19 @@ func (s *Service) processMutation(message models.Message) ([]byte, *models.WsErr
 			case models.TableAccount:
 				account, wsErr := unmarshalInterface[models.Account](mutation.Values)
 				if wsErr != nil {
-					return nil, wsErr
+					return nil, 0, wsErr
 				}
 
 				newId, err := s.dbModels.Account.Insert(*account)
 				if err != nil {
-					return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
+					return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
 
-				return s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
+				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
+				return b, newId, wsErr
 			}
 
-			return nil, &models.WsError{
+			return nil, 0, &models.WsError{
 				Code:    models.WsInvalidTable,
 				Message: "Invalid table",
 				Details: "Could not process mutation for table " + string(mutation.Table),
@@ -100,27 +97,53 @@ func (s *Service) processMutation(message models.Message) ([]byte, *models.WsErr
 		{
 			account, wsErr := unmarshalInterface[models.Account](mutation.Values)
 			if wsErr != nil {
-				return nil, wsErr
+				return nil, 0, wsErr
 			}
 
 			newId, err := s.dbModels.Account.Update(*account)
 			if err != nil {
-				return nil, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not update account"}
+				return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not update account"}
 			}
-			return s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
+
+			b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
+			return b, newId, wsErr
 		}
 
 	case models.OpDelete:
 		{
-			return nil, &models.WsError{Code: models.WsInvalidOperation,
+			return nil, 0, &models.WsError{Code: models.WsInvalidOperation,
 				Message: "Invalid operation",
 				Details: "Deletion of accounts is not supported"}
 		}
 	}
 
-	return nil, &models.WsError{
+	return nil, 0, &models.WsError{
 		Code:    models.WsInvalidOperation,
 		Message: "Invalid operation",
 		Details: "Could not process mutation for operation " + string(mutation.Operation),
 	}
+}
+
+func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *models.WsError) {
+	var data []byte
+	switch mutation.Table {
+	case models.TableAccount:
+		var account *models.Account
+		account, err := s.dbModels.Account.GetById(id)
+		if err != nil {
+			wsErr := &models.WsError{
+				Code:    models.WsDbQueryError,
+				Message: err.Error(),
+				Details: fmt.Sprintf("Could not get account with ID %d", id)}
+			return nil, wsErr
+		}
+		data, _ = json.Marshal(account)
+	}
+
+	message, wsErr := s.marshalBroadcastWithPayload(mutation.Table, data)
+	if wsErr != nil {
+		return nil, wsErr
+	}
+
+	return message, nil
 }

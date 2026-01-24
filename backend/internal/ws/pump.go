@@ -67,12 +67,26 @@ func (s *Service) ReadPump(c *models.Client) {
 			c.Send <- b
 
 		case models.MsgTypeMutation:
-			response, wsErr := s.processMutation(msg)
+			mutation, wsErr := unmarshalInterface[models.Mutation](msg.Payload)
+			if wsErr != nil {
+				s.sendError(c, wsErr)
+				continue
+			}
+
+			response, id, wsErr := s.processMutation(mutation)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
 			}
 			c.Send <- response
+
+			message, wsErr = s.prepareBroadcast(mutation, id)
+			if wsErr != nil {
+				s.sendError(c, wsErr)
+				continue
+			}
+
+			c.Hub.Broadcast <- message
 
 		default:
 			s.log.Error("Unknown message type:", slog.String("msg.Type", msg.Type.String()))

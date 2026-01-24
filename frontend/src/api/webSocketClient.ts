@@ -2,6 +2,7 @@ import {useAccountStore} from "../store/AccountStore";
 import {compileSchema, draft07} from "json-schema-library";
 import type {SchemaNode} from "json-schema-library";
 import messageSchema from "../../../backend/internal/models/jsonSchemas/message.json";
+import {Account} from '../composables/account'
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -20,7 +21,12 @@ interface Message {
     payload: Partial<any>
 }
 
-interface QueryResult {
+interface queryResult {
+    table: string;
+    data: Partial<any> // TODO only allow Account, Product, ...
+}
+
+interface queryResultList {
     table: string;
     data: Partial<any[]> // TODO only allow Account, Product, ...
 }
@@ -131,6 +137,7 @@ export class WebSocketClient {
 
             // Create Message interface for type safety
             const message = parsedMsg as Message
+            console.log("message type: ", message.type);
 
             switch (message.type) {
                 case 'pong': {
@@ -144,8 +151,8 @@ export class WebSocketClient {
                     return;
                 }
 
-                case 'queryResult': {
-                    const result = message.payload as QueryResult
+                case 'queryResultList': {
+                    const result = message.payload as queryResultList
 
                     switch (result.table) {
                         case 'account': {
@@ -163,6 +170,20 @@ export class WebSocketClient {
                 case 'mutationResult': {
                     const res = message.payload as ResultMutation
                     console.info(res)
+                    return
+                }
+                case 'broadcast' : {
+                    console.info('Received broadcast');
+                    // TODO check if payload exists
+                    const result = message.payload as queryResult
+                    switch (result.table) {
+                        case 'account': {
+                            const account = result.data as Account;
+                            console.log(account)
+                            // TODO do stuff
+                            return;
+                        }
+                    }
                     return
                 }
                 default: {

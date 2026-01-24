@@ -13,17 +13,18 @@ import (
 type MessageType string
 
 const (
-	MsgTypeAuth           MessageType = "auth"
-	MsgTypeRegister       MessageType = "register"
-	MsgTypeUnRegister     MessageType = "unregister"
-	MsgTypeError          MessageType = "error"
-	MsgTypeBroadcast      MessageType = "broadcast"
-	MsgTypePing           MessageType = "ping"
-	MsgTypePong           MessageType = "pong"
-	MsgTypeQuery          MessageType = "query"
-	MsgTypeQueryResult    MessageType = "queryResult"
-	MsgTypeMutation       MessageType = "mutation"
-	MsgTypeMutationResult MessageType = "mutationResult"
+	MsgTypeAuth            MessageType = "auth"
+	MsgTypeRegister        MessageType = "register"
+	MsgTypeUnRegister      MessageType = "unregister"
+	MsgTypeError           MessageType = "error"
+	MsgTypeBroadcast       MessageType = "broadcast"
+	MsgTypePing            MessageType = "ping"
+	MsgTypePong            MessageType = "pong"
+	MsgTypeQuery           MessageType = "query"
+	MsgTypeQueryResult     MessageType = "queryResult"
+	MsgTypeQueryResultList MessageType = "queryResultList"
+	MsgTypeMutation        MessageType = "mutation"
+	MsgTypeMutationResult  MessageType = "mutationResult"
 )
 
 func (t MessageType) String() string {
@@ -57,6 +58,11 @@ const (
 )
 
 type QueryResult struct {
+	Table TableName       `json:"table" validate:"required"`
+	Data  json.RawMessage `json:"data,omitempty"`
+}
+
+type QueryResultList struct {
 	Table TableName         `json:"table" validate:"required"`
 	Data  []json.RawMessage `json:"data,omitempty"`
 }

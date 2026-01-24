@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "queryResult.json",
-  "title": "QueryResult",
+  "$id": "queryResultList.json",
+  "title": "QueryResultList",
   "description": "The result of a database query",
   "type": "object",
   "properties": {
@@ -10,8 +10,8 @@
       "description": "The table name"
     },
     "data": {
-      "type": "object",
-      "description": "A single database object",
+      "type": "array",
+      "description": "A list of database objects",
       "items": {
         "oneOf": [
           {
