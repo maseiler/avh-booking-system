@@ -96,7 +96,7 @@
     <div class="column is-3">Max Debt Allowance:</div>
     <div class="column">
       <p class="control has-icons-left">
-        <input type="number" class="input" v-model="account.maxDebt">
+        <input type="number" class="input" v-model="maxDebt" step="1">
         <span class="icon is-small is-left">
           <icon :icon="['fas', 'usd']" />
         </span>
@@ -107,9 +107,15 @@
   <div class="columns">
     <div class="column is-3"></div>
     <div class="column">
-      <button class="button">Cancel</button>
-      <button class="button is-primary" @click="actionButtonClicked">{{ actionButton }}</button>
-      
+      <Buttons>
+        <Button :fa-icon="['fas', 'undo']" icon-position="left" @click="$router.go(-1)">
+          Cancel
+        </Button>
+
+        <Button class="is-primary" @click="actionButtonClicked" :fa-icon="['fas', 'cloud-upload']" icon-position="right">
+          {{ actionButton }}
+        </Button>
+      </Buttons>      
     </div>
   </div>
 
@@ -119,24 +125,32 @@
 import { useAccountStore } from '../../store/AccountStore';
 import { useCategoryStore } from '../../store/CategoryStore';
 import { Account } from '../../composables/account';
+import Buttons from '../../composables/elements/Buttons.vue';
+import Button from '../../composables/elements/Button.vue';
+import { useSocketStore } from '../../store/socketStore';
 
 export default {
   data() {
     return {
       account$: useAccountStore(),
       category$: useCategoryStore(),
+      socket$: useSocketStore(),
       account: {} as Account,
       doneMounting: false,
     }
   },
   mounted() {
     if(this.isEdit){
-      this.account = this.account$.byId(parseInt(this.$route.params.accountId.toString()))
+      this.account = this.account$.byId(parseInt(this.$route.params.accountId.toString())).copy()
     } else {
       let newAccount = {} as Account;
       this.account = new Account(newAccount);
     }
     this.doneMounting = true;
+  },
+  components: {
+    Buttons,
+    Button
   },
   computed: {
     categoryIcon(){
@@ -147,20 +161,29 @@ export default {
     },
     actionButton(){
       return this.isEdit ? "Speichern" : "Neu Erstellen";
+    },
+    maxDebt: {
+      get() {
+        return this.account.maxDebt / 100;
+      },
+      set(newValue: number) {
+        this.account.maxDebt = newValue * 100;
+      }
     }
   },
   methods: {
     actionButtonClicked(){
       if(this.isEdit){
         // Update current User
+        this.account$.byId(parseInt(this.$route.params.accountId.toString()))?.update(this.account);
+        this.$router.push({name:'AccountSettings'});
         return;
       }
-      this.account.maxDebt = Math.floor(this.account.maxDebt);
+      this.account.maxDebt = Math.floor(this.account?.maxDebt);
       this.account.enabled = false;
       this.account.balance = 0;
-      this.account.id = Math.ceil((1 + Math.random()) * 100 );
-      this.account$.addAccount(this.account as Account);
-      this.$router.push({name:'AccountSettings'})
+      this.socket$.addAccount(this.account as Account);
+      this.$router.push({name:'AccountSettings'});
     }
   }
 }

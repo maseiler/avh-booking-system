@@ -162,8 +162,17 @@ export class WebSocketClient {
 
                 case 'mutationResult': {
                     const res = message.payload as ResultMutation
-                    console.info(res)
-                    return
+
+                    switch (res.table) {
+                        case 'account': {
+                            // For future use
+                            return;
+                        }
+                        default: {
+                            console.info(res)
+                        }
+                    }
+                    return;
                 }
                 default: {
                     console.log('TODO handle message type', message.type);
