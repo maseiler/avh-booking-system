@@ -128,20 +128,20 @@ export default {
           return;
         }
         case("ln"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
+            this.accountsSorted = this.accounts?.sort((a, b) => {
             return a.lastName.localeCompare(b.lastName);
           }) as Account[];
           return;
         }
         case("mail"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
+            this.accountsSorted = this.accounts?.sort((a, b) => {
             return a.email.localeCompare(b.email);
           }) as Account[];
           return;
         }
         case("phone"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.phone.localeCompare(b.phone);
+            this.accountsSorted = this.accounts?.sort((a, b) => {
+            return a.phone?.localeCompare(b.phone);
           }) as Account[];
           return;
         }

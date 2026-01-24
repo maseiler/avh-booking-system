@@ -184,11 +184,12 @@ export class WebSocketClient {
                 case 'broadcast' : {
                     console.info('Received broadcast');
                     // TODO check if payload exists
-                    const result = message.payload as queryResult
+                    const result = message.payload as queryResultList
                     switch (result.table) {
                         case 'account': {
-                            const account = result.data as Account;
-                            console.log(account)
+                            let newAccounts = [] as Account[]
+                            newAccounts.push(result.data as Account);
+                            useAccountStore().patchAccounts(newAccounts);
                             // TODO do stuff
                             return;
                         }

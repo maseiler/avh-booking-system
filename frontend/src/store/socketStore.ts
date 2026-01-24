@@ -5,7 +5,7 @@ import type { Account } from "../composables/account";
 
 export const useSocketStore = defineStore("notificationStore", {
     state: () => ({
-        wsClient: new WebSocketClient("ws://localhost:8081/ws"),
+        wsClient: new WebSocketClient(`ws://${location.host.split(":")[0]}:8081/ws`),
         notifications: [] as Notification[],
     }),
     actions: {
