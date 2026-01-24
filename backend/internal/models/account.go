@@ -8,6 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
+	"strconv"
 )
 
 type Account struct {
@@ -63,6 +64,21 @@ func (m *AccountModel) Get(query *Query) ([]Account, error) {
 	}
 
 	return accounts, nil
+}
+
+func (m *AccountModel) GetById(id int) (*Account, error) {
+	filters := []Filter{{Column: "account_id", Operator: Eq, Value: strconv.Itoa(id)}}
+	query := Query{Table: TableAccount, Filter: filters}
+
+	accounts, err := m.Get(&query)
+	if err != nil {
+		return nil, err
+	}
+	if len(accounts) == 1 {
+		return &accounts[0], nil
+	}
+
+	return nil, DbQueryError
 }
 
 func (m *AccountModel) Insert(account Account) (int, error) {
