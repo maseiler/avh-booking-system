@@ -57,7 +57,7 @@ var upgrader = websocket.Upgrader{
 func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		app.log.Warn("Upgrade error: %v", err)
+		app.log.Warn("Upgrade error: %v", err.Error())
 		return
 	}
 
