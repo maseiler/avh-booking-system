@@ -7,4 +7,5 @@ type DbModels struct {
 	Unit          UnitModel
 	ProductGroup  ProductGroupModel
 	Product       ProductModel
+	Location      LocationModel
 }

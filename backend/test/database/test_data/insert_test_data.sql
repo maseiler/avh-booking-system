@@ -67,6 +67,9 @@ VALUES (1,
         'deceased',
         'true');
 
+INSERT INTO location(name)
+VALUES ('Bermuda Triangle'), ('Atlantis');
+
 INSERT INTO unit(name)
 VALUES ('ml');
 

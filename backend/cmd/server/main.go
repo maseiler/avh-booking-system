@@ -35,6 +35,7 @@ func main() {
 			Unit:          models.UnitModel{DB: dbPool},
 			ProductGroup:  models.ProductGroupModel{DB: dbPool},
 			Product:       models.ProductModel{DB: dbPool},
+			Location:      models.LocationModel{DB: dbPool},
 		},
 	}
 

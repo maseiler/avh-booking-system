@@ -236,3 +236,30 @@ func TestProductVisibilityById(t *testing.T) {
 	require.Equal(t, unit.CategoryId, 1)
 	require.Equal(t, unit.ProductId, 1)
 }
+
+// --------------------------------------------------
+// Location
+// --------------------------------------------------
+
+func TestInsertLocation(t *testing.T) {
+	dummyLocation := models.CreateLocation("Nursing Home")
+	id, err := dbModels.location.Insert(dummyLocation)
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetLocationById(t *testing.T) {
+	const locationId = 1
+	location, err := dbModels.location.Get(locationId)
+	if location == nil {
+		t.Fail()
+		t.Log("Could not get location")
+
+		return
+	}
+
+	require.NoError(t, err)
+	require.Equal(t, location.Id, locationId)
+	require.Equal(t, location.Name, "Bermuda Triangle")
+}

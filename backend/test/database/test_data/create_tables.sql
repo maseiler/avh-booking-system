@@ -41,6 +41,12 @@ CREATE TABLE IF NOT EXISTS unit
     name    VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS location
+(
+    location_id SERIAL PRIMARY KEY,
+    name    VARCHAR(20) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS product_group
 (
     product_group_id SERIAL PRIMARY KEY,
