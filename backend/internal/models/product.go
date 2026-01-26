@@ -11,7 +11,7 @@ import (
 type Product struct {
 	Id             int              `json:"id" db:"product_id"`
 	Name           string           `json:"name" db:"name"`
-	Price          pgtype.Numeric   `json:"price" db:"price"`
+	Price          int              `json:"price" db:"price"`
 	VatId          int              `json:"vatId" db:"vat"`
 	ProductGroupId int              `json:"productGroupId" db:"product_group"`
 	Size           int              `json:"size" db:"size"`
@@ -24,11 +24,11 @@ type ProductModel struct {
 	DB *database.DB
 }
 
-func CreateProduct(name string, price string, vatId int, prodGroupId int, size int,
+func CreateProduct(name string, price int, vatId int, prodGroupId int, size int,
 	unitId int, catId int) Product {
 	return Product{
 		Name:           name,
-		Price:          NewNumeric(price),
+		Price:          price,
 		VatId:          vatId,
 		ProductGroupId: prodGroupId,
 		Size:           size,

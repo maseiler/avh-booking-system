@@ -5,7 +5,6 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"math/big"
 	"os"
 	"testing"
 )
@@ -124,7 +123,7 @@ func TestGetCategoryById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProduct(t *testing.T) {
-	dummyProduct := models.CreateProduct("Pearl River Dynasty", "1000", 1, 1, 200, 1, 1)
+	dummyProduct := models.CreateProduct("Pearl River Dynasty", 1000, 1, 1, 200, 1, 1)
 	id, err := dbModels.product.Insert(dummyProduct)
 
 	require.NoError(t, err)
@@ -144,8 +143,7 @@ func TestGetProductById(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, product.Id, productId)
 	require.Equal(t, "Rota das Especiarias", product.Name)
-	expectedPrice := new(big.Int).SetInt64(1800)
-	require.Equal(t, expectedPrice, product.Price.Int)
+	require.Equal(t, 1800, product.Price)
 	require.Equal(t, 1, product.VatId)
 	require.Equal(t, 1, product.ProductGroupId)
 	require.Equal(t, 150, product.Size)
