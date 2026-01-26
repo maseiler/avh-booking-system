@@ -102,7 +102,7 @@ func TestInsertCategory(t *testing.T) {
 
 func TestGetCategoryById(t *testing.T) {
 	const categoryId = 1
-	cat, err := dbModels.category.Get(categoryId)
+	cat, err := dbModels.category.GetById(categoryId)
 	if cat == nil {
 		t.Fail()
 		t.Log("Could not get category")
@@ -132,7 +132,7 @@ func TestInsertProduct(t *testing.T) {
 
 func TestGetProductById(t *testing.T) {
 	const productId = 1
-	product, err := dbModels.product.Get(productId)
+	product, err := dbModels.product.GetById(productId)
 	if product == nil {
 		t.Fail()
 		t.Log("Could not get product")
@@ -165,7 +165,7 @@ func TestInsertProductGroup(t *testing.T) {
 
 func TestGetProductGroupById(t *testing.T) {
 	const groupId = 1
-	group, err := dbModels.productGroup.Get(groupId)
+	group, err := dbModels.productGroup.GetById(groupId)
 	if group == nil {
 		t.Fail()
 		t.Log("Could not get group")
@@ -220,7 +220,7 @@ func TestInsertProductVisibility(t *testing.T) {
 
 func TestProductVisibilityById(t *testing.T) {
 	const visibilityId = 1
-	unit, err := dbModels.productVisibility.Get(visibilityId)
+	unit, err := dbModels.productVisibility.GetById(visibilityId)
 	if unit == nil {
 		t.Fail()
 		t.Log("Could not get product visibility")
@@ -248,7 +248,7 @@ func TestInsertLocation(t *testing.T) {
 
 func TestGetLocationById(t *testing.T) {
 	const locationId = 1
-	location, err := dbModels.location.Get(locationId)
+	location, err := dbModels.location.GetById(locationId)
 	if location == nil {
 		t.Fail()
 		t.Log("Could not get location")
@@ -275,7 +275,7 @@ func TestInsertVat(t *testing.T) {
 
 func TestGetVatById(t *testing.T) {
 	const vatId = 1
-	vat, err := dbModels.vat.Get(vatId)
+	vat, err := dbModels.vat.GetById(vatId)
 	if vat == nil {
 		t.Fail()
 		t.Log("Could not get vat")
