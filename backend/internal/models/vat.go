@@ -8,8 +8,8 @@ import (
 )
 
 type Vat struct {
-	Id   int `json:"id"`
-	Rate int `json:"rate"`
+	Id   int `json:"id" db:"vat_id"`
+	Rate int `json:"rate" db:"rate"`
 }
 
 type VatModel struct {

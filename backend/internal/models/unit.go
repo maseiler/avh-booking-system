@@ -8,8 +8,8 @@ import (
 )
 
 type Unit struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	Id   int    `json:"id" db:"unit_id"`
+	Name string `json:"name" db:"name"`
 }
 
 type UnitModel struct {

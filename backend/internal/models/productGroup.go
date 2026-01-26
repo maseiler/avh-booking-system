@@ -8,9 +8,9 @@ import (
 )
 
 type ProductGroup struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	ParentId int    `json:"parent_id"`
+	Id       int    `json:"id" db:"product_group_id"`
+	Name     string `json:"name" db:"name"`
+	ParentId int    `json:"parent_id" db:"parent"`
 }
 
 type ProductGroupModel struct {

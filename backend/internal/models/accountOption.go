@@ -8,9 +8,9 @@ import (
 )
 
 type AccountOption struct {
-	AccountId int    `json:"id"`
-	Key       string `json:"key"`
-	Value     string `json:"value"`
+	AccountId int    `json:"accountId" db:"account"`
+	Key       string `json:"key" db:"key"`
+	Value     string `json:"value" db:"value"`
 }
 
 type AccountOptionModel struct {

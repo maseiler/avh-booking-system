@@ -8,11 +8,11 @@ import (
 )
 
 type Category struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Enabled bool   `json:"enabled"`
-	Icon    string `json:"icon"`
-	Type    string `json:"type"`
+	Id      int    `json:"id" db:"category_id"`
+	Name    string `json:"name" db:"name"`
+	Enabled bool   `json:"enabled" db:"enabled"`
+	Icon    string `json:"icon" db:"icon"`
+	Type    string `json:"type" db:"type"`
 }
 
 type CategoryModel struct {

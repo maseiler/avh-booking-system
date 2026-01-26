@@ -8,8 +8,8 @@ import (
 )
 
 type Location struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	Id   int    `json:"id" db:"location_id"`
+	Name string `json:"name" db:"name"`
 }
 
 type LocationModel struct {

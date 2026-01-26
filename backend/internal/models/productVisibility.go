@@ -8,10 +8,10 @@ import (
 )
 
 type ProductVisibility struct {
-	Id         int `json:"id"`
-	CategoryId int `json:"category_id"`
-	LocationId int `json:"location_id"`
-	ProductId  int `json:"product_id"`
+	Id         int `json:"id" db:"product_visibility_id"`
+	CategoryId int `json:"categoryId" db:"category"`
+	LocationId int `json:"locationId" db:"location"`
+	ProductId  int `json:"productId" db:"product"`
 }
 
 type ProductVisibilityModel struct {

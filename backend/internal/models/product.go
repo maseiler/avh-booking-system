@@ -9,15 +9,15 @@ import (
 )
 
 type Product struct {
-	Id             int              `json:"id"`
-	Name           string           `json:"name"`
-	Price          pgtype.Numeric   `json:"price"`
-	VatId          int              `json:"vatId"`
-	ProductGroupId int              `json:"productGroupId"`
-	Size           int              `json:"size"`
-	UnitId         int              `json:"unitId"`
-	CategoryId     int              `json:"categoryId"`
-	CreatedAt      pgtype.Timestamp `json:"createdAt"`
+	Id             int              `json:"id" db:"product_id"`
+	Name           string           `json:"name" db:"name"`
+	Price          pgtype.Numeric   `json:"price" db:"price"`
+	VatId          int              `json:"vatId" db:"vat"`
+	ProductGroupId int              `json:"productGroupId" db:"product_group"`
+	Size           int              `json:"size" db:"size"`
+	UnitId         int              `json:"unitId" db:"unit"`
+	CategoryId     int              `json:"categoryId" db:"category"`
+	CreatedAt      pgtype.Timestamp `json:"createdAt" db:"created_at"`
 }
 
 type ProductModel struct {
