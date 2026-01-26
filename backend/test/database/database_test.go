@@ -3,9 +3,9 @@ package test_database
 import (
 	"fmt"
 	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"math/big"
 	"os"
 	"testing"
 )
@@ -27,8 +27,8 @@ func TestMain(m *testing.M) {
 // --------------------------------------------------
 
 func TestInsertAccount(t *testing.T) {
-	dummyAccount := models.CreateAccount("一嫂", "Lady Hurricane", "鄭",
-		"zheng.yi.sao@redfleet.cn", "+86 20 1807-2010", 1234, 100, 1)
+	dummyAccount := models.CreateAccount("Andi", "", "Theke",
+		"andiwillsaufen@bier.com", "+49 170 1234567", 9900, 10, 3)
 	id, err := dbModels.account.Insert(dummyAccount)
 
 	require.NoError(t, err)
@@ -37,7 +37,7 @@ func TestInsertAccount(t *testing.T) {
 
 func TestGetAccountById(t *testing.T) {
 	const accountId = 1
-	daGama, err := dbModels.account.Get(accountId)
+	daGama, err := dbModels.account.GetById(accountId)
 	if daGama == nil {
 		t.Fail()
 		t.Log("Could not get account")
@@ -124,7 +124,7 @@ func TestGetCategoryById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProduct(t *testing.T) {
-	dummyProduct := models.CreateProduct("Pearl River Dynasty", "10", 1, 200, 1, "0.19", 1)
+	dummyProduct := models.CreateProduct("Pearl River Dynasty", "1000", 1, 200, 1, "19", 1)
 	id, err := dbModels.product.Insert(dummyProduct)
 
 	require.NoError(t, err)
@@ -144,13 +144,14 @@ func TestGetProductById(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, product.Id, productId)
 	require.Equal(t, product.Name, "Rota das Especiarias")
-	require.Equal(t, product.Price, 1800)
+	expectedPrice := new(big.Int).SetInt64(1800)
+	require.Equal(t, product.Price.Int, expectedPrice)
 	require.Equal(t, product.ProductGroupId, 1)
 	require.Equal(t, product.Size, 150)
 	require.Equal(t, product.UnitId, 1)
-	expectedTax := 19
-	require.Equal(t, product.Tax, expectedTax)
-	require.Equal(t, product.CategoryId, 1)
+	expectedTax := new(big.Int).SetInt64(19)
+	require.Equal(t, product.Tax.Int, expectedTax)
+	require.Equal(t, product.CategoryId, 2)
 }
 
 // --------------------------------------------------
