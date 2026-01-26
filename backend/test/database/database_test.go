@@ -124,7 +124,7 @@ func TestGetCategoryById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProduct(t *testing.T) {
-	dummyProduct := models.CreateProduct("Pearl River Dynasty", "1000", 1, 200, 1, "19", 1)
+	dummyProduct := models.CreateProduct("Pearl River Dynasty", "1000", 1, 1, 200, 1, 1)
 	id, err := dbModels.product.Insert(dummyProduct)
 
 	require.NoError(t, err)
@@ -146,11 +146,10 @@ func TestGetProductById(t *testing.T) {
 	require.Equal(t, product.Name, "Rota das Especiarias")
 	expectedPrice := new(big.Int).SetInt64(1800)
 	require.Equal(t, product.Price.Int, expectedPrice)
+	require.Equal(t, product.VatId, 1)
 	require.Equal(t, product.ProductGroupId, 1)
 	require.Equal(t, product.Size, 150)
 	require.Equal(t, product.UnitId, 1)
-	expectedTax := new(big.Int).SetInt64(19)
-	require.Equal(t, product.Tax.Int, expectedTax)
 	require.Equal(t, product.CategoryId, 2)
 }
 
