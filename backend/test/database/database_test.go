@@ -214,7 +214,7 @@ func TestGetUnitById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProductVisibility(t *testing.T) {
-	dummyVisibility := models.CreateProductVisibility(1, 2)
+	dummyVisibility := models.CreateProductVisibility(3, 1, 3)
 	id, err := dbModels.productVisibility.Insert(dummyVisibility)
 
 	require.NoError(t, err)

@@ -85,10 +85,11 @@ VALUES ('Rota das Especiarias', 1800, 1, 150, 1, 19, 2),
        ('白酒 (Báijiǔ)', 6, 2, 100, 1, 5, 2),
        ('Fiji Water', 233, 3, 500, 1, 5, 2);
 
-INSERT INTO product_visibility(category, product)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (3, 3),
-       (4, 1),
-       (4, 2);
+INSERT INTO product_visibility(category, location, product)
+VALUES (1, 1,1),
+       (1, 1, 2),
+       (1, 1, 3),
+       (3, 1,1),
+       (3, 1,3),
+       (3, 2,3),
+       (4, 2, 3);

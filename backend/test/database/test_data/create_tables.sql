@@ -75,7 +75,9 @@ CREATE TABLE IF NOT EXISTS product_visibility
 (
     product_visibility_id SERIAL PRIMARY KEY,
     category             INTEGER NOT NULL,
+    location    INTEGER NOT NULL,
     product           INTEGER NOT NULL,
     FOREIGN KEY (category) REFERENCES category (category_id),
+    FOREIGN KEY (location) REFERENCES location (location_id),
     FOREIGN KEY (product) REFERENCES product (product_id)
 );
