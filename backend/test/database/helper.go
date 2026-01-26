@@ -24,6 +24,7 @@ type modelStructs struct {
 	unit              *models.UnitModel
 	productVisibility *models.ProductVisibilityModel
 	location          *models.LocationModel
+	vat               *models.VatModel
 }
 
 // run sets up members and the database before executing tests and tearing them down after execution.
@@ -46,6 +47,7 @@ func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 	dbModels.unit = &models.UnitModel{DB: dbPool}
 	dbModels.productVisibility = &models.ProductVisibilityModel{DB: dbPool}
 	dbModels.location = &models.LocationModel{DB: dbPool}
+	dbModels.vat = &models.VatModel{DB: dbPool}
 
 	defer tearDown()
 

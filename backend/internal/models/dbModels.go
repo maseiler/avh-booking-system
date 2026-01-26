@@ -8,4 +8,5 @@ type DbModels struct {
 	ProductGroup  ProductGroupModel
 	Product       ProductModel
 	Location      LocationModel
+	Vat           VatModel
 }

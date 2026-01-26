@@ -263,3 +263,30 @@ func TestGetLocationById(t *testing.T) {
 	require.Equal(t, location.Id, locationId)
 	require.Equal(t, location.Name, "Bermuda Triangle")
 }
+
+// --------------------------------------------------
+// Vat
+// --------------------------------------------------
+
+func TestInsertVat(t *testing.T) {
+	dummyVat := models.CreateVat(12)
+	id, err := dbModels.vat.Insert(dummyVat)
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetVatById(t *testing.T) {
+	const vatId = 1
+	vat, err := dbModels.vat.Get(vatId)
+	if vat == nil {
+		t.Fail()
+		t.Log("Could not get vat")
+
+		return
+	}
+
+	require.NoError(t, err)
+	require.Equal(t, vat.Id, vatId)
+	require.Equal(t, vat.Rate, 19)
+}
