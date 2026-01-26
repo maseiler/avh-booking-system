@@ -46,16 +46,16 @@ func TestGetAccountById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, daGama.Id, accountId)
-	require.Equal(t, daGama.FirstName, "Vasco")
-	require.Equal(t, daGama.Nickname, "Cape Conqueror")
-	require.Equal(t, daGama.LastName, "da Gama")
-	require.Equal(t, daGama.Email, "indianspice@capeofgoodhope.com")
-	require.Equal(t, daGama.Phone, "+351 914 97 1498")
-	require.Equal(t, daGama.Balance, 3355)
-	require.Equal(t, daGama.MaxDebt, 100)
-	require.Equal(t, daGama.Category, 1)
-	require.Equal(t, daGama.Enabled, true)
+	require.Equal(t, accountId, daGama.Id)
+	require.Equal(t, "Vasco", daGama.FirstName)
+	require.Equal(t, "Cape Conqueror", daGama.Nickname)
+	require.Equal(t, "da Gama", daGama.LastName)
+	require.Equal(t, "indianspice@capeofgoodhope.com", daGama.Email)
+	require.Equal(t, "+351 914 97 1498", daGama.Phone)
+	require.Equal(t, 3355, daGama.Balance)
+	require.Equal(t, 100, daGama.MaxDebt)
+	require.Equal(t, 1, daGama.Category)
+	require.Equal(t, true, daGama.Enabled)
 	require.NotZero(t, daGama.CreatedAt)
 }
 
@@ -84,9 +84,9 @@ func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, opt.AccountId, accountId)
-	require.Equal(t, opt.Key, optKey)
-	require.Equal(t, opt.Value, "true")
+	require.Equal(t, accountId, opt.AccountId)
+	require.Equal(t, optKey, opt.Key)
+	require.Equal(t, "true", opt.Value)
 }
 
 // --------------------------------------------------
@@ -112,11 +112,11 @@ func TestGetCategoryById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, cat.Id, categoryId)
-	require.Equal(t, cat.Name, "Sailor")
-	require.Equal(t, cat.Enabled, true)
-	require.Equal(t, cat.Icon, "sailboat")
-	require.Equal(t, cat.Type, "account")
+	require.Equal(t, categoryId, cat.Id)
+	require.Equal(t, "Sailor", cat.Name)
+	require.Equal(t, true, cat.Enabled)
+	require.Equal(t, "sailboat", cat.Icon)
+	require.Equal(t, "account", cat.Type)
 }
 
 // --------------------------------------------------
@@ -143,14 +143,14 @@ func TestGetProductById(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Equal(t, product.Id, productId)
-	require.Equal(t, product.Name, "Rota das Especiarias")
+	require.Equal(t, "Rota das Especiarias", product.Name)
 	expectedPrice := new(big.Int).SetInt64(1800)
-	require.Equal(t, product.Price.Int, expectedPrice)
-	require.Equal(t, product.VatId, 1)
-	require.Equal(t, product.ProductGroupId, 1)
-	require.Equal(t, product.Size, 150)
-	require.Equal(t, product.UnitId, 1)
-	require.Equal(t, product.CategoryId, 2)
+	require.Equal(t, expectedPrice, product.Price.Int)
+	require.Equal(t, 1, product.VatId)
+	require.Equal(t, 1, product.ProductGroupId)
+	require.Equal(t, 150, product.Size)
+	require.Equal(t, 1, product.UnitId)
+	require.Equal(t, 2, product.CategoryId)
 }
 
 // --------------------------------------------------
@@ -176,9 +176,9 @@ func TestGetProductGroupById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, group.Id, groupId)
-	require.Equal(t, group.Name, "Alcohol")
-	require.Equal(t, group.ParentId, 0)
+	require.Equal(t, groupId, group.Id)
+	require.Equal(t, "Alcohol", group.Name)
+	require.Equal(t, 0, group.ParentId)
 }
 
 // --------------------------------------------------
@@ -204,8 +204,8 @@ func TestGetUnitById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, unit.Id, unitId)
-	require.Equal(t, unit.Name, "ml")
+	require.Equal(t, unitId, unit.Id)
+	require.Equal(t, "ml", unit.Name)
 }
 
 // --------------------------------------------------
@@ -231,9 +231,9 @@ func TestProductVisibilityById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, unit.Id, visibilityId)
-	require.Equal(t, unit.CategoryId, 1)
-	require.Equal(t, unit.ProductId, 1)
+	require.Equal(t, visibilityId, unit.Id)
+	require.Equal(t, 1, unit.CategoryId)
+	require.Equal(t, 1, unit.ProductId)
 }
 
 // --------------------------------------------------
@@ -259,8 +259,8 @@ func TestGetLocationById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, location.Id, locationId)
-	require.Equal(t, location.Name, "Bermuda Triangle")
+	require.Equal(t, locationId, location.Id)
+	require.Equal(t, "Bermuda Triangle", location.Name)
 }
 
 // --------------------------------------------------
@@ -286,6 +286,6 @@ func TestGetVatById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, vat.Id, vatId)
-	require.Equal(t, vat.Rate, 19)
+	require.Equal(t, vatId, vat.Id)
+	require.Equal(t, 19, vat.Rate)
 }
