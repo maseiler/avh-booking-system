@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "productVisibility.json",
+  "title": "Product Visibility",
+  "description": "The visibility of product for locations and categories",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "The unique ID"
+    },
+    "categoryId": {
+      "type": "integer",
+      "description": "The category ID"
+    },
+    "locationId": {
+      "type": "integer",
+      "description": "The location ID"
+    },
+    "productId": {
+      "type": "integer",
+      "description": "The product ID"
+    }
+  },
+  "required": [
+    "categoryId",
+    "locationId",
+    "productId"
+  ],
+  "additionalProperties": false
+}

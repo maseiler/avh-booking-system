@@ -9,6 +9,7 @@ import {useUnitStore} from "../store/UnitStore.ts";
 import {useVatStore} from "../store/VatStore.ts";
 import {useProductStore} from "../store/ProductStore.ts";
 import {useLocationStore} from "../store/LocationStore.ts";
+import {useProductVisibilityStore} from "../store/ProductVisibilityStore.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -183,6 +184,11 @@ export class WebSocketClient {
 
                         case 'product_group': {
                             useProductGroupStore().patchProductGroups(result.data);
+                            return;
+                        }
+
+                        case 'product_visibility': {
+                            useProductVisibilityStore().patchVisibilities(result.data);
                             return;
                         }
 

@@ -102,6 +102,18 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 			return s.marshalQueryResultList(models.TableProductGroup, &rawJsonSlice)
 		}
 
+	case models.TableProductVisibility:
+		{
+			visibilities, _ := s.dbModels.ProductVisibility.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, vis := range visibilities {
+				rawVis, _ := json.Marshal(vis)
+				rawJsonSlice = append(rawJsonSlice, rawVis)
+			}
+
+			return s.marshalQueryResultList(models.TableProductVisibility, &rawJsonSlice)
+		}
+
 	case models.TableUnit:
 		{
 			units, _ := s.dbModels.Unit.Get(query)

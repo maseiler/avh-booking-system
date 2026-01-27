@@ -114,6 +114,14 @@ export const useSocketStore = defineStore("notificationStore", {
             //console.debug(msg)
             this.wsClient.send(msg)
         },
+        queryProductVisibilities() {
+            let payload = {
+                "table": "product_visibility",
+            }
+            let msg = {type: "query", payload: payload}
+            //console.debug(msg)
+            this.wsClient.send(msg)
+        },
         getAllFromDb() {
             this.queryCategories()
             this.queryAccounts()
@@ -122,6 +130,7 @@ export const useSocketStore = defineStore("notificationStore", {
             this.queryVats()
             this.queryProducts()
             this.queryLocations()
+            this.queryProductVisibilities()
         }
     }
 })
