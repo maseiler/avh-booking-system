@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "category.json",
+  "title": "Category",
+  "description": "The classification of an account or product",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "The unique ID"
+    },
+    "name": {
+      "type": "string",
+      "description": "The name"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "The flag identifying if the category is enabled"
+    },
+    "icon": {
+      "type": "string",
+      "description": "The Font Awesome icon"
+    },
+    "type": {
+      "type": "string",
+      "description": "They type"
+    }
+  },
+  "required": [
+    "name",
+    "enabled",
+    "icon",
+    "type"
+  ],
+  "additionalProperties": false
+}

@@ -18,6 +18,9 @@
             "$ref": "../db/account.json"
           },
           {
+            "$ref": "../db/category.json"
+          },
+          {
             "$ref": "../db/product.json"
           }
         ]

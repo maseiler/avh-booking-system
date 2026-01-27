@@ -80,7 +80,7 @@
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="account.category">
-            <option v-for="category in category$.accountCategorys" :value="category.id" class="has-icons-left">
+            <option v-for="category in category$.accountCategories" :value="category.id" class="has-icons-left">
               {{ category.title }}
             </option>
           </select>

@@ -40,7 +40,7 @@
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="product.category">
-            <option v-for="category in category$.productCategorys" :value="category.id" class="has-icons-left">
+            <option v-for="category in category$.productCategories" :value="category.id" class="has-icons-left">
               {{ category.title }}
             </option>
           </select>
@@ -56,7 +56,7 @@
     <div class="column is-3">Visibility:</div>
     <div class="column">
       <div class="buttons">
-        <label class="checkbox button has-icons-right" v-for="category in category$.accountCategorys">
+        <label class="checkbox button has-icons-right" v-for="category in category$.accountCategories">
           <input type="checkbox" :checked="product.visibility.includes(category.id)" @change="updateProductVisibility(category.id)"/>
           <span>{{ category.title }}</span>
           <div class="icon is-small is-right">

@@ -3,6 +3,8 @@ import {compileSchema, draft07} from "json-schema-library";
 import type {SchemaNode} from "json-schema-library";
 import messageSchema from "../../../backend/internal/models/jsonSchemas/message.json";
 import {Account} from '../composables/account'
+import {useCategoryStore} from "../store/CategoryStore.ts";
+import {Category} from "../composables/category.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -137,7 +139,7 @@ export class WebSocketClient {
 
             // Create Message interface for type safety
             const message = parsedMsg as Message
-            console.log("message type: ", message.type);
+            // console.log("message type: ", message.type);
 
             switch (message.type) {
                 case 'pong': {
@@ -157,6 +159,11 @@ export class WebSocketClient {
                     switch (result.table) {
                         case 'account': {
                             useAccountStore().patchAccounts(result.data);
+                            return;
+                        }
+
+                        case 'category': {
+                            useCategoryStore().patchCategories(result.data);
                             return;
                         }
 
