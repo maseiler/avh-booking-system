@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Product, generateTestData, createProduct} from '../composables/product'
+import {Product, createProduct} from '../composables/product'
 
 export const useProductStore = defineStore('product', {
     state: () => {
@@ -9,11 +9,6 @@ export const useProductStore = defineStore('product', {
         }
     },
     actions: {
-        generateTestData() {
-            let testData = generateTestData();
-            this.products.push(...testData);
-            console.log(this.products);
-        },
         getByCategory(categoryId: number, selectedAccountCategorys: number[]): Product[] {
             /*
             let visibleProducts = this.products.filter((prod) => {

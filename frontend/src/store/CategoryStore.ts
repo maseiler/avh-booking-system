@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Category, CategoryType, createCategory, generateTestData} from '../composables/category'
+import {Category, CategoryType, createCategory} from '../composables/category'
 
 export const useCategoryStore = defineStore('category', {
     state: () => {
@@ -16,11 +16,6 @@ export const useCategoryStore = defineStore('category', {
         },
     },
     actions: {
-        generateTestData() {
-            if (this.categories.length == 0) {
-                this.categories.push(...generateTestData());
-            }
-        },
         byId(id: number | undefined): Category | undefined {
             return this.categories.find((cat) => cat.id == id)
         },

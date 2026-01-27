@@ -43,7 +43,6 @@
 import {
   huetteConfetti
 } from '../composables/confetti.ts';
-import {getTestCategorys, type Category} from '../composables/category.ts';
 import {useAccountStore} from '../store/AccountStore.ts';
 import {useSocketStore} from '../store/socketStore.ts';
 import type {Account} from "../composables/account.ts";

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Account, type Account, generateTestData } from '../composables/account'
+import { Account, type Account} from '../composables/account'
 import { useSocketStore } from './socketStore'
 
 export const useAccountStore = defineStore('account', {
@@ -10,13 +10,6 @@ export const useAccountStore = defineStore('account', {
     }
   },
   actions: {
-    generateTestData(){
-      // let testData = generateTestData();
-      // this.accounts.push(...testData);
-      // this.accounts.sort((a, b) => {
-      //   return a.getShortName() < b.getShortName() ? -1 : 1;
-      // })
-    },
     select(acc: Account){
       this.selected = [acc];
     },
@@ -46,7 +39,7 @@ export const useAccountStore = defineStore('account', {
       let searchResults = byCategory.filter((acc) => {
         return (
           acc.firstName.toLowerCase().includes(search) ||
-          acc.nickName?.toLowerCase().includes(search) ||
+          acc.nickname?.toLowerCase().includes(search) ||
           acc.lastName.toLowerCase().includes(search)
         )
       })
