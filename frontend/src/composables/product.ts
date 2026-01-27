@@ -54,7 +54,7 @@ export function createProduct(obj: any): Product {
     prod.size = obj.size
     let unit = useUnitStore().byId(obj.unitId)
     if (unit)
-        prod.unit_id = unit
+        prod.unit = unit
     else {
         console.error("Unit not found")
         // TODO handle error

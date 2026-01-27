@@ -21,7 +21,7 @@
     </div>
     <div class="column is-3">
       <div class="select">
-          <select v-model="product.unit_id">
+          <select v-model="product.unit">
             <option v-for="unit in unit$.all" :value="unit.id" class="has-icons-left">
               {{ unit.name }}
             </option>

@@ -16,7 +16,7 @@
           <td>{{ product.id }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.size }}</td>
-          <td>{{ product.unit_id.name }}</td>
+          <td>{{ product.unit.name }}</td>
           <td>
             <button class="tag">
               <span class="icon"><icon :icon="category$.byId(product.category.id)?.icon" /></span>
