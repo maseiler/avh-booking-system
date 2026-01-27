@@ -5,6 +5,7 @@ import messageSchema from "../../../backend/internal/models/jsonSchemas/message.
 import {Account} from '../composables/account'
 import {useCategoryStore} from "../store/CategoryStore.ts";
 import {useUnitStore} from "../store/UnitStore.ts";
+import {useVatStore} from "../store/VatStore.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -169,6 +170,11 @@ export class WebSocketClient {
 
                         case 'unit': {
                             useUnitStore().patchUnits(result.data);
+                            return;
+                        }
+
+                        case 'vat': {
+                            useVatStore().patchVats(result.data);
                             return;
                         }
 

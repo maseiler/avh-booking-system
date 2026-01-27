@@ -25,6 +25,9 @@
           },
           {
             "$ref": "../db/unit.json"
+          },
+          {
+            "$ref": "../db/vat.json"
           }
         ]
       }

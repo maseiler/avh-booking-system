@@ -82,6 +82,18 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 			return s.marshalQueryResultList(models.TableUnit, &rawJsonSlice)
 		}
+
+	case models.TableVat:
+		{
+			vats, _ := s.dbModels.Vat.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, vat := range vats {
+				rawVat, _ := json.Marshal(vat)
+				rawJsonSlice = append(rawJsonSlice, rawVat)
+			}
+
+			return s.marshalQueryResultList(models.TableVat, &rawJsonSlice)
+		}
 	}
 
 	return nil, &models.WsError{

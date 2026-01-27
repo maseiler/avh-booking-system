@@ -55,6 +55,7 @@ const (
 	TableProductGroup      TableName = "product_group"
 	TableProductVisibility TableName = "product_visibility"
 	TableUnit              TableName = "unit"
+	TableVat               TableName = "vat"
 )
 
 type QueryResult struct {

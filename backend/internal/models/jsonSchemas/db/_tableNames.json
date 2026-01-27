@@ -12,7 +12,8 @@
     "product",
     "product_group",
     "product_visibility",
-    "unit"
+    "unit",
+    "vat"
   ],
   "additionalProperties": false
 }
