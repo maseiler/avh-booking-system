@@ -76,10 +76,18 @@ export const useSocketStore = defineStore("notificationStore", {
             let msg = {type: "query", payload: payload}
             //console.debug(msg)
             this.wsClient.send(msg)
+        }, queryUnits() {
+            let payload = {
+                "table": "unit",
+            }
+            let msg = {type: "query", payload: payload}
+            //console.debug(msg)
+            this.wsClient.send(msg)
         },
         getAllFromDb() {
             this.queryCategories()
             this.queryAccounts()
+            this.queryUnits()
         }
     }
 })

@@ -193,7 +193,7 @@ func TestInsertUnit(t *testing.T) {
 
 func TestGetUnitById(t *testing.T) {
 	const unitId = 1
-	unit, err := dbModels.unit.Get(unitId)
+	unit, err := dbModels.unit.GetById(unitId)
 	if unit == nil {
 		t.Fail()
 		t.Log("Could not get unit")

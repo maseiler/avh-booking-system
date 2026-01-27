@@ -4,7 +4,7 @@ import type {SchemaNode} from "json-schema-library";
 import messageSchema from "../../../backend/internal/models/jsonSchemas/message.json";
 import {Account} from '../composables/account'
 import {useCategoryStore} from "../store/CategoryStore.ts";
-import {Category} from "../composables/category.ts";
+import {useUnitStore} from "../store/UnitStore.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -164,6 +164,11 @@ export class WebSocketClient {
 
                         case 'category': {
                             useCategoryStore().patchCategories(result.data);
+                            return;
+                        }
+
+                        case 'unit': {
+                            useUnitStore().patchUnits(result.data);
                             return;
                         }
 

@@ -72,7 +72,8 @@ VALUES ('Bermuda Triangle'),
        ('Atlantis');
 
 INSERT INTO unit(name)
-VALUES ('ml');
+VALUES ('ml'),
+       ('pcs');
 
 INSERT INTO vat(rate)
 VALUES (19);

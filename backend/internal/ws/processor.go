@@ -57,7 +57,6 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 	case models.TableCategory:
 		{
 			categories, _ := s.dbModels.Category.Get(query)
-			s.log.Debug("categories", len(categories))
 			var rawJsonSlice []json.RawMessage
 			for _, category := range categories {
 				rawCategory, _ := json.Marshal(category)
@@ -68,7 +67,21 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 		}
 
 	case models.TableProduct:
-		// TODO
+		{
+			// TODO
+		}
+
+	case models.TableUnit:
+		{
+			units, _ := s.dbModels.Unit.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, unit := range units {
+				rawUnit, _ := json.Marshal(unit)
+				rawJsonSlice = append(rawJsonSlice, rawUnit)
+			}
+
+			return s.marshalQueryResultList(models.TableUnit, &rawJsonSlice)
+		}
 	}
 
 	return nil, &models.WsError{
