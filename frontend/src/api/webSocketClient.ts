@@ -4,6 +4,7 @@ import type {SchemaNode} from "json-schema-library";
 import messageSchema from "../../../backend/internal/models/jsonSchemas/message.json";
 import {Account} from '../composables/account'
 import {useCategoryStore} from "../store/CategoryStore.ts";
+import {useProductGroupStore} from "../store/ProductGroupStore.ts";
 import {useUnitStore} from "../store/UnitStore.ts";
 import {useVatStore} from "../store/VatStore.ts";
 
@@ -165,6 +166,11 @@ export class WebSocketClient {
 
                         case 'category': {
                             useCategoryStore().patchCategories(result.data);
+                            return;
+                        }
+
+                        case 'product_group': {
+                            useProductGroupStore().patchProductGroups(result.data);
                             return;
                         }
 

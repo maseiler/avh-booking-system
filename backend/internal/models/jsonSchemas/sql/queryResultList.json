@@ -24,6 +24,9 @@
             "$ref": "../db/product.json"
           },
           {
+            "$ref": "../db/productGroup.json"
+          },
+          {
             "$ref": "../db/unit.json"
           },
           {

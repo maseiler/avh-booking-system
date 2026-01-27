@@ -71,6 +71,18 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 			// TODO
 		}
 
+	case models.TableProductGroup:
+		{
+			groups, _ := s.dbModels.ProductGroup.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, group := range groups {
+				rawGroup, _ := json.Marshal(group)
+				rawJsonSlice = append(rawJsonSlice, rawGroup)
+			}
+
+			return s.marshalQueryResultList(models.TableProductGroup, &rawJsonSlice)
+		}
+
 	case models.TableUnit:
 		{
 			units, _ := s.dbModels.Unit.Get(query)
