@@ -21,6 +21,9 @@
             "$ref": "../db/category.json"
           },
           {
+            "$ref": "../db/location.json"
+          },
+          {
             "$ref": "../db/product.json"
           },
           {

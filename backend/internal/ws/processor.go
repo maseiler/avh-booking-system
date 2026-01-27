@@ -66,6 +66,18 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 			return s.marshalQueryResultList(models.TableCategory, &rawJsonSlice)
 		}
 
+	case models.TableLocation:
+		{
+			locations, _ := s.dbModels.Location.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, loc := range locations {
+				rawLoc, _ := json.Marshal(loc)
+				rawJsonSlice = append(rawJsonSlice, rawLoc)
+			}
+
+			return s.marshalQueryResultList(models.TableLocation, &rawJsonSlice)
+		}
+
 	case models.TableProduct:
 		{
 			products, _ := s.dbModels.Product.Get(query)

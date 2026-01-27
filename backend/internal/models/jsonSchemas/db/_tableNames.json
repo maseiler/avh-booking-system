@@ -8,6 +8,7 @@
     "account",
     "account_option",
     "category",
+    "location",
     "order",
     "product",
     "product_group",

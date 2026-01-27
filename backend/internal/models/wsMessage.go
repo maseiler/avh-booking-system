@@ -50,6 +50,7 @@ const (
 	TableAccount           TableName = "account"
 	TableAccountOption     TableName = "account_option"
 	TableCategory          TableName = "category"
+	TableLocation          TableName = "location"
 	TableOrder             TableName = "order"
 	TableProduct           TableName = "product"
 	TableProductGroup      TableName = "product_group"

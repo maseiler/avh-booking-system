@@ -8,6 +8,7 @@ import {useProductGroupStore} from "../store/ProductGroupStore.ts";
 import {useUnitStore} from "../store/UnitStore.ts";
 import {useVatStore} from "../store/VatStore.ts";
 import {useProductStore} from "../store/ProductStore.ts";
+import {useLocationStore} from "../store/LocationStore.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -167,6 +168,11 @@ export class WebSocketClient {
 
                         case 'category': {
                             useCategoryStore().patchCategories(result.data);
+                            return;
+                        }
+
+                        case 'location': {
+                            useLocationStore().patchLocations(result.data);
                             return;
                         }
 
