@@ -16,6 +16,9 @@ export const useVatStore = defineStore('vat', {
         byId(id: number | undefined): Vat | undefined {
             return this.vats.find((vat) => vat.id == id)
         },
+        getById(id: number | undefined): Vat | undefined {
+            return this.vats.find((vat) => vat.id == id)
+        },
         patchVats(newVats: Vat[]) {
             this.$patch(state => {
                 newVats.forEach(newVat => {

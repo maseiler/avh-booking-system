@@ -7,8 +7,8 @@
           v-for="product in dict"
           @click="cart$.addToCart(product)"
           title="select product">
-           {{ product.name }} {{ product.size }} {{ product.unit }}
-           <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
+            {{ product.name }} {{ product.size }} {{ product.unit_id.name }}
+            <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
         </Button>
       </div>
     </div>

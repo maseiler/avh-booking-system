@@ -9,13 +9,48 @@
       "type": "integer",
       "description": "The unique ID"
     },
-    "TODO": {
+    "name": {
       "type": "string",
-      "description": "TODO"
+      "description": "The name"
+    },
+    "price": {
+      "type": "integer",
+      "description": "The price"
+    },
+    "vat_id": {
+      "type": "integer",
+      "description": "The ID of the VAT"
+    },
+    "productGroupId": {
+      "type": "integer",
+      "description": "The ID of the product group"
+    },
+    "size": {
+      "type": "integer",
+      "description": "The size"
+    },
+    "unitId": {
+      "type": "integer",
+      "description": "The ID of the unit"
+    },
+    "categoryId": {
+      "type": "integer",
+      "description": "The ID of the category"
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "The creation timestamp. It expects the ISO 8601 format"
     }
   },
   "required": [
-    "TODO"
+    "name",
+    "price",
+    "vat_id",
+    "productGroupId",
+    "size",
+    "unitId",
+    "categoryId",
+    "createdAt"
   ],
   "additionalProperties": false
 }

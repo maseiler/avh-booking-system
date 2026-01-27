@@ -83,7 +83,7 @@ export const useSocketStore = defineStore("notificationStore", {
             let msg = {type: "query", payload: payload}
             //console.debug(msg)
             this.wsClient.send(msg)
-        },queryUnits() {
+        }, queryUnits() {
             let payload = {
                 "table": "unit",
             }
@@ -98,12 +98,21 @@ export const useSocketStore = defineStore("notificationStore", {
             //console.debug(msg)
             this.wsClient.send(msg)
         },
+        queryProducts() {
+            let payload = {
+                "table": "product",
+            }
+            let msg = {type: "query", payload: payload}
+            //console.debug(msg)
+            this.wsClient.send(msg)
+        },
         getAllFromDb() {
             this.queryCategories()
             this.queryAccounts()
             this.queryProductGroups()
             this.queryUnits()
             this.queryVats()
+            this.queryProducts()
         }
     }
 })
