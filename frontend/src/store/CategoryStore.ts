@@ -1,30 +1,37 @@
-import { defineStore } from 'pinia'
-import { Category, generateTestData } from '../composables/category'
-import { CategoryType } from '../composables/category'
+import {defineStore} from 'pinia'
+import {Category, CategoryType, createCategory} from '../composables/category'
 
 export const useCategoryStore = defineStore('category', {
-  state: () => {
-    return {
-      categorys: [] as Category[]
+    state: () => {
+        return {
+            categories: [] as Category[]
+        }
+    },
+    getters: {
+        accountCategories(state) {
+            return state.categories.filter((cat) => cat.type == CategoryType.ACCOUNT)
+        },
+        productCategories(state) {
+            return state.categories.filter((cat) => cat.type == CategoryType.PRODUCT)
+        },
+    },
+    actions: {
+        byId(id: number | undefined): Category | undefined {
+            return this.categories.find((cat) => cat.id == id)
+        },
+        patchCategories(newCategories: Category[]) {
+            // TODO? copy-pasta from AccountStore.ts
+            this.$patch(state => {
+                newCategories.forEach(newCat => {
+                    const newCatObj = createCategory(newCat);
+                    const existing = state.categories.find(a => a.id === newCatObj.id);
+                    if (existing) {
+                        Object.assign(existing, newCatObj);
+                    } else {
+                        state.categories.push(newCatObj);
+                    }
+                })
+            })
+        }
     }
-  },
-  getters:{
-    accountCategorys(state){
-      return state.categorys.filter((cat) => cat.type == CategoryType.ACCOUNT)
-    },
-    productCategorys(state){
-      return state.categorys.filter((cat) => cat.type == CategoryType.PRODUCT)
-    },
-  },
-  actions: {
-    generateTestData(){
-      if (this.categorys.length == 0) {
-        this.categorys.push(...generateTestData());
-      }
-    },
-    byId(id: number | undefined): Category | undefined {
-      let foundCat = this.categorys.find((cat) => cat.id == id);
-      return foundCat
-    }
-  }
 })

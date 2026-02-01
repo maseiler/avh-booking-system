@@ -14,7 +14,7 @@
   </div>
 
   <button class="button" @click="listCategorys">List Categorys</button>
-  <p v-for="category in categorys" :key="category.title">{{ category.title }}
+  <p v-for="category in categories" :key="category.title">{{ category.title }}
     <icon :icon="category.icon"/>
   </p>
 
@@ -43,7 +43,6 @@
 import {
   huetteConfetti
 } from '../composables/confetti.ts';
-import {getTestCategorys, type Category} from '../composables/category.ts';
 import {useAccountStore} from '../store/AccountStore.ts';
 import {useSocketStore} from '../store/socketStore.ts';
 import type {Account} from "../composables/account.ts";
@@ -52,7 +51,7 @@ export default {
   data() {
     return {
       count: 0,
-      categorys: [] as Category[],
+      categories: [] as Category[],
       account$: useAccountStore(),
       socket$: useSocketStore(),
       accounts: [] as Account[]
@@ -63,7 +62,7 @@ export default {
   },
   methods: {
     listCategorys() {
-      this.categorys = getTestCategorys();
+      this.categories = getTestCategorys();
       console.log(getTestCategorys());
     },
     huetteConfetti() {

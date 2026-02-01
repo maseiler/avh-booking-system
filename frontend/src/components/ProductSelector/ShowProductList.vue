@@ -16,19 +16,24 @@
           <td>{{ product.id }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.size }}</td>
-          <td>{{ product.unit }}</td>
+          <td>{{ product.unit.name }}</td>
           <td>
             <button class="tag">
-              <span class="icon"><icon :icon="category$.byId(product.category)?.icon" /></span>
-              <span>{{ category$.byId(product.category)?.title }}</span>
+              <span class="icon"><icon :icon="category$.byId(product.category.id)?.icon" /></span>
+              <span>{{ category$.byId(product.category.id)?.title }}</span>
             </button>            
           </td>
-          <td>{{ product.group }}</td>
+          <td>{{ product.group.name }}</td>
           <td>
+            <!--
             <button v-for="categoryNumber in product.visibility" class="tag">
               <span class="icon"><icon :icon="category$.byId(categoryNumber)?.icon"/></span>
               <span>{{ category$.byId(categoryNumber)?.title }}</span>
             </button>
+
+            TODO use ProductVisibility (TBD)
+            -->
+            TODO
           </td>
           <td v-show="hasEditProductRights">
             <button class="tag">

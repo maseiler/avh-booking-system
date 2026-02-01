@@ -8,11 +8,13 @@
     "account",
     "account_option",
     "category",
+    "location",
     "order",
     "product",
     "product_group",
     "product_visibility",
-    "unit"
+    "unit",
+    "vat"
   ],
   "additionalProperties": false
 }

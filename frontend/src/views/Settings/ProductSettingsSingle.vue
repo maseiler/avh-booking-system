@@ -21,14 +21,10 @@
     </div>
     <div class="column is-3">
       <div class="select">
-        <select v-model="product.unit">
-          <!-- ToDo: fetch this from Database / Store -->
-          <option value="1" :selected="product.unit==1">ml</option>
-          <option value="2" :selected="product.unit==2">cl</option>
-          <option value="3" :selected="product.unit==3">dl</option>
-          <option value="4" :selected="product.unit==4">l</option>
-          <option value="5" :selected="product.unit==5">Stück</option>
-          <option value="6" :selected="product.unit==6">Nacht</option>
+          <select v-model="product.unit">
+            <option v-for="unit in unit$.all" :value="unit.id" class="has-icons-left">
+              {{ unit.name }}
+            </option>
         </select>
       </div>
     </div>
@@ -40,7 +36,7 @@
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="product.category">
-            <option v-for="category in category$.productCategorys" :value="category.id" class="has-icons-left">
+            <option v-for="category in category$.productCategories" :value="category.id" class="has-icons-left">
               {{ category.title }}
             </option>
           </select>
@@ -55,8 +51,10 @@
   <div class="columns" v-if="doneMounting">
     <div class="column is-3">Visibility:</div>
     <div class="column">
+      TODO
+      <!--
       <div class="buttons">
-        <label class="checkbox button has-icons-right" v-for="category in category$.accountCategorys">
+        <label class="checkbox button has-icons-right" v-for="category in category$.accountCategories">
           <input type="checkbox" :checked="product.visibility.includes(category.id)" @change="updateProductVisibility(category.id)"/>
           <span>{{ category.title }}</span>
           <div class="icon is-small is-right">
@@ -64,6 +62,7 @@
           </div>
         </label>
       </div>
+      -->
     </div>
   </div>
 </template>
@@ -72,12 +71,14 @@
 import type { Product } from '../../composables/product';
 import { useProductStore } from '../../store/ProductStore';
 import { useCategoryStore } from '../../store/CategoryStore';
+import {useUnitStore} from "@/store/UnitStore.ts";
 
 export default {
   data() {
     return {
       product$: useProductStore(),
       category$: useCategoryStore(),
+      unit$: useUnitStore(),
       product: {} as Product,
       doneMounting: false
     }

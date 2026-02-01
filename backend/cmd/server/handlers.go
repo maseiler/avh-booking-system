@@ -17,7 +17,7 @@ func (app *application) getAccount(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		account, err := app.dbModels.account.Get(id)
+		account, err := app.dbModels.account.GetById(id)
 		if err != nil {
 			if errors.Is(err, models.ErrNoRecord) {
 				app.notFound(w)
@@ -57,7 +57,7 @@ var upgrader = websocket.Upgrader{
 func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		app.log.Warn("Upgrade error: %v", err)
+		app.log.Warn("Upgrade error: %v", err.Error())
 		return
 	}
 

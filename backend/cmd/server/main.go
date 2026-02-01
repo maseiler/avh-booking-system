@@ -29,12 +29,15 @@ func main() {
 		log:  logger.CreateLogger(),
 		db:   dbPool,
 		DbModels: &models.DbModels{
-			Account:       models.AccountModel{DB: dbPool},
-			AccountOption: models.AccountOptionModel{DB: dbPool},
-			Category:      models.CategoryModel{DB: dbPool},
-			Unit:          models.UnitModel{DB: dbPool},
-			ProductGroup:  models.ProductGroupModel{DB: dbPool},
-			Product:       models.ProductModel{DB: dbPool},
+			Account:           models.AccountModel{DB: dbPool},
+			AccountOption:     models.AccountOptionModel{DB: dbPool},
+			Category:          models.CategoryModel{DB: dbPool},
+			Unit:              models.UnitModel{DB: dbPool},
+			ProductGroup:      models.ProductGroupModel{DB: dbPool},
+			ProductVisibility: models.ProductVisibilityModel{DB: dbPool},
+			Product:           models.ProductModel{DB: dbPool},
+			Location:          models.LocationModel{DB: dbPool},
+			Vat:               models.VatModel{DB: dbPool},
 		},
 	}
 

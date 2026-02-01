@@ -18,7 +18,25 @@
             "$ref": "../db/account.json"
           },
           {
+            "$ref": "../db/category.json"
+          },
+          {
+            "$ref": "../db/location.json"
+          },
+          {
             "$ref": "../db/product.json"
+          },
+          {
+            "$ref": "../db/productGroup.json"
+          },
+          {
+            "$ref": "../db/productVisibility.json"
+          },
+          {
+            "$ref": "../db/unit.json"
+          },
+          {
+            "$ref": "../db/vat.json"
           }
         ]
       }

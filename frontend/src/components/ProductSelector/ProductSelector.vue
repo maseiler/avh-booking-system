@@ -11,7 +11,7 @@
   <!-- Category Filter -->
   <div class="tags is-flex is-justify-content-space-around category-filter">
     <button class="tag is-hoverable" :class="selectedCategory == 0 ? 'is-primary' : ''" @click="selectCategory(0)">All</button>
-    <button v-for="category in categorys" class="tag is-hoverable" :class="selectedCategory == category.id ? 'is-primary' : ''" @click="selectCategory(category.id)">
+    <button v-for="category in categories" class="tag is-hoverable" :class="selectedCategory == category.id ? 'is-primary' : ''" @click="selectCategory(category.id)">
       <span class="icon"><icon :icon="category.icon"/></span>
       <span>{{ category.title }}</span>
     </button>
@@ -71,8 +71,8 @@ export default {
       // return this.product$.products;
       return this.product$.getBySearchAndCategory(this.search, this.selectedCategory, selectedAccountCategorys);
     },
-    categorys(){
-      return this.category$.productCategorys;
+    categories(){
+      return this.category$.productCategories;
     }
   }
 }

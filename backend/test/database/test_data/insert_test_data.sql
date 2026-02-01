@@ -6,7 +6,7 @@ VALUES ('Sailor',
        ('Beverage',
         true,
         'glass-water',
-        'beverage'),
+        'product'),
        ('Active',
         true,
         'person-running',
@@ -67,8 +67,16 @@ VALUES (1,
         'deceased',
         'true');
 
+INSERT INTO location(name)
+VALUES ('Bermuda Triangle'),
+       ('Atlantis');
+
 INSERT INTO unit(name)
-VALUES ('ml');
+VALUES ('ml'),
+       ('pcs');
+
+INSERT INTO vat(rate)
+VALUES (19);
 
 INSERT INTO product_group(name, parent)
 VALUES ('Alcohol', NULL),
@@ -77,15 +85,16 @@ VALUES ('Alcohol', NULL),
        ('Liquor', 1),
        ('Water', 2);
 
-INSERT INTO product (name, price, product_group, size, unit, tax, category)
-VALUES ('Rota das Especiarias', 1800, 1, 150, 1, 19, 2),
-       ('白酒 (Báijiǔ)', 6, 2, 100, 1, 5, 2),
-       ('Fiji Water', 233, 3, 500, 1, 5, 2);
+INSERT INTO product (name, price, vat, product_group, size, unit, category)
+VALUES ('Rota das Especiarias', 1800, 1, 1, 150, 1, 2),
+       ('白酒 (Báijiǔ)', 6, 1, 2, 100, 1, 2),
+       ('Fiji Water', 233, 1, 3, 500, 1, 2);
 
-INSERT INTO product_visibility(category, product)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (3, 3),
-       (4, 1),
-       (4, 2);
+INSERT INTO product_visibility(category, location, product)
+VALUES (1, 1, 1),
+       (1, 1, 2),
+       (1, 1, 3),
+       (3, 1, 1),
+       (3, 1, 3),
+       (3, 2, 3),
+       (4, 2, 3);

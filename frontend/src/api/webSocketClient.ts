@@ -3,6 +3,13 @@ import {compileSchema, draft07} from "json-schema-library";
 import type {SchemaNode} from "json-schema-library";
 import messageSchema from "../../../backend/internal/models/jsonSchemas/message.json";
 import {Account} from '../composables/account'
+import {useCategoryStore} from "../store/CategoryStore.ts";
+import {useProductGroupStore} from "../store/ProductGroupStore.ts";
+import {useUnitStore} from "../store/UnitStore.ts";
+import {useVatStore} from "../store/VatStore.ts";
+import {useProductStore} from "../store/ProductStore.ts";
+import {useLocationStore} from "../store/LocationStore.ts";
+import {useProductVisibilityStore} from "../store/ProductVisibilityStore.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -137,7 +144,7 @@ export class WebSocketClient {
 
             // Create Message interface for type safety
             const message = parsedMsg as Message
-            console.log("message type: ", message.type);
+            // console.log("message type: ", message.type);
 
             switch (message.type) {
                 case 'pong': {
@@ -157,6 +164,41 @@ export class WebSocketClient {
                     switch (result.table) {
                         case 'account': {
                             useAccountStore().patchAccounts(result.data);
+                            return;
+                        }
+
+                        case 'category': {
+                            useCategoryStore().patchCategories(result.data);
+                            return;
+                        }
+
+                        case 'location': {
+                            useLocationStore().patchLocations(result.data);
+                            return;
+                        }
+
+                        case 'product': {
+                            useProductStore().patchProducts(result.data);
+                            return;
+                        }
+
+                        case 'product_group': {
+                            useProductGroupStore().patchProductGroups(result.data);
+                            return;
+                        }
+
+                        case 'product_visibility': {
+                            useProductVisibilityStore().patchVisibilities(result.data);
+                            return;
+                        }
+
+                        case 'unit': {
+                            useUnitStore().patchUnits(result.data);
+                            return;
+                        }
+
+                        case 'vat': {
+                            useVatStore().patchVats(result.data);
                             return;
                         }
 

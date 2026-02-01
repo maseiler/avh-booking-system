@@ -16,7 +16,7 @@ export const useCartStore = defineStore('cart', {
       let tax = 0;
       this.cartContents.forEach((cont) => {
         let subTotal = cont.product.price * cont.quantity;
-        let subTax = subTotal*(cont.product.tax / 100);
+        let subTax = subTotal*(cont.product.vat.rate / 100);
         total += subTotal;
         tax += subTax;
       })
@@ -35,7 +35,7 @@ export const useCartStore = defineStore('cart', {
         alreadySelected[0].quantity ++;
         return;
       }
-      let newCartContent = {product: product, quantity: 1, price: product.price, tax: product.tax} as CartContent;
+      let newCartContent = {product: product, quantity: 1, price: product.price, tax: product.vat.rate} as CartContent;
       this.cartContents.push(newCartContent);
     },
     removeFromCart(product: Product){

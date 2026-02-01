@@ -54,8 +54,89 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 			return s.marshalQueryResultList(models.TableAccount, &rawJsonSlice)
 		}
 
+	case models.TableCategory:
+		{
+			categories, _ := s.dbModels.Category.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, category := range categories {
+				rawCategory, _ := json.Marshal(category)
+				rawJsonSlice = append(rawJsonSlice, rawCategory)
+			}
+
+			return s.marshalQueryResultList(models.TableCategory, &rawJsonSlice)
+		}
+
+	case models.TableLocation:
+		{
+			locations, _ := s.dbModels.Location.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, loc := range locations {
+				rawLoc, _ := json.Marshal(loc)
+				rawJsonSlice = append(rawJsonSlice, rawLoc)
+			}
+
+			return s.marshalQueryResultList(models.TableLocation, &rawJsonSlice)
+		}
+
 	case models.TableProduct:
-		// TODO
+		{
+			products, _ := s.dbModels.Product.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, product := range products {
+				rawProduct, _ := json.Marshal(product)
+				rawJsonSlice = append(rawJsonSlice, rawProduct)
+			}
+
+			return s.marshalQueryResultList(models.TableProduct, &rawJsonSlice)
+		}
+
+	case models.TableProductGroup:
+		{
+			groups, _ := s.dbModels.ProductGroup.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, group := range groups {
+				rawGroup, _ := json.Marshal(group)
+				rawJsonSlice = append(rawJsonSlice, rawGroup)
+			}
+
+			return s.marshalQueryResultList(models.TableProductGroup, &rawJsonSlice)
+		}
+
+	case models.TableProductVisibility:
+		{
+			visibilities, _ := s.dbModels.ProductVisibility.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, vis := range visibilities {
+				rawVis, _ := json.Marshal(vis)
+				rawJsonSlice = append(rawJsonSlice, rawVis)
+			}
+
+			return s.marshalQueryResultList(models.TableProductVisibility, &rawJsonSlice)
+		}
+
+	case models.TableUnit:
+		{
+			units, _ := s.dbModels.Unit.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, unit := range units {
+				rawUnit, _ := json.Marshal(unit)
+				rawJsonSlice = append(rawJsonSlice, rawUnit)
+			}
+
+			return s.marshalQueryResultList(models.TableUnit, &rawJsonSlice)
+		}
+
+	case models.TableVat:
+		{
+			vats, _ := s.dbModels.Vat.Get(query)
+			var rawJsonSlice []json.RawMessage
+			for _, vat := range vats {
+				rawVat, _ := json.Marshal(vat)
+				rawJsonSlice = append(rawJsonSlice, rawVat)
+			}
+
+			return s.marshalQueryResultList(models.TableVat, &rawJsonSlice)
+		}
 	}
 
 	return nil, &models.WsError{

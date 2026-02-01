@@ -14,11 +14,9 @@
   </div>
 
   <div class="navbar-menu" :class="{'is-active': burgerActive}">
-    <div class="navbar-start">
-
-      <a class="navbar-item" @click="generateTestData()">Generate Local Test Data</a>
-      <a class="navbar-item" @click="socket$.queryAccounts()">(Re)Request Accounts from DB/WS</a>
-      
+    <div class="navbar-start">    
+      <a class="navbar-item" @click="socket$.getAllFromDb()">Get Data from DB</a>
+      <a class="navbar-item" @click="socket$.addTestAccount()">Add new account</a>
     </div>
 
     <div class="navbar-end">
@@ -53,11 +51,6 @@ import { useSocketStore } from '../store/socketStore';
     methods: {
       toggleBurger(){
         this.burgerActive = !this.burgerActive;
-      },
-      generateTestData(){
-        this.account$.generateTestData();
-        this.category$.generateTestData();
-        this.product$.generateTestData();
       }
     }
   }

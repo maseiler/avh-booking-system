@@ -23,7 +23,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			if websocket.IsUnexpectedCloseError(err,
 				websocket.CloseGoingAway,
 				websocket.CloseAbnormalClosure) {
-				s.log.Error("WebSocket error: %v", err)
+				s.log.Error("WebSocket error: %v", err.Error())
 			}
 			break
 		}
