@@ -17,7 +17,7 @@
   <AccountSelector show="list" :all="true"></AccountSelector>
 </template>
 
-<script lasng="ts">
+<script lang="ts">
 import AccountSelector from '../../components/AccountSelector/AccountSelector.vue';
 import Button from '../../composables/elements/Button.vue';
 import Buttons from '../../composables/elements/Buttons.vue';

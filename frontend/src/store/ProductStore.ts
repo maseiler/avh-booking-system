@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Product, createProduct} from '../composables/product'
+import {Product} from '../composables/product'
 
 export const useProductStore = defineStore('product', {
     state: () => {
@@ -39,14 +39,14 @@ export const useProductStore = defineStore('product', {
         select(p: Product) {
             this.selected = p;
         },
-        byId(id: number | undefined): Product | undefined {
+        byId(id: number | undefined): Product | undefined{
             let foundProd = this.products.find((prod) => prod.id == id);
             return foundProd
         },
         patchProducts(newProducts: Product[]) {
             this.$patch(state => {
                 newProducts.forEach(newProd => {
-                    const newProdObject = createProduct(newProd);
+                    const newProdObject = new Product(newProd);
                     const existing = state.products.find(a => a.id === newProdObject.id);
                     if (existing) {
                         Object.assign(existing, newProdObject);

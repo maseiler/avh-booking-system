@@ -1,7 +1,7 @@
-import type {ProductGroup} from "./productGroup"
-import type {Unit} from "./unit"
-import type {Vat} from "./vat.ts";
-import type {Category} from "./category.ts";
+import {ProductGroup} from "./productGroup"
+import {Unit} from "./unit"
+import {Vat} from "./vat.ts";
+import {Category} from "./category.ts";
 import {useVatStore} from "../store/VatStore.ts";
 import {useProductGroupStore} from "../store/ProductGroupStore.ts";
 import {useUnitStore} from "../store/UnitStore.ts";
@@ -11,12 +11,16 @@ export interface Product {
     id?: number
     name: string
     price: number
-    vat: Vat
-    group: ProductGroup
+    vat: number
+    group: number
     size: number
-    unit: Unit
-    category: Category
+    unit: number
+    category: number
     createdAt: Date
+    getVat(): Vat
+    getGroup(): ProductGroup
+    getUnit(): Unit
+    getCategory(): Category
 }
 
 export class Product implements Product {
@@ -29,43 +33,38 @@ export class Product implements Product {
         this.size = prod.size;
         this.unit = prod.unit;
         this.category = prod.category;
-    }
-}
-
-export function createProduct(obj: any): Product {
-    const prod = {} as Product
-    prod.id = obj.id
-    prod.name = obj.name
-    prod.price = obj.price
-    let vat = useVatStore().getById(obj.vatId)
-    if (vat) {
-        prod.vat = vat
-    } else {
-        console.error("VAT not found")
-        // TODO handler error
-    }
-    let group = useProductGroupStore().byId(obj.productGroupId)
-    if (group)
-        prod.group = group
-    else {
-        console.error("Group not found")
-        // TODO handle error
-    }
-    prod.size = obj.size
-    let unit = useUnitStore().byId(obj.unitId)
-    if (unit)
-        prod.unit = unit
-    else {
-        console.error("Unit not found")
-        // TODO handle error
-    }
-    let cat = useCategoryStore().byId(obj.categoryId)
-    if (cat)
-        prod.category = cat
-    else {
-        console.error("Category not found")
-        // TODO handle error
+        this.vat = prod.vat;
     }
 
-    return prod
+    public getVat(): Vat | undefined{
+        return useVatStore().byId(this.vat);
+    }
+
+    public getGroup(): ProductGroup | undefined{
+        return useProductGroupStore().byId(this.group)
+    }
+
+    public getUnit(): Unit | undefined{
+        return useUnitStore().byId(this.unit)
+    }
+
+    public getCategory(): Category | undefined{
+        return useCategoryStore().byId(this.category)
+    }
+
+    public copy(): Product{
+        let newProduct = new Product(this);
+        return newProduct;
+    }
+
+    public update(reference: Product): Product{
+        this.id = reference.id;
+        this.name = reference.name;
+        this.price = reference.price;
+        this.group = reference.group;
+        this.size = reference.size;
+        this.unit = reference.unit;
+        this.category = reference.category;
+        return this;
+  }
 }

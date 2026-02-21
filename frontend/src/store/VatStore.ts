@@ -22,7 +22,7 @@ export const useVatStore = defineStore('vat', {
         patchVats(newVats: Vat[]) {
             this.$patch(state => {
                 newVats.forEach(newVat => {
-                    const newVatObj = new Vat(newVat);
+                    const newVatObj = new Vat(newVat as Vat);
                     const existing = state.vats.find(a => a.id === newVatObj.id);
                     if (existing) {
                         Object.assign(existing, newVatObj);

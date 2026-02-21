@@ -1,3 +1,6 @@
+import {Category} from "./category.ts";
+import {useCategoryStore} from "../store/CategoryStore.ts";
+
 export interface Account {
   id?: number
   firstName: string
@@ -10,6 +13,7 @@ export interface Account {
   category?: number
   enabled: boolean
   createdAt?: string
+  getCategory(): Category | undefined;
 }
 export class Account implements Account{
 
@@ -50,6 +54,7 @@ export class Account implements Account{
   }
 
   public jsonToClass(obj: any){
+    // remove?
     this.id = 'id' in obj ? obj.id : null;
     this.firstName = 'firstName' in obj ? obj.firstName : "";
     this.lastName = 'lastName' in obj ? obj.lastName : "";
@@ -69,6 +74,7 @@ export class Account implements Account{
   }
 
   public update(reference: Account): Account{
+    // Remove?
     this.firstName = reference.firstName;
     this.lastName = reference.lastName ;
     this.nickname = reference.nickname ;
@@ -79,4 +85,7 @@ export class Account implements Account{
     return this;
   }
   
+  public getCategory(): Category | undefined{
+    return useCategoryStore().byId(this.category)
+  }
 }

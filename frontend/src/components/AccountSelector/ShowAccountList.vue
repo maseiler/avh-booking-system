@@ -54,12 +54,12 @@
           <td class="has-text-right">{{ $n(account.balance / 100, 'currency', 'de-DE') }}</td>
           <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency', 'de-DE') }}</td>
           <td>
-            <button class="tag" :class="category$.byId(account.category) == undefined? 'is-skeleton' : ''">
-              <span class="icon"><icon :icon="category$.byId(account.category)?.icon" /></span>
-              <span>{{ category$.byId(account.category)?.title }}</span>
+            <button class="tag" :class="account.getCategory() == undefined? 'is-skeleton' : ''">
+              <span class="icon"><icon :icon="account.getCategory()?.icon" /></span>
+              <span>{{ account.getCategory()?.title }}</span>
             </button>  
           </td>
-          <td>{{ account.createdAt }}</td>
+          <td>{{ new Date(account.createdAt).toLocaleString() }}</td>
           <td v-show="hasEditAccountRights">
             <button class="button">
               <router-link :to="{ name: 'AccountSettingsSingle', params: { accountId: account.id } }">

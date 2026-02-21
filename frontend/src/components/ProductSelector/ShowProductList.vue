@@ -10,20 +10,22 @@
           <th>Category</th>
           <th>Group</th>
           <th>Visibility</th>
+          <th>Price</th>
+          <th>Vat</th>
           <th v-show="hasEditProductRights">Actions</th>
         </tr>
         <tr :class="product$.selected == product ? 'is-primary' : ''" v-for="product in products" @click="product$.select(product)">
           <td>{{ product.id }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.size }}</td>
-          <td>{{ product.unit.name }}</td>
+          <td>{{ product.getUnit()?.name }}</td>
           <td>
             <button class="tag">
-              <span class="icon"><icon :icon="category$.byId(product.category.id)?.icon" /></span>
-              <span>{{ category$.byId(product.category.id)?.title }}</span>
+              <span class="icon"><icon :icon="product.getCategory()?.icon" /></span>
+              <span>{{ category$.byId(product.getCategory()?.id)?.title }}</span>
             </button>            
           </td>
-          <td>{{ product.group.name }}</td>
+          <td>{{ product.getGroup()?.name }}</td>
           <td>
             <!--
             <button v-for="categoryNumber in product.visibility" class="tag">
@@ -35,6 +37,8 @@
             -->
             TODO
           </td>
+          <td>{{$n(product.price / 100, 'currency', 'de-DE')}}</td>
+          <td>{{product.getVat()?.rate}}%</td>
           <td v-show="hasEditProductRights">
             <button class="tag">
               <router-link :to="{ name: 'ProductSettingsSingle', params: { productId: product.id } }">

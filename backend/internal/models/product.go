@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -17,11 +18,11 @@ type Product struct {
 	Id             int              `json:"id" db:"product_id"`
 	Name           string           `json:"name" db:"name"`
 	Price          int              `json:"price" db:"price"`
-	VatId          int              `json:"vatId" db:"vat"`
-	ProductGroupId int              `json:"productGroupId" db:"product_group"`
+	VatId          int              `json:"vat" db:"vat"`
+	ProductGroupId int              `json:"productGroup" db:"product_group"`
 	Size           int              `json:"size" db:"size"`
-	UnitId         int              `json:"unitId" db:"unit"`
-	CategoryId     int              `json:"categoryId" db:"category"`
+	UnitId         int              `json:"unit" db:"unit"`
+	CategoryId     int              `json:"category" db:"category"`
 	CreatedAt      pgtype.Timestamp `json:"createdAt" db:"created_at"`
 }
 

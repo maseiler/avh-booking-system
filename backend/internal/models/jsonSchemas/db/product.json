@@ -17,7 +17,7 @@
       "type": "integer",
       "description": "The price"
     },
-    "vat_id": {
+    "vat": {
       "type": "integer",
       "description": "The ID of the VAT"
     },
@@ -29,11 +29,11 @@
       "type": "integer",
       "description": "The size"
     },
-    "unitId": {
+    "unit": {
       "type": "integer",
       "description": "The ID of the unit"
     },
-    "categoryId": {
+    "category": {
       "type": "integer",
       "description": "The ID of the category"
     },
@@ -45,11 +45,11 @@
   "required": [
     "name",
     "price",
-    "vat_id",
-    "productGroupId",
+    "vat",
+    "productGroup",
     "size",
-    "unitId",
-    "categoryId",
+    "unit",
+    "category",
     "createdAt"
   ],
   "additionalProperties": false
