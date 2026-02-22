@@ -78,71 +78,9 @@ app.use(pinia)
 app.mount('#app')
 
 
-/**
- * Communication between Websocket and Pinia Stores
- * Could be moved into the Stores by writing a subscribe method with this.$subscribe
- * this needs to be called from within the vue app context tho
- * so it could be in App.vue and called from the onMounted() function
- */
-import { useAccountStore } from './store/AccountStore.ts'
-import { useSocketStore } from './store/socketStore.ts'
-import { useProductVisibilityStore } from './store/ProductVisibilityStore.ts'
-const accountStore = useAccountStore();
-const socketStore = useSocketStore();
-const productVisibilityStore = useProductVisibilityStore();
+// import { useAccountStore } from './store/AccountStore.ts'
+// const accountStore = useAccountStore();
 
-accountStore.$subscribe((mutation, state) => {
-  console.log(mutation)
-  // Called when an Account is added in the Store
-  // if(mutation.storeId === "account" && mutation.events.type === "add" && mutation.events.key != "selected"){
-  //   const table = "account";
-  //   const operation = "insert";
-  //   const values = mutation.events.newValue;
-  //   let payload = {
-  //     "operation": operation,
-  //     "table": table,
-  //     "values": values
-  //   }
-  //   let msg = {type: "mutation", payload: payload};
-  //   socketStore.wsClient.send(msg)
-  // }
-
-  // Called when an Account gets Modified
-  // if(mutation.storeId === "account" && mutation.events.type === "set" && mutation.events.key != "accounts" && mutation.events.key != "selected"){
-  //   const table = "account";
-  //   const operation = "update";
-  //   const values = mutation.events.target;
-  //   const where = {"account_id": mutation.events.target.id.toString()};
-  //   let payload = {
-  //     "operation": operation,
-  //     "table": table,
-  //     "where": where,
-  //     "values": values
-  //   }
-  //   let msg = {type: "mutation", payload: payload};
-  //   socketStore.wsClient.send(JSON.stringify(msg));
-  // }
-
-
-})
-
-
-// productVisibilityStore.$subscribe((mutation, state) => {
-//   console.log("mutation: ", mutation)
-
-//   // Called when a visibility gets modified
-//   if(mutation.storeId === "product_visibility" && mutation.events.type === "set" ){
-//     const table = "product_visibility";
-//     const operation = "update";
-//     const values = mutation.events.target;
-//     const where = {"account_id": mutation.events.target.id.toString()};
-//     let payload = {
-//       "operation": operation,
-//       "table": table,
-//       "where": where,
-//       "values": values
-//     }
-//     let msg = {type: "mutation", payload: payload};
-//     // socketStore.wsClient.send(JSON.stringify(msg));
-//   }
-// })
+// accountStore.$subscribe((mutation, state) => {
+//   console.log(mutation)
+// }

@@ -80,6 +80,7 @@
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="account.category">
+            <option value="0">All</option>
             <option v-for="category in category$.accountCategories" :value="category.id" class="has-icons-left">
               {{ category.title }}
             </option>
@@ -104,6 +105,22 @@
     </div>
   </div>
 
+  <hr class="divider"></hr>
+  <div class="columns">
+    <div class="column is-3">Show Advanced Settings</div>
+    <div class="column">
+      <ToggleSwitch v-model="showAdvanced"> </ToggleSwitch>
+    </div>
+  </div>
+
+  <div class="columns" v-if="showAdvanced">
+    <div class="column is-3" title="Useful if you want an account to show up in one category, but it should not be restricted by the categories visibilities.">Always show all Products</div>
+    <div class="column" >
+      <ToggleSwitch>Not yet implemented</ToggleSwitch>
+    </div>
+  </div>
+
+  <hr class="divider" v-if="showAdvanced"></hr>
   <div class="columns">
     <div class="column is-3"></div>
     <div class="column">
@@ -128,6 +145,7 @@ import { Account } from '../../composables/account';
 import Buttons from '../../composables/elements/Buttons.vue';
 import Button from '../../composables/elements/Button.vue';
 import { useSocketStore } from '../../store/socketStore';
+import ToggleSwitch from '../../composables/elements/ToggleSwitch.vue';
 
 export default {
   data() {
@@ -137,6 +155,7 @@ export default {
       socket$: useSocketStore(),
       account: {} as Account,
       doneMounting: false,
+      showAdvanced: false
     }
   },
   mounted() {
@@ -150,7 +169,8 @@ export default {
   },
   components: {
     Buttons,
-    Button
+    Button,
+    ToggleSwitch
   },
   computed: {
     categoryIcon(){

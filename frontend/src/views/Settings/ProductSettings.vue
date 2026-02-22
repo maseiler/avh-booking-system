@@ -22,6 +22,7 @@
 import ProductSelector from '../../components/ProductSelector/ProductSelector.vue';
 import Button from '../../composables/elements/Button.vue';
 import Buttons from '../../composables/elements/Buttons.vue';
+import { useAccountStore } from '../../store/AccountStore';
 
 export default {
   data() {
@@ -33,6 +34,9 @@ export default {
     ProductSelector,
     Buttons,
     Button
-  }
+  },
+  mounted() {
+      useAccountStore().selected = [];
+  },
 }
 </script>

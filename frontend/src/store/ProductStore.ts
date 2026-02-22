@@ -20,6 +20,7 @@ export const useProductStore = defineStore('product', {
 
             const visibleProducts = currentCategoryProducts.filter((prod) => {
                 if (useAccountStore().selected.length == 0) {return true}
+                // ToDo Show all Products for Accounts that have the corresponding Flag in their Account Options
                 let visibilities = useProductVisibilityStore().byProductId(prod.id)
                 let retVal = false;
                 visibilities.forEach((visi) => {

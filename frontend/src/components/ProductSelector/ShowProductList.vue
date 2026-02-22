@@ -22,20 +22,16 @@
           <td>
             <button class="tag">
               <span class="icon"><icon :icon="product.getCategory()?.icon" /></span>
-              <span>{{ category$.byId(product.getCategory()?.id)?.title }}</span>
+              <span>{{ product.getCategory()?.title }}</span>
             </button>            
           </td>
           <td>{{ product.getGroup()?.name }}</td>
           <td>
-            <!--
-            <button v-for="categoryNumber in product.visibility" class="tag">
-              <span class="icon"><icon :icon="category$.byId(categoryNumber)?.icon"/></span>
-              <span>{{ category$.byId(categoryNumber)?.title }}</span>
+            
+            <button v-for="visibility in visibility$.byProductId(product.id)" class="tag">
+              <span class="icon"><icon :icon="visibility.getCategory()?.icon"/></span>
+              <span>{{ visibility.getCategory()?.title }}</span>
             </button>
-
-            TODO use ProductVisibility (TBD)
-            -->
-            TODO
           </td>
           <td>{{$n(product.price / 100, 'currency', 'de-DE')}}</td>
           <td>{{product.getVat()?.rate}}%</td>
@@ -64,14 +60,14 @@
 <script lang="ts">
 import type { Product } from '../../composables/product';
 import { useProductStore } from '../../store/ProductStore';
-import { useCategoryStore } from '../../store/CategoryStore';
+import { useProductVisibilityStore } from '../../store/ProductVisibilityStore';
 import type { PropType } from 'vue';
 
 export default {
   data(){
     return {
       product$: useProductStore(),
-      category$: useCategoryStore(),
+      visibility$: useProductVisibilityStore(),
       dev: false
     }
   },
