@@ -9,6 +9,7 @@
 <script lang="ts">
     import MainNavigation from './components/MainNavigation.vue';
   import DevModeBar from './components/DevModeBar.vue';
+  import { useSocketStore } from './store/socketStore';
   
   export default {
     components: {
@@ -17,11 +18,13 @@
     },
     data() {
       return {
-        dev: false
+        dev: false,
+        socket$: useSocketStore(),
       }
     },
     mounted() {
         this.dev = import.meta.env.DEV;
+        this.socket$.getAllFromDb();
     }
   }
 </script>

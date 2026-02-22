@@ -1,4 +1,5 @@
 <template>
+  <h1 class="title">Product Settings</h1>
     <Buttons :addons="true">
     <Button
       icon-position="left"

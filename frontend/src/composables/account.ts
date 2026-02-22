@@ -53,37 +53,37 @@ export class Account implements Account{
     );
   }
 
-  public jsonToClass(obj: any){
-    // remove?
-    this.id = 'id' in obj ? obj.id : null;
-    this.firstName = 'firstName' in obj ? obj.firstName : "";
-    this.lastName = 'lastName' in obj ? obj.lastName : "";
-    this.nickname = 'nickname' in obj ? obj.nickname : "";
-    this.email = 'email' in obj ? obj.email : "";
-    this.phone = 'phone' in obj ? obj.phone : "";
-    this.balance = 'balance' in obj ? obj.balance : 0;
-    this.maxDebt = 'maxDebt' in obj ? obj.maxDebt : 0;
-    this.category = 'category' in obj ? obj.category : 0;
-    this.enabled = 'enabled' in obj ? obj.enabled : false;
-    this.createdAt = 'createdAt' in obj ? obj.createdAt : null;
-  }
+  // public jsonToClass(obj: any){
+  //   // remove?
+  //   this.id = 'id' in obj ? obj.id : null;
+  //   this.firstName = 'firstName' in obj ? obj.firstName : "";
+  //   this.lastName = 'lastName' in obj ? obj.lastName : "";
+  //   this.nickname = 'nickname' in obj ? obj.nickname : "";
+  //   this.email = 'email' in obj ? obj.email : "";
+  //   this.phone = 'phone' in obj ? obj.phone : "";
+  //   this.balance = 'balance' in obj ? obj.balance : 0;
+  //   this.maxDebt = 'maxDebt' in obj ? obj.maxDebt : 0;
+  //   this.category = 'category' in obj ? obj.category : 0;
+  //   this.enabled = 'enabled' in obj ? obj.enabled : false;
+  //   this.createdAt = 'createdAt' in obj ? obj.createdAt : null;
+  // }
 
   public copy(): Account{
     let newAccount = new Account(this);
     return newAccount;
   }
 
-  public update(reference: Account): Account{
-    // Remove?
-    this.firstName = reference.firstName;
-    this.lastName = reference.lastName ;
-    this.nickname = reference.nickname ;
-    this.email = reference.email ;
-    this.phone = reference.phone ;
-    this.maxDebt = reference.maxDebt ;
-    this.category = reference.category ;
-    return this;
-  }
+  // public update(reference: Account): Account{
+  //   // Remove?
+  //   this.firstName = reference.firstName;
+  //   this.lastName = reference.lastName ;
+  //   this.nickname = reference.nickname ;
+  //   this.email = reference.email ;
+  //   this.phone = reference.phone ;
+  //   this.maxDebt = reference.maxDebt ;
+  //   this.category = reference.category ;
+  //   return this;
+  // }
   
   public getCategory(): Category | undefined{
     return useCategoryStore().byId(this.category)

@@ -1,5 +1,7 @@
 import {defineStore} from 'pinia'
 import {Product} from '../composables/product'
+import { useProductVisibilityStore } from './ProductVisibilityStore'
+import { useAccountStore } from './AccountStore'
 
 export const useProductStore = defineStore('product', {
     state: () => {
@@ -10,25 +12,28 @@ export const useProductStore = defineStore('product', {
     },
     actions: {
         getByCategory(categoryId: number, selectedAccountCategorys: number[]): Product[] {
-            /*
-            let visibleProducts = this.products.filter((prod) => {
-                // Union of all Products / User Categorys
-                // return prod.visibility.some(cat => selectedAccountCategorys.includes(cat))
-
-                // Intersection
-                let intersection = selectedAccountCategorys.filter(aCat => prod.visibility.includes(aCat));
-                return JSON.stringify(intersection.sort()) == JSON.stringify(selectedAccountCategorys.sort());
+            const currentCategoryProducts = this.products.filter((prod) => {
+                // ToDo Hide Products that are not available at this location
+                if (categoryId == 0) {return true}
+                return prod.category == categoryId 
             });
 
-            const currentCategoryProducts = visibleProducts.filter((prod) => prod.category.id == categoryId);
+            const visibleProducts = currentCategoryProducts.filter((prod) => {
+                if (useAccountStore().selected.length == 0) {return true}
+                let visibilities = useProductVisibilityStore().byProductId(prod.id)
+                let retVal = false;
+                visibilities.forEach((visi) => {
+                    if (selectedAccountCategorys.includes(visi.category)) { 
+                        retVal = true;
+                        return
+                    } 
+                })
+                return retVal;
+            })
 
-            if (categoryId == 0) {
-                return visibleProducts;
-            }
-            return currentCategoryProducts;
-             */
-            // TODO use class ProductVisibility (TBD)
-            return this.products
+            return visibleProducts.sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
         },
         getBySearchAndCategory(searchString: string, categoryId: number, selectedAccountCategorys: number[]): Product[] {
             let search = searchString.toLowerCase();

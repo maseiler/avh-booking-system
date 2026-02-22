@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -14,9 +15,9 @@ import (
 // to which categories at which locations.
 type ProductVisibility struct {
 	Id         int `json:"id" db:"product_visibility_id"`
-	CategoryId int `json:"categoryId" db:"category"`
-	LocationId int `json:"locationId" db:"location"`
-	ProductId  int `json:"productId" db:"product"`
+	CategoryId int `json:"category" db:"category"`
+	LocationId int `json:"location" db:"location"`
+	ProductId  int `json:"product" db:"product"`
 }
 
 // ProductVisibilityModel provides database operations for ProductVisibility entities.
@@ -92,6 +93,19 @@ func (m *ProductVisibilityModel) Insert(visibility ProductVisibility) (int, erro
         VALUES ($1, $2, $3)
         RETURNING product_visibility_id`
 	err := m.DB.QueryRow(ctx, query, visibility.CategoryId, visibility.LocationId, visibility.ProductId).Scan(&id)
+
+	return id, err
+}
+
+// Delete an existing visibility in the database.
+func (m *ProductVisibilityModel) Delete(id int) (int, error) {
+	ctx := context.Background()
+	query := `
+        DELETE FROM product_visibility 
+        WHERE product_visibility_id = $1
+				RETURNING $1;
+				`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
 
 	return id, err
 }

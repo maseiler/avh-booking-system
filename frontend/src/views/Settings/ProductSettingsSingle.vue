@@ -59,11 +59,11 @@
     <div class="column is-3">
       Price:
     </div>
-    <div class="column has-icons-left">
+    <div class="column has-icons-left" v-if="doneMounting">
       <p class="control has-icons-left">
-        <input type="number" class="input no-controls" v-model="product.price">
+        <input type="number" class="input no-controls" v-model="price">
         <span class="icon is-small is-left">
-            <icon :icon="['fas', 'usd']" />
+            <icon :icon="['fas', 'coins']" />
         </span>
       </p>
     </div>
@@ -89,21 +89,24 @@
     </div>
   </div>
 
-  <div class="columns" v-if="doneMounting">
-    <div class="column is-3">Visibility:</div>
-    <div class="column">
-      TODO
-      <!--
+  <div class="columns" v-if="doneMounting && isEdit">
+    <div class="column is-3">Category Visibility:</div>
+    <div class="column">     
       <div class="buttons">
-        <label class="checkbox button has-icons-right" v-for="category in category$.accountCategories">
-          <input type="checkbox" :checked="product.visibility.includes(category.id)" @change="updateProductVisibility(category.id)"/>
+        <label class="checkbox button has-icons-right has-icons-left" v-for="category in category$.accountCategories" :class="visibility$.categoryIsVisible(category.id, product.id) ? '' : 'not-visible'">
+          <!-- :checked="visibility.includes(category.id)" -->
+          <div class="icon is-small is-left">
+            <icon :icon="['fas', 'eye']" v-if="visibility$.categoryIsVisible(category.id, product.id)"/>
+            <icon :icon="['fas', 'eye-slash']" v-if="!visibility$.categoryIsVisible(category.id, product.id)"/>
+          </div> 
+          <input type="checkbox" :checked="visibility$.categoryIsVisible(category.id, product.id)" @change="visibility$.toggleCategoryVisibility(category.id, product.id)" style="visibility:hidden; width:0;"/>
           <span>{{ category.title }}</span>
           <div class="icon is-small is-right">
             <icon :icon="category.icon" />
           </div>
         </label>
       </div>
-      -->
+     
     </div>
   </div>
 
@@ -127,6 +130,7 @@
 import { Product } from '../../composables/product';
 import { useProductStore } from '../../store/ProductStore';
 import { useCategoryStore } from '../../store/CategoryStore';
+import { useProductVisibilityStore } from '../../store/ProductVisibilityStore.ts';
 import {useUnitStore} from "../../store/UnitStore.ts";
 import Buttons from '../../composables/elements/Buttons.vue';
 import Button from '../../composables/elements/Button.vue';
@@ -138,6 +142,7 @@ export default {
     return {
       product$: useProductStore(),
       category$: useCategoryStore(),
+      visibility$: useProductVisibilityStore(),
       unit$: useUnitStore(),
       socket$: useSocketStore(),
       vat$: useVatStore(),
@@ -165,16 +170,16 @@ export default {
     isEdit(){
       return this.$route.params.productId?.toString().length > 0;
     },
+    price: {
+      get() {
+        return this.product.price / 100;
+      },
+      set(newValue: number) {
+        this.product.price = newValue * 100;
+      }
+    }
   },
   methods: {
-    // updateProductVisibility(id: number){
-    //   if (this.productVisibility.includes(id)){
-    //     this.product.visibility = this.product.visibility.filter((visId) => visId != id)
-    //     return
-    //   }
-    //   this.product.visibility.push(id)
-    //   this.product.visibility.sort()
-    // },
     actionButtonClicked(){
       if(this.isEdit){
         // Update current User
@@ -201,5 +206,8 @@ export default {
 .no-controls::-webkit-inner-spin-button{
   -webkit-appearance: none;
   margin:0;
+}
+.not-visible{
+  opacity:0.6;
 }
 </style>

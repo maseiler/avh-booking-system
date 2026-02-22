@@ -3,9 +3,11 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/av-huette/avh-booking-system/internal/models"
 	"log/slog"
+	"strconv"
 	"time"
+
+	"github.com/av-huette/avh-booking-system/internal/models"
 )
 
 func (s *Service) processPing(message models.Message) ([]byte, *models.WsError) {
@@ -166,6 +168,20 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 
 				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
 				return b, newId, wsErr
+
+			case models.TableProductVisibility:
+				visibility, wsErr := unmarshalInterface[models.ProductVisibility](mutation.Values)
+				if wsErr != nil {
+					return nil, 0, wsErr
+				}
+
+				newId, err := s.dbModels.ProductVisibility.Insert(*visibility)
+				if err != nil {
+					return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create product visibility"}
+				}
+
+				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
+				return b, newId, wsErr
 			}
 
 			return nil, 0, &models.WsError{
@@ -192,9 +208,50 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 
 	case models.OpDelete:
 		{
-			return nil, 0, &models.WsError{Code: models.WsInvalidOperation,
-				Message: "Invalid operation",
-				Details: "Deletion of accounts is not supported"}
+			switch mutation.Table {
+			case models.TableAccount:
+				{
+					return nil, 0, &models.WsError{Code: models.WsInvalidOperation,
+						Message: "Invalid operation",
+						Details: "Deletion of accounts is not supported"}
+				}
+
+			case models.TableProductVisibility:
+				{
+					idStr, ok := mutation.Where["product_visibility_id"]
+					if !ok {
+						return nil, 0, &models.WsError{
+							Code:    models.WsBadJson,
+							Message: "Missing product_visibility_id in where clause",
+							Details: "Delete requires product_visibility_id",
+						}
+					}
+
+					id, err := strconv.Atoi(idStr)
+					if err != nil {
+						return nil, 0, &models.WsError{
+							Code:    models.WsBadJson,
+							Message: err.Error(),
+							Details: "product_visibility_id must be an integer",
+						}
+					}
+
+					oldId, err := s.dbModels.ProductVisibility.Delete(id)
+					if err != nil {
+						return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not delete visibility"}
+					}
+
+					b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, oldId)
+					return b, oldId, wsErr
+
+				}
+			}
+
+			return nil, 0, &models.WsError{
+				Code:    models.WsInvalidTable,
+				Message: "Invalid table",
+				Details: "Could not process delete for table " + string(mutation.Table),
+			}
 		}
 	}
 
@@ -219,6 +276,20 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 			return nil, wsErr
 		}
 		data, _ = json.Marshal(account)
+
+	case models.TableProductVisibility:
+		query := models.Query{
+			Table: models.TableProductVisibility,
+		}
+		visibilities, err := s.dbModels.ProductVisibility.Get(&query)
+		if err != nil {
+			return nil, &models.WsError{
+				Code:    models.WsDbQueryError,
+				Message: err.Error(),
+				Details: "Could not reload product visibilities after delete",
+			}
+		}
+		data, _ = json.Marshal(visibilities)
 	}
 
 	message, wsErr := s.marshalBroadcastWithPayload(mutation.Table, data)

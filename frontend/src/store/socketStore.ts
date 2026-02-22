@@ -3,6 +3,7 @@ import {type Notification} from "../composables/notification";
 import {WebSocketClient} from "../api/webSocketClient";
 import type {Account} from "../composables/account";
 import type { Product } from "../composables/product";
+import type { ProductVisibility } from "../composables/productVisibility";
 
 export const useSocketStore = defineStore("notificationStore", {
     state: () => ({
@@ -30,29 +31,6 @@ export const useSocketStore = defineStore("notificationStore", {
             }
             this.wsClient.send({type: "query", payload: payload})
         },
-        addTestAccount() {
-            let now = Date.now();
-            let newAccount = {
-                "id": 0,
-                "firstName": "Darude",
-                "nickname": now.toString(),
-                "lastName": "Sandstorm",
-                "email": "ohsofunny@troll.lol",
-                "phone": "12345678",
-                "balance": 0,
-                "maxDebt": 99,
-                "category": 1,
-                "enabled": true,
-                "createdAt": new Date(now).toISOString()
-            }
-            let payload = {
-                "operation": "insert",
-                "table": "account",
-                "values": newAccount
-            }
-            let msg = {type: "mutation", payload: payload}
-            this.wsClient.send(msg)
-        },
         addAccount(newAccount: Account) {
             let payload = {
                 "operation": "insert",
@@ -62,7 +40,42 @@ export const useSocketStore = defineStore("notificationStore", {
             let msg = {type: "mutation", payload: payload}
             //console.debug(msg)
             this.wsClient.send(msg)
-        }, addProduct(newProduct: Product) {
+        },
+        updateAccount(refAccount: Account){
+            const table = "account";
+            const operation = "update";
+            const values = refAccount;
+            const where = {"account_id": refAccount.id?.toString()};
+            let payload = {
+                "operation": operation,
+                "table": table,
+                "where": where,
+                "values": values
+            }
+            let msg = {type: "mutation", payload: payload};
+            this.wsClient.send(JSON.stringify(msg));
+        },
+        addVisibility(newVisibility: ProductVisibility) {
+            let payload = {
+                "operation": "insert",
+                "table": "product_visibility",
+                "values": newVisibility
+            }
+            let msg = {type: "mutation", payload: payload}
+            //console.debug(msg)
+            this.wsClient.send(msg)
+        },
+        removeVisibility(visId: number){
+            let payload = {
+                "operation": "delete",
+                "table": "product_visibility",
+                "where": {"product_visibility_id": visId.toString()} 
+            }
+            let msg = {type: "mutation", payload: payload}
+            //console.debug(msg)
+            this.wsClient.send(msg)
+        },
+        addProduct(newProduct: Product) {
             let payload = {
                 "operation": "insert",
                 "table": "product",

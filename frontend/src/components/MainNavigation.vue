@@ -38,7 +38,7 @@
 
         <div class="navbar-dropdown">
           <router-link to="/settings/products" class="navbar-item" @click="burgerActive = false">Wareneinstellungen</router-link>
-          <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">Benutzereinstellungen</router-link>
+          <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">Accounteinstellungen</router-link>
           <router-link to="/settings/payments" class="navbar-item" @click="burgerActive = false">Zahlungseinstellungen</router-link>
           <a class="navbar-item" @click="burgerActive = false">Systemeinstellungen</a>
         </div>

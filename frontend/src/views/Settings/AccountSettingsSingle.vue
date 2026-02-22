@@ -175,7 +175,8 @@ export default {
     actionButtonClicked(){
       if(this.isEdit){
         // Update current User
-        this.account$.byId(parseInt(this.$route.params.accountId.toString()))?.update(this.account);
+        // this.account$.byId(parseInt(this.$route.params.accountId.toString()))?.update(this.account);
+        this.socket$.updateAccount(this.account);
         this.$router.push({name:'AccountSettings'});
         return;
       }

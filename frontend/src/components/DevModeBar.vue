@@ -16,7 +16,6 @@
   <div class="navbar-menu" :class="{'is-active': burgerActive}">
     <div class="navbar-start">    
       <a class="navbar-item" @click="socket$.getAllFromDb()">Get Data from DB</a>
-      <a class="navbar-item" @click="socket$.addTestAccount()">Add new account</a>
     </div>
 
     <div class="navbar-end">
