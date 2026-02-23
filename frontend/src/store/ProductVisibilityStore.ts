@@ -19,14 +19,14 @@ export const useProductVisibilityStore = defineStore('product_visibility', {
         },
         byProductId(id: number){
             let foundVis = this.visibilities.filter((vis) => {
-                return vis.product == id;
+                return vis.productId == id;
             })
             return foundVis;
         },
         categoryIsVisible(categoryId: number, productId: number): boolean{
             let returnValue = false;
             this.byProductId(productId).forEach((vis) => {
-                if(vis.category == categoryId) {
+                if(vis.categoryId == categoryId) {
                     returnValue = true;
                 }
             })
@@ -34,13 +34,13 @@ export const useProductVisibilityStore = defineStore('product_visibility', {
         },
         toggleCategoryVisibility(categoryId: number, productId: number){
             let productVis = this.byProductId(productId);
-            let categoryVis = productVis.filter((vis) => { return vis.category == categoryId});
+            let categoryVis = productVis.filter((vis) => { return vis.categoryId == categoryId});
             if(categoryVis.length > 0) {
                 // this.visibilities = this.visibilities.filter((vis) => { return vis != categoryVis[0]});
                 useSocketStore().removeVisibility(categoryVis[0].id);
                 return
             }
-            let newVis = {'category': categoryId, 'product': productId, 'location': 1} as ProductVisibility;
+            let newVis = {'categoryId': categoryId, 'productId': productId, 'locationId': 1} as ProductVisibility;
             useSocketStore().addVisibility(newVis);
         },
         patchVisibilities(newVisibilities: ProductVisibility[]) {

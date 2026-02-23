@@ -75,8 +75,18 @@ func (s *Service) marshalResultMutation(table models.TableName, operation models
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalBroadcastWithPayload(table models.TableName, data []byte) ([]byte, *models.WsError) {
+func (s *Service) marshalBroadcastQueryResult(table models.TableName, data json.RawMessage) ([]byte, *models.WsError) {
 	res := models.QueryResult{Table: table, Data: data}
+	msg := models.Message{
+		Type:    models.MsgTypeBroadcast,
+		Payload: res,
+	}
+
+	return s.marshalAndValidateMessage(&msg)
+}
+
+func (s *Service) marshalBroadcastQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
+	res := models.QueryResultList{Table: table, Data: *data}
 	msg := models.Message{
 		Type:    models.MsgTypeBroadcast,
 		Payload: res,

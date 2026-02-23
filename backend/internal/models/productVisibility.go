@@ -15,9 +15,9 @@ import (
 // to which categories at which locations.
 type ProductVisibility struct {
 	Id         int `json:"id" db:"product_visibility_id"`
-	CategoryId int `json:"category" db:"category"`
-	LocationId int `json:"location" db:"location"`
-	ProductId  int `json:"product" db:"product"`
+	CategoryId int `json:"categoryId" db:"category"`
+	LocationId int `json:"locationId" db:"location"`
+	ProductId  int `json:"productId" db:"product"`
 }
 
 // ProductVisibilityModel provides database operations for ProductVisibility entities.
