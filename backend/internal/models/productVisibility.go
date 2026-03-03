@@ -40,7 +40,7 @@ func CreateProductVisibility(category int, location int, product int) ProductVis
 // Returns an error if the query execution fails or if row collection encounters an issue.
 func (m *ProductVisibilityModel) Get(query *Query) ([]ProductVisibility, error) {
 	ctx := context.Background()
-	stmt := query.SqlStatement()
+	stmt := buildSelectSQL(query)
 	rows, err := m.DB.Query(ctx, stmt)
 
 	if err != nil {

@@ -40,7 +40,7 @@ func CreateCategory(name string, icon string, type_ string) Category {
 // Returns an error if the query execution fails or if row collection encounters an issue.
 func (m *CategoryModel) Get(query *Query) ([]Category, error) {
 	ctx := context.Background()
-	stmt := query.SqlStatement()
+	stmt := buildSelectSQL(query)
 	rows, err := m.DB.Query(ctx, stmt)
 
 	if err != nil {

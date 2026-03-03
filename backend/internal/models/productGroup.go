@@ -39,7 +39,7 @@ func CreateProductGroup(name string, parentId int) ProductGroup {
 // Returns an error if the query execution fails or if row collection encounters an issue.
 func (m *ProductGroupModel) Get(query *Query) ([]ProductGroup, error) {
 	ctx := context.Background()
-	stmt := query.SqlStatement()
+	stmt := buildSelectSQL(query)
 	// pgx will panic when it tries to assign null to int as might be the case for the parent field. COALESCE in the SQL select statement will replace null values with 0.
 	stmt = strings.Replace(stmt, "SELECT *", "SELECT product_group_id, name, COALESCE(parent, 0) AS parent", 1)
 	rows, err := m.DB.Query(ctx, stmt)
