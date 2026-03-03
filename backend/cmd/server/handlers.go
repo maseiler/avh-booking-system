@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/av-huette/avh-booking-system/internal/validation"
+	"github.com/av-huette/avh-booking-system/internal/ws"
 	"github.com/gorilla/websocket"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -57,7 +57,7 @@ var upgrader = websocket.Upgrader{
 func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		app.log.Warn("Upgrade error: %v", err.Error())
+		app.log.Warn("Upgrade error", slog.String("error", err.Error()))
 		return
 	}
 
@@ -67,12 +67,11 @@ func (app *application) HandleConnections(w http.ResponseWriter, r *http.Request
 		clientID = generateID()
 	}
 
-	client := &models.Client{
-		ID:        clientID,
-		Conn:      conn,
-		Send:      make(chan []byte, 256),
-		Hub:       app.WsHandler.Service.Hub(),
-		Validator: validation.NewWebSocketValidator(),
+	client := &ws.Client{
+		ID:   clientID,
+		Conn: conn,
+		Send: make(chan []byte, 256),
+		Hub:  app.WsHandler.Service.Hub(),
 	}
 
 	client.Hub.Register <- client

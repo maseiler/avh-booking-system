@@ -7,10 +7,10 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/models"
 )
 
-func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
+func unmarshalInterface[T any](payload interface{}) (*T, *WsError) {
 	if payload == nil {
-		return nil, &models.WsError{
-			Code:    models.WsBadInterface,
+		return nil, &WsError{
+			Code:    WsBadInterface,
 			Message: "Payload is nil",
 		}
 	}
@@ -19,8 +19,8 @@ func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
 	var b []byte
 	var err error
 	if b, err = json.Marshal(payload); err != nil {
-		return nil, &models.WsError{
-			Code:    models.WsBadInterface,
+		return nil, &WsError{
+			Code:    WsBadInterface,
 			Message: err.Error(),
 			Details: "Could not marshal interface",
 		}
@@ -29,8 +29,8 @@ func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
 	// Convert JSON bytes to target type T
 	var result T
 	if err := json.Unmarshal(b, &result); err != nil {
-		return nil, &models.WsError{
-			Code:    models.WsBadJson,
+		return nil, &WsError{
+			Code:    WsBadJson,
 			Message: err.Error(),
 			Details: "Could not unmarshal to type " + reflect.TypeOf(result).Name(),
 		}
@@ -39,56 +39,46 @@ func unmarshalInterface[T any](payload interface{}) (*T, *models.WsError) {
 	return &result, nil
 }
 
-func (s *Service) marshalAndValidateMessage(message *models.Message) ([]byte, *models.WsError) {
+func (s *Service) marshalAndValidateMessage(message *Message) ([]byte, *WsError) {
 	// Marshall message
 	b, err := json.Marshal(message)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Could not marshal message"}
+		return nil, &WsError{Code: WsBadInterface, Message: err.Error(), Details: "Could not marshal message"}
 	}
 
 	// Validate message
 	err = s.validator.ValidateMessage(b)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 	}
 
 	return b, nil
 }
 
-func (s *Service) marshalQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
+func (s *Service) marshalQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
 	res := models.QueryResultList{Table: table, Data: *data}
-	msg := models.Message{
-		Type:    models.MsgTypeQueryResultList,
+	msg := Message{
+		Type:    MsgTypeQueryResultList,
 		Payload: res,
 	}
 
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalResultMutation(table models.TableName, operation models.Operation, id int) ([]byte, *models.WsError) {
+func (s *Service) marshalResultMutation(table models.TableName, operation models.Operation, id int) ([]byte, *WsError) {
 	res := models.ResultMutation{Table: table, Operation: operation, Id: id}
-	msg := models.Message{
-		Type:    models.MsgTypeMutationResult,
+	msg := Message{
+		Type:    MsgTypeMutationResult,
 		Payload: res,
 	}
 
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalBroadcastQueryResult(table models.TableName, data json.RawMessage) ([]byte, *models.WsError) {
+func (s *Service) marshalBroadcastWithPayload(table models.TableName, data []byte) ([]byte, *WsError) {
 	res := models.QueryResult{Table: table, Data: data}
-	msg := models.Message{
-		Type:    models.MsgTypeBroadcast,
-		Payload: res,
-	}
-
-	return s.marshalAndValidateMessage(&msg)
-}
-
-func (s *Service) marshalBroadcastQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *models.WsError) {
-	res := models.QueryResultList{Table: table, Data: *data}
-	msg := models.Message{
-		Type:    models.MsgTypeBroadcast,
+	msg := Message{
+		Type:    MsgTypeBroadcast,
 		Payload: res,
 	}
 
