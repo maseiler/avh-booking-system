@@ -6,12 +6,16 @@ import path from 'path'
 export default defineConfig({
   plugins: [vue()],
   server: {
-    host: true
+    host: true,
+    fs: {
+      allow: ['..'],
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
       '~': path.resolve(__dirname, './node_modules/'),
+      '@schemas': path.resolve(__dirname, '../schemas'),
     }
   },
   css: {

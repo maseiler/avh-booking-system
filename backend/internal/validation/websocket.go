@@ -25,14 +25,15 @@ type WebSocketValidator struct {
 	schemas *jsonSchemas
 }
 
-// NewWebSocketValidator creates a new validator instance
-func NewWebSocketValidator() *WebSocketValidator {
+// NewWebSocketValidator creates a new validator instance. schemasPath is the
+// directory containing the JSON schemas.
+func NewWebSocketValidator(schemasPath string) *WebSocketValidator {
 	jsonCompiler := jsonschema.NewCompiler()
 	jsonCompiler.DefaultDraft(jsonschema.Draft7)
 
 	schemas = &jsonSchemas{}
 
-	const schemaDir = "internal/models/jsonSchemas/"
+	schemaDir := schemasPath + "/"
 
 	var err error
 	schemas.message, err = jsonCompiler.Compile(schemaDir + "message.json")

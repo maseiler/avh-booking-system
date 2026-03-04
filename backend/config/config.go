@@ -16,6 +16,7 @@ type AppConfig struct {
 	LogLevel     slog.Level
 	HttpPort     int
 	FrontendPath string
+	SchemasPath  string
 }
 
 type DbConfig struct {
@@ -37,6 +38,7 @@ func LoadConfig() *AppConfig {
 	conf.LogLevel = getLogLevel("AVHBS_LOG_LEVEL", slog.LevelInfo)
 	conf.HttpPort = getInt("AVHBS_HTTP_PORT", DefaultHTTPPort)
 	conf.FrontendPath = getString("AVHBS_FRONTEND_PATH", "")
+	conf.SchemasPath = getString("AVHBS_SCHEMAS_PATH", "../schemas")
 
 	return conf
 }

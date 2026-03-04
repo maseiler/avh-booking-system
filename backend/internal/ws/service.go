@@ -13,7 +13,7 @@ type Service struct {
 	stores    Stores
 }
 
-func NewService(stores Stores, log *slog.Logger) *Service {
+func NewService(stores Stores, log *slog.Logger, schemasPath string) *Service {
 	hub := &Hub{
 		Log:        log,
 		Clients:    make(map[*Client]bool),
@@ -27,7 +27,7 @@ func NewService(stores Stores, log *slog.Logger) *Service {
 	return &Service{
 		log:       log,
 		hub:       hub,
-		validator: validation.NewWebSocketValidator(),
+		validator: validation.NewWebSocketValidator(schemasPath),
 		stores:    stores,
 	}
 }
