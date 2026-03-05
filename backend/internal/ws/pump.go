@@ -33,6 +33,7 @@ func (s *Service) ReadPump(c *Client) {
 		if err != nil {
 			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 			s.sendError(c, wsErr)
+			continue
 		}
 
 		// Unmarshal message

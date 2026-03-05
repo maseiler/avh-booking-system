@@ -44,100 +44,100 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 
 	switch query.Table {
 	case models.TableAccount:
-		{
-			accounts, _ := s.stores.Account.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, account := range accounts {
-				rawAccount, _ := json.Marshal(account)
-				rawJsonSlice = append(rawJsonSlice, rawAccount)
-			}
-
-			return s.marshalQueryResultList(models.TableAccount, &rawJsonSlice)
+		accounts, dbErr := s.stores.Account.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, account := range accounts {
+			rawAccount, _ := json.Marshal(account)
+			rawJsonSlice = append(rawJsonSlice, rawAccount)
+		}
+		return s.marshalQueryResultList(models.TableAccount, &rawJsonSlice)
 
 	case models.TableCategory:
-		{
-			categories, _ := s.stores.Category.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, category := range categories {
-				rawCategory, _ := json.Marshal(category)
-				rawJsonSlice = append(rawJsonSlice, rawCategory)
-			}
-
-			return s.marshalQueryResultList(models.TableCategory, &rawJsonSlice)
+		categories, dbErr := s.stores.Category.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, category := range categories {
+			rawCategory, _ := json.Marshal(category)
+			rawJsonSlice = append(rawJsonSlice, rawCategory)
+		}
+		return s.marshalQueryResultList(models.TableCategory, &rawJsonSlice)
 
 	case models.TableLocation:
-		{
-			locations, _ := s.stores.Location.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, loc := range locations {
-				rawLoc, _ := json.Marshal(loc)
-				rawJsonSlice = append(rawJsonSlice, rawLoc)
-			}
-
-			return s.marshalQueryResultList(models.TableLocation, &rawJsonSlice)
+		locations, dbErr := s.stores.Location.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, loc := range locations {
+			rawLoc, _ := json.Marshal(loc)
+			rawJsonSlice = append(rawJsonSlice, rawLoc)
+		}
+		return s.marshalQueryResultList(models.TableLocation, &rawJsonSlice)
 
 	case models.TableProduct:
-		{
-			products, _ := s.stores.Product.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, product := range products {
-				rawProduct, _ := json.Marshal(product)
-				rawJsonSlice = append(rawJsonSlice, rawProduct)
-			}
-
-			return s.marshalQueryResultList(models.TableProduct, &rawJsonSlice)
+		products, dbErr := s.stores.Product.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, product := range products {
+			rawProduct, _ := json.Marshal(product)
+			rawJsonSlice = append(rawJsonSlice, rawProduct)
+		}
+		return s.marshalQueryResultList(models.TableProduct, &rawJsonSlice)
 
 	case models.TableProductGroup:
-		{
-			groups, _ := s.stores.ProductGroup.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, group := range groups {
-				rawGroup, _ := json.Marshal(group)
-				rawJsonSlice = append(rawJsonSlice, rawGroup)
-			}
-
-			return s.marshalQueryResultList(models.TableProductGroup, &rawJsonSlice)
+		groups, dbErr := s.stores.ProductGroup.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, group := range groups {
+			rawGroup, _ := json.Marshal(group)
+			rawJsonSlice = append(rawJsonSlice, rawGroup)
+		}
+		return s.marshalQueryResultList(models.TableProductGroup, &rawJsonSlice)
 
 	case models.TableProductVisibility:
-		{
-			visibilities, _ := s.stores.ProductVisibility.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, vis := range visibilities {
-				rawVis, _ := json.Marshal(vis)
-				rawJsonSlice = append(rawJsonSlice, rawVis)
-			}
-
-			return s.marshalQueryResultList(models.TableProductVisibility, &rawJsonSlice)
+		visibilities, dbErr := s.stores.ProductVisibility.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, vis := range visibilities {
+			rawVis, _ := json.Marshal(vis)
+			rawJsonSlice = append(rawJsonSlice, rawVis)
+		}
+		return s.marshalQueryResultList(models.TableProductVisibility, &rawJsonSlice)
 
 	case models.TableUnit:
-		{
-			units, _ := s.stores.Unit.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, unit := range units {
-				rawUnit, _ := json.Marshal(unit)
-				rawJsonSlice = append(rawJsonSlice, rawUnit)
-			}
-
-			return s.marshalQueryResultList(models.TableUnit, &rawJsonSlice)
+		units, dbErr := s.stores.Unit.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, unit := range units {
+			rawUnit, _ := json.Marshal(unit)
+			rawJsonSlice = append(rawJsonSlice, rawUnit)
+		}
+		return s.marshalQueryResultList(models.TableUnit, &rawJsonSlice)
 
 	case models.TableVat:
-		{
-			vats, _ := s.stores.Vat.Get(query)
-			var rawJsonSlice []json.RawMessage
-			for _, vat := range vats {
-				rawVat, _ := json.Marshal(vat)
-				rawJsonSlice = append(rawJsonSlice, rawVat)
-			}
-
-			return s.marshalQueryResultList(models.TableVat, &rawJsonSlice)
+		vats, dbErr := s.stores.Vat.Get(query)
+		if dbErr != nil {
+			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
 		}
+		var rawJsonSlice []json.RawMessage
+		for _, vat := range vats {
+			rawVat, _ := json.Marshal(vat)
+			rawJsonSlice = append(rawJsonSlice, rawVat)
+		}
+		return s.marshalQueryResultList(models.TableVat, &rawJsonSlice)
 	}
 
 	return nil, &WsError{
@@ -265,14 +265,13 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 	var queryResultList []json.RawMessage
 	switch mutation.Table {
 	case models.TableAccount:
-		var account *models.Account
 		account, err := s.stores.Account.GetById(id)
 		if err != nil {
-			wsErr := &WsError{
+			return nil, &WsError{
 				Code:    WsDbQueryError,
 				Message: err.Error(),
-				Details: fmt.Sprintf("Could not get account with ID %d", id)}
-			return nil, wsErr
+				Details: fmt.Sprintf("Could not get account with ID %d", id),
+			}
 		}
 		rawAcc, _ := json.Marshal(account)
 		queryResultList = append(queryResultList, rawAcc)
@@ -281,7 +280,14 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 		query := models.Query{
 			Table: models.TableProductVisibility,
 		}
-		visibilities, _ := s.stores.ProductVisibility.Get(&query)
+		visibilities, err := s.stores.ProductVisibility.Get(&query)
+		if err != nil {
+			return nil, &WsError{
+				Code:    WsDbQueryError,
+				Message: err.Error(),
+				Details: "Could not reload product visibilities after delete",
+			}
+		}
 		for _, vis := range visibilities {
 			rawVis, _ := json.Marshal(vis)
 			queryResultList = append(queryResultList, rawVis)
