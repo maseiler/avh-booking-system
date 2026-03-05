@@ -45,14 +45,10 @@ export const useProductVisibilityStore = defineStore('product_visibility', {
         },
         patchVisibilities(newVisibilities: ProductVisibility[]) {
             this.$patch(state => {
+                state.visibilities = [];
                 newVisibilities.forEach(newVis => {
                     const newVisObj = new ProductVisibility(newVis);
-                    const existing = state.visibilities.find(a => a.id === newVisObj.id);
-                    if (existing) {
-                        Object.assign(existing, newVisObj);
-                    } else {
-                        state.visibilities.push(newVisObj);
-                    }
+                    state.visibilities.push(newVisObj);
                 })
             })
         }

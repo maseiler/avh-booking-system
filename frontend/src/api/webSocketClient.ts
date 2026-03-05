@@ -10,6 +10,7 @@ import {useVatStore} from "../store/VatStore.ts";
 import {useProductStore} from "../store/ProductStore.ts";
 import {useLocationStore} from "../store/LocationStore.ts";
 import {useProductVisibilityStore} from "../store/ProductVisibilityStore.ts";
+import type { ProductVisibility } from "../composables/productVisibility.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -233,6 +234,11 @@ export class WebSocketClient {
                             newAccounts.push(result.data as Account);
                             useAccountStore().patchAccounts(newAccounts);
                             // TODO do stuff
+                            return;
+                        }
+                        case 'product_visibility': {
+                            let newVisibilities = result.data as ProductVisibility[];
+                            useProductVisibilityStore().patchVisibilities(newVisibilities);
                             return;
                         }
                     }
