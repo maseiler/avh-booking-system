@@ -35,7 +35,7 @@ func CreateUnit(name string) Unit {
 // Returns an error if the query execution fails or if row collection encounters an issue.
 func (m *UnitModel) Get(query *Query) ([]Unit, error) {
 	ctx := context.Background()
-	stmt := query.SqlStatement()
+	stmt := buildSelectSQL(query)
 	rows, err := m.DB.Query(ctx, stmt)
 
 	if err != nil {

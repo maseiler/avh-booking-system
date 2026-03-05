@@ -51,7 +51,7 @@ func CreateProduct(name string, price int, vatId int, prodGroupId int, size int,
 // Returns an error if the query execution fails or if row collection encounters an issue.
 func (m *ProductModel) Get(query *Query) ([]Product, error) {
 	ctx := context.Background()
-	stmt := query.SqlStatement()
+	stmt := buildSelectSQL(query)
 	rows, err := m.DB.Query(ctx, stmt)
 
 	if err != nil {
