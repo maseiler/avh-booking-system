@@ -10,34 +10,33 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/models"
 )
 
-func (s *Service) processPing(message models.Message) ([]byte, *models.WsError) {
+func (s *Service) processPing(message Message) ([]byte, *WsError) {
 	b, err := json.Marshal(message.Payload)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadInterface, Message: err.Error(), Details: "Marshal payload"}
+		return nil, &WsError{Code: WsBadInterface, Message: err.Error(), Details: "Marshal payload"}
 	}
 
-	var ping models.PingPong
+	var ping PingPong
 	if err := json.Unmarshal(b, &ping); err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Unmarshal to PingPong"}
+		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "Unmarshal to PingPong"}
 	}
 
 	s.log.Info("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
 
-	pong := models.PingPong{Timestamp: time.Now()}
-	response := models.Message{Type: models.MsgTypePong, Payload: pong}
+	pong := PingPong{Timestamp: time.Now()}
+	response := Message{Type: MsgTypePong, Payload: pong}
 	b, _ = json.Marshal(response)
 
 	err = s.validator.ValidateMessage(b)
 	if err != nil {
-		return nil, &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 	}
 
 	return b, nil
 }
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
-func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError) {
-	//query, err := getQuery(message.Payload)
+func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	query, err := unmarshalInterface[models.Query](message.Payload)
 	if err != nil {
 		return nil, err
@@ -46,7 +45,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 	switch query.Table {
 	case models.TableAccount:
 		{
-			accounts, _ := s.dbModels.Account.Get(query)
+			accounts, _ := s.stores.Account.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, account := range accounts {
 				rawAccount, _ := json.Marshal(account)
@@ -58,7 +57,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableCategory:
 		{
-			categories, _ := s.dbModels.Category.Get(query)
+			categories, _ := s.stores.Category.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, category := range categories {
 				rawCategory, _ := json.Marshal(category)
@@ -70,7 +69,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableLocation:
 		{
-			locations, _ := s.dbModels.Location.Get(query)
+			locations, _ := s.stores.Location.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, loc := range locations {
 				rawLoc, _ := json.Marshal(loc)
@@ -82,7 +81,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableProduct:
 		{
-			products, _ := s.dbModels.Product.Get(query)
+			products, _ := s.stores.Product.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, product := range products {
 				rawProduct, _ := json.Marshal(product)
@@ -94,7 +93,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableProductGroup:
 		{
-			groups, _ := s.dbModels.ProductGroup.Get(query)
+			groups, _ := s.stores.ProductGroup.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, group := range groups {
 				rawGroup, _ := json.Marshal(group)
@@ -106,7 +105,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableProductVisibility:
 		{
-			visibilities, _ := s.dbModels.ProductVisibility.Get(query)
+			visibilities, _ := s.stores.ProductVisibility.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, vis := range visibilities {
 				rawVis, _ := json.Marshal(vis)
@@ -118,7 +117,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableUnit:
 		{
-			units, _ := s.dbModels.Unit.Get(query)
+			units, _ := s.stores.Unit.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, unit := range units {
 				rawUnit, _ := json.Marshal(unit)
@@ -130,7 +129,7 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 
 	case models.TableVat:
 		{
-			vats, _ := s.dbModels.Vat.Get(query)
+			vats, _ := s.stores.Vat.Get(query)
 			var rawJsonSlice []json.RawMessage
 			for _, vat := range vats {
 				rawVat, _ := json.Marshal(vat)
@@ -141,15 +140,15 @@ func (s *Service) processQuery(message models.Message) ([]byte, *models.WsError)
 		}
 	}
 
-	return nil, &models.WsError{
-		Code:    models.WsInvalidTable,
+	return nil, &WsError{
+		Code:    WsInvalidTable,
 		Message: "Invalid table",
 		Details: "Could not process query for table " + string(query.Table),
 	}
 }
 
 // processMutation unmarshals the message and initiates a database mutation
-func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *models.WsError) {
+func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *WsError) {
 
 	switch mutation.Operation {
 	case models.OpInsert:
@@ -161,9 +160,9 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 					return nil, 0, wsErr
 				}
 
-				newId, err := s.dbModels.Account.Insert(*account)
+				newId, err := s.stores.Account.Insert(*account)
 				if err != nil {
-					return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create account"}
+					return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
 
 				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
@@ -175,17 +174,17 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 					return nil, 0, wsErr
 				}
 
-				newId, err := s.dbModels.ProductVisibility.Insert(*visibility)
+				newId, err := s.stores.ProductVisibility.Insert(*visibility)
 				if err != nil {
-					return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not create product visibility"}
+					return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not create product visibility"}
 				}
 
 				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
 				return b, newId, wsErr
 			}
 
-			return nil, 0, &models.WsError{
-				Code:    models.WsInvalidTable,
+			return nil, 0, &WsError{
+				Code:    WsInvalidTable,
 				Message: "Invalid table",
 				Details: "Could not process mutation for table " + string(mutation.Table),
 			}
@@ -197,9 +196,9 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 				return nil, 0, wsErr
 			}
 
-			newId, err := s.dbModels.Account.Update(*account)
+			newId, err := s.stores.Account.Update(*account)
 			if err != nil {
-				return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not update account"}
+				return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not update account"}
 			}
 
 			b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
@@ -211,7 +210,7 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 			switch mutation.Table {
 			case models.TableAccount:
 				{
-					return nil, 0, &models.WsError{Code: models.WsInvalidOperation,
+					return nil, 0, &WsError{Code: WsInvalidOperation,
 						Message: "Invalid operation",
 						Details: "Deletion of accounts is not supported"}
 				}
@@ -220,8 +219,8 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 				{
 					idStr, ok := mutation.Where["product_visibility_id"]
 					if !ok {
-						return nil, 0, &models.WsError{
-							Code:    models.WsBadJson,
+						return nil, 0, &WsError{
+							Code:    WsBadJson,
 							Message: "Missing product_visibility_id in where clause",
 							Details: "Delete requires product_visibility_id",
 						}
@@ -229,16 +228,16 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 
 					id, err := strconv.Atoi(idStr)
 					if err != nil {
-						return nil, 0, &models.WsError{
-							Code:    models.WsBadJson,
+						return nil, 0, &WsError{
+							Code:    WsBadJson,
 							Message: err.Error(),
 							Details: "product_visibility_id must be an integer",
 						}
 					}
 
-					oldId, err := s.dbModels.ProductVisibility.Delete(id)
+					oldId, err := s.stores.ProductVisibility.Delete(id)
 					if err != nil {
-						return nil, 0, &models.WsError{Code: models.WsInternalError, Message: err.Error(), Details: "Could not delete visibility"}
+						return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not delete visibility"}
 					}
 
 					b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, oldId)
@@ -247,30 +246,30 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 				}
 			}
 
-			return nil, 0, &models.WsError{
-				Code:    models.WsInvalidTable,
+			return nil, 0, &WsError{
+				Code:    WsInvalidTable,
 				Message: "Invalid table",
 				Details: "Could not process delete for table " + string(mutation.Table),
 			}
 		}
 	}
 
-	return nil, 0, &models.WsError{
-		Code:    models.WsInvalidOperation,
+	return nil, 0, &WsError{
+		Code:    WsInvalidOperation,
 		Message: "Invalid operation",
 		Details: "Could not process mutation for operation " + string(mutation.Operation),
 	}
 }
 
-func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *models.WsError) {
+func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *WsError) {
 	var queryResultList []json.RawMessage
 	switch mutation.Table {
 	case models.TableAccount:
 		var account *models.Account
-		account, err := s.dbModels.Account.GetById(id)
+		account, err := s.stores.Account.GetById(id)
 		if err != nil {
-			wsErr := &models.WsError{
-				Code:    models.WsDbQueryError,
+			wsErr := &WsError{
+				Code:    WsDbQueryError,
 				Message: err.Error(),
 				Details: fmt.Sprintf("Could not get account with ID %d", id)}
 			return nil, wsErr
@@ -282,14 +281,7 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 		query := models.Query{
 			Table: models.TableProductVisibility,
 		}
-		visibilities, err := s.dbModels.ProductVisibility.Get(&query)
-		if err != nil {
-			return nil, &models.WsError{
-				Code:    models.WsDbQueryError,
-				Message: err.Error(),
-				Details: "Could not reload product visibilities after delete",
-			}
-		}
+		visibilities, _ := s.stores.ProductVisibility.Get(&query)
 		for _, vis := range visibilities {
 			rawVis, _ := json.Marshal(vis)
 			queryResultList = append(queryResultList, rawVis)
@@ -311,5 +303,5 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 		return message, nil
 	}
 
-	return nil, &models.WsError{Code: models.WsUnknown, Message: "Broadcast data is empty"}
+	return nil, &WsError{Code: WsUnknown, Message: "Broadcast data is empty"}
 }

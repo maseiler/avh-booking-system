@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/validation"
 	"github.com/gorilla/websocket"
 	"log/slog"
@@ -9,18 +8,18 @@ import (
 
 type Service struct {
 	log       *slog.Logger
-	hub       *models.Hub
+	hub       *Hub
 	validator *validation.WebSocketValidator
-	dbModels  *models.DbModels
+	stores    Stores
 }
 
-func NewService(dbModels *models.DbModels, log *slog.Logger) *Service {
-	hub := &models.Hub{
+func NewService(stores Stores, log *slog.Logger) *Service {
+	hub := &Hub{
 		Log:        log,
-		Clients:    make(map[*models.Client]bool),
+		Clients:    make(map[*Client]bool),
 		Broadcast:  make(chan []byte),
-		Register:   make(chan *models.Client),
-		Unregister: make(chan *models.Client),
+		Register:   make(chan *Client),
+		Unregister: make(chan *Client),
 	}
 
 	go hub.Run()
@@ -29,16 +28,16 @@ func NewService(dbModels *models.DbModels, log *slog.Logger) *Service {
 		log:       log,
 		hub:       hub,
 		validator: validation.NewWebSocketValidator(),
-		dbModels:  dbModels,
+		stores:    stores,
 	}
 }
 
-func (s *Service) Hub() *models.Hub {
+func (s *Service) Hub() *Hub {
 	return s.hub
 }
 
-func (s *Service) NewClient(conn *websocket.Conn) *models.Client {
-	return &models.Client{
+func (s *Service) NewClient(conn *websocket.Conn) *Client {
+	return &Client{
 		Hub:  s.hub,
 		Conn: conn,
 		Send: make(chan []byte, 256),

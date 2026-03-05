@@ -5,6 +5,7 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/logger"
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/ws"
 	"log/slog"
 	"os"
 )
@@ -13,7 +14,6 @@ type application struct {
 	conf      *config.AppConfig
 	log       *slog.Logger
 	db        *database.DB
-	DbModels  *models.DbModels
 	WsHandler *WebSocketHandler
 }
 
@@ -24,24 +24,24 @@ func main() {
 	}
 	defer dbPool.Close()
 
+	stores := ws.Stores{
+		Account:           &models.AccountModel{DB: dbPool},
+		Category:          &models.CategoryModel{DB: dbPool},
+		Location:          &models.LocationModel{DB: dbPool},
+		Product:           &models.ProductModel{DB: dbPool},
+		ProductGroup:      &models.ProductGroupModel{DB: dbPool},
+		ProductVisibility: &models.ProductVisibilityModel{DB: dbPool},
+		Unit:              &models.UnitModel{DB: dbPool},
+		Vat:               &models.VatModel{DB: dbPool},
+	}
+
 	app := &application{
 		conf: config.LoadConfig(),
 		log:  logger.CreateLogger(),
 		db:   dbPool,
-		DbModels: &models.DbModels{
-			Account:           models.AccountModel{DB: dbPool},
-			AccountOption:     models.AccountOptionModel{DB: dbPool},
-			Category:          models.CategoryModel{DB: dbPool},
-			Unit:              models.UnitModel{DB: dbPool},
-			ProductGroup:      models.ProductGroupModel{DB: dbPool},
-			ProductVisibility: models.ProductVisibilityModel{DB: dbPool},
-			Product:           models.ProductModel{DB: dbPool},
-			Location:          models.LocationModel{DB: dbPool},
-			Vat:               models.VatModel{DB: dbPool},
-		},
 	}
 
-	app.WsHandler = NewWebSocketHandler(app)
+	app.WsHandler = NewWebSocketHandler(app, stores)
 
 	if err := app.serveHTTP(); err != nil {
 		app.log.Error(err.Error())
