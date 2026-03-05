@@ -125,11 +125,11 @@
     <div class="column is-3"></div>
     <div class="column">
       <Buttons>
-        <Button :fa-icon="['fas', 'undo']" icon-position="left" @click="$router.go(-1)">
+        <Button :fa-icon="['fas', 'times']" icon-position="left" @click="$router.go(-1)">
           Cancel
         </Button>
 
-        <Button class="is-primary" @click="actionButtonClicked" :fa-icon="['fas', 'cloud-upload']" icon-position="right">
+        <Button class="is-primary" @click="actionButtonClicked" :fa-icon="['fas', 'save']" icon-position="right">
           {{ actionButton }}
         </Button>
       </Buttons>      
