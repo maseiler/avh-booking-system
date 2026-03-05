@@ -263,7 +263,7 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *mode
 }
 
 func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *models.WsError) {
-	var data []byte
+	var queryResultList []json.RawMessage
 	switch mutation.Table {
 	case models.TableAccount:
 		var account *models.Account
@@ -275,7 +275,8 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 				Details: fmt.Sprintf("Could not get account with ID %d", id)}
 			return nil, wsErr
 		}
-		data, _ = json.Marshal(account)
+		rawAcc, _ := json.Marshal(account)
+		queryResultList = append(queryResultList, rawAcc)
 
 	case models.TableProductVisibility:
 		query := models.Query{
@@ -289,13 +290,26 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 				Details: "Could not reload product visibilities after delete",
 			}
 		}
-		data, _ = json.Marshal(visibilities)
+		for _, vis := range visibilities {
+			rawVis, _ := json.Marshal(vis)
+			queryResultList = append(queryResultList, rawVis)
+		}
+
+	} // end of switch
+
+	if len(queryResultList) == 1 {
+		message, wsErr := s.marshalBroadcastQueryResult(mutation.Table, queryResultList[0])
+		if wsErr != nil {
+			return nil, wsErr
+		}
+		return message, nil
+	} else if len(queryResultList) > 1 {
+		message, wsErr := s.marshalBroadcastQueryResultList(mutation.Table, &queryResultList)
+		if wsErr != nil {
+			return nil, wsErr
+		}
+		return message, nil
 	}
 
-	message, wsErr := s.marshalBroadcastWithPayload(mutation.Table, data)
-	if wsErr != nil {
-		return nil, wsErr
-	}
-
-	return message, nil
+	return nil, &models.WsError{Code: models.WsUnknown, Message: "Broadcast data is empty"}
 }

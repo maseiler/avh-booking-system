@@ -7,9 +7,9 @@ import {useProductStore} from "../store/ProductStore.ts";
 
 export interface ProductVisibility {
     id?: number
-    category: number
-    location: number
-    product: number
+    categoryId: number
+    locationId: number
+    productId: number
     getCategory(): Category
     getProduct(): Product
     getLocation(): Location
@@ -19,21 +19,21 @@ export class ProductVisibility implements ProductVisibility {
 
     constructor(vis: ProductVisibility) {
         this.id = vis.id;
-        this.category = vis.category;
-        this.location = vis.location;
-        this.product = vis.product;
+        this.categoryId = vis.categoryId;
+        this.locationId = vis.locationId;
+        this.productId = vis.productId;
     }
 
     public getCategory(): Category | undefined{
-        return useCategoryStore().byId(this.category)
+        return useCategoryStore().byId(this.categoryId)
     }
 
     public getProduct(): Product | undefined{
-        return useProductStore().byId(this.product)
+        return useProductStore().byId(this.productId)
     }
 
     public getLocation(): Location | undefined{
-        return useLocationStore().byId(this.location)
+        return useLocationStore().byId(this.locationId)
     }
 
 }

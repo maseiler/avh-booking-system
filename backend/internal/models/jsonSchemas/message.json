@@ -155,7 +155,10 @@
       "then": {
         "properties": {
           "payload": {
-            "$ref": "sql/queryResult.json"
+            "anyOf": [
+              { "$ref": "sql/queryResult.json" },
+              { "$ref": "sql/queryResultList.json" }
+            ]
           }
         }
       }

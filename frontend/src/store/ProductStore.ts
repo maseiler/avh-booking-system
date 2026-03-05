@@ -24,7 +24,7 @@ export const useProductStore = defineStore('product', {
                 let visibilities = useProductVisibilityStore().byProductId(prod.id)
                 let retVal = false;
                 visibilities.forEach((visi) => {
-                    if (selectedAccountCategorys.includes(visi.category)) { 
+                    if (selectedAccountCategorys.includes(visi.categoryId)) { 
                         retVal = true;
                         return
                     } 
