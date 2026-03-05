@@ -23,6 +23,7 @@ export const useBookingStore = defineStore('booking', {
       } as Booking);
 
       this.bookings.push(newBooking);
+      console.log(newBooking);
       // ToDo: add listener to store mutations to communicate with websocket
       // Let Websocket send mutations to the accounts, so that these will be patched automatically
     }
