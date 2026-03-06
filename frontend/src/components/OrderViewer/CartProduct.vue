@@ -3,7 +3,7 @@
     <td class="cell productQuantity">
       <div class="field has-addons">
         <p class="control">
-          <button class="button" @click="cart$.removeFromCart(content.product)"><icon :icon="['fas', 'trash']" /></button>
+          <button class="button is-danger is-light" @click="cart$.removeFromCart(content.product)"><icon :icon="['fas', 'trash']" /></button>
         </p>
         <p class="control has-icons-left has-icons-right">
           <input v-model="content.quantity" type="number" class="input"></input>

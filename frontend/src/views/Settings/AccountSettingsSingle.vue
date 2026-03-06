@@ -77,17 +77,26 @@
   <div class="columns">
     <div class="column is-3">Category:</div>
     <div class="column">
-      <div class="control has-icons-left">
-        <div class="select">
-          <select v-model="account.category">
-            <option value="0">All</option>
-            <option v-for="category in category$.accountCategories" :value="category.id" class="has-icons-left">
-              {{ category.title }}
-            </option>
-          </select>
+      <div class="dropdown is-hoverable">
+        <div class="dropdown-trigger">
+          <button class="button" aria-haspopup="true">
+            <span class="icon is-small">
+              <icon :icon="categoryIcon ?? ['fas', 'circle-info']" />
+            </span>
+            <span>{{ selectedCategoryLabel }}</span>
+            <span class="icon is-small">
+              <icon :icon="['fas', 'angle-down']" />
+            </span>
+          </button>
         </div>
-        <div class="icon is-small is-left">
-          <icon :icon="categoryIcon"/>
+        <div class="dropdown-menu">
+          <div class="dropdown-content">
+            <a v-for="cat in category$.accountCategories" :key="cat.id"
+               class="dropdown-item" :class="{ 'is-active': account.category === cat.id }"
+               @click="account.category = cat.id">
+              {{ cat.title }}
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -138,6 +147,16 @@
 
 </template>
 
+<style scoped>
+.dropdown-item.is-active {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 600;
+  border-left: 3px solid hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l));
+  padding-left: calc(1rem - 3px);
+}
+</style>
+
 <script lang="ts">
 import { useAccountStore } from '../../store/AccountStore';
 import { useCategoryStore } from '../../store/CategoryStore';
@@ -175,6 +194,9 @@ export default {
   computed: {
     categoryIcon(){
       return this.category$.byId(this.account.category)?.icon
+    },
+    selectedCategoryLabel(){
+      return this.category$.byId(this.account.category)?.title ?? '—';
     },
     isEdit(){
       return this.$route.params.accountId?.toString().length > 0;
