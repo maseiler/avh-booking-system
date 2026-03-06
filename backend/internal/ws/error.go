@@ -54,7 +54,7 @@ func (s *Service) sendError(c *Client, wsErr *WsError) {
 	}
 
 	// Validate error message
-	err = s.validator.ValidateMessage(errBytes)
+	err = s.validator.validate(errBytes)
 	if err != nil {
 		panic(err)
 	}

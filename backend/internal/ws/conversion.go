@@ -47,7 +47,7 @@ func (s *Service) marshalAndValidateMessage(message *Message) ([]byte, *WsError)
 	}
 
 	// Validate message
-	err = s.validator.ValidateMessage(b)
+	err = s.validator.validate(b)
 	if err != nil {
 		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 	}

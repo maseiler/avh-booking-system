@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"github.com/av-huette/avh-booking-system/internal/validation"
 	"github.com/gorilla/websocket"
 	"log/slog"
 )
@@ -9,7 +8,7 @@ import (
 type Service struct {
 	log       *slog.Logger
 	hub       *Hub
-	validator *validation.WebSocketValidator
+	validator *messageValidator
 	stores    Stores
 }
 
@@ -27,7 +26,7 @@ func NewService(stores Stores, log *slog.Logger) *Service {
 	return &Service{
 		log:       log,
 		hub:       hub,
-		validator: validation.NewWebSocketValidator(),
+		validator: newMessageValidator(),
 		stores:    stores,
 	}
 }

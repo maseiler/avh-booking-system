@@ -29,7 +29,7 @@ func (s *Service) ReadPump(c *Client) {
 		}
 
 		// Validate JSON schema
-		err = s.validator.ValidateMessage(message)
+		err = s.validator.validate(message)
 		if err != nil {
 			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 			s.sendError(c, wsErr)
