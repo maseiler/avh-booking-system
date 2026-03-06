@@ -26,13 +26,19 @@ type DbConfig struct {
 	DbPassword string
 }
 
-func LoadConfig() *AppConfig {
-	// load environment variables from .env file
-	err := godotenv.Load()
-	if err != nil {
+func LoadEnv() {
+	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file: " + err.Error())
 	}
+}
 
+func LoadEnvFromFile(path string) {
+	if err := godotenv.Load(path); err != nil {
+		log.Fatal("Error loading .env file: " + err.Error())
+	}
+}
+
+func LoadConfig() *AppConfig {
 	conf := &AppConfig{}
 	conf.LogLevel = getLogLevel("AVHBS_LOG_LEVEL", slog.LevelInfo)
 	conf.HttpPort = getInt("AVHBS_HTTP_PORT", DefaultHTTPPort)
@@ -41,23 +47,7 @@ func LoadConfig() *AppConfig {
 	return conf
 }
 
-func LoadDbConfigFromRootEnv() *DbConfig {
-	// load environment variables from root .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file: " + err.Error())
-	}
-
-	return createDbConfig()
-}
-
-func LoadDbConfigFromFileEnv(filePath string) *DbConfig {
-	// load environment variables from absolute path to .env file
-	err := godotenv.Load(filePath)
-	if err != nil {
-		log.Fatal("Error loading .env file: " + err.Error())
-	}
-
+func LoadDbConfig() *DbConfig {
 	return createDbConfig()
 }
 

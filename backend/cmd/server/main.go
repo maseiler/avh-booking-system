@@ -19,7 +19,11 @@ type application struct {
 }
 
 func main() {
-	dbPool, err := database.NewFromConfig()
+	config.LoadEnv()
+	appConf := config.LoadConfig()
+	dbConf := config.LoadDbConfig()
+
+	dbPool, err := database.New(dbConf.DbUser, dbConf.DbPassword, dbConf.DbHost, dbConf.DbPort, dbConf.DbName)
 	if err != nil {
 		panic(err)
 	}
@@ -37,8 +41,8 @@ func main() {
 	}
 
 	app := &application{
-		conf: config.LoadConfig(),
-		log:  logger.CreateLogger(),
+		conf: appConf,
+		log:  logger.CreateLogger(appConf.LogLevel),
 		db:   dbPool,
 	}
 
