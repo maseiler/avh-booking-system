@@ -9,7 +9,7 @@ import (
 )
 
 // ReadPump pumps messages from the ws connection to the hub
-func (s *Service) ReadPump(c *models.Client) {
+func (s *Service) ReadPump(c *Client) {
 	defer func() {
 		c.Hub.Unregister <- c
 		c.Conn.Close()
@@ -23,7 +23,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			if websocket.IsUnexpectedCloseError(err,
 				websocket.CloseGoingAway,
 				websocket.CloseAbnormalClosure) {
-				s.log.Error("WebSocket error: %v", err.Error())
+				s.log.Error("WebSocket error", slog.String("error", err.Error()))
 			}
 			break
 		}
@@ -31,14 +31,15 @@ func (s *Service) ReadPump(c *models.Client) {
 		// Validate JSON schema
 		err = s.validator.ValidateMessage(message)
 		if err != nil {
-			wsErr := &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 			s.sendError(c, wsErr)
+			continue
 		}
 
 		// Unmarshal message
-		msg := models.Message{}
+		msg := Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
-			wsErr := &models.WsError{Code: models.WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
+			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
 			s.sendError(c, wsErr)
 			continue
 		}
@@ -47,10 +48,10 @@ func (s *Service) ReadPump(c *models.Client) {
 
 		// Route
 		switch msg.Type {
-		case models.MsgTypeBroadcast:
+		case MsgTypeBroadcast:
 			c.Hub.Broadcast <- message
 
-		case models.MsgTypePing:
+		case MsgTypePing:
 			b, wsErr := s.processPing(msg)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
@@ -58,7 +59,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			}
 			c.Send <- b
 
-		case models.MsgTypeQuery:
+		case MsgTypeQuery:
 			b, wsErr := s.processQuery(msg)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
@@ -66,7 +67,7 @@ func (s *Service) ReadPump(c *models.Client) {
 			}
 			c.Send <- b
 
-		case models.MsgTypeMutation:
+		case MsgTypeMutation:
 			mutation, wsErr := unmarshalInterface[models.Mutation](msg.Payload)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
@@ -95,7 +96,7 @@ func (s *Service) ReadPump(c *models.Client) {
 }
 
 // WritePump pumps messages from the hub to the ws connection
-func (s *Service) WritePump(c *models.Client) {
+func (s *Service) WritePump(c *Client) {
 	defer c.Conn.Close()
 
 	for {

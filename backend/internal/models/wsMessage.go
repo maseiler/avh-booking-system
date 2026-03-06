@@ -1,44 +1,6 @@
 package models
 
-import (
-	"encoding/json"
-	"strconv"
-	"time"
-)
-
-// ============================================================================
-// Message Types and Protocol
-// ============================================================================
-
-type MessageType string
-
-const (
-	MsgTypeAuth            MessageType = "auth"
-	MsgTypeRegister        MessageType = "register"
-	MsgTypeUnRegister      MessageType = "unregister"
-	MsgTypeError           MessageType = "error"
-	MsgTypeBroadcast       MessageType = "broadcast"
-	MsgTypePing            MessageType = "ping"
-	MsgTypePong            MessageType = "pong"
-	MsgTypeQuery           MessageType = "query"
-	MsgTypeQueryResult     MessageType = "queryResult"
-	MsgTypeQueryResultList MessageType = "queryResultList"
-	MsgTypeMutation        MessageType = "mutation"
-	MsgTypeMutationResult  MessageType = "mutationResult"
-)
-
-func (t MessageType) String() string {
-	return string(t)
-}
-
-type Message struct {
-	Type    MessageType `json:"type" validate:"required"`
-	Payload interface{} `json:"payload,omitempty"`
-}
-
-type PingPong struct {
-	Timestamp time.Time `json:"timestamp,omitempty"`
-}
+import "encoding/json"
 
 // ============================================================================
 // Database Access/Manipulation Types and Protocol
@@ -80,33 +42,6 @@ type Query struct {
 	Filter []Filter  `json:"filter,omitempty"`
 	Limit  *int      `json:"limit,omitempty"`
 	Sort   *Sorting  `json:"sort,omitempty"`
-}
-
-// SqlStatement returns the SQL statement for this query
-func (q *Query) SqlStatement() string {
-	stmt := "SELECT * FROM " + string(q.Table)
-
-	if len(q.Filter) > 0 {
-		stmt += " WHERE "
-		for i, filter := range q.Filter {
-			stmt += filter.Column + " "
-			stmt += filter.Operator.SqlString() + " "
-			stmt += filter.Value
-			if i != len(q.Filter)-1 {
-				stmt += " AND "
-			}
-		}
-	}
-
-	if q.Sort != nil {
-		stmt += " ORDER BY " + q.Sort.Column + " " + q.Sort.Order.SqlString()
-	}
-
-	if q.Limit != nil {
-		stmt += " LIMIT " + strconv.Itoa(*q.Limit)
-	}
-
-	return stmt
 }
 
 type Filter struct {
