@@ -32,7 +32,7 @@ func NewWebSocketValidator() *WebSocketValidator {
 
 	schemas = &jsonSchemas{}
 
-	const schemaDir = "internal/models/jsonSchemas/"
+	const schemaDir = "../schemas/"
 
 	var err error
 	schemas.message, err = jsonCompiler.Compile(schemaDir + "message.json")
