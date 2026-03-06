@@ -1,8 +1,3 @@
-:root{
-  --primary: hsl(110, 76%, 59%);
-}
-
-
 * {
   user-select: none;
 }
@@ -11,7 +6,3 @@
   user-select: text;
 }
 
-.button.is-primary,
-.tag.is-primary{
-  background-color: var(--primary);
-}

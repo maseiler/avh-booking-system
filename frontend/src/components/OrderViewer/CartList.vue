@@ -28,16 +28,27 @@
 <style scoped>
 .table-container{
   border-radius: var(--bulma-control-radius);
-  margin-bottom:.5rem;
+  margin-bottom:.75rem;
+  border: 1px solid hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-border-l));
+  overflow: hidden;
   .table{
     width:100%;
+    background-color: transparent;
+    margin-bottom:0;
   }
 }
 .dblhr{
-  --_height:6px;
-  height:var(--_height);
-  border-top:calc(var(--_height) / 3) solid var(--bulma-scheme-main);;
-  border-bottom:calc(var(--_height) / 3) solid var(--bulma-scheme-main);;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l)) 20%,
+    hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l)) 80%,
+    transparent
+  );
+  opacity: 0.5;
+  margin-bottom: .75rem;
+  border: none;
 }
 </style>
 

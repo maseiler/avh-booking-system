@@ -12,12 +12,13 @@ import MainNavigation from './components/MainNavigation.vue';
 import DevModeBar from './components/DevModeBar.vue';
 import ClientSetup from './views/ClientSetup.vue';
 import { useSocketStore } from './store/socketStore';
+import { useThemeStore } from './store/themeStore';
 
 export default {
   components: {
     MainNavigation,
     DevModeBar,
-    ClientSetup,
+    ClientSetup
   },
   data() {
     const clientId = localStorage.getItem('avhbs_client_id');
@@ -25,9 +26,11 @@ export default {
       dev: false,
       needsSetup: !clientId,
       socket$: clientId ? useSocketStore() : null,
+      theme$: useThemeStore(),
     };
   },
   mounted() {
+    this.theme$.init();
     this.dev = import.meta.env.DEV;
     if (this.socket$) {
       this.socket$.getAllFromDb();
