@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/av-huette/avh-booking-system/config"
+	"github.com/av-huette/avh-booking-system/internal/config"
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/repo"
 	"github.com/jackc/pgx/v5"

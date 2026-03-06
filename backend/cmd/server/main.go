@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/av-huette/avh-booking-system/config"
+	"github.com/av-huette/avh-booking-system/internal/config"
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/logger"
 	"github.com/av-huette/avh-booking-system/internal/repo"
