@@ -1,14 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/av-huette/avh-booking-system/internal/config"
 	"github.com/av-huette/avh-booking-system/internal/database"
-	"github.com/av-huette/avh-booking-system/internal/logger"
 	"github.com/av-huette/avh-booking-system/internal/repo"
 	"github.com/av-huette/avh-booking-system/internal/ws"
+	"github.com/lmittmann/tint"
 )
 
 type application struct {
@@ -40,9 +42,13 @@ func main() {
 		Vat:               &repo.VatModel{DB: dbPool},
 	}
 
+	logOpts := &tint.Options{Level: appConf.LogLevel, TimeFormat: time.DateTime}
+	log := slog.New(tint.NewHandler(os.Stdout, logOpts))
+	log.Debug(fmt.Sprintf("Log level: %s", logOpts.Level))
+
 	app := &application{
 		conf: appConf,
-		log:  logger.CreateLogger(appConf.LogLevel),
+		log:  log,
 		db:   dbPool,
 	}
 
