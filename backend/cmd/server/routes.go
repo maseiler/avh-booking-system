@@ -18,7 +18,7 @@ func (app *application) routes() http.Handler {
 	//mux.HandleFunc("GET /account/{id}", app.getAccount)
 
 	// WebSocket handler
-	mux.HandleFunc("/ws", app.HandleConnections)
+	mux.Handle("/ws", app.wsHandler)
 
 	return app.logRequest(app.securityHeaders(mux))
 }

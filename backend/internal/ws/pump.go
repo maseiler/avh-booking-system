@@ -3,9 +3,9 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/gorilla/websocket"
 	"log/slog"
+
+	"github.com/gorilla/websocket"
 )
 
 // ReadPump pumps messages from the ws connection to the hub
@@ -68,7 +68,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Send <- b
 
 		case MsgTypeMutation:
-			mutation, wsErr := unmarshalInterface[models.Mutation](msg.Payload)
+			mutation, wsErr := unmarshalInterface[Mutation](msg.Payload)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue

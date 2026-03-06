@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/repo"
 )
 
 func (s *Service) processPing(message Message) ([]byte, *WsError) {
@@ -37,13 +38,13 @@ func (s *Service) processPing(message Message) ([]byte, *WsError) {
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
 func (s *Service) processQuery(message Message) ([]byte, *WsError) {
-	query, err := unmarshalInterface[models.Query](message.Payload)
+	query, err := unmarshalInterface[repo.Query](message.Payload)
 	if err != nil {
 		return nil, err
 	}
 
 	switch query.Table {
-	case models.TableAccount:
+	case repo.TableAccount:
 		accounts, dbErr := s.stores.Account.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -53,9 +54,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawAccount, _ := json.Marshal(account)
 			rawJsonSlice = append(rawJsonSlice, rawAccount)
 		}
-		return s.marshalQueryResultList(models.TableAccount, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableAccount, &rawJsonSlice)
 
-	case models.TableCategory:
+	case repo.TableCategory:
 		categories, dbErr := s.stores.Category.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -65,9 +66,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawCategory, _ := json.Marshal(category)
 			rawJsonSlice = append(rawJsonSlice, rawCategory)
 		}
-		return s.marshalQueryResultList(models.TableCategory, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableCategory, &rawJsonSlice)
 
-	case models.TableLocation:
+	case repo.TableLocation:
 		locations, dbErr := s.stores.Location.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -77,9 +78,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawLoc, _ := json.Marshal(loc)
 			rawJsonSlice = append(rawJsonSlice, rawLoc)
 		}
-		return s.marshalQueryResultList(models.TableLocation, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableLocation, &rawJsonSlice)
 
-	case models.TableProduct:
+	case repo.TableProduct:
 		products, dbErr := s.stores.Product.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -89,9 +90,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawProduct, _ := json.Marshal(product)
 			rawJsonSlice = append(rawJsonSlice, rawProduct)
 		}
-		return s.marshalQueryResultList(models.TableProduct, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableProduct, &rawJsonSlice)
 
-	case models.TableProductGroup:
+	case repo.TableProductGroup:
 		groups, dbErr := s.stores.ProductGroup.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -101,9 +102,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawGroup, _ := json.Marshal(group)
 			rawJsonSlice = append(rawJsonSlice, rawGroup)
 		}
-		return s.marshalQueryResultList(models.TableProductGroup, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableProductGroup, &rawJsonSlice)
 
-	case models.TableProductVisibility:
+	case repo.TableProductVisibility:
 		visibilities, dbErr := s.stores.ProductVisibility.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -113,9 +114,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawVis, _ := json.Marshal(vis)
 			rawJsonSlice = append(rawJsonSlice, rawVis)
 		}
-		return s.marshalQueryResultList(models.TableProductVisibility, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableProductVisibility, &rawJsonSlice)
 
-	case models.TableUnit:
+	case repo.TableUnit:
 		units, dbErr := s.stores.Unit.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -125,9 +126,9 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawUnit, _ := json.Marshal(unit)
 			rawJsonSlice = append(rawJsonSlice, rawUnit)
 		}
-		return s.marshalQueryResultList(models.TableUnit, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableUnit, &rawJsonSlice)
 
-	case models.TableVat:
+	case repo.TableVat:
 		vats, dbErr := s.stores.Vat.Get(query)
 		if dbErr != nil {
 			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
@@ -137,7 +138,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 			rawVat, _ := json.Marshal(vat)
 			rawJsonSlice = append(rawJsonSlice, rawVat)
 		}
-		return s.marshalQueryResultList(models.TableVat, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableVat, &rawJsonSlice)
 	}
 
 	return nil, &WsError{
@@ -148,13 +149,13 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 }
 
 // processMutation unmarshals the message and initiates a database mutation
-func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *WsError) {
+func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 
 	switch mutation.Operation {
-	case models.OpInsert:
+	case repo.OpInsert:
 		{
 			switch mutation.Table {
-			case models.TableAccount:
+			case repo.TableAccount:
 				account, wsErr := unmarshalInterface[models.Account](mutation.Values)
 				if wsErr != nil {
 					return nil, 0, wsErr
@@ -168,7 +169,7 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *WsEr
 				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
 				return b, newId, wsErr
 
-			case models.TableProductVisibility:
+			case repo.TableProductVisibility:
 				visibility, wsErr := unmarshalInterface[models.ProductVisibility](mutation.Values)
 				if wsErr != nil {
 					return nil, 0, wsErr
@@ -189,7 +190,7 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *WsEr
 				Details: "Could not process mutation for table " + string(mutation.Table),
 			}
 		}
-	case models.OpUpdate:
+	case repo.OpUpdate:
 		{
 			account, wsErr := unmarshalInterface[models.Account](mutation.Values)
 			if wsErr != nil {
@@ -205,17 +206,17 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *WsEr
 			return b, newId, wsErr
 		}
 
-	case models.OpDelete:
+	case repo.OpDelete:
 		{
 			switch mutation.Table {
-			case models.TableAccount:
+			case repo.TableAccount:
 				{
 					return nil, 0, &WsError{Code: WsInvalidOperation,
 						Message: "Invalid operation",
 						Details: "Deletion of accounts is not supported"}
 				}
 
-			case models.TableProductVisibility:
+			case repo.TableProductVisibility:
 				{
 					idStr, ok := mutation.Where["product_visibility_id"]
 					if !ok {
@@ -261,10 +262,10 @@ func (s *Service) processMutation(mutation *models.Mutation) ([]byte, int, *WsEr
 	}
 }
 
-func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *WsError) {
+func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WsError) {
 	var queryResultList []json.RawMessage
 	switch mutation.Table {
-	case models.TableAccount:
+	case repo.TableAccount:
 		account, err := s.stores.Account.GetById(id)
 		if err != nil {
 			return nil, &WsError{
@@ -276,9 +277,9 @@ func (s *Service) prepareBroadcast(mutation *models.Mutation, id int) ([]byte, *
 		rawAcc, _ := json.Marshal(account)
 		queryResultList = append(queryResultList, rawAcc)
 
-	case models.TableProductVisibility:
-		query := models.Query{
-			Table: models.TableProductVisibility,
+	case repo.TableProductVisibility:
+		query := repo.Query{
+			Table: repo.TableProductVisibility,
 		}
 		visibilities, err := s.stores.ProductVisibility.Get(&query)
 		if err != nil {

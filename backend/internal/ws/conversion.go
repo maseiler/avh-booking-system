@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/repo"
 )
 
 func unmarshalInterface[T any](payload interface{}) (*T, *WsError) {
@@ -55,8 +55,8 @@ func (s *Service) marshalAndValidateMessage(message *Message) ([]byte, *WsError)
 	return b, nil
 }
 
-func (s *Service) marshalQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
-	res := models.QueryResultList{Table: table, Data: *data}
+func (s *Service) marshalQueryResultList(table repo.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
+	res := QueryResultList{Table: table, Data: *data}
 	msg := Message{
 		Type:    MsgTypeQueryResultList,
 		Payload: res,
@@ -65,8 +65,8 @@ func (s *Service) marshalQueryResultList(table models.TableName, data *[]json.Ra
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalResultMutation(table models.TableName, operation models.Operation, id int) ([]byte, *WsError) {
-	res := models.ResultMutation{Table: table, Operation: operation, Id: id}
+func (s *Service) marshalResultMutation(table repo.TableName, operation repo.Operation, id int) ([]byte, *WsError) {
+	res := ResultMutation{Table: table, Operation: operation, Id: id}
 	msg := Message{
 		Type:    MsgTypeMutationResult,
 		Payload: res,
@@ -75,8 +75,8 @@ func (s *Service) marshalResultMutation(table models.TableName, operation models
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalBroadcastQueryResult(table models.TableName, data json.RawMessage) ([]byte, *WsError) {
-	res := models.QueryResult{Table: table, Data: data}
+func (s *Service) marshalBroadcastQueryResult(table repo.TableName, data json.RawMessage) ([]byte, *WsError) {
+	res := QueryResult{Table: table, Data: data}
 	msg := Message{
 		Type:    MsgTypeBroadcast,
 		Payload: res,
@@ -85,8 +85,8 @@ func (s *Service) marshalBroadcastQueryResult(table models.TableName, data json.
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalBroadcastQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
-	res := models.QueryResultList{Table: table, Data: *data}
+func (s *Service) marshalBroadcastQueryResultList(table repo.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
+	res := QueryResultList{Table: table, Data: *data}
 	msg := Message{
 		Type:    MsgTypeBroadcast,
 		Payload: res,

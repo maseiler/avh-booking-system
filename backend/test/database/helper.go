@@ -3,28 +3,29 @@ package test_database
 import (
 	"context"
 	"fmt"
-	"github.com/av-huette/avh-booking-system/config"
-	"github.com/av-huette/avh-booking-system/internal/database"
-	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/jackc/pgx/v5"
 	"os"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/av-huette/avh-booking-system/config"
+	"github.com/av-huette/avh-booking-system/internal/database"
+	"github.com/av-huette/avh-booking-system/internal/repo"
+	"github.com/jackc/pgx/v5"
 )
 
 var dbPool *database.DB
 
 type modelStructs struct {
-	account           *models.AccountModel
-	accountOption     *models.AccountOptionModel
-	category          *models.CategoryModel
-	product           *models.ProductModel
-	productGroup      *models.ProductGroupModel
-	unit              *models.UnitModel
-	productVisibility *models.ProductVisibilityModel
-	location          *models.LocationModel
-	vat               *models.VatModel
+	account           *repo.AccountModel
+	accountOption     *repo.AccountOptionModel
+	category          *repo.CategoryModel
+	product           *repo.ProductModel
+	productGroup      *repo.ProductGroupModel
+	unit              *repo.UnitModel
+	productVisibility *repo.ProductVisibilityModel
+	location          *repo.LocationModel
+	vat               *repo.VatModel
 }
 
 // run sets up members and the database before executing tests and tearing them down after execution.
@@ -39,15 +40,15 @@ func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 
 	setUp()
 
-	dbModels.account = &models.AccountModel{DB: dbPool}
-	dbModels.accountOption = &models.AccountOptionModel{DB: dbPool}
-	dbModels.category = &models.CategoryModel{DB: dbPool}
-	dbModels.product = &models.ProductModel{DB: dbPool}
-	dbModels.productGroup = &models.ProductGroupModel{DB: dbPool}
-	dbModels.unit = &models.UnitModel{DB: dbPool}
-	dbModels.productVisibility = &models.ProductVisibilityModel{DB: dbPool}
-	dbModels.location = &models.LocationModel{DB: dbPool}
-	dbModels.vat = &models.VatModel{DB: dbPool}
+	dbModels.account = &repo.AccountModel{DB: dbPool}
+	dbModels.accountOption = &repo.AccountOptionModel{DB: dbPool}
+	dbModels.category = &repo.CategoryModel{DB: dbPool}
+	dbModels.product = &repo.ProductModel{DB: dbPool}
+	dbModels.productGroup = &repo.ProductGroupModel{DB: dbPool}
+	dbModels.unit = &repo.UnitModel{DB: dbPool}
+	dbModels.productVisibility = &repo.ProductVisibilityModel{DB: dbPool}
+	dbModels.location = &repo.LocationModel{DB: dbPool}
+	dbModels.vat = &repo.VatModel{DB: dbPool}
 
 	defer tearDown()
 
