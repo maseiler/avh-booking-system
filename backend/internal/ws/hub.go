@@ -54,18 +54,28 @@ func (h *Hub) Run() {
 }
 
 func (h *Hub) broadcastMessage(message []byte, exclude *Client) {
-	h.Mu.RLock()
-	defer h.Mu.RUnlock()
+	var drop []*Client
 
+	h.Mu.RLock()
 	for client := range h.Clients {
 		if client != exclude {
 			select {
 			case client.Send <- message:
 			default:
-				// Client's send channel is full, close it
+				drop = append(drop, client)
+			}
+		}
+	}
+	h.Mu.RUnlock()
+
+	if len(drop) > 0 {
+		h.Mu.Lock()
+		for _, client := range drop {
+			if _, ok := h.Clients[client]; ok {
 				delete(h.Clients, client)
 				close(client.Send)
 			}
 		}
+		h.Mu.Unlock()
 	}
 }
