@@ -77,28 +77,18 @@
   <div class="columns">
     <div class="column is-3">Category:</div>
     <div class="column">
-      <div class="dropdown is-hoverable">
-        <div class="dropdown-trigger">
-          <button class="button" aria-haspopup="true">
-            <span class="icon is-small">
-              <icon :icon="categoryIcon ?? ['fas', 'circle-info']" />
-            </span>
-            <span>{{ selectedCategoryLabel }}</span>
-            <span class="icon is-small">
-              <icon :icon="['fas', 'angle-down']" />
-            </span>
-          </button>
-        </div>
-        <div class="dropdown-menu">
-          <div class="dropdown-content">
-            <a v-for="cat in category$.accountCategories" :key="cat.id"
-               class="dropdown-item" :class="{ 'is-active': account.category === cat.id }"
-               @click="account.category = cat.id">
-              {{ cat.title }}
-            </a>
+      <div class="control has-icons-left">
+        <div class="select">
+          <select v-model="account.category">
+            <option v-for="category in category$.accountCategories" :value="category.id" class="has-icons-left">
+              {{ category.title }}
+            </option>
+          </select>
+          </div>
+           <div class="icon is-small is-left">
+            <icon :icon="categoryIcon"/>
           </div>
         </div>
-      </div>
     </div>
   </div>
 
@@ -194,9 +184,6 @@ export default {
   computed: {
     categoryIcon(){
       return this.category$.byId(this.account.category)?.icon
-    },
-    selectedCategoryLabel(){
-      return this.category$.byId(this.account.category)?.title ?? '—';
     },
     isEdit(){
       return this.$route.params.accountId?.toString().length > 0;

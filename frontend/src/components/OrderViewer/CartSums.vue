@@ -16,13 +16,13 @@
   color: hsl(var(--bulma-text-h), var(--bulma-text-s), var(--bulma-text-strong-l));
   span{
     font-weight:700;
-    color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l));
+    /* color: hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l)); */
   }
 }
 .cartTax{
   font-size:.8rem;
   text-align: right;
-  opacity: 0.65;
+  /* opacity: 0.65; */
   span{
     font-weight:600;
   }
