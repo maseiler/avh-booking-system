@@ -31,7 +31,6 @@
 }
 .order{
   position:relative;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
 .order-icon{
   margin-right:.5em;
@@ -55,7 +54,8 @@
   position:absolute;
   width:100%;
   z-index:20;
-  background-color: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  /* background-color: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l)); */
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   border-top: none;
 }
 .order-ripped-teaser{
@@ -86,6 +86,10 @@
     display:block;
   }
 }
+.tag{
+  margin-bottom:.25em;
+  margin-right:.25em;
+}
 @media screen and (min-width: 768px) {
   .order-icon,
   .showDetails.order-icon.details{
@@ -100,7 +104,7 @@
   }
   .message-body{
     display:block;
-    position:static;
+    /* position:static; */
   }
 }
 </style>

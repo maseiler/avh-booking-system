@@ -1,3 +1,9 @@
 @import "./variables.scss";
 @import "bulma/bulma";
 @import "./catppuccin.scss";
+
+.tag {
+  white-space: break-spaces;
+  height:auto;
+  min-height:2em;
+}

@@ -13,7 +13,7 @@
 
     <Button
     v-if="!cart$.isOverdrawn"
-    class="is-success"
+    class="is-primary"
     @click="checkoutOrder"
     title="discard cart and unselect account"
     :fa-icon="['fas', 'beer']"

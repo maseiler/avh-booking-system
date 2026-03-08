@@ -3,7 +3,7 @@
     <td class="cell productQuantity">
       <div class="field has-addons">
         <p class="control">
-          <button class="button is-danger is-light" @click="cart$.removeFromCart(content.product)"><icon :icon="['fas', 'trash']" /></button>
+          <button class="button" @click="cart$.removeFromCart(content.product)"><icon :icon="['fas', 'trash']" /></button>
         </p>
         <p class="control has-icons-left has-icons-right">
           <input v-model="content.quantity" type="number" class="input"></input>
@@ -12,7 +12,7 @@
         </p>
       </div>
     </td>
-    <td class="cell productName"><span>{{ content.product.name }} ({{ content.product.size }})</span></td>
+    <td class="cell productName"><span>{{ content.product.name }} ({{ content.product.size }} {{ content.product.getUnit().name }})</span></td>
     <td class="cell productTax has-text-right"><span>{{ content.tax }}%</span></td>
     <td class="cell productPrice has-text-right"><span>{{ $n(content.price / 100, 'currency', 'de-DE') }}</span></td>
     <td class="cell productAmount has-text-right"><span>{{ $n(content.price * content.quantity / 100, 'currency', 'de-DE') }}</span></td>

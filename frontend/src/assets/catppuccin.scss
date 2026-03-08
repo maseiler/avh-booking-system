@@ -33,7 +33,7 @@ html[data-theme="catppuccin-latte"] {
   // Danger → Red #d20f39
   --bulma-danger-h: 347deg;
   --bulma-danger-s: 87%;
-  --bulma-danger-l: 44%;
+  --bulma-danger-l: 44%; //44
   // Warning → Yellow #df8e1d
   --bulma-warning-h: 35deg;
   --bulma-warning-s: 77%;
@@ -42,6 +42,12 @@ html[data-theme="catppuccin-latte"] {
   --bulma-info-h: 197deg;
   --bulma-info-s: 97%;
   --bulma-info-l: 46%;
+  
+  // Repariere kaputte Farben
+  --bulma-danger-on-scheme-l: 0%;
+  --bulma-info-on-scheme-1: 0%;
+  --bulma-primary-invert-1: 100%;
+  --bulma-info-invert-1: 100%;
 }
 
 html[data-theme="catppuccin-frappe"] {
