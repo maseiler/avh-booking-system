@@ -80,16 +80,15 @@
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="account.category">
-            <option value="0">All</option>
             <option v-for="category in category$.accountCategories" :value="category.id" class="has-icons-left">
               {{ category.title }}
             </option>
           </select>
+          </div>
+           <div class="icon is-small is-left">
+            <icon :icon="categoryIcon"/>
+          </div>
         </div>
-        <div class="icon is-small is-left">
-          <icon :icon="categoryIcon"/>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -137,6 +136,16 @@
   </div>
 
 </template>
+
+<style scoped>
+.dropdown-item.is-active {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 600;
+  border-left: 3px solid hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l));
+  padding-left: calc(1rem - 3px);
+}
+</style>
 
 <script lang="ts">
 import { useAccountStore } from '../../store/AccountStore';

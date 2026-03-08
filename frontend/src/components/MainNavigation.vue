@@ -46,6 +46,7 @@
     </div>
 
     <div class="navbar-end">
+      <ThemeSelector />
       <div class="navbar-item">
         <div class="buttons">
           <a class="button is-light">
@@ -59,7 +60,10 @@
 </template>
 
 <script lang="ts">
+  import ThemeSelector from './ThemeSelector.vue'
+
   export default {
+    components: { ThemeSelector },
     data() {
       return {
         burgerActive: false as Boolean

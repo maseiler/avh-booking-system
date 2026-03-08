@@ -1,0 +1,183 @@
+html[data-theme="catppuccin-latte"] {
+  // Scheme (backgrounds)
+  --bulma-scheme-h: 220;
+  --bulma-scheme-s: 23%;
+  --bulma-scheme-main-l: 95%;        // Base #eff1f5
+  --bulma-scheme-main-bis-l: 92%;    // Mantle #e6e9ef
+  --bulma-scheme-main-ter-l: 89%;    // Crust #dce0e8
+  --bulma-scheme-invert-l: 35%;
+  --bulma-scheme-invert-bis-l: 29%;
+  --bulma-scheme-invert-ter-l: 47%;
+  --bulma-background-l: 83%;         // Surface0 #ccd0da
+  --bulma-border-l: 77%;             // Surface1 #bcc0cc
+  --bulma-border-weak-l: 83%;
+  // Text
+  --bulma-text-h: 234deg;
+  --bulma-text-s: 16%;
+  --bulma-text-l: 35%;               // Text #4c4f69
+  --bulma-text-weak-l: 47%;          // Subtext0 #6c6f85
+  --bulma-text-strong-l: 21%;
+  --bulma-text-title-l: 14%;
+  // Primary → Sky #04a5e5
+  --bulma-primary-h: 197deg;
+  --bulma-primary-s: 97%;
+  --bulma-primary-l: 46%;
+  // Link → Blue #1e66f5
+  --bulma-link-h: 220deg;
+  --bulma-link-s: 91%;
+  --bulma-link-l: 54%;
+  // Success → Green #40a02b
+  --bulma-success-h: 109deg;
+  --bulma-success-s: 58%;
+  --bulma-success-l: 40%;
+  // Danger → Red #d20f39
+  --bulma-danger-h: 347deg;
+  --bulma-danger-s: 87%;
+  --bulma-danger-l: 44%; //44
+  // Warning → Yellow #df8e1d
+  --bulma-warning-h: 35deg;
+  --bulma-warning-s: 77%;
+  --bulma-warning-l: 49%;
+  // Info → Sky #04a5e5
+  --bulma-info-h: 197deg;
+  --bulma-info-s: 97%;
+  --bulma-info-l: 46%;
+  
+  // Repariere kaputte Farben
+  --bulma-danger-on-scheme-l: 0%;
+  --bulma-info-on-scheme-1: 0%;
+  --bulma-primary-invert-1: 100%;
+  --bulma-info-invert-1: 100%;
+}
+
+html[data-theme="catppuccin-frappe"] {
+  --bulma-scheme-h: 229;
+  --bulma-scheme-s: 19%;
+  --bulma-scheme-main-l: 23%;        // Base #303446
+  --bulma-scheme-main-bis-l: 20%;    // Mantle #292c3c
+  --bulma-scheme-main-ter-l: 17%;    // Crust #232634
+  --bulma-scheme-invert-l: 87%;
+  --bulma-scheme-invert-bis-l: 92%;
+  --bulma-scheme-invert-ter-l: 73%;
+  --bulma-background-l: 30%;         // Surface0 #414559
+  --bulma-border-l: 37%;             // Surface1 #51576d
+  --bulma-border-weak-l: 30%;
+  --bulma-text-h: 227deg;
+  --bulma-text-s: 70%;
+  --bulma-text-l: 87%;               // Text #c6d0f5
+  --bulma-text-weak-l: 73%;          // Subtext0 #a5adce
+  --bulma-text-strong-l: 95%;
+  --bulma-text-title-l: 99%;
+  // Primary → Sky #99d1db
+  --bulma-primary-h: 189deg;
+  --bulma-primary-s: 48%;
+  --bulma-primary-l: 73%;
+  // Link → Blue #8caaee
+  --bulma-link-h: 222deg;
+  --bulma-link-s: 74%;
+  --bulma-link-l: 74%;
+  // Success → Green #a6d189
+  --bulma-success-h: 96deg;
+  --bulma-success-s: 44%;
+  --bulma-success-l: 68%;
+  // Danger → Red #e78284
+  --bulma-danger-h: 359deg;
+  --bulma-danger-s: 68%;
+  --bulma-danger-l: 71%;
+  // Warning → Yellow #e5c890
+  --bulma-warning-h: 40deg;
+  --bulma-warning-s: 62%;
+  --bulma-warning-l: 73%;
+  // Info → Sky #99d1db
+  --bulma-info-h: 189deg;
+  --bulma-info-s: 48%;
+  --bulma-info-l: 73%;
+}
+
+html[data-theme="catppuccin-macchiato"] {
+  --bulma-scheme-h: 232;
+  --bulma-scheme-s: 23%;
+  --bulma-scheme-main-l: 18%;        // Base #24273a
+  --bulma-scheme-main-bis-l: 15%;    // Mantle #1e2030
+  --bulma-scheme-main-ter-l: 12%;    // Crust #181926
+  --bulma-scheme-invert-l: 87%;
+  --bulma-scheme-invert-bis-l: 92%;
+  --bulma-scheme-invert-ter-l: 72%;
+  --bulma-background-l: 26%;         // Surface0 #363a4f
+  --bulma-border-l: 34%;             // Surface1 #494d64
+  --bulma-border-weak-l: 26%;
+  --bulma-text-h: 227deg;
+  --bulma-text-s: 68%;
+  --bulma-text-l: 88%;               // Text #cad3f5
+  --bulma-text-weak-l: 72%;          // Subtext0 #a5adcb
+  --bulma-text-strong-l: 95%;
+  --bulma-text-title-l: 99%;
+  // Primary → Sky #91d7e3
+  --bulma-primary-h: 189deg;
+  --bulma-primary-s: 59%;
+  --bulma-primary-l: 73%;
+  // Link → Blue #8aadf4
+  --bulma-link-h: 220deg;
+  --bulma-link-s: 83%;
+  --bulma-link-l: 75%;
+  // Success → Green #a6da95
+  --bulma-success-h: 105deg;
+  --bulma-success-s: 48%;
+  --bulma-success-l: 72%;
+  // Danger → Red #ed8796
+  --bulma-danger-h: 351deg;
+  --bulma-danger-s: 74%;
+  --bulma-danger-l: 73%;
+  // Warning → Yellow #eed49f
+  --bulma-warning-h: 38deg;
+  --bulma-warning-s: 72%;
+  --bulma-warning-l: 78%;
+  // Info → Sky #91d7e3
+  --bulma-info-h: 189deg;
+  --bulma-info-s: 59%;
+  --bulma-info-l: 73%;
+}
+
+html[data-theme="catppuccin-mocha"] {
+  --bulma-scheme-h: 240;
+  --bulma-scheme-s: 21%;
+  --bulma-scheme-main-l: 15%;        // Base #1e1e2e
+  --bulma-scheme-main-bis-l: 12%;    // Mantle #181825
+  --bulma-scheme-main-ter-l: 9%;     // Crust #11111b
+  --bulma-scheme-invert-l: 88%;
+  --bulma-scheme-invert-bis-l: 93%;
+  --bulma-scheme-invert-ter-l: 72%;
+  --bulma-background-l: 23%;         // Surface0 #313244
+  --bulma-border-l: 31%;             // Surface1 #45475a
+  --bulma-border-weak-l: 23%;
+  --bulma-text-h: 226deg;
+  --bulma-text-s: 64%;
+  --bulma-text-l: 88%;               // Text #cdd6f4
+  --bulma-text-weak-l: 72%;          // Subtext0 #a6adc8
+  --bulma-text-strong-l: 95%;
+  --bulma-text-title-l: 99%;
+  // Primary → Sky #89dceb
+  --bulma-primary-h: 189deg;
+  --bulma-primary-s: 71%;
+  --bulma-primary-l: 73%;
+  // Link → Blue #89b4fa
+  --bulma-link-h: 217deg;
+  --bulma-link-s: 92%;
+  --bulma-link-l: 76%;
+  // Success → Green #a6e3a1
+  --bulma-success-h: 115deg;
+  --bulma-success-s: 54%;
+  --bulma-success-l: 76%;
+  // Danger → Red #f38ba8
+  --bulma-danger-h: 343deg;
+  --bulma-danger-s: 81%;
+  --bulma-danger-l: 75%;
+  // Warning → Yellow #f9e2af
+  --bulma-warning-h: 40deg;
+  --bulma-warning-s: 88%;
+  --bulma-warning-l: 83%;
+  // Info → Sky #89dceb
+  --bulma-info-h: 189deg;
+  --bulma-info-s: 71%;
+  --bulma-info-l: 73%;
+}

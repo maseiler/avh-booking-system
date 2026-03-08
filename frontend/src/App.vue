@@ -10,7 +10,8 @@
     import MainNavigation from './components/MainNavigation.vue';
   import DevModeBar from './components/DevModeBar.vue';
   import { useSocketStore } from './store/socketStore';
-  
+  import { useThemeStore } from './store/themeStore';
+
   export default {
     components: {
       MainNavigation,
@@ -20,9 +21,11 @@
       return {
         dev: false,
         socket$: useSocketStore(),
+        theme$: useThemeStore(),
       }
     },
     mounted() {
+        this.theme$.init();
         this.dev = import.meta.env.DEV;
         this.socket$.getAllFromDb();
     }

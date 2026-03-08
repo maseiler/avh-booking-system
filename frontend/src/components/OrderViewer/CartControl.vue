@@ -2,7 +2,7 @@
 
   <Buttons>
     <Button
-    class="is-warning is-inverted is-outlined"
+    class="is-warning"
     @click="$emit('cancelOrder')"
     title="discard cart and unselect account"
     :fa-icon="['fas', 'trash']"
@@ -13,8 +13,8 @@
 
     <Button
     v-if="!cart$.isOverdrawn"
-    class="is-success is-inverted is-outlined"
-    @click="checkoutOrder" 
+    class="is-primary"
+    @click="checkoutOrder"
     title="discard cart and unselect account"
     :fa-icon="['fas', 'beer']"
     icon-position="right"
@@ -24,7 +24,7 @@
 
     <Button
     v-if="cart$.isOverdrawn"
-    class="is-inverted is-danger is-outlined"
+    class="is-danger"
     title="discard cart and unselect account"
     :fa-icon="['fas', 'coins']"
     icon-position="right"
