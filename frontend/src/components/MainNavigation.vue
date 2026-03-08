@@ -31,16 +31,16 @@
         Orders
       </router-link>
 
-      <a class="navbar-item">Statistics</a>
+      <a class="navbar-item" href="#">Statistics</a>
 
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">Settings</a>
+        <a class="navbar-link" href="#">Settings</a>
 
         <div class="navbar-dropdown">
           <router-link to="/settings/products" class="navbar-item" @click="burgerActive = false">Wareneinstellungen</router-link>
           <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">Accounteinstellungen</router-link>
           <router-link to="/settings/payments" class="navbar-item" @click="burgerActive = false">Zahlungseinstellungen</router-link>
-          <a class="navbar-item" @click="burgerActive = false">Systemeinstellungen</a>
+          <router-link to="/settings/application" class="navbar-item" @click="burgerActive = false">Systemeinstellungen</router-link>
         </div>
       </div>
     </div>
