@@ -32,7 +32,10 @@ type modelStructs struct {
 func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 	currentWorkDirectory, _ := os.Getwd()
 	config.LoadEnvFromFile(currentWorkDirectory + `/.env`)
-	dbConf := config.LoadDbConfig()
+	dbConf, err := config.LoadDbConfig()
+	if err != nil {
+		panic(err)
+	}
 
 	dbPool, err = database.New(dbConf.DbUser, dbConf.DbPassword, dbConf.DbHost, dbConf.DbPort, dbConf.DbName)
 	if err != nil {

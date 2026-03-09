@@ -23,7 +23,11 @@ type application struct {
 func main() {
 	config.LoadEnv()
 	appConf := config.LoadConfig()
-	dbConf := config.LoadDbConfig()
+	dbConf, err := config.LoadDbConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 
 	dbPool, err := database.New(dbConf.DbUser, dbConf.DbPassword, dbConf.DbHost, dbConf.DbPort, dbConf.DbName)
 	if err != nil {

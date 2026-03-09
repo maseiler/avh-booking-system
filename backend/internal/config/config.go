@@ -1,11 +1,14 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
+	"fmt"
 	"log"
 	"log/slog"
 	"os"
 	"strconv"
+	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -27,7 +30,7 @@ type DbConfig struct {
 }
 
 func LoadEnv() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(); err != nil && !os.IsNotExist(err) {
 		log.Fatal("Error loading .env file: " + err.Error())
 	}
 }
@@ -47,19 +50,36 @@ func LoadConfig() *AppConfig {
 	return conf
 }
 
-func LoadDbConfig() *DbConfig {
-	return createDbConfig()
-}
+func LoadDbConfig() (*DbConfig, error) {
+	conf := &DbConfig{
+		DbHost:     getString("DB_HOST", ""),
+		DbPort:     getInt("DB_PORT", 0),
+		DbName:     getString("DB_NAME", ""),
+		DbUser:     getString("DB_USER", ""),
+		DbPassword: getString("DB_PASSWORD", ""),
+	}
 
-func createDbConfig() *DbConfig {
-	conf := &DbConfig{}
-	conf.DbHost = getString("DB_HOST", "INVALID")
-	conf.DbPort = getInt("DB_PORT", 0)
-	conf.DbName = getString("DB_NAME", "INVALID")
-	conf.DbUser = getString("DB_USER", "INVALID")
-	conf.DbPassword = getString("DB_PASSWORD", "INVALID")
+	var missing []string
+	if conf.DbHost == "" {
+		missing = append(missing, "DB_HOST")
+	}
+	if conf.DbPort == 0 {
+		missing = append(missing, "DB_PORT")
+	}
+	if conf.DbName == "" {
+		missing = append(missing, "DB_NAME")
+	}
+	if conf.DbUser == "" {
+		missing = append(missing, "DB_USER")
+	}
+	if conf.DbPassword == "" {
+		missing = append(missing, "DB_PASSWORD")
+	}
+	if len(missing) > 0 {
+		return nil, fmt.Errorf("missing required env vars: %s", strings.Join(missing, ", "))
+	}
 
-	return conf
+	return conf, nil
 }
 
 func getString(key, defaultValue string) string {
@@ -85,24 +105,10 @@ func getInt(key string, defaultValue int) int {
 	return intValue
 }
 
-func getBool(key string, defaultValue bool) bool {
-	value, exists := os.LookupEnv(key)
-	if !exists {
-		return defaultValue
-	}
-
-	boolValue, err := strconv.ParseBool(value)
-	if err != nil {
-		panic(err)
-	}
-
-	return boolValue
-}
-
 func getLogLevel(key string, defaultValue slog.Level) slog.Level {
 	value, exists := os.LookupEnv(key)
 	if !exists {
-		return slog.LevelInfo
+		return defaultValue
 	}
 
 	m := make(map[string]slog.Level)
