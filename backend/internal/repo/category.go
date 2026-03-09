@@ -20,8 +20,11 @@ type CategoryModel struct {
 // Get retrieves categories based on the provided query specification.
 func (m *CategoryModel) Get(query *Query) ([]models.Category, error) {
 	ctx := context.Background()
-	stmt := buildSelectSQL(query)
-	rows, err := m.DB.Query(ctx, stmt)
+	stmt, args, err := buildSelectSQL(query)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := m.DB.Query(ctx, stmt, args...)
 
 	if err != nil {
 		var pgErr *pgconn.PgError

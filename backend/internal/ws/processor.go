@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"strconv"
@@ -10,6 +11,14 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/repo"
 )
+
+func queryError(table repo.TableName, err error) *WsError {
+	code := WsErrorCode(WsDbQueryError)
+	if errors.Is(err, repo.ErrInvalidColumn) {
+		code = WsInvalidFilter
+	}
+	return &WsError{Code: code, Message: err.Error(), Details: "Query failed for table " + string(table)}
+}
 
 func (s *Service) processPing(message Message) ([]byte, *WsError) {
 	b, err := json.Marshal(message.Payload)
@@ -47,7 +56,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableAccount:
 		accounts, dbErr := s.stores.Account.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, account := range accounts {
@@ -59,7 +68,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableCategory:
 		categories, dbErr := s.stores.Category.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, category := range categories {
@@ -71,7 +80,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableLocation:
 		locations, dbErr := s.stores.Location.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, loc := range locations {
@@ -83,7 +92,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableProduct:
 		products, dbErr := s.stores.Product.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, product := range products {
@@ -95,7 +104,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableProductGroup:
 		groups, dbErr := s.stores.ProductGroup.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, group := range groups {
@@ -107,7 +116,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableProductVisibility:
 		visibilities, dbErr := s.stores.ProductVisibility.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, vis := range visibilities {
@@ -119,7 +128,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableUnit:
 		units, dbErr := s.stores.Unit.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, unit := range units {
@@ -131,7 +140,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 	case repo.TableVat:
 		vats, dbErr := s.stores.Vat.Get(query)
 		if dbErr != nil {
-			return nil, &WsError{Code: WsDbQueryError, Message: dbErr.Error(), Details: "Query failed for table " + string(query.Table)}
+			return nil, queryError(query.Table, dbErr)
 		}
 		var rawJsonSlice []json.RawMessage
 		for _, vat := range vats {

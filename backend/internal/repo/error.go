@@ -7,3 +7,4 @@ import "errors"
 // --------------------------------------------------
 
 var DbQueryError = errors.New("database query failed")
+var ErrInvalidColumn = errors.New("invalid column name")

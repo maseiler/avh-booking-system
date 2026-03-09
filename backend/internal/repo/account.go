@@ -20,8 +20,11 @@ type AccountModel struct {
 // Get retrieves accounts based on the provided query specification.
 func (m *AccountModel) Get(query *Query) ([]models.Account, error) {
 	ctx := context.Background()
-	stmt := buildSelectSQL(query)
-	rows, err := m.DB.Query(ctx, stmt)
+	stmt, args, err := buildSelectSQL(query)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := m.DB.Query(ctx, stmt, args...)
 
 	if err != nil {
 		var pgErr *pgconn.PgError

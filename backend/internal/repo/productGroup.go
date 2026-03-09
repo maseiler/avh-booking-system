@@ -21,10 +21,13 @@ type ProductGroupModel struct {
 // Get retrieves product groups based on the provided query specification.
 func (m *ProductGroupModel) Get(query *Query) ([]models.ProductGroup, error) {
 	ctx := context.Background()
-	stmt := buildSelectSQL(query)
+	stmt, args, err := buildSelectSQL(query)
+	if err != nil {
+		return nil, err
+	}
 	// pgx will panic when it tries to assign null to int as might be the case for the parent field. COALESCE in the SQL select statement will replace null values with 0.
 	stmt = strings.Replace(stmt, "SELECT *", "SELECT product_group_id, name, COALESCE(parent, 0) AS parent", 1)
-	rows, err := m.DB.Query(ctx, stmt)
+	rows, err := m.DB.Query(ctx, stmt, args...)
 
 	if err != nil {
 		var pgErr *pgconn.PgError

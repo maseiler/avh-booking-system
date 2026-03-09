@@ -20,8 +20,11 @@ type VatModel struct {
 // Get retrieves VATs based on the provided query specification.
 func (m *VatModel) Get(query *Query) ([]models.Vat, error) {
 	ctx := context.Background()
-	stmt := buildSelectSQL(query)
-	rows, err := m.DB.Query(ctx, stmt)
+	stmt, args, err := buildSelectSQL(query)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := m.DB.Query(ctx, stmt, args...)
 
 	if err != nil {
 		var pgErr *pgconn.PgError
