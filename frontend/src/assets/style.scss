@@ -1,6 +1,6 @@
-@import "./variables.scss";
-@import "bulma/bulma";
-@import "./catppuccin.scss";
+@use "./variables.scss";
+@use "bulma/bulma";
+@use "./catppuccin.scss";
 
 .tag {
   white-space: break-spaces;
