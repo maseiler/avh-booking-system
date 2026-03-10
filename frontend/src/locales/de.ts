@@ -1,4 +1,9 @@
 const de = {
+  "settings":{
+    "language": "Sprache",
+    "de": "deutsch",
+    "en": "englisch",
+  },
   "home":{
     "title": "Akademischer Verein Hütte",
     "subtitle": "Buchungssystem",

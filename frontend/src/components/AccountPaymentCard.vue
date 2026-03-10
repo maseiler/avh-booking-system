@@ -14,7 +14,7 @@
         </div>
         <div class="balance-area">
           <span>Balance</span><br>
-          <span class="balance" :class="account$.selected[0].balance <= (-1* account$.selected[0].maxDebt) ? 'has-text-danger' : 'has-text-primary'">{{ $n(account$.selected[0].balance / 100, 'currency', 'de-DE') }}</span>
+          <span class="balance" :class="account$.selected[0].balance <= (-1* account$.selected[0].maxDebt) ? 'has-text-danger' : 'has-text-primary'">{{ $n(account$.selected[0].balance / 100, 'currency') }}</span>
         </div>
       </div>
 

@@ -25,7 +25,7 @@ function loadLocaleNumbers(){
   // })
   // return numbers
   const numberFormats = {
-    "de-DE": {
+    "de": {
       "currency": {
         "style": "currency",
         "currency": "EUR",
@@ -42,7 +42,7 @@ function loadLocaleNumbers(){
         "useGrouping": false
       }
     },
-    "en-US":{
+    "en":{
       "currency":{
         "style": "currency",
         "currency": "USD",

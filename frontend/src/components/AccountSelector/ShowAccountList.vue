@@ -51,8 +51,8 @@
           <td>{{ account.lastName }}</td>
           <td class="has-copy-btn">{{ account.email }} <span class="icon is-small" @click="copyText(account.email)"><icon :icon="['fas', 'copy']" /></span></td>
           <td class="has-copy-btn">{{ account.phone }} <span class="icon is-small"><icon :icon="['fas', 'copy']" /></span></td>
-          <td class="has-text-right">{{ $n(account.balance / 100, 'currency', 'de-DE') }}</td>
-          <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency', 'de-DE') }}</td>
+          <td class="has-text-right">{{ $n(account.balance / 100, 'currency') }}</td>
+          <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency') }}</td>
           <td>
             <button class="tag" :class="account.getCategory() == undefined? 'is-skeleton' : ''">
               <span class="icon"><icon :icon="account.getCategory()?.icon" /></span>

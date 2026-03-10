@@ -1,11 +1,11 @@
 <template>
 <p class="cartSum">
   Summe:
-  <span>{{ $n(cart$.getTotals[0] / 100, 'currency', 'de-DE') }}</span>
+  <span>{{ $n(cart$.getTotals[0] / 100, 'currency') }}</span>
 </p>
 <p class="cartTax">
   Davon Steuer:
-  <span>{{ $n(cart$.getTotals[1] / 100, 'currency', 'de-DE') }}</span>
+  <span>{{ $n(cart$.getTotals[1] / 100, 'currency') }}</span>
 </p>
 </template>
 

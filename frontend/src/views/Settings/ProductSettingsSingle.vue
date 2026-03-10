@@ -210,4 +210,7 @@ export default {
 .not-visible{
   opacity:0.6;
 }
+.columns{
+  align-items: center;
+}
 </style>

@@ -145,6 +145,9 @@
   border-left: 3px solid hsl(var(--bulma-primary-h), var(--bulma-primary-s), var(--bulma-primary-l));
   padding-left: calc(1rem - 3px);
 }
+.columns{
+  align-items: center;
+}
 </style>
 
 <script lang="ts">
