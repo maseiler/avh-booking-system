@@ -6,6 +6,19 @@ import (
 	"log/slog"
 )
 
+// logLevel returns the appropriate log level for this error.
+// Client errors (bad input) are logged at Warn; server errors at Error.
+func (wse *WSError) logLevel() slog.Level {
+	switch wse.Code {
+	case WSBadJSON, WSBadInterface, WSBadStruct,
+		WSInvalidTable, WSInvalidOperation, WSInvalidFilter,
+		WSNotFound:
+		return slog.LevelWarn
+	default:
+		return slog.LevelError
+	}
+}
+
 // --------------------------------------------------
 // Websocket errors
 // --------------------------------------------------
@@ -40,7 +53,7 @@ func (wse *WSError) String() string {
 }
 
 func (s *Service) sendError(c *Client, wsErr *WSError) {
-	s.log.Error(wsErr.String())
+	s.log.Log(nil, wsErr.logLevel(), wsErr.String())
 
 	// Create error message
 	msg := Message{
