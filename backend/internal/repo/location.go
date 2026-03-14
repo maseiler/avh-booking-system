@@ -52,7 +52,7 @@ func (m *LocationModel) GetById(id int) (*models.Location, error) {
 	row := m.DB.QueryRow(ctx, stmt, id)
 
 	var location models.Location
-	err := row.Scan(&location.Id, &location.Name)
+	err := row.Scan(&location.ID, &location.Name)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord

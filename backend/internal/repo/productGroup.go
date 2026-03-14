@@ -56,7 +56,7 @@ func (m *ProductGroupModel) GetById(id int) (*models.ProductGroup, error) {
 
 	var productGroup models.ProductGroup
 	var parentId *int // pointer to read null
-	err := row.Scan(&productGroup.Id, &productGroup.Name, &parentId)
+	err := row.Scan(&productGroup.ID, &productGroup.Name, &parentId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord
@@ -65,9 +65,9 @@ func (m *ProductGroupModel) GetById(id int) (*models.ProductGroup, error) {
 		}
 	}
 	if parentId == nil {
-		productGroup.ParentId = 0
+		productGroup.ParentID = 0
 	} else {
-		productGroup.ParentId = *parentId
+		productGroup.ParentID = *parentId
 	}
 
 	return &productGroup, nil
@@ -78,7 +78,7 @@ func (m *ProductGroupModel) Insert(group models.ProductGroup) (int, error) {
 	ctx := context.Background()
 	var id int
 	var err error
-	if group.ParentId <= 0 {
+	if group.ParentID <= 0 {
 		query := `
         INSERT INTO product_group (name)
         VALUES ($1)
@@ -89,7 +89,7 @@ func (m *ProductGroupModel) Insert(group models.ProductGroup) (int, error) {
         INSERT INTO product_group (name, parent)
         VALUES ($1, $2)
         RETURNING product_group_id`
-		err = m.DB.QueryRow(ctx, query, group.Name, group.ParentId).Scan(&id)
+		err = m.DB.QueryRow(ctx, query, group.Name, group.ParentID).Scan(&id)
 	}
 
 	return id, err

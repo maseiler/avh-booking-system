@@ -52,8 +52,8 @@ func (m *ProductModel) GetById(productId int) (*models.Product, error) {
 	row := m.DB.QueryRow(ctx, stmt, productId)
 
 	var product models.Product
-	err := row.Scan(&product.Id, &product.Name, &product.Price, &product.VatId, &product.ProductGroupId,
-		&product.Size, &product.UnitId, &product.CategoryId, &product.CreatedAt)
+	err := row.Scan(&product.ID, &product.Name, &product.Price, &product.VatID, &product.ProductGroupID,
+		&product.Size, &product.UnitID, &product.CategoryID, &product.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord
@@ -76,11 +76,11 @@ func (m *ProductModel) Insert(product models.Product) (int, error) {
 	err := m.DB.QueryRow(ctx, query,
 		product.Name,
 		product.Price,
-		product.VatId,
-		product.ProductGroupId,
+		product.VatID,
+		product.ProductGroupID,
 		product.Size,
-		product.UnitId,
-		product.CategoryId,
+		product.UnitID,
+		product.CategoryID,
 	).Scan(&id)
 
 	return id, err

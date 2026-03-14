@@ -99,7 +99,7 @@ func (m *AccountModel) Update(account models.Account) (int, error) {
 		account.MaxDebt,
 		account.Category,
 		account.Enabled,
-		account.Id).Scan(&id)
+		account.ID).Scan(&id)
 
 	return id, err
 }

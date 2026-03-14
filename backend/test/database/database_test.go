@@ -45,7 +45,7 @@ func TestGetAccountById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, accountId, daGama.Id)
+	require.Equal(t, accountId, daGama.ID)
 	require.Equal(t, "Vasco", daGama.FirstName)
 	require.Equal(t, "Cape Conqueror", daGama.Nickname)
 	require.Equal(t, "da Gama", daGama.LastName)
@@ -111,7 +111,7 @@ func TestGetCategoryById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, categoryId, cat.Id)
+	require.Equal(t, categoryId, cat.ID)
 	require.Equal(t, "Sailor", cat.Name)
 	require.Equal(t, true, cat.Enabled)
 	require.Equal(t, "sailboat", cat.Icon)
@@ -141,14 +141,14 @@ func TestGetProductById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, product.Id, productId)
+	require.Equal(t, product.ID, productId)
 	require.Equal(t, "Rota das Especiarias", product.Name)
 	require.Equal(t, 1800, product.Price)
-	require.Equal(t, 1, product.VatId)
-	require.Equal(t, 1, product.ProductGroupId)
+	require.Equal(t, 1, product.VatID)
+	require.Equal(t, 1, product.ProductGroupID)
 	require.Equal(t, 150, product.Size)
-	require.Equal(t, 1, product.UnitId)
-	require.Equal(t, 2, product.CategoryId)
+	require.Equal(t, 1, product.UnitID)
+	require.Equal(t, 2, product.CategoryID)
 }
 
 // --------------------------------------------------
@@ -174,9 +174,9 @@ func TestGetProductGroupById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, groupId, group.Id)
+	require.Equal(t, groupId, group.ID)
 	require.Equal(t, "Alcohol", group.Name)
-	require.Equal(t, 0, group.ParentId)
+	require.Equal(t, 0, group.ParentID)
 }
 
 // --------------------------------------------------
@@ -202,7 +202,7 @@ func TestGetUnitById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, unitId, unit.Id)
+	require.Equal(t, unitId, unit.ID)
 	require.Equal(t, "ml", unit.Name)
 }
 
@@ -229,9 +229,9 @@ func TestProductVisibilityById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, visibilityId, unit.Id)
-	require.Equal(t, 1, unit.CategoryId)
-	require.Equal(t, 1, unit.ProductId)
+	require.Equal(t, visibilityId, unit.ID)
+	require.Equal(t, 1, unit.CategoryID)
+	require.Equal(t, 1, unit.ProductID)
 }
 
 // --------------------------------------------------
@@ -257,7 +257,7 @@ func TestGetLocationById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, locationId, location.Id)
+	require.Equal(t, locationId, location.ID)
 	require.Equal(t, "Bermuda Triangle", location.Name)
 }
 
@@ -284,6 +284,6 @@ func TestGetVatById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, vatId, vat.Id)
+	require.Equal(t, vatId, vat.ID)
 	require.Equal(t, 19, vat.Rate)
 }

@@ -52,7 +52,7 @@ func (m *VatModel) GetById(id int) (*models.Vat, error) {
 	row := m.DB.QueryRow(ctx, stmt, id)
 
 	var vat models.Vat
-	err := row.Scan(&vat.Id, &vat.Rate)
+	err := row.Scan(&vat.ID, &vat.Rate)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord

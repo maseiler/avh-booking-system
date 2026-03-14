@@ -52,7 +52,7 @@ func (m *UnitModel) GetById(id int) (*models.Unit, error) {
 	row := m.DB.QueryRow(ctx, stmt, id)
 
 	var unit models.Unit
-	err := row.Scan(&unit.Id, &unit.Name)
+	err := row.Scan(&unit.ID, &unit.Name)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord

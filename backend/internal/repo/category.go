@@ -52,7 +52,7 @@ func (m *CategoryModel) GetById(id int) (*models.Category, error) {
 	row := m.DB.QueryRow(ctx, stmt, id)
 
 	var cat models.Category
-	err := row.Scan(&cat.Id, &cat.Name, &cat.Enabled, &cat.Icon, &cat.Type)
+	err := row.Scan(&cat.ID, &cat.Name, &cat.Enabled, &cat.Icon, &cat.Type)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord

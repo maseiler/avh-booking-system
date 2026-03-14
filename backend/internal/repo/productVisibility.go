@@ -52,7 +52,7 @@ func (m *ProductVisibilityModel) GetById(id int) (*models.ProductVisibility, err
 	row := m.DB.QueryRow(ctx, stmt, id)
 
 	var productVisibility models.ProductVisibility
-	err := row.Scan(&productVisibility.Id, &productVisibility.CategoryId, &productVisibility.LocationId, &productVisibility.ProductId)
+	err := row.Scan(&productVisibility.ID, &productVisibility.CategoryID, &productVisibility.LocationID, &productVisibility.ProductID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord
@@ -72,7 +72,7 @@ func (m *ProductVisibilityModel) Insert(visibility models.ProductVisibility) (in
         INSERT INTO product_visibility (category, location, product)
         VALUES ($1, $2, $3)
         RETURNING product_visibility_id`
-	err := m.DB.QueryRow(ctx, query, visibility.CategoryId, visibility.LocationId, visibility.ProductId).Scan(&id)
+	err := m.DB.QueryRow(ctx, query, visibility.CategoryID, visibility.LocationID, visibility.ProductID).Scan(&id)
 
 	return id, err
 }
