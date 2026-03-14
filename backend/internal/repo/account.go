@@ -2,14 +2,11 @@ package repo
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // AccountModel provides database operations for Account entities.
@@ -25,18 +22,12 @@ func (m *AccountModel) Get(query *Query) ([]models.Account, error) {
 		return nil, err
 	}
 	rows, err := m.DB.Query(ctx, stmt, args...)
-
 	if err != nil {
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) {
-			fmt.Println(pgErr.Message)
-			fmt.Println(pgErr.Code)
-		}
+		return nil, err
 	}
 
 	accounts, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Account])
 	if err != nil {
-		fmt.Printf("CollectRows error: %v", err)
 		return nil, err
 	}
 

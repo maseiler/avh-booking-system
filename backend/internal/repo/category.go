@@ -4,12 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // CategoryModel provides database operations for Category entities.
@@ -25,18 +23,12 @@ func (m *CategoryModel) Get(query *Query) ([]models.Category, error) {
 		return nil, err
 	}
 	rows, err := m.DB.Query(ctx, stmt, args...)
-
 	if err != nil {
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) {
-			fmt.Println(pgErr.Message)
-			fmt.Println(pgErr.Code)
-		}
+		return nil, err
 	}
 
 	categories, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.Category])
 	if err != nil {
-		fmt.Printf("CollectRows error: %v", err)
 		return nil, err
 	}
 

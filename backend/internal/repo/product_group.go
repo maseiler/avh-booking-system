@@ -4,13 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // ProductGroupModel provides database operations for ProductGroup entities.
@@ -28,18 +26,12 @@ func (m *ProductGroupModel) Get(query *Query) ([]models.ProductGroup, error) {
 	// pgx will panic when it tries to assign null to int as might be the case for the parent field. COALESCE in the SQL select statement will replace null values with 0.
 	stmt = strings.Replace(stmt, "SELECT *", "SELECT product_group_id, name, COALESCE(parent, 0) AS parent", 1)
 	rows, err := m.DB.Query(ctx, stmt, args...)
-
 	if err != nil {
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) {
-			fmt.Println(pgErr.Message)
-			fmt.Println(pgErr.Code)
-		}
+		return nil, err
 	}
 
 	groups, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.ProductGroup])
 	if err != nil {
-		fmt.Printf("CollectRows error: %v", err)
 		return nil, err
 	}
 
