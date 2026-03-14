@@ -35,7 +35,10 @@ func (s *Service) processPing(message Message) ([]byte, *WSError) {
 
 	pong := PingPong{Timestamp: time.Now()}
 	response := Message{Type: MsgTypePong, Payload: pong}
-	b, _ = json.Marshal(response)
+	b, err = json.Marshal(response)
+	if err != nil {
+		return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode pong response"}
+	}
 
 	err = s.validator.validate(b)
 	if err != nil {
@@ -60,7 +63,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, account := range accounts {
-			rawAccount, _ := json.Marshal(account)
+			rawAccount, err := json.Marshal(account)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode account"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawAccount)
 		}
 		return s.marshalQueryResultList(repo.TableAccount, &rawJSONSlice)
@@ -72,7 +78,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, category := range categories {
-			rawCategory, _ := json.Marshal(category)
+			rawCategory, err := json.Marshal(category)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode category"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawCategory)
 		}
 		return s.marshalQueryResultList(repo.TableCategory, &rawJSONSlice)
@@ -84,7 +93,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, loc := range locations {
-			rawLoc, _ := json.Marshal(loc)
+			rawLoc, err := json.Marshal(loc)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode location"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawLoc)
 		}
 		return s.marshalQueryResultList(repo.TableLocation, &rawJSONSlice)
@@ -96,7 +108,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, product := range products {
-			rawProduct, _ := json.Marshal(product)
+			rawProduct, err := json.Marshal(product)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawProduct)
 		}
 		return s.marshalQueryResultList(repo.TableProduct, &rawJSONSlice)
@@ -108,7 +123,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, group := range groups {
-			rawGroup, _ := json.Marshal(group)
+			rawGroup, err := json.Marshal(group)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product group"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawGroup)
 		}
 		return s.marshalQueryResultList(repo.TableProductGroup, &rawJSONSlice)
@@ -120,7 +138,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, vis := range visibilities {
-			rawVis, _ := json.Marshal(vis)
+			rawVis, err := json.Marshal(vis)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product visibility"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawVis)
 		}
 		return s.marshalQueryResultList(repo.TableProductVisibility, &rawJSONSlice)
@@ -132,7 +153,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, unit := range units {
-			rawUnit, _ := json.Marshal(unit)
+			rawUnit, err := json.Marshal(unit)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode unit"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawUnit)
 		}
 		return s.marshalQueryResultList(repo.TableUnit, &rawJSONSlice)
@@ -144,7 +168,10 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		}
 		var rawJSONSlice []json.RawMessage
 		for _, vat := range vats {
-			rawVat, _ := json.Marshal(vat)
+			rawVat, err := json.Marshal(vat)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode vat"}
+			}
 			rawJSONSlice = append(rawJSONSlice, rawVat)
 		}
 		return s.marshalQueryResultList(repo.TableVat, &rawJSONSlice)
@@ -283,7 +310,10 @@ func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WSError
 				Details: fmt.Sprintf("Could not get account with ID %d", id),
 			}
 		}
-		rawAcc, _ := json.Marshal(account)
+		rawAcc, err := json.Marshal(account)
+		if err != nil {
+			return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode account for broadcast"}
+		}
 		queryResultList = append(queryResultList, rawAcc)
 
 	case repo.TableProductVisibility:
@@ -299,7 +329,10 @@ func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WSError
 			}
 		}
 		for _, vis := range visibilities {
-			rawVis, _ := json.Marshal(vis)
+			rawVis, err := json.Marshal(vis)
+			if err != nil {
+				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product visibility for broadcast"}
+			}
 			queryResultList = append(queryResultList, rawVis)
 		}
 
