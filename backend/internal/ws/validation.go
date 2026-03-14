@@ -25,7 +25,7 @@ func newMessageValidator() *messageValidator {
 func (v *messageValidator) validate(message []byte) error {
 	var data interface{}
 	if err := json.Unmarshal(message, &data); err != nil {
-		panic(err)
+		return err
 	}
 	return v.schema.Validate(data)
 }
