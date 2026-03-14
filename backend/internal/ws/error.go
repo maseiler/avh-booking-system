@@ -3,6 +3,7 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 )
 
 // --------------------------------------------------
@@ -47,16 +48,16 @@ func (s *Service) sendError(c *Client, wsErr *WSError) {
 		Payload: wsErr,
 	}
 
-	// Marshal error message
 	errBytes, err := json.Marshal(msg)
 	if err != nil {
-		panic(err)
+		s.log.Error("failed to marshal error message", slog.String("error", err.Error()))
+		return
 	}
 
-	// Validate error message
 	err = s.validator.validate(errBytes)
 	if err != nil {
-		panic(err)
+		s.log.Error("error message failed schema validation", slog.String("error", err.Error()))
+		return
 	}
 
 	c.Send <- errBytes
