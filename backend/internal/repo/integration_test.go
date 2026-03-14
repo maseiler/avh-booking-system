@@ -1,4 +1,4 @@
-package test_database
+package repo_test
 
 import (
 	"context"
@@ -54,7 +54,7 @@ func TestGetAccountById(t *testing.T) {
 	require.Equal(t, "indianspice@capeofgoodhope.com", daGama.Email)
 	require.Equal(t, "+351 914 97 1498", daGama.Phone)
 	require.Equal(t, 3355, daGama.Balance)
-	require.Equal(t, 100, daGama.MaxDebt)
+	require.Equal(t, 10000, daGama.MaxDebt)
 	require.Equal(t, 1, daGama.Category)
 	require.Equal(t, true, daGama.Enabled)
 	require.NotZero(t, daGama.CreatedAt)

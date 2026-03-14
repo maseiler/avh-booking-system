@@ -1,4 +1,4 @@
-package test_database
+package repo_test
 
 import (
 	"context"
@@ -64,14 +64,12 @@ func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 // getQueriesFromFile reads the file content specified in `filePath` into a string. It expects the content
 // to be SQL queries that are terminated by `;` and returns a list of queries.
 func getQueriesFromFile(filePath string) []string {
-	// open file and read into string
 	buf, err := os.ReadFile(filePath)
 	if err != nil {
 		panic(err)
 	}
 	s := string(buf)
 
-	// separate queries
 	s = strings.ReplaceAll(s, "\n", "")
 	queries := strings.Split(s, ";")
 	if queries[len(queries)-1] == "" {
@@ -82,13 +80,11 @@ func getQueriesFromFile(filePath string) []string {
 
 // batchExecQueries executes a list of queries.
 func batchExecQueries(queries []string) pgx.BatchResults {
-	// batch queries
 	batch := &pgx.Batch{}
 	for _, query := range queries {
 		batch.Queue(query)
 	}
 
-	// execute queries
 	ctx := context.Background()
 	br := dbPool.SendBatch(ctx, batch)
 	_, err := br.Exec()
@@ -99,24 +95,24 @@ func batchExecQueries(queries []string) pgx.BatchResults {
 	return br
 }
 
-// setUp set-ups the database by creating the tables and inserting test data.
+// setUp creates tables and inserts test data.
 func setUp() {
 	currentWorkDirectory, _ := os.Getwd()
-	filePath := currentWorkDirectory + `/test_data/create_tables.sql`
+	filePath := currentWorkDirectory + `/testdata/create_tables.sql`
 	queries := getQueriesFromFile(filePath)
 	batchExecQueries(queries)
 	logSetup("Created tables")
 
-	filePath = currentWorkDirectory + `/test_data/insert_test_data.sql`
+	filePath = currentWorkDirectory + `/testdata/insert_test_data.sql`
 	queries = getQueriesFromFile(filePath)
 	batchExecQueries(queries)
 	logSetup("Inserted test data")
 }
 
-// tearDown drops all tables from the database and closes the database connection pool.
+// tearDown drops all tables and closes the database connection pool.
 func tearDown() {
 	currentWorkDirectory, _ := os.Getwd()
-	filePath := currentWorkDirectory + `/test_data/drop_tables.sql`
+	filePath := currentWorkDirectory + `/testdata/drop_tables.sql`
 	queries := getQueriesFromFile(filePath)
 
 	br := batchExecQueries(queries)
@@ -143,12 +139,10 @@ func tearDown() {
 	}
 }
 
-// logSetup prints a message to stdout. It is intended to be called during test setup.
 func logSetup(msg string) {
 	fmt.Printf("== SETUP: %s\n", msg)
 }
 
-// logTearDown prints a message to stdout. It is intended to be called during test teardown.
 func logTearDown(msg string) {
 	fmt.Printf("== TEARDOWN: %s\n", msg)
 }
