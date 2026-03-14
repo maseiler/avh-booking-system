@@ -117,7 +117,7 @@ func (o Operation) SQLString() string {
 	case OpDelete:
 		return "DELETE"
 	default:
-		panic(fmt.Errorf("invalid Operation value: %v", o))
+		return "unknown"
 	}
 }
 
