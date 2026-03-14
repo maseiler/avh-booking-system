@@ -27,7 +27,11 @@ func (h *Hub) Run() {
 
 			// Notify others about new client
 			msg := Message{Type: MsgTypeRegister, Payload: map[string]string{"id": client.ID}}
-			notification, _ := json.Marshal(msg)
+			notification, err := json.Marshal(msg)
+			if err != nil {
+				h.Log.Error("failed to marshal register notification", slog.String("error", err.Error()))
+				break
+			}
 			h.broadcastMessage(notification, client)
 
 		case client := <-h.Unregister:
@@ -41,7 +45,11 @@ func (h *Hub) Run() {
 
 				// Notify others about disconnection
 				msg := Message{Type: MsgTypeUnRegister, Payload: map[string]string{"id": client.ID}}
-				notification, _ := json.Marshal(msg)
+				notification, err := json.Marshal(msg)
+				if err != nil {
+					h.Log.Error("failed to marshal unregister notification", slog.String("error", err.Error()))
+					break
+				}
 				h.broadcastMessage(notification, nil)
 			} else {
 				h.Mu.Unlock()
