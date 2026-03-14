@@ -56,7 +56,7 @@ func (m *AccountModel) GetById(id int) (*models.Account, error) {
 		return &accounts[0], nil
 	}
 
-	return nil, DbQueryError
+	return nil, ErrDBQuery
 }
 
 // Insert adds a new account to the database.
