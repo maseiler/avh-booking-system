@@ -15,8 +15,7 @@ type AccountModel struct {
 }
 
 // Get retrieves accounts based on the provided query specification.
-func (m *AccountModel) Get(query *Query) ([]models.Account, error) {
-	ctx := context.Background()
+func (m *AccountModel) Get(ctx context.Context, query *Query) ([]models.Account, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -35,11 +34,11 @@ func (m *AccountModel) Get(query *Query) ([]models.Account, error) {
 }
 
 // GetByID retrieves a single account by its ID.
-func (m *AccountModel) GetByID(id int) (*models.Account, error) {
+func (m *AccountModel) GetByID(ctx context.Context, id int) (*models.Account, error) {
 	filters := []Filter{{Column: "account_id", Operator: Eq, Value: strconv.Itoa(id)}}
 	query := Query{Table: TableAccount, Filter: filters}
 
-	accounts, err := m.Get(&query)
+	accounts, err := m.Get(ctx, &query)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +50,7 @@ func (m *AccountModel) GetByID(id int) (*models.Account, error) {
 }
 
 // Insert adds a new account to the database.
-func (m *AccountModel) Insert(account models.Account) (int, error) {
-	ctx := context.Background()
+func (m *AccountModel) Insert(ctx context.Context, account models.Account) (int, error) {
 	query := `
         INSERT INTO account (first_name, nickname, last_name, email, phone, balance, max_debt, category)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -73,8 +71,7 @@ func (m *AccountModel) Insert(account models.Account) (int, error) {
 
 // Update modifies an existing account in the database.
 // Note: This method does NOT update the Balance field.
-func (m *AccountModel) Update(account models.Account) (int, error) {
-	ctx := context.Background()
+func (m *AccountModel) Update(ctx context.Context, account models.Account) (int, error) {
 	query := `
         UPDATE account
         SET first_name = $1, nickname = $2, last_name = $3, email = $4, phone = $5, max_debt = $6, category = $7, enabled = $8

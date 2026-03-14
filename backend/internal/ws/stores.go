@@ -1,45 +1,47 @@
 package ws
 
 import (
+	"context"
+
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/repo"
 )
 
 type AccountStore interface {
-	Get(q *repo.Query) ([]models.Account, error)
-	GetByID(id int) (*models.Account, error)
-	Insert(a models.Account) (int, error)
-	Update(a models.Account) (int, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.Account, error)
+	GetByID(ctx context.Context, id int) (*models.Account, error)
+	Insert(ctx context.Context, a models.Account) (int, error)
+	Update(ctx context.Context, a models.Account) (int, error)
 }
 
 type CategoryStore interface {
-	Get(q *repo.Query) ([]models.Category, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.Category, error)
 }
 
 type LocationStore interface {
-	Get(q *repo.Query) ([]models.Location, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.Location, error)
 }
 
 type ProductStore interface {
-	Get(q *repo.Query) ([]models.Product, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.Product, error)
 }
 
 type ProductGroupStore interface {
-	Get(q *repo.Query) ([]models.ProductGroup, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.ProductGroup, error)
 }
 
 type ProductVisibilityStore interface {
-	Get(q *repo.Query) ([]models.ProductVisibility, error)
-	Insert(v models.ProductVisibility) (int, error)
-	Delete(id int) (int, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.ProductVisibility, error)
+	Insert(ctx context.Context, v models.ProductVisibility) (int, error)
+	Delete(ctx context.Context, id int) (int, error)
 }
 
 type UnitStore interface {
-	Get(q *repo.Query) ([]models.Unit, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.Unit, error)
 }
 
 type VatStore interface {
-	Get(q *repo.Query) ([]models.Vat, error)
+	Get(ctx context.Context, q *repo.Query) ([]models.Vat, error)
 }
 
 type Stores struct {

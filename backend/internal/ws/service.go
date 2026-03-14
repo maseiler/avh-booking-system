@@ -1,8 +1,10 @@
 package ws
 
 import (
-	"github.com/gorilla/websocket"
+	"context"
 	"log/slog"
+
+	"github.com/gorilla/websocket"
 )
 
 type Service struct {
@@ -35,10 +37,12 @@ func (s *Service) Hub() *Hub {
 	return s.hub
 }
 
-func (s *Service) NewClient(conn *websocket.Conn) *Client {
+func (s *Service) NewClient(ctx context.Context, cancel context.CancelFunc, conn *websocket.Conn) *Client {
 	return &Client{
-		Hub:  s.hub,
-		Conn: conn,
-		Send: make(chan []byte, 256),
+		Hub:    s.hub,
+		Conn:   conn,
+		Send:   make(chan []byte, 256),
+		Ctx:    ctx,
+		Cancel: cancel,
 	}
 }

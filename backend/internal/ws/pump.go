@@ -11,6 +11,7 @@ import (
 // ReadPump pumps messages from the ws connection to the hub
 func (s *Service) ReadPump(c *Client) {
 	defer func() {
+		c.Cancel()
 		c.Hub.Unregister <- c
 		c.Conn.Close()
 	}()
@@ -60,7 +61,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Send <- b
 
 		case MsgTypeQuery:
-			b, wsErr := s.processQuery(msg)
+			b, wsErr := s.processQuery(c.Ctx, msg)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
@@ -74,14 +75,14 @@ func (s *Service) ReadPump(c *Client) {
 				continue
 			}
 
-			response, id, wsErr := s.processMutation(mutation)
+			response, id, wsErr := s.processMutation(c.Ctx, mutation)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
 			}
 			c.Send <- response
 
-			message, wsErr = s.prepareBroadcast(mutation, id)
+			message, wsErr = s.prepareBroadcast(c.Ctx, mutation, id)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue

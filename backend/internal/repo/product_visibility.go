@@ -16,8 +16,7 @@ type ProductVisibilityModel struct {
 }
 
 // Get retrieves ProductVisibilities based on the provided query specification.
-func (m *ProductVisibilityModel) Get(query *Query) ([]models.ProductVisibility, error) {
-	ctx := context.Background()
+func (m *ProductVisibilityModel) Get(ctx context.Context, query *Query) ([]models.ProductVisibility, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *ProductVisibilityModel) Get(query *Query) ([]models.ProductVisibility, 
 }
 
 // GetByID retrieves a product visibility rule by its ID.
-func (m *ProductVisibilityModel) GetByID(id int) (*models.ProductVisibility, error) {
-	ctx := context.Background()
+func (m *ProductVisibilityModel) GetByID(ctx context.Context, id int) (*models.ProductVisibility, error) {
 	stmt := `SELECT product_visibility_id, category, location, product
 			FROM product_visibility
 			WHERE product_visibility_id = $1`
@@ -57,8 +55,7 @@ func (m *ProductVisibilityModel) GetByID(id int) (*models.ProductVisibility, err
 }
 
 // Insert adds a new product visibility rule to the database.
-func (m *ProductVisibilityModel) Insert(visibility models.ProductVisibility) (int, error) {
-	ctx := context.Background()
+func (m *ProductVisibilityModel) Insert(ctx context.Context, visibility models.ProductVisibility) (int, error) {
 	var id int
 	query := `
         INSERT INTO product_visibility (category, location, product)
@@ -70,8 +67,7 @@ func (m *ProductVisibilityModel) Insert(visibility models.ProductVisibility) (in
 }
 
 // Delete removes an existing visibility from the database.
-func (m *ProductVisibilityModel) Delete(id int) (int, error) {
-	ctx := context.Background()
+func (m *ProductVisibilityModel) Delete(ctx context.Context, id int) (int, error) {
 	query := `
         DELETE FROM product_visibility
         WHERE product_visibility_id = $1
