@@ -9,28 +9,28 @@ import (
 // Websocket errors
 // --------------------------------------------------
 
-type WsErrorCode string
+type WSErrorCode string
 
 const (
-	WsUnknown          = "UNKNOWN"
-	WsBadJson          = "BAD_JSON"
-	WsBadInterface     = "BAD_INTERFACE"
-	WsBadStruct        = "BAD_STRUCT"
-	WsInvalidTable     = "INVALID_TABLE"
-	WsInvalidOperation = "INVALID_OPERATION"
-	WsInvalidFilter    = "INVALID_FILTER"
-	WsNotFound         = "NOT_FOUND"
-	WsInternalError    = "INTERNAL_ERROR"
-	WsDbQueryError     = "DB_QUERY_ERROR"
+	WSUnknown          = "UNKNOWN"
+	WSBadJSON          = "BAD_JSON"
+	WSBadInterface     = "BAD_INTERFACE"
+	WSBadStruct        = "BAD_STRUCT"
+	WSInvalidTable     = "INVALID_TABLE"
+	WSInvalidOperation = "INVALID_OPERATION"
+	WSInvalidFilter    = "INVALID_FILTER"
+	WSNotFound         = "NOT_FOUND"
+	WSInternalError    = "INTERNAL_ERROR"
+	WSDBQueryError     = "DB_QUERY_ERROR"
 )
 
-type WsError struct {
-	Code    WsErrorCode `json:"code" validate:"required"`
+type WSError struct {
+	Code    WSErrorCode `json:"code" validate:"required"`
 	Message string      `json:"message" validate:"required"`
 	Details string      `json:"details,omitempty"`
 }
 
-func (wse *WsError) String() string {
+func (wse *WSError) String() string {
 	msg := fmt.Sprintf("code: %s, message: '%s'", wse.Code, wse.Message)
 	if wse.Details != "" {
 		msg += fmt.Sprintf(", details: '%s'", wse.Details)
@@ -38,7 +38,7 @@ func (wse *WsError) String() string {
 	return msg
 }
 
-func (s *Service) sendError(c *Client, wsErr *WsError) {
+func (s *Service) sendError(c *Client, wsErr *WSError) {
 	s.log.Error(wsErr.String())
 
 	// Create error message

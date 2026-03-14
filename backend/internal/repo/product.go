@@ -43,13 +43,13 @@ func (m *ProductModel) Get(query *Query) ([]models.Product, error) {
 	return products, nil
 }
 
-// GetById retrieves a product by its ID.
-func (m *ProductModel) GetById(productId int) (*models.Product, error) {
+// GetByID retrieves a product by its ID.
+func (m *ProductModel) GetByID(productID int) (*models.Product, error) {
 	ctx := context.Background()
 	stmt := `SELECT product_id, name, price, vat, product_group, size, unit, category, created_at
 			FROM product
 			WHERE product_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, productId)
+	row := m.DB.QueryRow(ctx, stmt, productID)
 
 	var product models.Product
 	err := row.Scan(&product.ID, &product.Name, &product.Price, &product.VatID, &product.ProductGroupID,

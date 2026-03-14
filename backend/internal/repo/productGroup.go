@@ -46,8 +46,8 @@ func (m *ProductGroupModel) Get(query *Query) ([]models.ProductGroup, error) {
 	return groups, nil
 }
 
-// GetById retrieves a product group by its ID.
-func (m *ProductGroupModel) GetById(id int) (*models.ProductGroup, error) {
+// GetByID retrieves a product group by its ID.
+func (m *ProductGroupModel) GetByID(id int) (*models.ProductGroup, error) {
 	ctx := context.Background()
 	stmt := `SELECT product_group_id, name, parent
 			FROM product_group
@@ -55,8 +55,8 @@ func (m *ProductGroupModel) GetById(id int) (*models.ProductGroup, error) {
 	row := m.DB.QueryRow(ctx, stmt, id)
 
 	var productGroup models.ProductGroup
-	var parentId *int // pointer to read null
-	err := row.Scan(&productGroup.ID, &productGroup.Name, &parentId)
+	var parentID *int // pointer to read null
+	err := row.Scan(&productGroup.ID, &productGroup.Name, &parentID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord
@@ -64,10 +64,10 @@ func (m *ProductGroupModel) GetById(id int) (*models.ProductGroup, error) {
 			return nil, err
 		}
 	}
-	if parentId == nil {
+	if parentID == nil {
 		productGroup.ParentID = 0
 	} else {
-		productGroup.ParentID = *parentId
+		productGroup.ParentID = *parentID
 	}
 
 	return &productGroup, nil

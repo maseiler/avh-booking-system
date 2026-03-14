@@ -7,7 +7,7 @@ import (
 
 type AccountStore interface {
 	Get(q *repo.Query) ([]models.Account, error)
-	GetById(id int) (*models.Account, error)
+	GetByID(id int) (*models.Account, error)
 	Insert(a models.Account) (int, error)
 	Update(a models.Account) (int, error)
 }

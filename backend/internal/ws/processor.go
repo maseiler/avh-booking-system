@@ -12,23 +12,23 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/repo"
 )
 
-func queryError(table repo.TableName, err error) *WsError {
-	code := WsErrorCode(WsDbQueryError)
+func queryError(table repo.TableName, err error) *WSError {
+	code := WSErrorCode(WSDBQueryError)
 	if errors.Is(err, repo.ErrInvalidColumn) {
-		code = WsInvalidFilter
+		code = WSInvalidFilter
 	}
-	return &WsError{Code: code, Message: err.Error(), Details: "Query failed for table " + string(table)}
+	return &WSError{Code: code, Message: err.Error(), Details: "Query failed for table " + string(table)}
 }
 
-func (s *Service) processPing(message Message) ([]byte, *WsError) {
+func (s *Service) processPing(message Message) ([]byte, *WSError) {
 	b, err := json.Marshal(message.Payload)
 	if err != nil {
-		return nil, &WsError{Code: WsBadInterface, Message: err.Error(), Details: "Marshal payload"}
+		return nil, &WSError{Code: WSBadInterface, Message: err.Error(), Details: "Marshal payload"}
 	}
 
 	var ping PingPong
 	if err := json.Unmarshal(b, &ping); err != nil {
-		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "Unmarshal to PingPong"}
+		return nil, &WSError{Code: WSBadJSON, Message: err.Error(), Details: "Unmarshal to PingPong"}
 	}
 
 	s.log.Info("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
@@ -39,14 +39,14 @@ func (s *Service) processPing(message Message) ([]byte, *WsError) {
 
 	err = s.validator.validate(b)
 	if err != nil {
-		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+		return nil, &WSError{Code: WSBadJSON, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 	}
 
 	return b, nil
 }
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
-func (s *Service) processQuery(message Message) ([]byte, *WsError) {
+func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 	query, err := unmarshalInterface[repo.Query](message.Payload)
 	if err != nil {
 		return nil, err
@@ -58,107 +58,107 @@ func (s *Service) processQuery(message Message) ([]byte, *WsError) {
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, account := range accounts {
 			rawAccount, _ := json.Marshal(account)
-			rawJsonSlice = append(rawJsonSlice, rawAccount)
+			rawJSONSlice = append(rawJSONSlice, rawAccount)
 		}
-		return s.marshalQueryResultList(repo.TableAccount, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableAccount, &rawJSONSlice)
 
 	case repo.TableCategory:
 		categories, dbErr := s.stores.Category.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, category := range categories {
 			rawCategory, _ := json.Marshal(category)
-			rawJsonSlice = append(rawJsonSlice, rawCategory)
+			rawJSONSlice = append(rawJSONSlice, rawCategory)
 		}
-		return s.marshalQueryResultList(repo.TableCategory, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableCategory, &rawJSONSlice)
 
 	case repo.TableLocation:
 		locations, dbErr := s.stores.Location.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, loc := range locations {
 			rawLoc, _ := json.Marshal(loc)
-			rawJsonSlice = append(rawJsonSlice, rawLoc)
+			rawJSONSlice = append(rawJSONSlice, rawLoc)
 		}
-		return s.marshalQueryResultList(repo.TableLocation, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableLocation, &rawJSONSlice)
 
 	case repo.TableProduct:
 		products, dbErr := s.stores.Product.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, product := range products {
 			rawProduct, _ := json.Marshal(product)
-			rawJsonSlice = append(rawJsonSlice, rawProduct)
+			rawJSONSlice = append(rawJSONSlice, rawProduct)
 		}
-		return s.marshalQueryResultList(repo.TableProduct, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableProduct, &rawJSONSlice)
 
 	case repo.TableProductGroup:
 		groups, dbErr := s.stores.ProductGroup.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, group := range groups {
 			rawGroup, _ := json.Marshal(group)
-			rawJsonSlice = append(rawJsonSlice, rawGroup)
+			rawJSONSlice = append(rawJSONSlice, rawGroup)
 		}
-		return s.marshalQueryResultList(repo.TableProductGroup, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableProductGroup, &rawJSONSlice)
 
 	case repo.TableProductVisibility:
 		visibilities, dbErr := s.stores.ProductVisibility.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, vis := range visibilities {
 			rawVis, _ := json.Marshal(vis)
-			rawJsonSlice = append(rawJsonSlice, rawVis)
+			rawJSONSlice = append(rawJSONSlice, rawVis)
 		}
-		return s.marshalQueryResultList(repo.TableProductVisibility, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableProductVisibility, &rawJSONSlice)
 
 	case repo.TableUnit:
 		units, dbErr := s.stores.Unit.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, unit := range units {
 			rawUnit, _ := json.Marshal(unit)
-			rawJsonSlice = append(rawJsonSlice, rawUnit)
+			rawJSONSlice = append(rawJSONSlice, rawUnit)
 		}
-		return s.marshalQueryResultList(repo.TableUnit, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableUnit, &rawJSONSlice)
 
 	case repo.TableVat:
 		vats, dbErr := s.stores.Vat.Get(query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
-		var rawJsonSlice []json.RawMessage
+		var rawJSONSlice []json.RawMessage
 		for _, vat := range vats {
 			rawVat, _ := json.Marshal(vat)
-			rawJsonSlice = append(rawJsonSlice, rawVat)
+			rawJSONSlice = append(rawJSONSlice, rawVat)
 		}
-		return s.marshalQueryResultList(repo.TableVat, &rawJsonSlice)
+		return s.marshalQueryResultList(repo.TableVat, &rawJSONSlice)
 	}
 
-	return nil, &WsError{
-		Code:    WsInvalidTable,
+	return nil, &WSError{
+		Code:    WSInvalidTable,
 		Message: "Invalid table",
 		Details: "Could not process query for table " + string(query.Table),
 	}
 }
 
 // processMutation unmarshals the message and initiates a database mutation
-func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
+func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
 
 	switch mutation.Operation {
 	case repo.OpInsert:
@@ -170,13 +170,13 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 					return nil, 0, wsErr
 				}
 
-				newId, err := s.stores.Account.Insert(*account)
+				newID, err := s.stores.Account.Insert(*account)
 				if err != nil {
-					return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not create account"}
+					return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
 
-				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
-				return b, newId, wsErr
+				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
+				return b, newID, wsErr
 
 			case repo.TableProductVisibility:
 				visibility, wsErr := unmarshalInterface[models.ProductVisibility](mutation.Values)
@@ -184,17 +184,17 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 					return nil, 0, wsErr
 				}
 
-				newId, err := s.stores.ProductVisibility.Insert(*visibility)
+				newID, err := s.stores.ProductVisibility.Insert(*visibility)
 				if err != nil {
-					return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not create product visibility"}
+					return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not create product visibility"}
 				}
 
-				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
-				return b, newId, wsErr
+				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
+				return b, newID, wsErr
 			}
 
-			return nil, 0, &WsError{
-				Code:    WsInvalidTable,
+			return nil, 0, &WSError{
+				Code:    WSInvalidTable,
 				Message: "Invalid table",
 				Details: "Could not process mutation for table " + string(mutation.Table),
 			}
@@ -206,13 +206,13 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 				return nil, 0, wsErr
 			}
 
-			newId, err := s.stores.Account.Update(*account)
+			newID, err := s.stores.Account.Update(*account)
 			if err != nil {
-				return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not update account"}
+				return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not update account"}
 			}
 
-			b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newId)
-			return b, newId, wsErr
+			b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
+			return b, newID, wsErr
 		}
 
 	case repo.OpDelete:
@@ -220,7 +220,7 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 			switch mutation.Table {
 			case repo.TableAccount:
 				{
-					return nil, 0, &WsError{Code: WsInvalidOperation,
+					return nil, 0, &WSError{Code: WSInvalidOperation,
 						Message: "Invalid operation",
 						Details: "Deletion of accounts is not supported"}
 				}
@@ -229,8 +229,8 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 				{
 					idStr, ok := mutation.Where["product_visibility_id"]
 					if !ok {
-						return nil, 0, &WsError{
-							Code:    WsBadJson,
+						return nil, 0, &WSError{
+							Code:    WSBadJSON,
 							Message: "Missing product_visibility_id in where clause",
 							Details: "Delete requires product_visibility_id",
 						}
@@ -238,47 +238,47 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WsError) {
 
 					id, err := strconv.Atoi(idStr)
 					if err != nil {
-						return nil, 0, &WsError{
-							Code:    WsBadJson,
+						return nil, 0, &WSError{
+							Code:    WSBadJSON,
 							Message: err.Error(),
 							Details: "product_visibility_id must be an integer",
 						}
 					}
 
-					oldId, err := s.stores.ProductVisibility.Delete(id)
+					oldID, err := s.stores.ProductVisibility.Delete(id)
 					if err != nil {
-						return nil, 0, &WsError{Code: WsInternalError, Message: err.Error(), Details: "Could not delete visibility"}
+						return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not delete visibility"}
 					}
 
-					b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, oldId)
-					return b, oldId, wsErr
+					b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, oldID)
+					return b, oldID, wsErr
 
 				}
 			}
 
-			return nil, 0, &WsError{
-				Code:    WsInvalidTable,
+			return nil, 0, &WSError{
+				Code:    WSInvalidTable,
 				Message: "Invalid table",
 				Details: "Could not process delete for table " + string(mutation.Table),
 			}
 		}
 	}
 
-	return nil, 0, &WsError{
-		Code:    WsInvalidOperation,
+	return nil, 0, &WSError{
+		Code:    WSInvalidOperation,
 		Message: "Invalid operation",
 		Details: "Could not process mutation for operation " + string(mutation.Operation),
 	}
 }
 
-func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WsError) {
+func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WSError) {
 	var queryResultList []json.RawMessage
 	switch mutation.Table {
 	case repo.TableAccount:
-		account, err := s.stores.Account.GetById(id)
+		account, err := s.stores.Account.GetByID(id)
 		if err != nil {
-			return nil, &WsError{
-				Code:    WsDbQueryError,
+			return nil, &WSError{
+				Code:    WSDBQueryError,
 				Message: err.Error(),
 				Details: fmt.Sprintf("Could not get account with ID %d", id),
 			}
@@ -292,8 +292,8 @@ func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WsError
 		}
 		visibilities, err := s.stores.ProductVisibility.Get(&query)
 		if err != nil {
-			return nil, &WsError{
-				Code:    WsDbQueryError,
+			return nil, &WSError{
+				Code:    WSDBQueryError,
 				Message: err.Error(),
 				Details: "Could not reload product visibilities after delete",
 			}
@@ -319,5 +319,5 @@ func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WsError
 		return message, nil
 	}
 
-	return nil, &WsError{Code: WsUnknown, Message: "Broadcast data is empty"}
+	return nil, &WSError{Code: WSUnknown, Message: "Broadcast data is empty"}
 }

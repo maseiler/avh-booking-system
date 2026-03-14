@@ -24,7 +24,7 @@ func (m *AccountOptionModel) Insert(opt models.AccountOption) (int, string, erro
 	var account int
 	var key string
 	err := m.DB.QueryRow(ctx, query,
-		opt.AccountId,
+		opt.AccountID,
 		opt.Key,
 		opt.Value,
 	).Scan(&account, &key)
@@ -33,15 +33,15 @@ func (m *AccountOptionModel) Insert(opt models.AccountOption) (int, string, erro
 }
 
 // Get retrieves a specific account option by account ID and key.
-func (m *AccountOptionModel) Get(accountId int, key string) (*models.AccountOption, error) {
+func (m *AccountOptionModel) Get(accountID int, key string) (*models.AccountOption, error) {
 	ctx := context.Background()
 	stmt := `SELECT account, key, value
 			FROM account_option
 			WHERE account = $1 AND key = $2`
-	row := m.DB.QueryRow(ctx, stmt, accountId, key)
+	row := m.DB.QueryRow(ctx, stmt, accountID, key)
 
 	var opt models.AccountOption
-	err := row.Scan(&opt.AccountId, &opt.Key, &opt.Value)
+	err := row.Scan(&opt.AccountID, &opt.Key, &opt.Value)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, database.ErrNoRecord

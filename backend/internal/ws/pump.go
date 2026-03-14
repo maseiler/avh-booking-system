@@ -31,7 +31,7 @@ func (s *Service) ReadPump(c *Client) {
 		// Validate JSON schema
 		err = s.validator.validate(message)
 		if err != nil {
-			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+			wsErr := &WSError{Code: WSBadJSON, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 			s.sendError(c, wsErr)
 			continue
 		}
@@ -39,7 +39,7 @@ func (s *Service) ReadPump(c *Client) {
 		// Unmarshal message
 		msg := Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
-			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
+			wsErr := &WSError{Code: WSBadJSON, Message: err.Error(), Details: "Could not unmarshal message"}
 			s.sendError(c, wsErr)
 			continue
 		}

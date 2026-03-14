@@ -43,8 +43,8 @@ func (m *VatModel) Get(query *Query) ([]models.Vat, error) {
 	return vats, nil
 }
 
-// GetById retrieves a VAT rate by its ID.
-func (m *VatModel) GetById(id int) (*models.Vat, error) {
+// GetByID retrieves a VAT rate by its ID.
+func (m *VatModel) GetByID(id int) (*models.Vat, error) {
 	ctx := context.Background()
 	stmt := `SELECT vat_id, rate
 			FROM vat

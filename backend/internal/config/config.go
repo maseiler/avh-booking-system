@@ -17,16 +17,16 @@ const (
 
 type AppConfig struct {
 	LogLevel     slog.Level
-	HttpPort     int
+	HTTPPort     int
 	FrontendPath string
 }
 
-type DbConfig struct {
-	DbHost     string
-	DbPort     int
-	DbName     string
-	DbUser     string
-	DbPassword string
+type DBConfig struct {
+	DBHost     string
+	DBPort     int
+	DBName     string
+	DBUser     string
+	DBPassword string
 }
 
 func LoadEnv() {
@@ -44,35 +44,35 @@ func LoadEnvFromFile(path string) {
 func LoadConfig() *AppConfig {
 	conf := &AppConfig{}
 	conf.LogLevel = getLogLevel("AVHBS_LOG_LEVEL", slog.LevelInfo)
-	conf.HttpPort = getInt("AVHBS_HTTP_PORT", DefaultHTTPPort)
+	conf.HTTPPort = getInt("AVHBS_HTTP_PORT", DefaultHTTPPort)
 	conf.FrontendPath = getString("AVHBS_FRONTEND_PATH", "")
 
 	return conf
 }
 
-func LoadDbConfig() (*DbConfig, error) {
-	conf := &DbConfig{
-		DbHost:     getString("DB_HOST", ""),
-		DbPort:     getInt("DB_PORT", 0),
-		DbName:     getString("DB_NAME", ""),
-		DbUser:     getString("DB_USER", ""),
-		DbPassword: getString("DB_PASSWORD", ""),
+func LoadDBConfig() (*DBConfig, error) {
+	conf := &DBConfig{
+		DBHost:     getString("DB_HOST", ""),
+		DBPort:     getInt("DB_PORT", 0),
+		DBName:     getString("DB_NAME", ""),
+		DBUser:     getString("DB_USER", ""),
+		DBPassword: getString("DB_PASSWORD", ""),
 	}
 
 	var missing []string
-	if conf.DbHost == "" {
+	if conf.DBHost == "" {
 		missing = append(missing, "DB_HOST")
 	}
-	if conf.DbPort == 0 {
+	if conf.DBPort == 0 {
 		missing = append(missing, "DB_PORT")
 	}
-	if conf.DbName == "" {
+	if conf.DBName == "" {
 		missing = append(missing, "DB_NAME")
 	}
-	if conf.DbUser == "" {
+	if conf.DBUser == "" {
 		missing = append(missing, "DB_USER")
 	}
-	if conf.DbPassword == "" {
+	if conf.DBPassword == "" {
 		missing = append(missing, "DB_PASSWORD")
 	}
 	if len(missing) > 0 {

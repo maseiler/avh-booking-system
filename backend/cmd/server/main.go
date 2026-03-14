@@ -23,13 +23,13 @@ type application struct {
 func main() {
 	config.LoadEnv()
 	appConf := config.LoadConfig()
-	dbConf, err := config.LoadDbConfig()
+	dbConf, err := config.LoadDBConfig()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 
-	dbPool, err := database.New(dbConf.DbUser, dbConf.DbPassword, dbConf.DbHost, dbConf.DbPort, dbConf.DbName)
+	dbPool, err := database.New(dbConf.DBUser, dbConf.DBPassword, dbConf.DBHost, dbConf.DBPort, dbConf.DBName)
 	if err != nil {
 		panic(err)
 	}

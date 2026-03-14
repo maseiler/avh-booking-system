@@ -19,7 +19,7 @@ type QueryResultList struct {
 type ResultMutation struct {
 	Table     repo.TableName `json:"table" validate:"required"`
 	Operation repo.Operation `json:"operation" validate:"required"`
-	Id        int            `json:"id" validate:"required"`
+	ID        int            `json:"id" validate:"required"`
 }
 
 type Mutation struct {

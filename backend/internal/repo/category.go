@@ -43,8 +43,8 @@ func (m *CategoryModel) Get(query *Query) ([]models.Category, error) {
 	return categories, nil
 }
 
-// GetById retrieves a category by its ID.
-func (m *CategoryModel) GetById(id int) (*models.Category, error) {
+// GetByID retrieves a category by its ID.
+func (m *CategoryModel) GetByID(id int) (*models.Category, error) {
 	ctx := context.Background()
 	stmt := `SELECT category_id, name, enabled, icon, type
 			FROM category

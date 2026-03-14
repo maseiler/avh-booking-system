@@ -43,8 +43,8 @@ func (m *AccountModel) Get(query *Query) ([]models.Account, error) {
 	return accounts, nil
 }
 
-// GetById retrieves a single account by its ID.
-func (m *AccountModel) GetById(id int) (*models.Account, error) {
+// GetByID retrieves a single account by its ID.
+func (m *AccountModel) GetByID(id int) (*models.Account, error) {
 	filters := []Filter{{Column: "account_id", Operator: Eq, Value: strconv.Itoa(id)}}
 	query := Query{Table: TableAccount, Filter: filters}
 

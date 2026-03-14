@@ -43,8 +43,8 @@ func (m *UnitModel) Get(query *Query) ([]models.Unit, error) {
 	return units, nil
 }
 
-// GetById retrieves a unit by its ID.
-func (m *UnitModel) GetById(id int) (*models.Unit, error) {
+// GetByID retrieves a unit by its ID.
+func (m *UnitModel) GetByID(id int) (*models.Unit, error) {
 	ctx := context.Background()
 	stmt := `SELECT unit_id, name
 			FROM unit

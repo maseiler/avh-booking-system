@@ -52,8 +52,8 @@ const (
 	Ne  = "ne"
 )
 
-// SqlString returns the SQL string representation of an operator
-func (o Operator) SqlString() string {
+// SQLString returns the SQL string representation of an operator
+func (o Operator) SQLString() string {
 	switch o {
 	case Eq:
 		return "="
@@ -83,8 +83,8 @@ const (
 	Desc = "desc"
 )
 
-// SqlString returns the SQL string representation of an order direction
-func (o Order) SqlString() string {
+// SQLString returns the SQL string representation of an order direction
+func (o Order) SQLString() string {
 	switch o {
 	case Asc:
 		return "ASC"
@@ -107,8 +107,8 @@ const (
 	OpDelete = "delete"
 )
 
-// SqlString returns the SQL string representation of an operation
-func (o Operation) SqlString() string {
+// SQLString returns the SQL string representation of an operation
+func (o Operation) SQLString() string {
 	switch o {
 	case OpInsert:
 		return "INSERT"
@@ -164,7 +164,7 @@ func buildSelectSQL(q *Query) (string, []any, error) {
 			if i > 0 {
 				stmt += " AND "
 			}
-			stmt += f.Column + " " + f.Operator.SqlString() + " " + placeholder
+			stmt += f.Column + " " + f.Operator.SQLString() + " " + placeholder
 		}
 	}
 
@@ -172,7 +172,7 @@ func buildSelectSQL(q *Query) (string, []any, error) {
 		if !allowed[q.Sort.Column] {
 			return "", nil, fmt.Errorf("%w: %q", ErrInvalidColumn, q.Sort.Column)
 		}
-		stmt += " ORDER BY " + q.Sort.Column + " " + q.Sort.Order.SqlString()
+		stmt += " ORDER BY " + q.Sort.Column + " " + q.Sort.Order.SQLString()
 	}
 
 	if q.Limit != nil {

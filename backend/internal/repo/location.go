@@ -43,8 +43,8 @@ func (m *LocationModel) Get(query *Query) ([]models.Location, error) {
 	return locations, nil
 }
 
-// GetById retrieves a location by its ID.
-func (m *LocationModel) GetById(id int) (*models.Location, error) {
+// GetByID retrieves a location by its ID.
+func (m *LocationModel) GetByID(id int) (*models.Location, error) {
 	ctx := context.Background()
 	stmt := `SELECT location_id, name
 			FROM location

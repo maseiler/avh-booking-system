@@ -43,8 +43,8 @@ func (m *ProductVisibilityModel) Get(query *Query) ([]models.ProductVisibility, 
 	return visibilities, nil
 }
 
-// GetById retrieves a product visibility rule by its ID.
-func (m *ProductVisibilityModel) GetById(id int) (*models.ProductVisibility, error) {
+// GetByID retrieves a product visibility rule by its ID.
+func (m *ProductVisibilityModel) GetByID(id int) (*models.ProductVisibility, error) {
 	ctx := context.Background()
 	stmt := `SELECT product_visibility_id, category, location, product
 			FROM product_visibility
