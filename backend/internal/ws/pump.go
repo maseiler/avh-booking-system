@@ -103,7 +103,7 @@ func (s *Service) WritePump(c *Client) {
 		select {
 		case msg, ok := <-c.Send:
 			if !ok {
-				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				c.Conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 				return
 			}
 			c.Conn.WriteMessage(websocket.TextMessage, msg)
