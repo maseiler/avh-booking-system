@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"strconv"
@@ -29,31 +28,44 @@ type DBConfig struct {
 	DBPassword string
 }
 
-func LoadEnv() {
+func LoadEnv() error {
 	if err := godotenv.Load(); err != nil && !os.IsNotExist(err) {
-		log.Fatal("Error loading .env file: " + err.Error())
+		return fmt.Errorf("loading .env file: %w", err)
 	}
+	return nil
 }
 
-func LoadEnvFromFile(path string) {
+func LoadEnvFromFile(path string) error {
 	if err := godotenv.Load(path); err != nil {
-		log.Fatal("Error loading .env file: " + err.Error())
+		return fmt.Errorf("loading .env file %q: %w", path, err)
 	}
+	return nil
 }
 
-func LoadConfig() *AppConfig {
-	conf := &AppConfig{}
-	conf.LogLevel = getLogLevel("AVHBS_LOG_LEVEL", slog.LevelInfo)
-	conf.HTTPPort = getInt("AVHBS_HTTP_PORT", DefaultHTTPPort)
-	conf.FrontendPath = getString("AVHBS_FRONTEND_PATH", "")
+func LoadConfig() (*AppConfig, error) {
+	httpPort, err := getInt("AVHBS_HTTP_PORT", DefaultHTTPPort)
+	if err != nil {
+		return nil, fmt.Errorf("AVHBS_HTTP_PORT: %w", err)
+	}
 
-	return conf
+	conf := &AppConfig{
+		LogLevel:     getLogLevel("AVHBS_LOG_LEVEL", slog.LevelInfo),
+		HTTPPort:     httpPort,
+		FrontendPath: getString("AVHBS_FRONTEND_PATH", ""),
+	}
+
+	return conf, nil
 }
 
 func LoadDBConfig() (*DBConfig, error) {
+	dbPort, err := getInt("DB_PORT", 0)
+	if err != nil {
+		return nil, fmt.Errorf("DB_PORT: %w", err)
+	}
+
 	conf := &DBConfig{
 		DBHost:     getString("DB_HOST", ""),
-		DBPort:     getInt("DB_PORT", 0),
+		DBPort:     dbPort,
 		DBName:     getString("DB_NAME", ""),
 		DBUser:     getString("DB_USER", ""),
 		DBPassword: getString("DB_PASSWORD", ""),
@@ -91,18 +103,18 @@ func getString(key, defaultValue string) string {
 	return value
 }
 
-func getInt(key string, defaultValue int) int {
+func getInt(key string, defaultValue int) (int, error) {
 	value, exists := os.LookupEnv(key)
 	if !exists {
-		return defaultValue
+		return defaultValue, nil
 	}
 
 	intValue, err := strconv.Atoi(value)
 	if err != nil {
-		panic(err)
+		return 0, fmt.Errorf("invalid integer value %q: %w", value, err)
 	}
 
-	return intValue
+	return intValue, nil
 }
 
 func getLogLevel(key string, defaultValue slog.Level) slog.Level {

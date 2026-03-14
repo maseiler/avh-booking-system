@@ -21,8 +21,15 @@ type application struct {
 }
 
 func main() {
-	config.LoadEnv()
-	appConf := config.LoadConfig()
+	if err := config.LoadEnv(); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+	appConf, err := config.LoadConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 	dbConf, err := config.LoadDBConfig()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())

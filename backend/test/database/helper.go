@@ -31,7 +31,9 @@ type modelStructs struct {
 // run sets up members and the database before executing tests and tearing them down after execution.
 func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 	currentWorkDirectory, _ := os.Getwd()
-	config.LoadEnvFromFile(currentWorkDirectory + `/.env`)
+	if err := config.LoadEnvFromFile(currentWorkDirectory + `/.env`); err != nil {
+		panic(err)
+	}
 	dbConf, err := config.LoadDBConfig()
 	if err != nil {
 		panic(err)
