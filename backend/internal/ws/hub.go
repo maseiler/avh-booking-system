@@ -19,7 +19,7 @@ func (h *Hub) Run() {
 		select {
 		case client := <-h.Register:
 			h.Clients[client] = true
-			h.log.Info("Client registered", slog.String("client.ID", client.ID))
+			h.log.Info("Client registered", slog.String("client_id", client.ID))
 
 			// Notify others about new client
 			msg := Message{Type: MsgTypeRegister, Payload: map[string]string{"id": client.ID}}
@@ -35,7 +35,7 @@ func (h *Hub) Run() {
 				delete(h.Clients, client)
 				close(client.Send)
 
-				h.log.Info("Client unregistered", slog.String("client.ID", client.ID))
+				h.log.Info("Client unregistered", slog.String("client_id", client.ID))
 
 				// Notify others about disconnection
 				msg := Message{Type: MsgTypeUnRegister, Payload: map[string]string{"id": client.ID}}

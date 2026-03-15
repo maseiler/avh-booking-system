@@ -90,7 +90,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Hub.Broadcast <- message
 
 		default:
-			s.log.Error("Unknown message type", slog.String("msg.Type", msg.Type.String()))
+			s.log.Error("Unknown message type", slog.String("msg_type", msg.Type.String()))
 		}
 	}
 }
