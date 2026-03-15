@@ -16,31 +16,31 @@
   <div class="navbar-menu" :class="{'is-active': burgerActive}">
     <div class="navbar-start">
       <router-link class="navbar-item" to="/" @click="burgerActive = false">
-        Home
+        {{ $t('menu.home') }}
       </router-link>
 
       <router-link class="navbar-item" to="/booking" @click="burgerActive = false">
-        Booking
+        {{ $t('menu.booking') }}
       </router-link>
 
       <router-link class="navbar-item" to="/payment" @click="burgerActive = false">
-        Payment
+        {{ $t('menu.payment') }}
       </router-link>
 
       <router-link class="navbar-item" to="/orders" @click="burgerActive = false">
-        Orders
+        {{ $t('menu.orders') }}
       </router-link>
 
-      <a class="navbar-item" href="#">Statistics</a>
+      <a class="navbar-item" href="#">{{ $t('menu.stats') }}</a>
 
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link" href="#">Settings</a>
+        <a class="navbar-link" href="#">{{ $t('menu.settings.menuTitle') }}</a>
 
         <div class="navbar-dropdown">
-          <router-link to="/settings/products" class="navbar-item" @click="burgerActive = false">Wareneinstellungen</router-link>
-          <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">Accounteinstellungen</router-link>
-          <router-link to="/settings/payments" class="navbar-item" @click="burgerActive = false">Zahlungseinstellungen</router-link>
-          <router-link to="/settings/application" class="navbar-item" @click="burgerActive = false">Systemeinstellungen</router-link>
+          <router-link to="/settings/products" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.item') }}</router-link>
+          <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.account') }}</router-link>
+          <router-link to="/settings/payments" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.payment') }}</router-link>
+          <router-link to="/settings/application" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.system') }}</router-link>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
       <div class="navbar-item">
         <div class="buttons">
           <a class="button is-light">
-            Log in
+            {{ $t('menu.login') }}
           </a>
         </div>
       </div>

@@ -10,13 +10,13 @@
         <li :class="visiblePart == 0 ? 'is-active' : ''">
           <a @click="setVisiblePart(0)">
             <span class="icon is-small"><icon :icon="['fas', 'user']" /></span>
-            Accounts
+            {{ $t('booking.accounts') }}
           </a>
         </li>
         <li :class="visiblePart == 1 ? 'is-active' : ''">
           <a @click="setVisiblePart(1)">
             <span class="icon is-small"><icon :icon="['fas', 'th-large']" /></span>
-            Products
+            {{ $t('booking.products') }}
           </a>
         </li>
       </ul>

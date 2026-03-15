@@ -1,10 +1,10 @@
 <template>
 <p class="cartSum">
-  Summe:
+  {{ $t('transaction.sum') }}:
   <span>{{ $n(cart$.getTotals[0] / 100, 'currency') }}</span>
 </p>
 <p class="cartTax">
-  Davon Steuer:
+  {{ $t('transaction.partVat') }}:
   <span>{{ $n(cart$.getTotals[1] / 100, 'currency') }}</span>
 </p>
 </template>

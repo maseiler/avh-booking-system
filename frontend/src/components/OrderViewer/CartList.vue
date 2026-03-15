@@ -1,14 +1,14 @@
 <template>
-<p v-if="account$.selected.length == 0">Please select an Accout first</p>
+<p v-if="account$.selected.length == 0">{{ $t('messages.selectAccount') }}</p>
 <div class="cartList" v-if="account$.selected.length != 0">
   <div class="table-container">
     <table class="table is-striped">
       <thead><tr>
-        <th>Quantity</th>
-        <th>Product</th>
-        <th class="has-text-right">Tax</th>
-        <th class="has-text-right">Price</th>
-        <th class="has-text-right">Amount</th>
+        <th>{{ $t('quantity') }}</th>
+        <th>{{ $t('booking.products') }}</th>
+        <th class="has-text-right">{{ $t('transaction.vat') }}</th>
+        <th class="has-text-right">{{ $t('transaction.price') }}</th>
+        <th class="has-text-right">{{ $t('transaction.amount') }}</th>
       </tr></thead>
       <tbody>
         <CartProduct v-for="content in cart$.cartContents" :content="content"/>

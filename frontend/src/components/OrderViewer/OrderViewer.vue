@@ -5,9 +5,9 @@
       <span>
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon details" :icon="['fas', 'arrow-up-short-wide']" />
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon" :icon="['fas', 'arrow-down-short-wide']" />
-        New Order
+        {{ $t('transaction.cart') }}
       </span>
-      <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" title="discard cart and unselect account"></button>
+      <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" :title="$t('transaction.discardCartTooltip')"></button>
     </div>
 
     <div :class="showOrderDetails ? 'showDetails' : ''" class="message-body fixed-grid has-3-cols">
