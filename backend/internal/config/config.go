@@ -14,8 +14,16 @@ const (
 	DefaultHTTPPort = 8081
 )
 
+type LogFormat int
+
+const (
+	LogFormatText LogFormat = iota
+	LogFormatJSON
+)
+
 type AppConfig struct {
 	LogLevel     slog.Level
+	LogFormat    LogFormat
 	HTTPPort     int
 	FrontendPath string
 }
@@ -50,6 +58,7 @@ func LoadConfig() (*AppConfig, error) {
 
 	conf := &AppConfig{
 		LogLevel:     getLogLevel("AVHBS_LOG_LEVEL", slog.LevelInfo),
+		LogFormat:    getLogFormat("AVHBS_LOG_FORMAT", LogFormatText),
 		HTTPPort:     httpPort,
 		FrontendPath: getString("AVHBS_FRONTEND_PATH", ""),
 	}
@@ -115,6 +124,22 @@ func getInt(key string, defaultValue int) (int, error) {
 	}
 
 	return intValue, nil
+}
+
+func getLogFormat(key string, defaultValue LogFormat) LogFormat {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return defaultValue
+	}
+
+	switch strings.ToUpper(value) {
+	case "JSON":
+		return LogFormatJSON
+	case "TEXT":
+		return LogFormatText
+	default:
+		return defaultValue
+	}
 }
 
 func getLogLevel(key string, defaultValue slog.Level) slog.Level {
