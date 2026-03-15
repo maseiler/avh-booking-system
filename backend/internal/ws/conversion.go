@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/repo"
 )
 
-func unmarshalInterface[T any](payload interface{}) (*T, *WsError) {
+func unmarshalInterface[T any](payload interface{}) (*T, *WSError) {
 	if payload == nil {
-		return nil, &WsError{
-			Code:    WsBadInterface,
+		return nil, &WSError{
+			Code:    WSBadInterface,
 			Message: "Payload is nil",
 		}
 	}
@@ -19,8 +19,8 @@ func unmarshalInterface[T any](payload interface{}) (*T, *WsError) {
 	var b []byte
 	var err error
 	if b, err = json.Marshal(payload); err != nil {
-		return nil, &WsError{
-			Code:    WsBadInterface,
+		return nil, &WSError{
+			Code:    WSBadInterface,
 			Message: err.Error(),
 			Details: "Could not marshal interface",
 		}
@@ -29,8 +29,8 @@ func unmarshalInterface[T any](payload interface{}) (*T, *WsError) {
 	// Convert JSON bytes to target type T
 	var result T
 	if err := json.Unmarshal(b, &result); err != nil {
-		return nil, &WsError{
-			Code:    WsBadJson,
+		return nil, &WSError{
+			Code:    WSBadJSON,
 			Message: err.Error(),
 			Details: "Could not unmarshal to type " + reflect.TypeOf(result).Name(),
 		}
@@ -39,24 +39,24 @@ func unmarshalInterface[T any](payload interface{}) (*T, *WsError) {
 	return &result, nil
 }
 
-func (s *Service) marshalAndValidateMessage(message *Message) ([]byte, *WsError) {
+func (s *Service) marshalAndValidateMessage(message *Message) ([]byte, *WSError) {
 	// Marshall message
 	b, err := json.Marshal(message)
 	if err != nil {
-		return nil, &WsError{Code: WsBadInterface, Message: err.Error(), Details: "Could not marshal message"}
+		return nil, &WSError{Code: WSBadInterface, Message: err.Error(), Details: "Could not marshal message"}
 	}
 
 	// Validate message
-	err = s.validator.ValidateMessage(b)
+	err = s.validator.validate(b)
 	if err != nil {
-		return nil, &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+		return nil, &WSError{Code: WSBadJSON, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 	}
 
 	return b, nil
 }
 
-func (s *Service) marshalQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
-	res := models.QueryResultList{Table: table, Data: *data}
+func (s *Service) marshalQueryResultList(table repo.TableName, data *[]json.RawMessage) ([]byte, *WSError) {
+	res := QueryResultList{Table: table, Data: *data}
 	msg := Message{
 		Type:    MsgTypeQueryResultList,
 		Payload: res,
@@ -65,8 +65,8 @@ func (s *Service) marshalQueryResultList(table models.TableName, data *[]json.Ra
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalResultMutation(table models.TableName, operation models.Operation, id int) ([]byte, *WsError) {
-	res := models.ResultMutation{Table: table, Operation: operation, Id: id}
+func (s *Service) marshalResultMutation(table repo.TableName, operation repo.Operation, id int) ([]byte, *WSError) {
+	res := ResultMutation{Table: table, Operation: operation, ID: id}
 	msg := Message{
 		Type:    MsgTypeMutationResult,
 		Payload: res,
@@ -75,8 +75,8 @@ func (s *Service) marshalResultMutation(table models.TableName, operation models
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalBroadcastQueryResult(table models.TableName, data json.RawMessage) ([]byte, *WsError) {
-	res := models.QueryResult{Table: table, Data: data}
+func (s *Service) marshalBroadcastQueryResult(table repo.TableName, data json.RawMessage) ([]byte, *WSError) {
+	res := QueryResult{Table: table, Data: data}
 	msg := Message{
 		Type:    MsgTypeBroadcast,
 		Payload: res,
@@ -85,8 +85,8 @@ func (s *Service) marshalBroadcastQueryResult(table models.TableName, data json.
 	return s.marshalAndValidateMessage(&msg)
 }
 
-func (s *Service) marshalBroadcastQueryResultList(table models.TableName, data *[]json.RawMessage) ([]byte, *WsError) {
-	res := models.QueryResultList{Table: table, Data: *data}
+func (s *Service) marshalBroadcastQueryResultList(table repo.TableName, data *[]json.RawMessage) ([]byte, *WSError) {
+	res := QueryResultList{Table: table, Data: *data}
 	msg := Message{
 		Type:    MsgTypeBroadcast,
 		Payload: res,

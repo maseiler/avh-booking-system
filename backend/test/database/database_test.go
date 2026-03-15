@@ -35,8 +35,8 @@ func TestInsertAccount(t *testing.T) {
 }
 
 func TestGetAccountById(t *testing.T) {
-	const accountId = 1
-	daGama, err := dbModels.account.GetById(accountId)
+	const accountID = 1
+	daGama, err := dbModels.account.GetByID(accountID)
 	if daGama == nil {
 		t.Fail()
 		t.Log("Could not get account")
@@ -45,7 +45,7 @@ func TestGetAccountById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, accountId, daGama.Id)
+	require.Equal(t, accountID, daGama.ID)
 	require.Equal(t, "Vasco", daGama.FirstName)
 	require.Equal(t, "Cape Conqueror", daGama.Nickname)
 	require.Equal(t, "da Gama", daGama.LastName)
@@ -64,17 +64,17 @@ func TestGetAccountById(t *testing.T) {
 
 func TestInsertAccountOption(t *testing.T) {
 	dummyOpt := models.CreateAccountOption(1, "key", "value")
-	accountId, key, err := dbModels.accountOption.Insert(dummyOpt)
+	accountID, key, err := dbModels.accountOption.Insert(dummyOpt)
 
 	require.NoError(t, err)
-	assert.NotZero(t, accountId)
+	assert.NotZero(t, accountID)
 	assert.NotZero(t, key)
 }
 
 func TestGetAccountOptionByAccountAndKey(t *testing.T) {
-	const accountId = 1
+	const accountID = 1
 	const optKey = "deceased"
-	opt, err := dbModels.accountOption.Get(accountId, optKey)
+	opt, err := dbModels.accountOption.Get(accountID, optKey)
 	if opt == nil {
 		t.Fail()
 		t.Log("Could not get account option")
@@ -83,7 +83,7 @@ func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, accountId, opt.AccountId)
+	require.Equal(t, accountID, opt.AccountID)
 	require.Equal(t, optKey, opt.Key)
 	require.Equal(t, "true", opt.Value)
 }
@@ -101,8 +101,8 @@ func TestInsertCategory(t *testing.T) {
 }
 
 func TestGetCategoryById(t *testing.T) {
-	const categoryId = 1
-	cat, err := dbModels.category.GetById(categoryId)
+	const categoryID = 1
+	cat, err := dbModels.category.GetByID(categoryID)
 	if cat == nil {
 		t.Fail()
 		t.Log("Could not get category")
@@ -111,7 +111,7 @@ func TestGetCategoryById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, categoryId, cat.Id)
+	require.Equal(t, categoryID, cat.ID)
 	require.Equal(t, "Sailor", cat.Name)
 	require.Equal(t, true, cat.Enabled)
 	require.Equal(t, "sailboat", cat.Icon)
@@ -131,8 +131,8 @@ func TestInsertProduct(t *testing.T) {
 }
 
 func TestGetProductById(t *testing.T) {
-	const productId = 1
-	product, err := dbModels.product.GetById(productId)
+	const productID = 1
+	product, err := dbModels.product.GetByID(productID)
 	if product == nil {
 		t.Fail()
 		t.Log("Could not get product")
@@ -141,14 +141,14 @@ func TestGetProductById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, product.Id, productId)
+	require.Equal(t, product.ID, productID)
 	require.Equal(t, "Rota das Especiarias", product.Name)
 	require.Equal(t, 1800, product.Price)
-	require.Equal(t, 1, product.VatId)
-	require.Equal(t, 1, product.ProductGroupId)
+	require.Equal(t, 1, product.VatID)
+	require.Equal(t, 1, product.ProductGroupID)
 	require.Equal(t, 150, product.Size)
-	require.Equal(t, 1, product.UnitId)
-	require.Equal(t, 2, product.CategoryId)
+	require.Equal(t, 1, product.UnitID)
+	require.Equal(t, 2, product.CategoryID)
 }
 
 // --------------------------------------------------
@@ -164,8 +164,8 @@ func TestInsertProductGroup(t *testing.T) {
 }
 
 func TestGetProductGroupById(t *testing.T) {
-	const groupId = 1
-	group, err := dbModels.productGroup.GetById(groupId)
+	const groupID = 1
+	group, err := dbModels.productGroup.GetByID(groupID)
 	if group == nil {
 		t.Fail()
 		t.Log("Could not get group")
@@ -174,9 +174,9 @@ func TestGetProductGroupById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, groupId, group.Id)
+	require.Equal(t, groupID, group.ID)
 	require.Equal(t, "Alcohol", group.Name)
-	require.Equal(t, 0, group.ParentId)
+	require.Equal(t, 0, group.ParentID)
 }
 
 // --------------------------------------------------
@@ -192,8 +192,8 @@ func TestInsertUnit(t *testing.T) {
 }
 
 func TestGetUnitById(t *testing.T) {
-	const unitId = 1
-	unit, err := dbModels.unit.GetById(unitId)
+	const unitID = 1
+	unit, err := dbModels.unit.GetByID(unitID)
 	if unit == nil {
 		t.Fail()
 		t.Log("Could not get unit")
@@ -202,7 +202,7 @@ func TestGetUnitById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, unitId, unit.Id)
+	require.Equal(t, unitID, unit.ID)
 	require.Equal(t, "ml", unit.Name)
 }
 
@@ -219,8 +219,8 @@ func TestInsertProductVisibility(t *testing.T) {
 }
 
 func TestProductVisibilityById(t *testing.T) {
-	const visibilityId = 1
-	unit, err := dbModels.productVisibility.GetById(visibilityId)
+	const visibilityID = 1
+	unit, err := dbModels.productVisibility.GetByID(visibilityID)
 	if unit == nil {
 		t.Fail()
 		t.Log("Could not get product visibility")
@@ -229,9 +229,9 @@ func TestProductVisibilityById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, visibilityId, unit.Id)
-	require.Equal(t, 1, unit.CategoryId)
-	require.Equal(t, 1, unit.ProductId)
+	require.Equal(t, visibilityID, unit.ID)
+	require.Equal(t, 1, unit.CategoryID)
+	require.Equal(t, 1, unit.ProductID)
 }
 
 // --------------------------------------------------
@@ -247,8 +247,8 @@ func TestInsertLocation(t *testing.T) {
 }
 
 func TestGetLocationById(t *testing.T) {
-	const locationId = 1
-	location, err := dbModels.location.GetById(locationId)
+	const locationID = 1
+	location, err := dbModels.location.GetByID(locationID)
 	if location == nil {
 		t.Fail()
 		t.Log("Could not get location")
@@ -257,7 +257,7 @@ func TestGetLocationById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, locationId, location.Id)
+	require.Equal(t, locationID, location.ID)
 	require.Equal(t, "Bermuda Triangle", location.Name)
 }
 
@@ -274,8 +274,8 @@ func TestInsertVat(t *testing.T) {
 }
 
 func TestGetVatById(t *testing.T) {
-	const vatId = 1
-	vat, err := dbModels.vat.GetById(vatId)
+	const vatID = 1
+	vat, err := dbModels.vat.GetByID(vatID)
 	if vat == nil {
 		t.Fail()
 		t.Log("Could not get vat")
@@ -284,6 +284,6 @@ func TestGetVatById(t *testing.T) {
 	}
 
 	require.NoError(t, err)
-	require.Equal(t, vatId, vat.Id)
+	require.Equal(t, vatID, vat.ID)
 	require.Equal(t, 19, vat.Rate)
 }

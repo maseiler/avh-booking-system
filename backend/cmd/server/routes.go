@@ -2,13 +2,11 @@ package main
 
 import (
 	"net/http"
-	"os"
 )
 
 func (app *application) routes() http.Handler {
 	// set up file server
-	staticPath := os.Getenv("AVHBS_FRONTEND_PATH")
-	fileServer := http.FileServer(http.Dir(staticPath))
+	fileServer := http.FileServer(http.Dir(app.conf.FrontendPath))
 
 	// set up routes
 	mux := http.NewServeMux()
@@ -18,7 +16,7 @@ func (app *application) routes() http.Handler {
 	//mux.HandleFunc("GET /account/{id}", app.getAccount)
 
 	// WebSocket handler
-	mux.HandleFunc("/ws", app.HandleConnections)
+	mux.Handle("/ws", app.wsHandler)
 
 	return app.logRequest(app.securityHeaders(mux))
 }

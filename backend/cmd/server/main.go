@@ -1,47 +1,70 @@
 package main
 
 import (
-	"github.com/av-huette/avh-booking-system/config"
-	"github.com/av-huette/avh-booking-system/internal/database"
-	"github.com/av-huette/avh-booking-system/internal/logger"
-	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/av-huette/avh-booking-system/internal/ws"
+	"fmt"
 	"log/slog"
 	"os"
+	"time"
+
+	"github.com/av-huette/avh-booking-system/internal/config"
+	"github.com/av-huette/avh-booking-system/internal/database"
+	"github.com/av-huette/avh-booking-system/internal/repo"
+	"github.com/av-huette/avh-booking-system/internal/ws"
+	"github.com/lmittmann/tint"
 )
 
 type application struct {
 	conf      *config.AppConfig
 	log       *slog.Logger
 	db        *database.DB
-	WsHandler *WebSocketHandler
+	wsHandler *ws.Handler
 }
 
 func main() {
-	dbPool, err := database.NewFromConfig()
+	if err := config.LoadEnv(); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+	appConf, err := config.LoadConfig()
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+	dbConf, err := config.LoadDBConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+
+	dbPool, err := database.New(dbConf.DBUser, dbConf.DBPassword, dbConf.DBHost, dbConf.DBPort, dbConf.DBName)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
 	}
 	defer dbPool.Close()
 
 	stores := ws.Stores{
-		Account:           &models.AccountModel{DB: dbPool},
-		Category:          &models.CategoryModel{DB: dbPool},
-		Location:          &models.LocationModel{DB: dbPool},
-		Product:           &models.ProductModel{DB: dbPool},
-		ProductGroup:      &models.ProductGroupModel{DB: dbPool},
-		ProductVisibility: &models.ProductVisibilityModel{DB: dbPool},
-		Unit:              &models.UnitModel{DB: dbPool},
-		Vat:               &models.VatModel{DB: dbPool},
+		Account:           &repo.AccountModel{DB: dbPool},
+		Category:          &repo.CategoryModel{DB: dbPool},
+		Location:          &repo.LocationModel{DB: dbPool},
+		Product:           &repo.ProductModel{DB: dbPool},
+		ProductGroup:      &repo.ProductGroupModel{DB: dbPool},
+		ProductVisibility: &repo.ProductVisibilityModel{DB: dbPool},
+		Unit:              &repo.UnitModel{DB: dbPool},
+		Vat:               &repo.VatModel{DB: dbPool},
 	}
 
+	logOpts := &tint.Options{Level: appConf.LogLevel, TimeFormat: time.DateTime}
+	log := slog.New(tint.NewHandler(os.Stdout, logOpts))
+	log.Debug(fmt.Sprintf("Log level: %s", logOpts.Level))
+
 	app := &application{
-		conf: config.LoadConfig(),
-		log:  logger.CreateLogger(),
+		conf: appConf,
+		log:  log,
 		db:   dbPool,
 	}
 
-	app.WsHandler = NewWebSocketHandler(app, stores)
+	app.wsHandler = ws.NewHandler(stores, app.log)
 
 	if err := app.serveHTTP(); err != nil {
 		app.log.Error(err.Error())

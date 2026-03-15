@@ -4,19 +4,11 @@ package database
 import (
 	"context"
 	"fmt"
-	"github.com/av-huette/avh-booking-system/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type DB struct {
 	*pgxpool.Pool
-}
-
-// NewFromConfig creates a new database connection pool using values loaded from environment variables.
-func NewFromConfig() (*DB, error) {
-	dbConf := config.LoadDbConfigFromRootEnv()
-
-	return New(dbConf.DbUser, dbConf.DbPassword, dbConf.DbHost, dbConf.DbPort, dbConf.DbName)
 }
 
 // New creates a new database connection pool using the passed parameters.

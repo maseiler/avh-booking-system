@@ -1,0 +1,83 @@
+package repo
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+
+	"github.com/av-huette/avh-booking-system/internal/database"
+	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/jackc/pgx/v5"
+)
+
+// ProductVisibilityModel provides database operations for ProductVisibility entities.
+type ProductVisibilityModel struct {
+	DB *database.DB
+}
+
+// Get retrieves ProductVisibilities based on the provided query specification.
+func (m *ProductVisibilityModel) Get(query *Query) ([]models.ProductVisibility, error) {
+	ctx := context.Background()
+	stmt, args, err := buildSelectSQL(query)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := m.DB.Query(ctx, stmt, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	visibilities, err := pgx.CollectRows(rows, pgx.RowToStructByName[models.ProductVisibility])
+	if err != nil {
+		return nil, err
+	}
+
+	return visibilities, nil
+}
+
+// GetByID retrieves a product visibility rule by its ID.
+func (m *ProductVisibilityModel) GetByID(id int) (*models.ProductVisibility, error) {
+	ctx := context.Background()
+	stmt := `SELECT product_visibility_id, category, location, product
+			FROM product_visibility
+			WHERE product_visibility_id = $1`
+	row := m.DB.QueryRow(ctx, stmt, id)
+
+	var productVisibility models.ProductVisibility
+	err := row.Scan(&productVisibility.ID, &productVisibility.CategoryID, &productVisibility.LocationID, &productVisibility.ProductID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, database.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return &productVisibility, nil
+}
+
+// Insert adds a new product visibility rule to the database.
+func (m *ProductVisibilityModel) Insert(visibility models.ProductVisibility) (int, error) {
+	ctx := context.Background()
+	var id int
+	query := `
+        INSERT INTO product_visibility (category, location, product)
+        VALUES ($1, $2, $3)
+        RETURNING product_visibility_id`
+	err := m.DB.QueryRow(ctx, query, visibility.CategoryID, visibility.LocationID, visibility.ProductID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes an existing visibility from the database.
+func (m *ProductVisibilityModel) Delete(id int) (int, error) {
+	ctx := context.Background()
+	query := `
+        DELETE FROM product_visibility
+        WHERE product_visibility_id = $1
+			RETURNING $1;
+			`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
+
+	return id, err
+}

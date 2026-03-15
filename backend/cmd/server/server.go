@@ -22,7 +22,7 @@ const (
 // serveHTTP creates and runs a web server.
 func (app *application) serveHTTP() error {
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", app.conf.HttpPort),
+		Addr:         fmt.Sprintf(":%d", app.conf.HTTPPort),
 		Handler:      app.routes(),
 		ErrorLog:     slog.NewLogLogger(app.log.Handler(), slog.LevelWarn),
 		IdleTimeout:  defaultIdleTimeout,

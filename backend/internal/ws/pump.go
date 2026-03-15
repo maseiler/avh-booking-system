@@ -3,9 +3,9 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/av-huette/avh-booking-system/internal/models"
-	"github.com/gorilla/websocket"
 	"log/slog"
+
+	"github.com/gorilla/websocket"
 )
 
 // ReadPump pumps messages from the ws connection to the hub
@@ -29,9 +29,9 @@ func (s *Service) ReadPump(c *Client) {
 		}
 
 		// Validate JSON schema
-		err = s.validator.ValidateMessage(message)
+		err = s.validator.validate(message)
 		if err != nil {
-			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "JSON does not comply with Message schema"}
+			wsErr := &WSError{Code: WSBadJSON, Message: err.Error(), Details: "JSON does not comply with Message schema"}
 			s.sendError(c, wsErr)
 			continue
 		}
@@ -39,7 +39,7 @@ func (s *Service) ReadPump(c *Client) {
 		// Unmarshal message
 		msg := Message{}
 		if err := json.Unmarshal(message, &msg); err != nil {
-			wsErr := &WsError{Code: WsBadJson, Message: err.Error(), Details: "Could not unmarshal message"}
+			wsErr := &WSError{Code: WSBadJSON, Message: err.Error(), Details: "Could not unmarshal message"}
 			s.sendError(c, wsErr)
 			continue
 		}
@@ -68,7 +68,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Send <- b
 
 		case MsgTypeMutation:
-			mutation, wsErr := unmarshalInterface[models.Mutation](msg.Payload)
+			mutation, wsErr := unmarshalInterface[Mutation](msg.Payload)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
@@ -103,7 +103,7 @@ func (s *Service) WritePump(c *Client) {
 		select {
 		case msg, ok := <-c.Send:
 			if !ok {
-				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				c.Conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 				return
 			}
 			c.Conn.WriteMessage(websocket.TextMessage, msg)

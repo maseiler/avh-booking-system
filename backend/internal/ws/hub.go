@@ -27,7 +27,11 @@ func (h *Hub) Run() {
 
 			// Notify others about new client
 			msg := Message{Type: MsgTypeRegister, Payload: map[string]string{"id": client.ID}}
-			notification, _ := json.Marshal(msg)
+			notification, err := json.Marshal(msg)
+			if err != nil {
+				h.Log.Error("failed to marshal register notification", slog.String("error", err.Error()))
+				break
+			}
 			h.broadcastMessage(notification, client)
 
 		case client := <-h.Unregister:
@@ -41,7 +45,11 @@ func (h *Hub) Run() {
 
 				// Notify others about disconnection
 				msg := Message{Type: MsgTypeUnRegister, Payload: map[string]string{"id": client.ID}}
-				notification, _ := json.Marshal(msg)
+				notification, err := json.Marshal(msg)
+				if err != nil {
+					h.Log.Error("failed to marshal unregister notification", slog.String("error", err.Error()))
+					break
+				}
 				h.broadcastMessage(notification, nil)
 			} else {
 				h.Mu.Unlock()
@@ -54,18 +62,28 @@ func (h *Hub) Run() {
 }
 
 func (h *Hub) broadcastMessage(message []byte, exclude *Client) {
-	h.Mu.RLock()
-	defer h.Mu.RUnlock()
+	var drop []*Client
 
+	h.Mu.RLock()
 	for client := range h.Clients {
 		if client != exclude {
 			select {
 			case client.Send <- message:
 			default:
-				// Client's send channel is full, close it
+				drop = append(drop, client)
+			}
+		}
+	}
+	h.Mu.RUnlock()
+
+	if len(drop) > 0 {
+		h.Mu.Lock()
+		for _, client := range drop {
+			if _, ok := h.Clients[client]; ok {
 				delete(h.Clients, client)
 				close(client.Send)
 			}
 		}
+		h.Mu.Unlock()
 	}
 }
