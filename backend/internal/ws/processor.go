@@ -32,7 +32,7 @@ func (s *Service) processPing(message Message) ([]byte, *WSError) {
 		return nil, &WSError{Code: WSBadJSON, Message: err.Error(), Details: "Unmarshal to PingPong"}
 	}
 
-	s.log.Info("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
+	s.log.Debug("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
 
 	pong := PingPong{Timestamp: time.Now()}
 	response := Message{Type: MsgTypePong, Payload: pong}
