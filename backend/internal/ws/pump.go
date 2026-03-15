@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"log/slog"
 
 	"github.com/gorilla/websocket"
@@ -45,7 +44,7 @@ func (s *Service) ReadPump(c *Client) {
 			continue
 		}
 
-		s.log.Debug("Received message", slog.String("msg", fmt.Sprintf("%v", msg)))
+		s.log.Debug("Received message", slog.Any("msg", msg))
 
 		// Route
 		switch msg.Type {
@@ -91,7 +90,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Hub.Broadcast <- message
 
 		default:
-			s.log.Error("Unknown message type:", slog.String("msg.Type", msg.Type.String()))
+			s.log.Error("Unknown message type", slog.String("msg.Type", msg.Type.String()))
 		}
 	}
 }

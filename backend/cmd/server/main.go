@@ -56,7 +56,7 @@ func main() {
 
 	logOpts := &tint.Options{Level: appConf.LogLevel, TimeFormat: time.DateTime}
 	log := slog.New(tint.NewHandler(os.Stdout, logOpts))
-	log.Debug(fmt.Sprintf("Log level: %s", logOpts.Level))
+	log.Debug("Log level", slog.Any("level", logOpts.Level))
 
 	app := &application{
 		conf: appConf,

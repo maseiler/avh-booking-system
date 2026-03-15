@@ -16,7 +16,7 @@ type Service struct {
 
 func NewService(stores Stores, log *slog.Logger) *Service {
 	hub := &Hub{
-		Log:        log,
+		log:        log,
 		Clients:    make(map[*Client]bool),
 		Broadcast:  make(chan []byte),
 		Register:   make(chan *Client),

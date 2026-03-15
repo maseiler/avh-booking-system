@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -53,7 +54,7 @@ func (wse *WSError) String() string {
 }
 
 func (s *Service) sendError(c *Client, wsErr *WSError) {
-	s.log.Log(nil, wsErr.logLevel(), wsErr.String())
+	s.log.Log(context.Background(), wsErr.logLevel(), wsErr.String())
 
 	// Create error message
 	msg := Message{
