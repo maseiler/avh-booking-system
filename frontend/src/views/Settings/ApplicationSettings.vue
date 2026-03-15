@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import DetailsArea from '../../components/DetailsArea.vue';
-import { useI18n } from 'vue-i18n';
 
 const companyLogo = ref("");
 function changeLogo(e){
@@ -24,10 +23,6 @@ function changeIcon(e){
 
   reader.readAsDataURL(e.target.files[0]);
 }
-
-// const i18n = useI18n();
-// console.log(i18n.availableLocales);
-
 </script>
 
 <template>
@@ -114,7 +109,7 @@ function changeIcon(e){
     <div class="column">
       <div class="select">
         <select>
-          <option value="">Put all</option>
+          <option value="">Not yet implemented</option>
         </select>
       </div>
     </div>
@@ -127,7 +122,7 @@ function changeIcon(e){
     <div class="column">
       <div class="select">
         <select>
-          <option value="">Put all</option>
+          <option value="">Not yet implemented</option>
         </select>
       </div>
     </div>
@@ -162,18 +157,9 @@ function changeIcon(e){
     </div>
   </div>
 
-  <!-- <div class="columns">
-    <div class="column is-3">
-      {{ $t('settings.currrency')}}
-    </div>
-    <div class="column is-2">
-      <div class="select">
-        <select v-model="$i18n.numberFormats">
-          <option v-for="l of $i18n.availableLocales" :key="`locale-${l}`" :value="l">{{ l }}</option>
-        </select>
-      </div>
-    </div>
-  </div> -->
+  <!-- ToDo Allow seperate changing of currency -->
+
+
 </DetailsArea>
 
 
