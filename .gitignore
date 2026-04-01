@@ -19,6 +19,7 @@ frontend/dist/
 frontend/node_modules/
 frontend/.env
 
-backend/.env
+backend/**/.env
+.env
 
 python/
