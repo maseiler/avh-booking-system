@@ -1,30 +1,42 @@
 <template>
-  <DevModeBar v-if="dev"/>
-  <MainNavigation />
-  <!-- <div v-for="msg in store.notifications"> {{ msg }}</div>
-  <button class="button" @click="sendTestMessage">Send Test Message</button> -->
-  <RouterView />
+  <ClientSetup v-if="needsSetup" @setup-complete="onSetupComplete" />
+  <template v-else>
+    <DevModeBar v-if="dev" />
+    <MainNavigation />
+    <RouterView />
+  </template>
 </template>
 
 <script lang="ts">
-    import MainNavigation from './components/MainNavigation.vue';
-  import DevModeBar from './components/DevModeBar.vue';
-  import { useSocketStore } from './store/socketStore';
-  
-  export default {
-    components: {
-      MainNavigation,
-      DevModeBar
-    },
-    data() {
-      return {
-        dev: false,
-        socket$: useSocketStore(),
-      }
-    },
-    mounted() {
-        this.dev = import.meta.env.DEV;
-        this.socket$.getAllFromDb();
+import MainNavigation from './components/MainNavigation.vue';
+import DevModeBar from './components/DevModeBar.vue';
+import ClientSetup from './views/ClientSetup.vue';
+import { useSocketStore } from './store/socketStore';
+
+export default {
+  components: {
+    MainNavigation,
+    DevModeBar,
+    ClientSetup,
+  },
+  data() {
+    const clientId = localStorage.getItem('avhbs_client_id');
+    return {
+      dev: false,
+      needsSetup: !clientId,
+      socket$: clientId ? useSocketStore() : null,
+    };
+  },
+  mounted() {
+    this.dev = import.meta.env.DEV;
+    if (this.socket$) {
+      this.socket$.getAllFromDb();
     }
-  }
+  },
+  methods: {
+    onSetupComplete() {
+      location.reload();
+    },
+  },
+};
 </script>
