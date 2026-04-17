@@ -83,8 +83,8 @@ export class WebSocketClient {
 
     connect(): void {
         let url = this.url;
-        const clientId = import.meta.env.VITE_WS_CLIENT_ID;
-        if (clientId.length > 0) {
+        const clientId = localStorage.getItem('avhbs_client_id');
+        if (clientId && clientId.length > 0) {
             url += "?id=" + clientId;
         }
         console.log(`Connecting to ${url}...`);
