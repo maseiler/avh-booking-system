@@ -17,8 +17,7 @@ type ProductGroupModel struct {
 }
 
 // Get retrieves product groups based on the provided query specification.
-func (m *ProductGroupModel) Get(query *Query) ([]models.ProductGroup, error) {
-	ctx := context.Background()
+func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.ProductGroup, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -39,8 +38,7 @@ func (m *ProductGroupModel) Get(query *Query) ([]models.ProductGroup, error) {
 }
 
 // GetByID retrieves a product group by its ID.
-func (m *ProductGroupModel) GetByID(id int) (*models.ProductGroup, error) {
-	ctx := context.Background()
+func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.ProductGroup, error) {
 	stmt := `SELECT product_group_id, name, parent
 			FROM product_group
 			WHERE product_group_id = $1`
@@ -66,8 +64,7 @@ func (m *ProductGroupModel) GetByID(id int) (*models.ProductGroup, error) {
 }
 
 // Insert adds a new product group to the database.
-func (m *ProductGroupModel) Insert(group models.ProductGroup) (int, error) {
-	ctx := context.Background()
+func (m *ProductGroupModel) Insert(ctx context.Context, group models.ProductGroup) (int, error) {
 	var id int
 	var err error
 	if group.ParentID <= 0 {

@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -39,11 +40,14 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		clientID = generateID()
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
 	client := &Client{
-		ID:   clientID,
-		Conn: conn,
-		Send: make(chan []byte, 256),
-		Hub:  h.service.Hub(),
+		ID:     clientID,
+		Conn:   conn,
+		Send:   make(chan []byte, 256),
+		Hub:    h.service.Hub(),
+		Ctx:    ctx,
+		Cancel: cancel,
 	}
 	client.Hub.Register <- client
 

@@ -16,8 +16,7 @@ type UnitModel struct {
 }
 
 // Get retrieves units based on the provided query specification.
-func (m *UnitModel) Get(query *Query) ([]models.Unit, error) {
-	ctx := context.Background()
+func (m *UnitModel) Get(ctx context.Context, query *Query) ([]models.Unit, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *UnitModel) Get(query *Query) ([]models.Unit, error) {
 }
 
 // GetByID retrieves a unit by its ID.
-func (m *UnitModel) GetByID(id int) (*models.Unit, error) {
-	ctx := context.Background()
+func (m *UnitModel) GetByID(ctx context.Context, id int) (*models.Unit, error) {
 	stmt := `SELECT unit_id, name
 			FROM unit
 			WHERE unit_id = $1`
@@ -57,8 +55,7 @@ func (m *UnitModel) GetByID(id int) (*models.Unit, error) {
 }
 
 // Insert adds a new unit to the database.
-func (m *UnitModel) Insert(unit models.Unit) (int, error) {
-	ctx := context.Background()
+func (m *UnitModel) Insert(ctx context.Context, unit models.Unit) (int, error) {
 	query := `
         INSERT INTO unit (name)
         VALUES ($1)

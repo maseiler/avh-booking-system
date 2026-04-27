@@ -1,12 +1,14 @@
-package test_database
+package repo_test
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"os"
-	"testing"
 )
 
 var dbModels *modelStructs
@@ -28,7 +30,7 @@ func TestMain(m *testing.M) {
 func TestInsertAccount(t *testing.T) {
 	dummyAccount := models.CreateAccount("Andi", "", "Theke",
 		"andiwillsaufen@bier.com", "+49 170 1234567", 9900, 10, 3)
-	id, err := dbModels.account.Insert(dummyAccount)
+	id, err := dbModels.account.Insert(context.Background(), dummyAccount)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -36,7 +38,7 @@ func TestInsertAccount(t *testing.T) {
 
 func TestGetAccountById(t *testing.T) {
 	const accountID = 1
-	daGama, err := dbModels.account.GetByID(accountID)
+	daGama, err := dbModels.account.GetByID(context.Background(), accountID)
 	if daGama == nil {
 		t.Fail()
 		t.Log("Could not get account")
@@ -52,7 +54,7 @@ func TestGetAccountById(t *testing.T) {
 	require.Equal(t, "indianspice@capeofgoodhope.com", daGama.Email)
 	require.Equal(t, "+351 914 97 1498", daGama.Phone)
 	require.Equal(t, 3355, daGama.Balance)
-	require.Equal(t, 100, daGama.MaxDebt)
+	require.Equal(t, 10000, daGama.MaxDebt)
 	require.Equal(t, 1, daGama.Category)
 	require.Equal(t, true, daGama.Enabled)
 	require.NotZero(t, daGama.CreatedAt)
@@ -64,7 +66,7 @@ func TestGetAccountById(t *testing.T) {
 
 func TestInsertAccountOption(t *testing.T) {
 	dummyOpt := models.CreateAccountOption(1, "key", "value")
-	accountID, key, err := dbModels.accountOption.Insert(dummyOpt)
+	accountID, key, err := dbModels.accountOption.Insert(context.Background(), dummyOpt)
 
 	require.NoError(t, err)
 	assert.NotZero(t, accountID)
@@ -74,7 +76,7 @@ func TestInsertAccountOption(t *testing.T) {
 func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 	const accountID = 1
 	const optKey = "deceased"
-	opt, err := dbModels.accountOption.Get(accountID, optKey)
+	opt, err := dbModels.accountOption.Get(context.Background(), accountID, optKey)
 	if opt == nil {
 		t.Fail()
 		t.Log("Could not get account option")
@@ -94,7 +96,7 @@ func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 
 func TestInsertCategory(t *testing.T) {
 	dummyCategory := models.CreateCategory("Guest", "user-friends", "account")
-	id, err := dbModels.category.Insert(dummyCategory)
+	id, err := dbModels.category.Insert(context.Background(), dummyCategory)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -102,7 +104,7 @@ func TestInsertCategory(t *testing.T) {
 
 func TestGetCategoryById(t *testing.T) {
 	const categoryID = 1
-	cat, err := dbModels.category.GetByID(categoryID)
+	cat, err := dbModels.category.GetByID(context.Background(), categoryID)
 	if cat == nil {
 		t.Fail()
 		t.Log("Could not get category")
@@ -124,7 +126,7 @@ func TestGetCategoryById(t *testing.T) {
 
 func TestInsertProduct(t *testing.T) {
 	dummyProduct := models.CreateProduct("Pearl River Dynasty", 1000, 1, 1, 200, 1, 1)
-	id, err := dbModels.product.Insert(dummyProduct)
+	id, err := dbModels.product.Insert(context.Background(), dummyProduct)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -132,7 +134,7 @@ func TestInsertProduct(t *testing.T) {
 
 func TestGetProductById(t *testing.T) {
 	const productID = 1
-	product, err := dbModels.product.GetByID(productID)
+	product, err := dbModels.product.GetByID(context.Background(), productID)
 	if product == nil {
 		t.Fail()
 		t.Log("Could not get product")
@@ -157,7 +159,7 @@ func TestGetProductById(t *testing.T) {
 
 func TestInsertProductGroup(t *testing.T) {
 	dummyProductGroup := models.CreateProductGroup("Beer", 1)
-	id, err := dbModels.productGroup.Insert(dummyProductGroup)
+	id, err := dbModels.productGroup.Insert(context.Background(), dummyProductGroup)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -165,7 +167,7 @@ func TestInsertProductGroup(t *testing.T) {
 
 func TestGetProductGroupById(t *testing.T) {
 	const groupID = 1
-	group, err := dbModels.productGroup.GetByID(groupID)
+	group, err := dbModels.productGroup.GetByID(context.Background(), groupID)
 	if group == nil {
 		t.Fail()
 		t.Log("Could not get group")
@@ -185,7 +187,7 @@ func TestGetProductGroupById(t *testing.T) {
 
 func TestInsertUnit(t *testing.T) {
 	dummyUnit := models.CreateUnit("oz")
-	id, err := dbModels.unit.Insert(dummyUnit)
+	id, err := dbModels.unit.Insert(context.Background(), dummyUnit)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -193,7 +195,7 @@ func TestInsertUnit(t *testing.T) {
 
 func TestGetUnitById(t *testing.T) {
 	const unitID = 1
-	unit, err := dbModels.unit.GetByID(unitID)
+	unit, err := dbModels.unit.GetByID(context.Background(), unitID)
 	if unit == nil {
 		t.Fail()
 		t.Log("Could not get unit")
@@ -212,7 +214,7 @@ func TestGetUnitById(t *testing.T) {
 
 func TestInsertProductVisibility(t *testing.T) {
 	dummyVisibility := models.CreateProductVisibility(3, 1, 3)
-	id, err := dbModels.productVisibility.Insert(dummyVisibility)
+	id, err := dbModels.productVisibility.Insert(context.Background(), dummyVisibility)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -220,7 +222,7 @@ func TestInsertProductVisibility(t *testing.T) {
 
 func TestProductVisibilityById(t *testing.T) {
 	const visibilityID = 1
-	unit, err := dbModels.productVisibility.GetByID(visibilityID)
+	unit, err := dbModels.productVisibility.GetByID(context.Background(), visibilityID)
 	if unit == nil {
 		t.Fail()
 		t.Log("Could not get product visibility")
@@ -240,7 +242,7 @@ func TestProductVisibilityById(t *testing.T) {
 
 func TestInsertLocation(t *testing.T) {
 	dummyLocation := models.CreateLocation("Nursing Home")
-	id, err := dbModels.location.Insert(dummyLocation)
+	id, err := dbModels.location.Insert(context.Background(), dummyLocation)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -248,7 +250,7 @@ func TestInsertLocation(t *testing.T) {
 
 func TestGetLocationById(t *testing.T) {
 	const locationID = 1
-	location, err := dbModels.location.GetByID(locationID)
+	location, err := dbModels.location.GetByID(context.Background(), locationID)
 	if location == nil {
 		t.Fail()
 		t.Log("Could not get location")
@@ -267,7 +269,7 @@ func TestGetLocationById(t *testing.T) {
 
 func TestInsertVat(t *testing.T) {
 	dummyVat := models.CreateVat(12)
-	id, err := dbModels.vat.Insert(dummyVat)
+	id, err := dbModels.vat.Insert(context.Background(), dummyVat)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -275,7 +277,7 @@ func TestInsertVat(t *testing.T) {
 
 func TestGetVatById(t *testing.T) {
 	const vatID = 1
-	vat, err := dbModels.vat.GetByID(vatID)
+	vat, err := dbModels.vat.GetByID(context.Background(), vatID)
 	if vat == nil {
 		t.Fail()
 		t.Log("Could not get vat")

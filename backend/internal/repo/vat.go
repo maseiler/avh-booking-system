@@ -16,8 +16,7 @@ type VatModel struct {
 }
 
 // Get retrieves VATs based on the provided query specification.
-func (m *VatModel) Get(query *Query) ([]models.Vat, error) {
-	ctx := context.Background()
+func (m *VatModel) Get(ctx context.Context, query *Query) ([]models.Vat, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *VatModel) Get(query *Query) ([]models.Vat, error) {
 }
 
 // GetByID retrieves a VAT rate by its ID.
-func (m *VatModel) GetByID(id int) (*models.Vat, error) {
-	ctx := context.Background()
+func (m *VatModel) GetByID(ctx context.Context, id int) (*models.Vat, error) {
 	stmt := `SELECT vat_id, rate
 			FROM vat
 			WHERE vat_id = $1`
@@ -57,8 +55,7 @@ func (m *VatModel) GetByID(id int) (*models.Vat, error) {
 }
 
 // Insert adds a new VAT rate to the database.
-func (m *VatModel) Insert(vat models.Vat) (int, error) {
-	ctx := context.Background()
+func (m *VatModel) Insert(ctx context.Context, vat models.Vat) (int, error) {
 	query := `
         INSERT INTO vat (rate)
         VALUES ($1)

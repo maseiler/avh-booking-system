@@ -16,8 +16,7 @@ type LocationModel struct {
 }
 
 // Get retrieves locations based on the provided query specification.
-func (m *LocationModel) Get(query *Query) ([]models.Location, error) {
-	ctx := context.Background()
+func (m *LocationModel) Get(ctx context.Context, query *Query) ([]models.Location, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *LocationModel) Get(query *Query) ([]models.Location, error) {
 }
 
 // GetByID retrieves a location by its ID.
-func (m *LocationModel) GetByID(id int) (*models.Location, error) {
-	ctx := context.Background()
+func (m *LocationModel) GetByID(ctx context.Context, id int) (*models.Location, error) {
 	stmt := `SELECT location_id, name
 			FROM location
 			WHERE location_id = $1`
@@ -57,8 +55,7 @@ func (m *LocationModel) GetByID(id int) (*models.Location, error) {
 }
 
 // Insert adds a new location to the database.
-func (m *LocationModel) Insert(location models.Location) (int, error) {
-	ctx := context.Background()
+func (m *LocationModel) Insert(ctx context.Context, location models.Location) (int, error) {
 	query := `
         INSERT INTO location (name)
         VALUES ($1)

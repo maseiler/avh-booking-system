@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"log/slog"
 
 	"github.com/gorilla/websocket"
@@ -11,6 +10,7 @@ import (
 // ReadPump pumps messages from the ws connection to the hub
 func (s *Service) ReadPump(c *Client) {
 	defer func() {
+		c.Cancel()
 		c.Hub.Unregister <- c
 		c.Conn.Close()
 	}()
@@ -44,7 +44,7 @@ func (s *Service) ReadPump(c *Client) {
 			continue
 		}
 
-		s.log.Debug("Received message", slog.String("msg", fmt.Sprintf("%v", msg)))
+		s.log.Debug("Received message", slog.Any("msg", msg))
 
 		// Route
 		switch msg.Type {
@@ -60,7 +60,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Send <- b
 
 		case MsgTypeQuery:
-			b, wsErr := s.processQuery(msg)
+			b, wsErr := s.processQuery(c.Ctx, msg)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
@@ -74,14 +74,14 @@ func (s *Service) ReadPump(c *Client) {
 				continue
 			}
 
-			response, id, wsErr := s.processMutation(mutation)
+			response, id, wsErr := s.processMutation(c.Ctx, mutation)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
 			}
 			c.Send <- response
 
-			message, wsErr = s.prepareBroadcast(mutation, id)
+			message, wsErr = s.prepareBroadcast(c.Ctx, mutation, id)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
@@ -90,7 +90,7 @@ func (s *Service) ReadPump(c *Client) {
 			c.Hub.Broadcast <- message
 
 		default:
-			s.log.Error("Unknown message type:", slog.String("msg.Type", msg.Type.String()))
+			s.log.Warn("Unknown message type", slog.String("msg_type", msg.Type.String()))
 		}
 	}
 }

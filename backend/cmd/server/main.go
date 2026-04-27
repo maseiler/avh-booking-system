@@ -54,9 +54,14 @@ func main() {
 		Vat:               &repo.VatModel{DB: dbPool},
 	}
 
-	logOpts := &tint.Options{Level: appConf.LogLevel, TimeFormat: time.DateTime}
-	log := slog.New(tint.NewHandler(os.Stdout, logOpts))
-	log.Debug(fmt.Sprintf("Log level: %s", logOpts.Level))
+	var handler slog.Handler
+	if appConf.LogFormat == config.LogFormatJSON {
+		handler = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: appConf.LogLevel})
+	} else {
+		handler = tint.NewHandler(os.Stdout, &tint.Options{Level: appConf.LogLevel, TimeFormat: time.DateTime})
+	}
+	log := slog.New(handler)
+	log.Debug("Logger initialised", slog.Any("level", appConf.LogLevel), slog.Any("format", appConf.LogFormat))
 
 	app := &application{
 		conf: appConf,

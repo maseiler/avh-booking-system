@@ -16,8 +16,7 @@ type CategoryModel struct {
 }
 
 // Get retrieves categories based on the provided query specification.
-func (m *CategoryModel) Get(query *Query) ([]models.Category, error) {
-	ctx := context.Background()
+func (m *CategoryModel) Get(ctx context.Context, query *Query) ([]models.Category, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *CategoryModel) Get(query *Query) ([]models.Category, error) {
 }
 
 // GetByID retrieves a category by its ID.
-func (m *CategoryModel) GetByID(id int) (*models.Category, error) {
-	ctx := context.Background()
+func (m *CategoryModel) GetByID(ctx context.Context, id int) (*models.Category, error) {
 	stmt := `SELECT category_id, name, enabled, icon, type
 			FROM category
 			WHERE category_id = $1`
@@ -57,8 +55,7 @@ func (m *CategoryModel) GetByID(id int) (*models.Category, error) {
 }
 
 // Insert adds a new category to the database.
-func (m *CategoryModel) Insert(category models.Category) (int, error) {
-	ctx := context.Background()
+func (m *CategoryModel) Insert(ctx context.Context, category models.Category) (int, error) {
 	query := `
         INSERT INTO category (name, enabled, icon, type)
         VALUES ($1, $2, $3, $4)

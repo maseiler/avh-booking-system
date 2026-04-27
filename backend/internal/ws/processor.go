@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -31,7 +32,7 @@ func (s *Service) processPing(message Message) ([]byte, *WSError) {
 		return nil, &WSError{Code: WSBadJSON, Message: err.Error(), Details: "Unmarshal to PingPong"}
 	}
 
-	s.log.Info("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
+	s.log.Debug("Received ping with timestamp", slog.String("timestamp", ping.Timestamp.String()))
 
 	pong := PingPong{Timestamp: time.Now()}
 	response := Message{Type: MsgTypePong, Payload: pong}
@@ -49,7 +50,7 @@ func (s *Service) processPing(message Message) ([]byte, *WSError) {
 }
 
 // processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
-func (s *Service) processQuery(message Message) ([]byte, *WSError) {
+func (s *Service) processQuery(ctx context.Context, message Message) ([]byte, *WSError) {
 	query, err := unmarshalInterface[repo.Query](message.Payload)
 	if err != nil {
 		return nil, err
@@ -57,7 +58,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 
 	switch query.Table {
 	case repo.TableAccount:
-		accounts, dbErr := s.stores.Account.Get(query)
+		accounts, dbErr := s.stores.Account.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -72,7 +73,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableAccount, &rawJSONSlice)
 
 	case repo.TableCategory:
-		categories, dbErr := s.stores.Category.Get(query)
+		categories, dbErr := s.stores.Category.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -87,7 +88,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableCategory, &rawJSONSlice)
 
 	case repo.TableLocation:
-		locations, dbErr := s.stores.Location.Get(query)
+		locations, dbErr := s.stores.Location.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -102,7 +103,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableLocation, &rawJSONSlice)
 
 	case repo.TableProduct:
-		products, dbErr := s.stores.Product.Get(query)
+		products, dbErr := s.stores.Product.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -117,7 +118,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableProduct, &rawJSONSlice)
 
 	case repo.TableProductGroup:
-		groups, dbErr := s.stores.ProductGroup.Get(query)
+		groups, dbErr := s.stores.ProductGroup.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -132,7 +133,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableProductGroup, &rawJSONSlice)
 
 	case repo.TableProductVisibility:
-		visibilities, dbErr := s.stores.ProductVisibility.Get(query)
+		visibilities, dbErr := s.stores.ProductVisibility.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -147,7 +148,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableProductVisibility, &rawJSONSlice)
 
 	case repo.TableUnit:
-		units, dbErr := s.stores.Unit.Get(query)
+		units, dbErr := s.stores.Unit.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -162,7 +163,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 		return s.marshalQueryResultList(repo.TableUnit, &rawJSONSlice)
 
 	case repo.TableVat:
-		vats, dbErr := s.stores.Vat.Get(query)
+		vats, dbErr := s.stores.Vat.Get(ctx, query)
 		if dbErr != nil {
 			return nil, queryError(query.Table, dbErr)
 		}
@@ -185,7 +186,7 @@ func (s *Service) processQuery(message Message) ([]byte, *WSError) {
 }
 
 // processMutation unmarshals the message and initiates a database mutation
-func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
+func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]byte, int, *WSError) {
 
 	switch mutation.Operation {
 	case repo.OpInsert:
@@ -197,7 +198,7 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
 					return nil, 0, wsErr
 				}
 
-				newID, err := s.stores.Account.Insert(*account)
+				newID, err := s.stores.Account.Insert(ctx, *account)
 				if err != nil {
 					return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not create account"}
 				}
@@ -211,7 +212,7 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
 					return nil, 0, wsErr
 				}
 
-				newID, err := s.stores.ProductVisibility.Insert(*visibility)
+				newID, err := s.stores.ProductVisibility.Insert(ctx, *visibility)
 				if err != nil {
 					return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not create product visibility"}
 				}
@@ -233,7 +234,7 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
 				return nil, 0, wsErr
 			}
 
-			newID, err := s.stores.Account.Update(*account)
+			newID, err := s.stores.Account.Update(ctx, *account)
 			if err != nil {
 				return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not update account"}
 			}
@@ -272,7 +273,7 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
 						}
 					}
 
-					oldID, err := s.stores.ProductVisibility.Delete(id)
+					oldID, err := s.stores.ProductVisibility.Delete(ctx, id)
 					if err != nil {
 						return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not delete visibility"}
 					}
@@ -298,11 +299,11 @@ func (s *Service) processMutation(mutation *Mutation) ([]byte, int, *WSError) {
 	}
 }
 
-func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WSError) {
+func (s *Service) prepareBroadcast(ctx context.Context, mutation *Mutation, id int) ([]byte, *WSError) {
 	var queryResultList []json.RawMessage
 	switch mutation.Table {
 	case repo.TableAccount:
-		account, err := s.stores.Account.GetByID(id)
+		account, err := s.stores.Account.GetByID(ctx, id)
 		if err != nil {
 			return nil, &WSError{
 				Code:    WSDBQueryError,
@@ -320,7 +321,7 @@ func (s *Service) prepareBroadcast(mutation *Mutation, id int) ([]byte, *WSError
 		query := repo.Query{
 			Table: repo.TableProductVisibility,
 		}
-		visibilities, err := s.stores.ProductVisibility.Get(&query)
+		visibilities, err := s.stores.ProductVisibility.Get(ctx, &query)
 		if err != nil {
 			return nil, &WSError{
 				Code:    WSDBQueryError,

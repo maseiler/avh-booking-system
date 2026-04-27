@@ -15,8 +15,7 @@ type AccountOptionModel struct {
 }
 
 // Insert adds a new account option to the database.
-func (m *AccountOptionModel) Insert(opt models.AccountOption) (int, string, error) {
-	ctx := context.Background()
+func (m *AccountOptionModel) Insert(ctx context.Context, opt models.AccountOption) (int, string, error) {
 	query := `
         INSERT INTO account_option (account, key, value)
         VALUES ($1, $2, $3)
@@ -33,8 +32,7 @@ func (m *AccountOptionModel) Insert(opt models.AccountOption) (int, string, erro
 }
 
 // Get retrieves a specific account option by account ID and key.
-func (m *AccountOptionModel) Get(accountID int, key string) (*models.AccountOption, error) {
-	ctx := context.Background()
+func (m *AccountOptionModel) Get(ctx context.Context, accountID int, key string) (*models.AccountOption, error) {
 	stmt := `SELECT account, key, value
 			FROM account_option
 			WHERE account = $1 AND key = $2`

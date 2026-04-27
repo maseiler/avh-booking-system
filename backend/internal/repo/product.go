@@ -16,8 +16,7 @@ type ProductModel struct {
 }
 
 // Get retrieves products based on the provided query specification.
-func (m *ProductModel) Get(query *Query) ([]models.Product, error) {
-	ctx := context.Background()
+func (m *ProductModel) Get(ctx context.Context, query *Query) ([]models.Product, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *ProductModel) Get(query *Query) ([]models.Product, error) {
 }
 
 // GetByID retrieves a product by its ID.
-func (m *ProductModel) GetByID(productID int) (*models.Product, error) {
-	ctx := context.Background()
+func (m *ProductModel) GetByID(ctx context.Context, productID int) (*models.Product, error) {
 	stmt := `SELECT product_id, name, price, vat, product_group, size, unit, category, created_at
 			FROM product
 			WHERE product_id = $1`
@@ -58,8 +56,7 @@ func (m *ProductModel) GetByID(productID int) (*models.Product, error) {
 }
 
 // Insert adds a new product to the database.
-func (m *ProductModel) Insert(product models.Product) (int, error) {
-	ctx := context.Background()
+func (m *ProductModel) Insert(ctx context.Context, product models.Product) (int, error) {
 	query := `
         INSERT INTO product (name, price, vat, product_group, size, unit, category)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
