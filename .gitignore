@@ -22,3 +22,6 @@ frontend/.env
 backend/**/.env
 
 python/
+
+CLAUDE.md
+frontend/CLAUDE.md
