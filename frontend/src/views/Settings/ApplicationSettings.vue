@@ -1,13 +1,34 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import DetailsArea from '../../components/DetailsArea.vue';
+import { useSettingStore } from '../../store/SettingStore';
+import { computed } from 'vue';
+
+const setting$ = useSettingStore();
+
+const companyName =  computed( {
+  get() {
+    return setting$.get("compTitle").value;
+  },
+  set(newValue: string) {
+    setting$.set("compTitle", newValue);
+  }
+});
+
+const companySlogan =  computed( {
+  get() {
+    return setting$.get("compSlogan").value;
+  },
+  set(newValue: string) {
+    setting$.set("compSlogan", newValue);
+  }
+});
 
 const companyLogo = ref("");
 function changeLogo(e){
   const reader = new FileReader();
   reader.addEventListener("load", () => {
     companyLogo.value = reader.result;
-    console.log(companyLogo.value.length);
   })
 
   reader.readAsDataURL(e.target.files[0]);
@@ -40,7 +61,7 @@ function changeIcon(e){
     </div>
     <div class="column">
       <p class="control has-icons-left">
-          <input type="text" class="input" placeholder="SOS Children's Villages">
+          <input type="text" v-model="companyName" class="input" placeholder="SOS Children's Villages">
           <span class="icon is-small is-left">
             <icon :icon="['fas', 'id-card']" />
           </span>
@@ -54,7 +75,7 @@ function changeIcon(e){
     </div>
     <div class="column">
       <p class="control has-icons-left">
-          <input type="text" class="input" placeholder="Every child a home!">
+          <input type="text" v-model="companySlogan" class="input" placeholder="Every child a home!">
           <span class="icon is-small is-left">
             <icon :icon="['fas', 'microphone']" />
           </span>
