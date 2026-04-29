@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -35,22 +35,15 @@ func (m *CategoryModel) Get(ctx context.Context, query *Query) ([]models.Categor
 
 // GetByID retrieves a category by its ID.
 func (m *CategoryModel) GetByID(ctx context.Context, id int) (*models.Category, error) {
-	stmt := `SELECT category_id, name, enabled, icon, type
-			FROM category
-			WHERE category_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var cat models.Category
-	err := row.Scan(&cat.ID, &cat.Name, &cat.Enabled, &cat.Icon, &cat.Type)
+	query := Query{Table: TableCategory, Filter: []Filter{{Column: "category_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	categories, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &cat, nil
+	if len(categories) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &categories[0], nil
 }
 
 // Insert adds a new category to the database.

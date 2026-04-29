@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -35,22 +35,15 @@ func (m *VatModel) Get(ctx context.Context, query *Query) ([]models.Vat, error) 
 
 // GetByID retrieves a VAT rate by its ID.
 func (m *VatModel) GetByID(ctx context.Context, id int) (*models.Vat, error) {
-	stmt := `SELECT vat_id, rate
-			FROM vat
-			WHERE vat_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var vat models.Vat
-	err := row.Scan(&vat.ID, &vat.Rate)
+	query := Query{Table: TableVat, Filter: []Filter{{Column: "vat_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	vats, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &vat, nil
+	if len(vats) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &vats[0], nil
 }
 
 // Insert adds a new VAT rate to the database.

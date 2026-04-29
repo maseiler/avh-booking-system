@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
@@ -38,28 +38,15 @@ func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.Pro
 
 // GetByID retrieves a product group by its ID.
 func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.ProductGroup, error) {
-	stmt := `SELECT product_group_id, name, parent
-			FROM product_group
-			WHERE product_group_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var productGroup models.ProductGroup
-	var parentID *int // pointer to read null
-	err := row.Scan(&productGroup.ID, &productGroup.Name, &parentID)
+	query := Query{Table: TableProductGroup, Filter: []Filter{{Column: "product_group_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	groups, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-	if parentID == nil {
-		productGroup.ParentID = 0
-	} else {
-		productGroup.ParentID = *parentID
+	if len(groups) == 0 {
+		return nil, database.ErrNoRecord
 	}
-
-	return &productGroup, nil
+	return &groups[0], nil
 }
 
 // Insert adds a new product group to the database.

@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -35,22 +35,15 @@ func (m *ProductVisibilityModel) Get(ctx context.Context, query *Query) ([]model
 
 // GetByID retrieves a product visibility rule by its ID.
 func (m *ProductVisibilityModel) GetByID(ctx context.Context, id int) (*models.ProductVisibility, error) {
-	stmt := `SELECT product_visibility_id, category, location, product
-			FROM product_visibility
-			WHERE product_visibility_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var productVisibility models.ProductVisibility
-	err := row.Scan(&productVisibility.ID, &productVisibility.CategoryID, &productVisibility.LocationID, &productVisibility.ProductID)
+	query := Query{Table: TableProductVisibility, Filter: []Filter{{Column: "product_visibility_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	visibilities, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &productVisibility, nil
+	if len(visibilities) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &visibilities[0], nil
 }
 
 // Insert adds a new product visibility rule to the database.

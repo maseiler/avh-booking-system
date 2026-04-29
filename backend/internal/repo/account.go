@@ -46,7 +46,7 @@ func (m *AccountModel) GetByID(ctx context.Context, id int) (*models.Account, er
 		return &accounts[0], nil
 	}
 
-	return nil, ErrDBQuery
+	return nil, database.ErrNoRecord
 }
 
 // Insert adds a new account to the database.

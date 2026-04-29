@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -35,22 +35,15 @@ func (m *UnitModel) Get(ctx context.Context, query *Query) ([]models.Unit, error
 
 // GetByID retrieves a unit by its ID.
 func (m *UnitModel) GetByID(ctx context.Context, id int) (*models.Unit, error) {
-	stmt := `SELECT unit_id, name
-			FROM unit
-			WHERE unit_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var unit models.Unit
-	err := row.Scan(&unit.ID, &unit.Name)
+	query := Query{Table: TableUnit, Filter: []Filter{{Column: "unit_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	units, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &unit, nil
+	if len(units) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &units[0], nil
 }
 
 // Insert adds a new unit to the database.

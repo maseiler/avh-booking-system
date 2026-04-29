@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -35,23 +35,15 @@ func (m *ProductModel) Get(ctx context.Context, query *Query) ([]models.Product,
 
 // GetByID retrieves a product by its ID.
 func (m *ProductModel) GetByID(ctx context.Context, productID int) (*models.Product, error) {
-	stmt := `SELECT product_id, name, price, vat, product_group, size, unit, category, created_at
-			FROM product
-			WHERE product_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, productID)
-
-	var product models.Product
-	err := row.Scan(&product.ID, &product.Name, &product.Price, &product.VatID, &product.ProductGroupID,
-		&product.Size, &product.UnitID, &product.CategoryID, &product.CreatedAt)
+	query := Query{Table: TableProduct, Filter: []Filter{{Column: "product_id", Operator: Eq, Value: strconv.Itoa(productID)}}}
+	products, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &product, nil
+	if len(products) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &products[0], nil
 }
 
 // Insert adds a new product to the database.

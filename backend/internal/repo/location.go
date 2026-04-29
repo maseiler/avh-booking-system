@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -35,22 +35,15 @@ func (m *LocationModel) Get(ctx context.Context, query *Query) ([]models.Locatio
 
 // GetByID retrieves a location by its ID.
 func (m *LocationModel) GetByID(ctx context.Context, id int) (*models.Location, error) {
-	stmt := `SELECT location_id, name
-			FROM location
-			WHERE location_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var location models.Location
-	err := row.Scan(&location.ID, &location.Name)
+	query := Query{Table: TableLocation, Filter: []Filter{{Column: "location_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	locations, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &location, nil
+	if len(locations) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &locations[0], nil
 }
 
 // Insert adds a new location to the database.
