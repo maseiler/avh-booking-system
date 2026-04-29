@@ -1,22 +1,10 @@
 package repo
 
 import (
-	"fmt"
 	"strconv"
-)
 
-// tableColumns is the allowlist of valid column names per table.
-var tableColumns = map[TableName]map[string]bool{
-	TableAccount:           {"account_id": true, "first_name": true, "nickname": true, "last_name": true, "email": true, "phone": true, "balance": true, "max_debt": true, "category": true, "enabled": true, "created_at": true},
-	TableAccountOption:     {"account_id": true, "key": true, "value": true},
-	TableCategory:          {"category_id": true, "name": true, "enabled": true, "icon": true, "type": true},
-	TableLocation:          {"location_id": true, "name": true},
-	TableProduct:           {"product_id": true, "name": true, "price": true, "vat_id": true, "product_group_id": true, "size": true, "unit_id": true, "category_id": true, "created_at": true},
-	TableProductGroup:      {"product_group_id": true, "name": true, "parent_id": true},
-	TableProductVisibility: {"product_visibility_id": true, "category_id": true, "location_id": true, "product_id": true},
-	TableUnit:              {"unit_id": true, "name": true},
-	TableVat:               {"vat_id": true, "rate": true},
-}
+	"github.com/jackc/pgx/v5"
+)
 
 // ============================================================================
 // Table names
@@ -148,31 +136,23 @@ type Sorting struct {
 // ============================================================================
 
 func buildSelectSQL(q *Query) (string, []any, error) {
-	allowed := tableColumns[q.Table]
-
 	stmt := "SELECT * FROM " + string(q.Table)
 	var args []any
 
 	if len(q.Filter) > 0 {
 		stmt += " WHERE "
 		for i, f := range q.Filter {
-			if !allowed[f.Column] {
-				return "", nil, fmt.Errorf("%w: %q", ErrInvalidColumn, f.Column)
-			}
 			args = append(args, f.Value)
 			placeholder := "$" + strconv.Itoa(len(args))
 			if i > 0 {
 				stmt += " AND "
 			}
-			stmt += f.Column + " " + f.Operator.SQLString() + " " + placeholder
+			stmt += pgx.Identifier{f.Column}.Sanitize() + " " + f.Operator.SQLString() + " " + placeholder
 		}
 	}
 
 	if q.Sort != nil {
-		if !allowed[q.Sort.Column] {
-			return "", nil, fmt.Errorf("%w: %q", ErrInvalidColumn, q.Sort.Column)
-		}
-		stmt += " ORDER BY " + q.Sort.Column + " " + q.Sort.Order.SQLString()
+		stmt += " ORDER BY " + pgx.Identifier{q.Sort.Column}.Sanitize() + " " + q.Sort.Order.SQLString()
 	}
 
 	if q.Limit != nil {

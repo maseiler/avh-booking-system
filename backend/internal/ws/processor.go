@@ -3,7 +3,6 @@ package ws
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"strconv"
@@ -14,11 +13,7 @@ import (
 )
 
 func queryError(table repo.TableName, err error) *WSError {
-	code := WSErrorCode(WSDBQueryError)
-	if errors.Is(err, repo.ErrInvalidColumn) {
-		code = WSInvalidFilter
-	}
-	return &WSError{Code: code, Message: err.Error(), Details: "Query failed for table " + string(table)}
+	return &WSError{Code: WSDBQueryError, Message: err.Error(), Details: "Query failed for table " + string(table)}
 }
 
 func (s *Service) processPing(message Message) ([]byte, *WSError) {
