@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"strings"
 
@@ -48,7 +47,7 @@ func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.Produc
 	var parentID *int // pointer to read null
 	err := row.Scan(&productGroup.ID, &productGroup.Name, &parentID)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, database.ErrNoRecord
 		} else {
 			return nil, err

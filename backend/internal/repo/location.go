@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
@@ -44,7 +43,7 @@ func (m *LocationModel) GetByID(ctx context.Context, id int) (*models.Location, 
 	var location models.Location
 	err := row.Scan(&location.ID, &location.Name)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, database.ErrNoRecord
 		} else {
 			return nil, err

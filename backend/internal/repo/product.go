@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
@@ -45,7 +44,7 @@ func (m *ProductModel) GetByID(ctx context.Context, productID int) (*models.Prod
 	err := row.Scan(&product.ID, &product.Name, &product.Price, &product.VatID, &product.ProductGroupID,
 		&product.Size, &product.UnitID, &product.CategoryID, &product.CreatedAt)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, database.ErrNoRecord
 		} else {
 			return nil, err

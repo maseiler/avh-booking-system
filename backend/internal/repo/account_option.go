@@ -2,11 +2,11 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/jackc/pgx/v5"
 )
 
 // AccountOptionModel provides database operations for AccountOption entities.
@@ -41,7 +41,7 @@ func (m *AccountOptionModel) Get(ctx context.Context, accountID int, key string)
 	var opt models.AccountOption
 	err := row.Scan(&opt.AccountID, &opt.Key, &opt.Value)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, database.ErrNoRecord
 		} else {
 			return nil, err
