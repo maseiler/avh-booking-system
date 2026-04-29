@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/repo"
 	"github.com/stretchr/testify/assert"
@@ -356,4 +357,94 @@ func TestGetVatById(t *testing.T) {
 	require.NotNil(t, vat)
 	require.Equal(t, vatID, vat.ID)
 	require.Equal(t, 19, vat.Rate)
+}
+
+// --------------------------------------------------
+// Error cases
+// --------------------------------------------------
+
+func TestGetByIDNotFound(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	account, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, account)
+}
+
+func TestGetAccountOptionNotFound(t *testing.T) {
+	store := &repo.AccountOptionStore{DB: beginTx(t)}
+	opt, err := store.Get(context.Background(), 1, "nonexistent_key")
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, opt)
+}
+
+// --------------------------------------------------
+// Insert + read-back
+// --------------------------------------------------
+
+func TestInsertAccountAndReadBack(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	account := models.CreateAccount("Andi", "Biermeister", "Theke",
+		"andiwillsaufen@bier.com", "+49 170 1234567", 9900, 500, 3)
+
+	id, err := store.Insert(context.Background(), account)
+	require.NoError(t, err)
+	require.NotZero(t, id)
+
+	saved, err := store.GetByID(context.Background(), id)
+	require.NoError(t, err)
+	require.NotNil(t, saved)
+	assert.Equal(t, "Andi", saved.FirstName)
+	assert.Equal(t, "Biermeister", saved.Nickname)
+	assert.Equal(t, "Theke", saved.LastName)
+	assert.Equal(t, "andiwillsaufen@bier.com", saved.Email)
+	assert.Equal(t, "+49 170 1234567", saved.Phone)
+	assert.Equal(t, 9900, saved.Balance)
+	assert.Equal(t, 500, saved.MaxDebt)
+	assert.Equal(t, 3, saved.Category)
+	assert.True(t, saved.Enabled)
+}
+
+// --------------------------------------------------
+// Update
+// --------------------------------------------------
+
+func TestUpdateAccount(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+
+	original, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, original)
+
+	original.FirstName = "Vasconius"
+	original.MaxDebt = 99999
+	original.Enabled = false
+
+	updatedID, err := store.Update(context.Background(), *original)
+	require.NoError(t, err)
+	assert.Equal(t, 1, updatedID)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, saved)
+	assert.Equal(t, "Vasconius", saved.FirstName)
+	assert.Equal(t, 99999, saved.MaxDebt)
+	assert.False(t, saved.Enabled)
+	assert.Equal(t, original.Balance, saved.Balance) // Balance must not be updated
+}
+
+// --------------------------------------------------
+// Delete
+// --------------------------------------------------
+
+func TestDeleteProductVisibility(t *testing.T) {
+	store := &repo.ProductVisibilityStore{DB: beginTx(t)}
+
+	deletedID, err := store.Delete(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, 1, deletedID)
+
+	_, err = store.GetByID(context.Background(), 1)
+	require.ErrorIs(t, err, database.ErrNoRecord)
 }
