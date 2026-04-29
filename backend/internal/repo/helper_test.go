@@ -10,25 +10,14 @@ import (
 
 	"github.com/av-huette/avh-booking-system/internal/config"
 	"github.com/av-huette/avh-booking-system/internal/database"
-	"github.com/av-huette/avh-booking-system/internal/repo"
+	"github.com/jackc/pgx/v5"
+	"github.com/stretchr/testify/require"
 )
 
 var dbPool *database.DB
 
-type modelStructs struct {
-	account           *repo.AccountStore
-	accountOption     *repo.AccountOptionStore
-	category          *repo.CategoryStore
-	product           *repo.ProductStore
-	productGroup      *repo.ProductGroupStore
-	unit              *repo.UnitStore
-	productVisibility *repo.ProductVisibilityStore
-	location          *repo.LocationStore
-	vat               *repo.VatStore
-}
-
-// run sets up members and the database before executing tests and tearing them down after execution.
-func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
+// run sets up the database before executing tests and tears it down after.
+func run(m *testing.M) (code int, err error) {
 	currentWorkDirectory, _ := os.Getwd()
 	if err := config.LoadEnvFromFile(currentWorkDirectory + `/.env`); err != nil {
 		panic(err)
@@ -44,20 +33,19 @@ func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 	}
 
 	setUp()
-
-	dbModels.account = &repo.AccountStore{DB: dbPool}
-	dbModels.accountOption = &repo.AccountOptionStore{DB: dbPool}
-	dbModels.category = &repo.CategoryStore{DB: dbPool}
-	dbModels.product = &repo.ProductStore{DB: dbPool}
-	dbModels.productGroup = &repo.ProductGroupStore{DB: dbPool}
-	dbModels.unit = &repo.UnitStore{DB: dbPool}
-	dbModels.productVisibility = &repo.ProductVisibilityStore{DB: dbPool}
-	dbModels.location = &repo.LocationStore{DB: dbPool}
-	dbModels.vat = &repo.VatStore{DB: dbPool}
-
 	defer tearDown()
 
 	return m.Run(), nil
+}
+
+// beginTx starts a transaction and registers a rollback via t.Cleanup,
+// leaving the database in its seeded state after each test.
+func beginTx(t *testing.T) pgx.Tx {
+	t.Helper()
+	tx, err := dbPool.Begin(context.Background())
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = tx.Rollback(context.Background()) })
+	return tx
 }
 
 // getQueriesFromFile reads the file content specified in `filePath` into a string. It expects the content

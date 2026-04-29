@@ -7,15 +7,13 @@ import (
 	"testing"
 
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/av-huette/avh-booking-system/internal/repo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-var dbModels *modelStructs
-
 func TestMain(m *testing.M) {
-	dbModels = &modelStructs{}
-	code, err := run(m, dbModels)
+	code, err := run(m)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -28,25 +26,118 @@ func TestMain(m *testing.M) {
 // --------------------------------------------------
 
 func TestInsertAccount(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
 	dummyAccount := models.CreateAccount("Andi", "", "Theke",
 		"andiwillsaufen@bier.com", "+49 170 1234567", 9900, 10, 3)
-	id, err := dbModels.account.Insert(context.Background(), dummyAccount)
+	id, err := store.Insert(context.Background(), dummyAccount)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
 }
 
-func TestGetAccountById(t *testing.T) {
-	const accountID = 1
-	daGama, err := dbModels.account.GetByID(context.Background(), accountID)
-	if daGama == nil {
-		t.Fail()
-		t.Log("Could not get account")
-
-		return
-	}
+func TestGetAccounts(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableAccount}
+	accounts, err := store.Get(context.Background(), &query)
 
 	require.NoError(t, err)
+	assert.Len(t, accounts, 4)
+}
+
+func TestGetAccountsWithFilter(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table:  repo.TableAccount,
+		Filter: []repo.Filter{{Column: "category", Operator: repo.Eq, Value: "1"}},
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, accounts, 2)
+	for _, a := range accounts {
+		assert.Equal(t, 1, a.Category)
+	}
+}
+
+func TestGetAccountsWithMultipleFilters(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table: repo.TableAccount,
+		Filter: []repo.Filter{
+			{Column: "category", Operator: repo.Eq, Value: "1"},
+			{Column: "balance", Operator: repo.Gt, Value: "2000"},
+		},
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, accounts, 1)
+	assert.Equal(t, 1, accounts[0].Category)
+	assert.Greater(t, accounts[0].Balance, 2000)
+}
+
+func TestGetAccountsWithFilterNoMatch(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table:  repo.TableAccount,
+		Filter: []repo.Filter{{Column: "balance", Operator: repo.Eq, Value: "0"}},
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Empty(t, accounts)
+}
+
+func TestGetAccountsWithSortAsc(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table: repo.TableAccount,
+		Sort:  &repo.Sorting{Column: "balance", Order: repo.Asc},
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, accounts, 4)
+	for i := 1; i < len(accounts); i++ {
+		assert.LessOrEqual(t, accounts[i-1].Balance, accounts[i].Balance)
+	}
+}
+
+func TestGetAccountsWithSortDesc(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table: repo.TableAccount,
+		Sort:  &repo.Sorting{Column: "balance", Order: repo.Desc},
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, accounts, 4)
+	for i := 1; i < len(accounts); i++ {
+		assert.GreaterOrEqual(t, accounts[i-1].Balance, accounts[i].Balance)
+	}
+}
+
+func TestGetAccountsWithLimit(t *testing.T) {
+	limit := 2
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table: repo.TableAccount,
+		Limit: &limit,
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, accounts, 2)
+}
+
+func TestGetAccountById(t *testing.T) {
+	const accountID = 1
+	store := &repo.AccountStore{DB: beginTx(t)}
+	daGama, err := store.GetByID(context.Background(), accountID)
+
+	require.NoError(t, err)
+	require.NotNil(t, daGama)
 	require.Equal(t, accountID, daGama.ID)
 	require.Equal(t, "Vasco", daGama.FirstName)
 	require.Equal(t, "Cape Conqueror", daGama.Nickname)
@@ -65,8 +156,9 @@ func TestGetAccountById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertAccountOption(t *testing.T) {
+	store := &repo.AccountOptionStore{DB: beginTx(t)}
 	dummyOpt := models.CreateAccountOption(1, "key", "value")
-	accountID, key, err := dbModels.accountOption.Insert(context.Background(), dummyOpt)
+	accountID, key, err := store.Insert(context.Background(), dummyOpt)
 
 	require.NoError(t, err)
 	assert.NotZero(t, accountID)
@@ -76,15 +168,11 @@ func TestInsertAccountOption(t *testing.T) {
 func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 	const accountID = 1
 	const optKey = "deceased"
-	opt, err := dbModels.accountOption.Get(context.Background(), accountID, optKey)
-	if opt == nil {
-		t.Fail()
-		t.Log("Could not get account option")
-
-		return
-	}
+	store := &repo.AccountOptionStore{DB: beginTx(t)}
+	opt, err := store.Get(context.Background(), accountID, optKey)
 
 	require.NoError(t, err)
+	require.NotNil(t, opt)
 	require.Equal(t, accountID, opt.AccountID)
 	require.Equal(t, optKey, opt.Key)
 	require.Equal(t, "true", opt.Value)
@@ -95,8 +183,9 @@ func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertCategory(t *testing.T) {
+	store := &repo.CategoryStore{DB: beginTx(t)}
 	dummyCategory := models.CreateCategory("Guest", "user-friends", "account")
-	id, err := dbModels.category.Insert(context.Background(), dummyCategory)
+	id, err := store.Insert(context.Background(), dummyCategory)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -104,15 +193,11 @@ func TestInsertCategory(t *testing.T) {
 
 func TestGetCategoryById(t *testing.T) {
 	const categoryID = 1
-	cat, err := dbModels.category.GetByID(context.Background(), categoryID)
-	if cat == nil {
-		t.Fail()
-		t.Log("Could not get category")
-
-		return
-	}
+	store := &repo.CategoryStore{DB: beginTx(t)}
+	cat, err := store.GetByID(context.Background(), categoryID)
 
 	require.NoError(t, err)
+	require.NotNil(t, cat)
 	require.Equal(t, categoryID, cat.ID)
 	require.Equal(t, "Sailor", cat.Name)
 	require.Equal(t, true, cat.Enabled)
@@ -125,8 +210,9 @@ func TestGetCategoryById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProduct(t *testing.T) {
+	store := &repo.ProductStore{DB: beginTx(t)}
 	dummyProduct := models.CreateProduct("Pearl River Dynasty", 1000, 1, 1, 200, 1, 1)
-	id, err := dbModels.product.Insert(context.Background(), dummyProduct)
+	id, err := store.Insert(context.Background(), dummyProduct)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -134,15 +220,11 @@ func TestInsertProduct(t *testing.T) {
 
 func TestGetProductById(t *testing.T) {
 	const productID = 1
-	product, err := dbModels.product.GetByID(context.Background(), productID)
-	if product == nil {
-		t.Fail()
-		t.Log("Could not get product")
-
-		return
-	}
+	store := &repo.ProductStore{DB: beginTx(t)}
+	product, err := store.GetByID(context.Background(), productID)
 
 	require.NoError(t, err)
+	require.NotNil(t, product)
 	require.Equal(t, product.ID, productID)
 	require.Equal(t, "Rota das Especiarias", product.Name)
 	require.Equal(t, 1800, product.Price)
@@ -159,8 +241,9 @@ func TestGetProductById(t *testing.T) {
 
 func TestInsertProductGroup(t *testing.T) {
 	parentID := 1
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
 	dummyProductGroup := models.CreateProductGroup("Beer", &parentID)
-	id, err := dbModels.productGroup.Insert(context.Background(), dummyProductGroup)
+	id, err := store.Insert(context.Background(), dummyProductGroup)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -168,15 +251,11 @@ func TestInsertProductGroup(t *testing.T) {
 
 func TestGetProductGroupById(t *testing.T) {
 	const groupID = 1
-	group, err := dbModels.productGroup.GetByID(context.Background(), groupID)
-	if group == nil {
-		t.Fail()
-		t.Log("Could not get group")
-
-		return
-	}
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
+	group, err := store.GetByID(context.Background(), groupID)
 
 	require.NoError(t, err)
+	require.NotNil(t, group)
 	require.Equal(t, groupID, group.ID)
 	require.Equal(t, "Alcohol", group.Name)
 	require.Nil(t, group.ParentID)
@@ -187,8 +266,9 @@ func TestGetProductGroupById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertUnit(t *testing.T) {
+	store := &repo.UnitStore{DB: beginTx(t)}
 	dummyUnit := models.CreateUnit("oz")
-	id, err := dbModels.unit.Insert(context.Background(), dummyUnit)
+	id, err := store.Insert(context.Background(), dummyUnit)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -196,15 +276,11 @@ func TestInsertUnit(t *testing.T) {
 
 func TestGetUnitById(t *testing.T) {
 	const unitID = 1
-	unit, err := dbModels.unit.GetByID(context.Background(), unitID)
-	if unit == nil {
-		t.Fail()
-		t.Log("Could not get unit")
-
-		return
-	}
+	store := &repo.UnitStore{DB: beginTx(t)}
+	unit, err := store.GetByID(context.Background(), unitID)
 
 	require.NoError(t, err)
+	require.NotNil(t, unit)
 	require.Equal(t, unitID, unit.ID)
 	require.Equal(t, "ml", unit.Name)
 }
@@ -214,8 +290,9 @@ func TestGetUnitById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProductVisibility(t *testing.T) {
+	store := &repo.ProductVisibilityStore{DB: beginTx(t)}
 	dummyVisibility := models.CreateProductVisibility(3, 1, 3)
-	id, err := dbModels.productVisibility.Insert(context.Background(), dummyVisibility)
+	id, err := store.Insert(context.Background(), dummyVisibility)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -223,18 +300,14 @@ func TestInsertProductVisibility(t *testing.T) {
 
 func TestProductVisibilityById(t *testing.T) {
 	const visibilityID = 1
-	unit, err := dbModels.productVisibility.GetByID(context.Background(), visibilityID)
-	if unit == nil {
-		t.Fail()
-		t.Log("Could not get product visibility")
-
-		return
-	}
+	store := &repo.ProductVisibilityStore{DB: beginTx(t)}
+	vis, err := store.GetByID(context.Background(), visibilityID)
 
 	require.NoError(t, err)
-	require.Equal(t, visibilityID, unit.ID)
-	require.Equal(t, 1, unit.CategoryID)
-	require.Equal(t, 1, unit.ProductID)
+	require.NotNil(t, vis)
+	require.Equal(t, visibilityID, vis.ID)
+	require.Equal(t, 1, vis.CategoryID)
+	require.Equal(t, 1, vis.ProductID)
 }
 
 // --------------------------------------------------
@@ -242,8 +315,9 @@ func TestProductVisibilityById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertLocation(t *testing.T) {
+	store := &repo.LocationStore{DB: beginTx(t)}
 	dummyLocation := models.CreateLocation("Nursing Home")
-	id, err := dbModels.location.Insert(context.Background(), dummyLocation)
+	id, err := store.Insert(context.Background(), dummyLocation)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -251,15 +325,11 @@ func TestInsertLocation(t *testing.T) {
 
 func TestGetLocationById(t *testing.T) {
 	const locationID = 1
-	location, err := dbModels.location.GetByID(context.Background(), locationID)
-	if location == nil {
-		t.Fail()
-		t.Log("Could not get location")
-
-		return
-	}
+	store := &repo.LocationStore{DB: beginTx(t)}
+	location, err := store.GetByID(context.Background(), locationID)
 
 	require.NoError(t, err)
+	require.NotNil(t, location)
 	require.Equal(t, locationID, location.ID)
 	require.Equal(t, "Bermuda Triangle", location.Name)
 }
@@ -269,8 +339,9 @@ func TestGetLocationById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertVat(t *testing.T) {
+	store := &repo.VatStore{DB: beginTx(t)}
 	dummyVat := models.CreateVat(12)
-	id, err := dbModels.vat.Insert(context.Background(), dummyVat)
+	id, err := store.Insert(context.Background(), dummyVat)
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
@@ -278,15 +349,11 @@ func TestInsertVat(t *testing.T) {
 
 func TestGetVatById(t *testing.T) {
 	const vatID = 1
-	vat, err := dbModels.vat.GetByID(context.Background(), vatID)
-	if vat == nil {
-		t.Fail()
-		t.Log("Could not get vat")
-
-		return
-	}
+	store := &repo.VatStore{DB: beginTx(t)}
+	vat, err := store.GetByID(context.Background(), vatID)
 
 	require.NoError(t, err)
+	require.NotNil(t, vat)
 	require.Equal(t, vatID, vat.ID)
 	require.Equal(t, 19, vat.Rate)
 }
