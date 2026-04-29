@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 	"strconv"
-	"strings"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
@@ -21,8 +20,6 @@ func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.Pro
 	if err != nil {
 		return nil, err
 	}
-	// pgx will panic when it tries to assign null to int as might be the case for the parent field. COALESCE in the SQL select statement will replace null values with 0.
-	stmt = strings.Replace(stmt, "SELECT *", "SELECT product_group_id, name, COALESCE(parent, 0) AS parent", 1)
 	rows, err := m.DB.Query(ctx, stmt, args...)
 	if err != nil {
 		return nil, err
@@ -53,7 +50,7 @@ func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.Produc
 func (m *ProductGroupModel) Insert(ctx context.Context, group models.ProductGroup) (int, error) {
 	var id int
 	var err error
-	if group.ParentID <= 0 {
+	if group.ParentID == nil {
 		query := `
         INSERT INTO product_group (name)
         VALUES ($1)

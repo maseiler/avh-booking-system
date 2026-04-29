@@ -158,7 +158,8 @@ func TestGetProductById(t *testing.T) {
 // --------------------------------------------------
 
 func TestInsertProductGroup(t *testing.T) {
-	dummyProductGroup := models.CreateProductGroup("Beer", 1)
+	parentID := 1
+	dummyProductGroup := models.CreateProductGroup("Beer", &parentID)
 	id, err := dbModels.productGroup.Insert(context.Background(), dummyProductGroup)
 
 	require.NoError(t, err)
@@ -178,7 +179,7 @@ func TestGetProductGroupById(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, groupID, group.ID)
 	require.Equal(t, "Alcohol", group.Name)
-	require.Equal(t, 0, group.ParentID)
+	require.Nil(t, group.ParentID)
 }
 
 // --------------------------------------------------
