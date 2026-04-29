@@ -11,7 +11,7 @@ import (
 
 // CategoryModel provides database operations for Category entities.
 type CategoryModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves categories based on the provided query specification.

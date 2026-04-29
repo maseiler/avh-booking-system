@@ -11,7 +11,7 @@ import (
 
 // ProductModel provides database operations for Product entities.
 type ProductModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves products based on the provided query specification.

@@ -11,7 +11,7 @@ import (
 
 // UnitModel provides database operations for Unit entities.
 type UnitModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves units based on the provided query specification.

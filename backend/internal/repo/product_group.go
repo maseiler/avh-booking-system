@@ -11,7 +11,7 @@ import (
 
 // ProductGroupModel provides database operations for ProductGroup entities.
 type ProductGroupModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves product groups based on the provided query specification.

@@ -11,7 +11,7 @@ import (
 
 // VatModel provides database operations for Vat entities.
 type VatModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves VATs based on the provided query specification.

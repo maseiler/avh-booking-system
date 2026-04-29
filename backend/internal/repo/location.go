@@ -11,7 +11,7 @@ import (
 
 // LocationModel provides database operations for Location entities.
 type LocationModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves locations based on the provided query specification.

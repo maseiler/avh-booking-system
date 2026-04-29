@@ -11,7 +11,7 @@ import (
 
 // ProductVisibilityModel provides database operations for ProductVisibility entities.
 type ProductVisibilityModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves ProductVisibilities based on the provided query specification.

@@ -11,7 +11,7 @@ import (
 
 // AccountOptionModel provides database operations for AccountOption entities.
 type AccountOptionModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Insert adds a new account option to the database.

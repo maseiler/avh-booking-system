@@ -11,7 +11,7 @@ import (
 
 // AccountModel provides database operations for Account entities.
 type AccountModel struct {
-	DB *database.DB
+	DB DBTx
 }
 
 // Get retrieves accounts based on the provided query specification.
