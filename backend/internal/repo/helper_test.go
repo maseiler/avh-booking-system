@@ -11,7 +11,6 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/config"
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/repo"
-	"github.com/jackc/pgx/v5"
 )
 
 var dbPool *database.DB
@@ -78,21 +77,14 @@ func getQueriesFromFile(filePath string) []string {
 	return queries
 }
 
-// batchExecQueries executes a list of queries.
-func batchExecQueries(queries []string) pgx.BatchResults {
-	batch := &pgx.Batch{}
-	for _, query := range queries {
-		batch.Queue(query)
-	}
-
+// execQueries executes a list of queries sequentially, panicking if any one fails.
+func execQueries(queries []string) {
 	ctx := context.Background()
-	br := dbPool.SendBatch(ctx, batch)
-	_, err := br.Exec()
-	if err != nil {
-		panic(err)
+	for _, query := range queries {
+		if _, err := dbPool.Exec(ctx, query); err != nil {
+			panic(err)
+		}
 	}
-
-	return br
 }
 
 // setUp creates tables and inserts test data.
@@ -100,12 +92,12 @@ func setUp() {
 	currentWorkDirectory, _ := os.Getwd()
 	filePath := currentWorkDirectory + `/testdata/create_tables.sql`
 	queries := getQueriesFromFile(filePath)
-	batchExecQueries(queries)
+	execQueries(queries)
 	logSetup("Created tables")
 
 	filePath = currentWorkDirectory + `/testdata/insert_test_data.sql`
 	queries = getQueriesFromFile(filePath)
-	batchExecQueries(queries)
+	execQueries(queries)
 	logSetup("Inserted test data")
 }
 
@@ -115,13 +107,7 @@ func tearDown() {
 	filePath := currentWorkDirectory + `/testdata/drop_tables.sql`
 	queries := getQueriesFromFile(filePath)
 
-	br := batchExecQueries(queries)
-
-	err := br.Close()
-	if err != nil {
-		panic(err)
-	}
-
+	execQueries(queries)
 	logTearDown("Dropped tables")
 
 	// TODO: this is a workaround to close the dbPool as it is stuck in an endless loop
