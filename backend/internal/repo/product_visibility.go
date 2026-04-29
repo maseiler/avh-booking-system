@@ -63,8 +63,7 @@ func (m *ProductVisibilityModel) Delete(ctx context.Context, id int) (int, error
 	query := `
         DELETE FROM product_visibility
         WHERE product_visibility_id = $1
-			RETURNING $1;
-			`
+        RETURNING product_visibility_id`
 	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
 
 	return id, err
