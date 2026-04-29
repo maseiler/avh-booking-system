@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// VatModel provides database operations for Vat entities.
-type VatModel struct {
+// VatStore provides database operations for Vat entities.
+type VatStore struct {
 	DB DBTx
 }
 
 // Get retrieves VATs based on the provided query specification.
-func (m *VatModel) Get(ctx context.Context, query *Query) ([]models.Vat, error) {
+func (m *VatStore) Get(ctx context.Context, query *Query) ([]models.Vat, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *VatModel) Get(ctx context.Context, query *Query) ([]models.Vat, error) 
 }
 
 // GetByID retrieves a VAT rate by its ID.
-func (m *VatModel) GetByID(ctx context.Context, id int) (*models.Vat, error) {
+func (m *VatStore) GetByID(ctx context.Context, id int) (*models.Vat, error) {
 	query := Query{Table: TableVat, Filter: []Filter{{Column: "vat_id", Operator: Eq, Value: strconv.Itoa(id)}}}
 	vats, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *VatModel) GetByID(ctx context.Context, id int) (*models.Vat, error) {
 }
 
 // Insert adds a new VAT rate to the database.
-func (m *VatModel) Insert(ctx context.Context, vat models.Vat) (int, error) {
+func (m *VatStore) Insert(ctx context.Context, vat models.Vat) (int, error) {
 	query := `
         INSERT INTO vat (rate)
         VALUES ($1)

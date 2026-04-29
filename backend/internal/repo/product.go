@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// ProductModel provides database operations for Product entities.
-type ProductModel struct {
+// ProductStore provides database operations for Product entities.
+type ProductStore struct {
 	DB DBTx
 }
 
 // Get retrieves products based on the provided query specification.
-func (m *ProductModel) Get(ctx context.Context, query *Query) ([]models.Product, error) {
+func (m *ProductStore) Get(ctx context.Context, query *Query) ([]models.Product, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *ProductModel) Get(ctx context.Context, query *Query) ([]models.Product,
 }
 
 // GetByID retrieves a product by its ID.
-func (m *ProductModel) GetByID(ctx context.Context, productID int) (*models.Product, error) {
+func (m *ProductStore) GetByID(ctx context.Context, productID int) (*models.Product, error) {
 	query := Query{Table: TableProduct, Filter: []Filter{{Column: "product_id", Operator: Eq, Value: strconv.Itoa(productID)}}}
 	products, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *ProductModel) GetByID(ctx context.Context, productID int) (*models.Prod
 }
 
 // Insert adds a new product to the database.
-func (m *ProductModel) Insert(ctx context.Context, product models.Product) (int, error) {
+func (m *ProductStore) Insert(ctx context.Context, product models.Product) (int, error) {
 	query := `
         INSERT INTO product (name, price, vat, product_group, size, unit, category)
         VALUES ($1, $2, $3, $4, $5, $6, $7)

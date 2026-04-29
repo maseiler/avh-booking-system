@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// LocationModel provides database operations for Location entities.
-type LocationModel struct {
+// LocationStore provides database operations for Location entities.
+type LocationStore struct {
 	DB DBTx
 }
 
 // Get retrieves locations based on the provided query specification.
-func (m *LocationModel) Get(ctx context.Context, query *Query) ([]models.Location, error) {
+func (m *LocationStore) Get(ctx context.Context, query *Query) ([]models.Location, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *LocationModel) Get(ctx context.Context, query *Query) ([]models.Locatio
 }
 
 // GetByID retrieves a location by its ID.
-func (m *LocationModel) GetByID(ctx context.Context, id int) (*models.Location, error) {
+func (m *LocationStore) GetByID(ctx context.Context, id int) (*models.Location, error) {
 	query := Query{Table: TableLocation, Filter: []Filter{{Column: "location_id", Operator: Eq, Value: strconv.Itoa(id)}}}
 	locations, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *LocationModel) GetByID(ctx context.Context, id int) (*models.Location, 
 }
 
 // Insert adds a new location to the database.
-func (m *LocationModel) Insert(ctx context.Context, location models.Location) (int, error) {
+func (m *LocationStore) Insert(ctx context.Context, location models.Location) (int, error) {
 	query := `
         INSERT INTO location (name)
         VALUES ($1)

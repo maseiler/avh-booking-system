@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// CategoryModel provides database operations for Category entities.
-type CategoryModel struct {
+// CategoryStore provides database operations for Category entities.
+type CategoryStore struct {
 	DB DBTx
 }
 
 // Get retrieves categories based on the provided query specification.
-func (m *CategoryModel) Get(ctx context.Context, query *Query) ([]models.Category, error) {
+func (m *CategoryStore) Get(ctx context.Context, query *Query) ([]models.Category, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *CategoryModel) Get(ctx context.Context, query *Query) ([]models.Categor
 }
 
 // GetByID retrieves a category by its ID.
-func (m *CategoryModel) GetByID(ctx context.Context, id int) (*models.Category, error) {
+func (m *CategoryStore) GetByID(ctx context.Context, id int) (*models.Category, error) {
 	query := Query{Table: TableCategory, Filter: []Filter{{Column: "category_id", Operator: Eq, Value: strconv.Itoa(id)}}}
 	categories, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *CategoryModel) GetByID(ctx context.Context, id int) (*models.Category, 
 }
 
 // Insert adds a new category to the database.
-func (m *CategoryModel) Insert(ctx context.Context, category models.Category) (int, error) {
+func (m *CategoryStore) Insert(ctx context.Context, category models.Category) (int, error) {
 	query := `
         INSERT INTO category (name, enabled, icon, type)
         VALUES ($1, $2, $3, $4)

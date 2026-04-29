@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// AccountOptionModel provides database operations for AccountOption entities.
-type AccountOptionModel struct {
+// AccountOptionStore provides database operations for AccountOption entities.
+type AccountOptionStore struct {
 	DB DBTx
 }
 
 // Insert adds a new account option to the database.
-func (m *AccountOptionModel) Insert(ctx context.Context, opt models.AccountOption) (int, string, error) {
+func (m *AccountOptionStore) Insert(ctx context.Context, opt models.AccountOption) (int, string, error) {
 	query := `
         INSERT INTO account_option (account, key, value)
         VALUES ($1, $2, $3)
@@ -32,7 +32,7 @@ func (m *AccountOptionModel) Insert(ctx context.Context, opt models.AccountOptio
 }
 
 // Get retrieves a specific account option by account ID and key.
-func (m *AccountOptionModel) Get(ctx context.Context, accountID int, key string) (*models.AccountOption, error) {
+func (m *AccountOptionStore) Get(ctx context.Context, accountID int, key string) (*models.AccountOption, error) {
 	stmt := `SELECT account, key, value
 			FROM account_option
 			WHERE account = $1 AND key = $2`

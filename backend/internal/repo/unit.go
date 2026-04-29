@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// UnitModel provides database operations for Unit entities.
-type UnitModel struct {
+// UnitStore provides database operations for Unit entities.
+type UnitStore struct {
 	DB DBTx
 }
 
 // Get retrieves units based on the provided query specification.
-func (m *UnitModel) Get(ctx context.Context, query *Query) ([]models.Unit, error) {
+func (m *UnitStore) Get(ctx context.Context, query *Query) ([]models.Unit, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *UnitModel) Get(ctx context.Context, query *Query) ([]models.Unit, error
 }
 
 // GetByID retrieves a unit by its ID.
-func (m *UnitModel) GetByID(ctx context.Context, id int) (*models.Unit, error) {
+func (m *UnitStore) GetByID(ctx context.Context, id int) (*models.Unit, error) {
 	query := Query{Table: TableUnit, Filter: []Filter{{Column: "unit_id", Operator: Eq, Value: strconv.Itoa(id)}}}
 	units, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *UnitModel) GetByID(ctx context.Context, id int) (*models.Unit, error) {
 }
 
 // Insert adds a new unit to the database.
-func (m *UnitModel) Insert(ctx context.Context, unit models.Unit) (int, error) {
+func (m *UnitStore) Insert(ctx context.Context, unit models.Unit) (int, error) {
 	query := `
         INSERT INTO unit (name)
         VALUES ($1)

@@ -44,14 +44,14 @@ func main() {
 	defer dbPool.Close()
 
 	stores := ws.Stores{
-		Account:           &repo.AccountModel{DB: dbPool},
-		Category:          &repo.CategoryModel{DB: dbPool},
-		Location:          &repo.LocationModel{DB: dbPool},
-		Product:           &repo.ProductModel{DB: dbPool},
-		ProductGroup:      &repo.ProductGroupModel{DB: dbPool},
-		ProductVisibility: &repo.ProductVisibilityModel{DB: dbPool},
-		Unit:              &repo.UnitModel{DB: dbPool},
-		Vat:               &repo.VatModel{DB: dbPool},
+		Account:           &repo.AccountStore{DB: dbPool},
+		Category:          &repo.CategoryStore{DB: dbPool},
+		Location:          &repo.LocationStore{DB: dbPool},
+		Product:           &repo.ProductStore{DB: dbPool},
+		ProductGroup:      &repo.ProductGroupStore{DB: dbPool},
+		ProductVisibility: &repo.ProductVisibilityStore{DB: dbPool},
+		Unit:              &repo.UnitStore{DB: dbPool},
+		Vat:               &repo.VatStore{DB: dbPool},
 	}
 
 	var handler slog.Handler

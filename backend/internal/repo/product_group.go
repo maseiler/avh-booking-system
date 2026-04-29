@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// ProductGroupModel provides database operations for ProductGroup entities.
-type ProductGroupModel struct {
+// ProductGroupStore provides database operations for ProductGroup entities.
+type ProductGroupStore struct {
 	DB DBTx
 }
 
 // Get retrieves product groups based on the provided query specification.
-func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.ProductGroup, error) {
+func (m *ProductGroupStore) Get(ctx context.Context, query *Query) ([]models.ProductGroup, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.Pro
 }
 
 // GetByID retrieves a product group by its ID.
-func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.ProductGroup, error) {
+func (m *ProductGroupStore) GetByID(ctx context.Context, id int) (*models.ProductGroup, error) {
 	query := Query{Table: TableProductGroup, Filter: []Filter{{Column: "product_group_id", Operator: Eq, Value: strconv.Itoa(id)}}}
 	groups, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.Produc
 }
 
 // Insert adds a new product group to the database.
-func (m *ProductGroupModel) Insert(ctx context.Context, group models.ProductGroup) (int, error) {
+func (m *ProductGroupStore) Insert(ctx context.Context, group models.ProductGroup) (int, error) {
 	var id int
 	var err error
 	if group.ParentID == nil {

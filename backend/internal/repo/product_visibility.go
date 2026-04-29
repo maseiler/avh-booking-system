@@ -9,13 +9,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// ProductVisibilityModel provides database operations for ProductVisibility entities.
-type ProductVisibilityModel struct {
+// ProductVisibilityStore provides database operations for ProductVisibility entities.
+type ProductVisibilityStore struct {
 	DB DBTx
 }
 
 // Get retrieves ProductVisibilities based on the provided query specification.
-func (m *ProductVisibilityModel) Get(ctx context.Context, query *Query) ([]models.ProductVisibility, error) {
+func (m *ProductVisibilityStore) Get(ctx context.Context, query *Query) ([]models.ProductVisibility, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (m *ProductVisibilityModel) Get(ctx context.Context, query *Query) ([]model
 }
 
 // GetByID retrieves a product visibility rule by its ID.
-func (m *ProductVisibilityModel) GetByID(ctx context.Context, id int) (*models.ProductVisibility, error) {
+func (m *ProductVisibilityStore) GetByID(ctx context.Context, id int) (*models.ProductVisibility, error) {
 	query := Query{Table: TableProductVisibility, Filter: []Filter{{Column: "product_visibility_id", Operator: Eq, Value: strconv.Itoa(id)}}}
 	visibilities, err := m.Get(ctx, &query)
 	if err != nil {
@@ -47,7 +47,7 @@ func (m *ProductVisibilityModel) GetByID(ctx context.Context, id int) (*models.P
 }
 
 // Insert adds a new product visibility rule to the database.
-func (m *ProductVisibilityModel) Insert(ctx context.Context, visibility models.ProductVisibility) (int, error) {
+func (m *ProductVisibilityStore) Insert(ctx context.Context, visibility models.ProductVisibility) (int, error) {
 	var id int
 	query := `
         INSERT INTO product_visibility (category, location, product)
@@ -59,7 +59,7 @@ func (m *ProductVisibilityModel) Insert(ctx context.Context, visibility models.P
 }
 
 // Delete removes an existing visibility from the database.
-func (m *ProductVisibilityModel) Delete(ctx context.Context, id int) (int, error) {
+func (m *ProductVisibilityStore) Delete(ctx context.Context, id int) (int, error) {
 	query := `
         DELETE FROM product_visibility
         WHERE product_visibility_id = $1

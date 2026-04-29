@@ -16,15 +16,15 @@ import (
 var dbPool *database.DB
 
 type modelStructs struct {
-	account           *repo.AccountModel
-	accountOption     *repo.AccountOptionModel
-	category          *repo.CategoryModel
-	product           *repo.ProductModel
-	productGroup      *repo.ProductGroupModel
-	unit              *repo.UnitModel
-	productVisibility *repo.ProductVisibilityModel
-	location          *repo.LocationModel
-	vat               *repo.VatModel
+	account           *repo.AccountStore
+	accountOption     *repo.AccountOptionStore
+	category          *repo.CategoryStore
+	product           *repo.ProductStore
+	productGroup      *repo.ProductGroupStore
+	unit              *repo.UnitStore
+	productVisibility *repo.ProductVisibilityStore
+	location          *repo.LocationStore
+	vat               *repo.VatStore
 }
 
 // run sets up members and the database before executing tests and tearing them down after execution.
@@ -45,15 +45,15 @@ func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 
 	setUp()
 
-	dbModels.account = &repo.AccountModel{DB: dbPool}
-	dbModels.accountOption = &repo.AccountOptionModel{DB: dbPool}
-	dbModels.category = &repo.CategoryModel{DB: dbPool}
-	dbModels.product = &repo.ProductModel{DB: dbPool}
-	dbModels.productGroup = &repo.ProductGroupModel{DB: dbPool}
-	dbModels.unit = &repo.UnitModel{DB: dbPool}
-	dbModels.productVisibility = &repo.ProductVisibilityModel{DB: dbPool}
-	dbModels.location = &repo.LocationModel{DB: dbPool}
-	dbModels.vat = &repo.VatModel{DB: dbPool}
+	dbModels.account = &repo.AccountStore{DB: dbPool}
+	dbModels.accountOption = &repo.AccountOptionStore{DB: dbPool}
+	dbModels.category = &repo.CategoryStore{DB: dbPool}
+	dbModels.product = &repo.ProductStore{DB: dbPool}
+	dbModels.productGroup = &repo.ProductGroupStore{DB: dbPool}
+	dbModels.unit = &repo.UnitStore{DB: dbPool}
+	dbModels.productVisibility = &repo.ProductVisibilityStore{DB: dbPool}
+	dbModels.location = &repo.LocationStore{DB: dbPool}
+	dbModels.vat = &repo.VatStore{DB: dbPool}
 
 	defer tearDown()
 
