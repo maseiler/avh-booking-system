@@ -42,7 +42,21 @@ func TestGetAccounts(t *testing.T) {
 	accounts, err := store.Get(context.Background(), &query)
 
 	require.NoError(t, err)
-	assert.Len(t, accounts, 4)
+	assert.Len(t, accounts, 5)
+}
+
+func TestGetAccountsFilterByDisabled(t *testing.T) {
+	store := &repo.AccountStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table:  repo.TableAccount,
+		Filter: []repo.Filter{{Column: "enabled", Operator: repo.Eq, Value: "false"}},
+	}
+	accounts, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, accounts, 1)
+	assert.Equal(t, "Davy", accounts[0].FirstName)
+	assert.False(t, accounts[0].Enabled)
 }
 
 func TestGetAccountsWithFilter(t *testing.T) {
@@ -81,7 +95,7 @@ func TestGetAccountsWithFilterNoMatch(t *testing.T) {
 	store := &repo.AccountStore{DB: beginTx(t)}
 	query := repo.Query{
 		Table:  repo.TableAccount,
-		Filter: []repo.Filter{{Column: "balance", Operator: repo.Eq, Value: "0"}},
+		Filter: []repo.Filter{{Column: "balance", Operator: repo.Eq, Value: "-1"}},
 	}
 	accounts, err := store.Get(context.Background(), &query)
 
@@ -98,7 +112,7 @@ func TestGetAccountsWithSortAsc(t *testing.T) {
 	accounts, err := store.Get(context.Background(), &query)
 
 	require.NoError(t, err)
-	require.Len(t, accounts, 4)
+	require.Len(t, accounts, 5)
 	for i := 1; i < len(accounts); i++ {
 		assert.LessOrEqual(t, accounts[i-1].Balance, accounts[i].Balance)
 	}
@@ -113,7 +127,7 @@ func TestGetAccountsWithSortDesc(t *testing.T) {
 	accounts, err := store.Get(context.Background(), &query)
 
 	require.NoError(t, err)
-	require.Len(t, accounts, 4)
+	require.Len(t, accounts, 5)
 	for i := 1; i < len(accounts); i++ {
 		assert.GreaterOrEqual(t, accounts[i-1].Balance, accounts[i].Balance)
 	}

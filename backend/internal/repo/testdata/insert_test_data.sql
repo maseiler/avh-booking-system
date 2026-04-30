@@ -50,7 +50,16 @@ VALUES ('Vasco',
         5500,
         12345,
         4,
-        true);
+        true),
+       ('Davy',
+        'Keeper of the Deep',
+        'Jones',
+        'davy.jones@locker.sea',
+        '+0 000 000 0000',
+        0,
+        0,
+        2,
+        false);
 
 
 INSERT INTO account_option(account, key, value)
