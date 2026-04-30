@@ -57,3 +57,27 @@ func (m *VatStore) Insert(ctx context.Context, vat models.Vat) (int, error) {
 
 	return id, err
 }
+
+// Update modifies an existing VAT rate in the database.
+func (m *VatStore) Update(ctx context.Context, vat models.Vat) (int, error) {
+	query := `
+        UPDATE vat
+        SET rate = $1
+        WHERE vat_id = $2
+        RETURNING vat_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, vat.Rate, vat.ID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a VAT rate from the database.
+func (m *VatStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM vat
+        WHERE vat_id = $1
+        RETURNING vat_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
+
+	return id, err
+}

@@ -66,3 +66,27 @@ func (m *ProductGroupStore) Insert(ctx context.Context, group models.ProductGrou
 
 	return id, err
 }
+
+// Update modifies an existing product group in the database.
+func (m *ProductGroupStore) Update(ctx context.Context, group models.ProductGroup) (int, error) {
+	query := `
+        UPDATE product_group
+        SET name = $1, parent = $2
+        WHERE product_group_id = $3
+        RETURNING product_group_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, group.Name, group.ParentID, group.ID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a product group from the database.
+func (m *ProductGroupStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM product_group
+        WHERE product_group_id = $1
+        RETURNING product_group_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
+
+	return id, err
+}

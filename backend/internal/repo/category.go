@@ -62,3 +62,33 @@ func (m *CategoryStore) Insert(ctx context.Context, category models.Category) (i
 
 	return id, err
 }
+
+// Update modifies an existing category in the database.
+func (m *CategoryStore) Update(ctx context.Context, category models.Category) (int, error) {
+	query := `
+        UPDATE category
+        SET name = $1, enabled = $2, icon = $3, type = $4
+        WHERE category_id = $5
+        RETURNING category_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query,
+		category.Name,
+		category.Enabled,
+		category.Icon,
+		category.Type,
+		category.ID,
+	).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a category from the database.
+func (m *CategoryStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM category
+        WHERE category_id = $1
+        RETURNING category_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
+
+	return id, err
+}

@@ -525,6 +525,115 @@ func TestInsertAccountAndReadBack(t *testing.T) {
 // Update
 // --------------------------------------------------
 
+func TestUpdateCategory(t *testing.T) {
+	store := &repo.CategoryStore{DB: beginTx(t)}
+
+	original, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, original)
+
+	original.Name = "Navigator"
+	original.Enabled = false
+	original.Icon = "compass"
+
+	updatedID, err := store.Update(context.Background(), *original)
+	require.NoError(t, err)
+	assert.Equal(t, 1, updatedID)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "Navigator", saved.Name)
+	assert.False(t, saved.Enabled)
+	assert.Equal(t, "compass", saved.Icon)
+}
+
+func TestUpdateUnit(t *testing.T) {
+	store := &repo.UnitStore{DB: beginTx(t)}
+
+	original, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, original)
+
+	original.Name = "cl"
+
+	updatedID, err := store.Update(context.Background(), *original)
+	require.NoError(t, err)
+	assert.Equal(t, 1, updatedID)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "cl", saved.Name)
+}
+
+func TestUpdateVat(t *testing.T) {
+	store := &repo.VatStore{DB: beginTx(t)}
+
+	original, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, original)
+
+	original.Rate = 7
+
+	updatedID, err := store.Update(context.Background(), *original)
+	require.NoError(t, err)
+	assert.Equal(t, 1, updatedID)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, 7, saved.Rate)
+}
+
+func TestUpdateProductGroup(t *testing.T) {
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
+
+	original, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, original)
+
+	original.Name = "Spirits"
+
+	updatedID, err := store.Update(context.Background(), *original)
+	require.NoError(t, err)
+	assert.Equal(t, 1, updatedID)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "Spirits", saved.Name)
+	assert.Nil(t, saved.ParentID)
+}
+
+func TestUpdateProduct(t *testing.T) {
+	store := &repo.ProductStore{DB: beginTx(t)}
+
+	original, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	require.NotNil(t, original)
+
+	original.Name = "Vinho do Porto"
+	original.Price = 2500
+
+	updatedID, err := store.Update(context.Background(), *original)
+	require.NoError(t, err)
+	assert.Equal(t, 1, updatedID)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "Vinho do Porto", saved.Name)
+	assert.Equal(t, 2500, saved.Price)
+}
+
+func TestUpdateAccountOption(t *testing.T) {
+	store := &repo.AccountOptionStore{DB: beginTx(t)}
+
+	opt := models.CreateAccountOption(1, "deceased", "false")
+	err := store.Update(context.Background(), opt)
+	require.NoError(t, err)
+
+	saved, err := store.Get(context.Background(), 1, "deceased")
+	require.NoError(t, err)
+	assert.Equal(t, "false", saved.Value)
+}
+
 func TestUpdateAccount(t *testing.T) {
 	store := &repo.AccountStore{DB: beginTx(t)}
 
@@ -552,6 +661,64 @@ func TestUpdateAccount(t *testing.T) {
 // --------------------------------------------------
 // Delete
 // --------------------------------------------------
+
+func TestDeleteCategory(t *testing.T) {
+	store := &repo.CategoryStore{DB: beginTx(t)}
+
+	// insert a category with no dependents so we can safely delete it
+	id, err := store.Insert(context.Background(), models.CreateCategory("Temporary", "trash", "account"))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+func TestDeleteUnit(t *testing.T) {
+	store := &repo.UnitStore{DB: beginTx(t)}
+
+	// unit_id 2 (pcs) has no FK dependents in seed data
+	deletedID, err := store.Delete(context.Background(), 2)
+	require.NoError(t, err)
+	assert.Equal(t, 2, deletedID)
+
+	_, err = store.GetByID(context.Background(), 2)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+func TestDeleteVat(t *testing.T) {
+	store := &repo.VatStore{DB: beginTx(t)}
+
+	// insert a vat first so we can delete it without FK conflicts
+	id, err := store.Insert(context.Background(), models.CreateVat(5))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+func TestDeleteProductGroup(t *testing.T) {
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
+
+	// insert a leaf group so we can delete it without FK conflicts
+	parentID := 1
+	id, err := store.Insert(context.Background(), models.CreateProductGroup("Temporary", &parentID))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
 
 func TestDeleteProductVisibility(t *testing.T) {
 	store := &repo.ProductVisibilityStore{DB: beginTx(t)}

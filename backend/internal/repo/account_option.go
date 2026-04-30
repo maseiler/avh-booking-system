@@ -31,6 +31,17 @@ func (m *AccountOptionStore) Insert(ctx context.Context, opt models.AccountOptio
 	return account, key, err
 }
 
+// Update modifies the value of an existing account option.
+func (m *AccountOptionStore) Update(ctx context.Context, opt models.AccountOption) error {
+	query := `
+        UPDATE account_option
+        SET value = $1
+        WHERE account = $2 AND key = $3`
+	_, err := m.DB.Exec(ctx, query, opt.Value, opt.AccountID, opt.Key)
+
+	return err
+}
+
 // Get retrieves a specific account option by account ID and key.
 func (m *AccountOptionStore) Get(ctx context.Context, accountID int, key string) (*models.AccountOption, error) {
 	stmt := `SELECT account, key, value

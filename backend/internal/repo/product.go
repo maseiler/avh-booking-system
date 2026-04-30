@@ -65,3 +65,25 @@ func (m *ProductStore) Insert(ctx context.Context, product models.Product) (int,
 
 	return id, err
 }
+
+// Update modifies an existing product in the database.
+func (m *ProductStore) Update(ctx context.Context, product models.Product) (int, error) {
+	query := `
+        UPDATE product
+        SET name = $1, price = $2, vat = $3, product_group = $4, size = $5, unit = $6, category = $7
+        WHERE product_id = $8
+        RETURNING product_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query,
+		product.Name,
+		product.Price,
+		product.VatID,
+		product.ProductGroupID,
+		product.Size,
+		product.UnitID,
+		product.CategoryID,
+		product.ID,
+	).Scan(&id)
+
+	return id, err
+}

@@ -57,3 +57,27 @@ func (m *UnitStore) Insert(ctx context.Context, unit models.Unit) (int, error) {
 
 	return id, err
 }
+
+// Update modifies an existing unit in the database.
+func (m *UnitStore) Update(ctx context.Context, unit models.Unit) (int, error) {
+	query := `
+        UPDATE unit
+        SET name = $1
+        WHERE unit_id = $2
+        RETURNING unit_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, unit.Name, unit.ID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a unit from the database.
+func (m *UnitStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM unit
+        WHERE unit_id = $1
+        RETURNING unit_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
+
+	return id, err
+}
