@@ -108,6 +108,11 @@ VALUES (1, 1, 1),
        (3, 2, 3),
        (4, 2, 3);
 
+INSERT INTO favorites(product, account, count)
+VALUES (1, 1, 5),
+       (2, 2, 3),
+       (3, 1, 2);
+
 INSERT INTO "order"(account)
 VALUES (1),
        (2);

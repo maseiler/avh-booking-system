@@ -17,6 +17,7 @@ const (
 	TableAccountOption     TableName = "account_option"
 	TableCategory          TableName = "category"
 	TableLocation          TableName = "location"
+	TableFavorites         TableName = "favorites"
 	TableOrder             TableName = "order"
 	TableProductOrder      TableName = "product_order"
 	TableProduct           TableName = "product"

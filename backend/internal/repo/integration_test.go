@@ -542,6 +542,79 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 }
 
 // --------------------------------------------------
+// Favorites
+// --------------------------------------------------
+
+func TestInsertFavorite(t *testing.T) {
+	store := &repo.FavoritesStore{DB: beginTx(t)}
+	fav := models.CreateFavorite(2, 1, 1)
+	err := store.Insert(context.Background(), fav)
+
+	require.NoError(t, err)
+}
+
+func TestGetFavorites(t *testing.T) {
+	store := &repo.FavoritesStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableFavorites}
+	favorites, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, favorites, 3)
+}
+
+func TestGetFavoritesByAccount(t *testing.T) {
+	store := &repo.FavoritesStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table:  repo.TableFavorites,
+		Filter: []repo.Filter{{Column: "account", Operator: repo.Eq, Value: "1"}},
+	}
+	favorites, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, favorites, 2)
+	for _, fav := range favorites {
+		assert.Equal(t, 1, fav.AccountID)
+	}
+}
+
+func TestUpdateFavorite(t *testing.T) {
+	store := &repo.FavoritesStore{DB: beginTx(t)}
+
+	err := store.Update(context.Background(), models.CreateFavorite(1, 1, 10))
+	require.NoError(t, err)
+
+	query := repo.Query{
+		Table: repo.TableFavorites,
+		Filter: []repo.Filter{
+			{Column: "product", Operator: repo.Eq, Value: "1"},
+			{Column: "account", Operator: repo.Eq, Value: "1"},
+		},
+	}
+	favorites, err := store.Get(context.Background(), &query)
+	require.NoError(t, err)
+	require.Len(t, favorites, 1)
+	assert.Equal(t, 10, favorites[0].Count)
+}
+
+func TestDeleteFavorite(t *testing.T) {
+	store := &repo.FavoritesStore{DB: beginTx(t)}
+	err := store.Delete(context.Background(), 1, 1)
+
+	require.NoError(t, err)
+
+	query := repo.Query{
+		Table: repo.TableFavorites,
+		Filter: []repo.Filter{
+			{Column: "product", Operator: repo.Eq, Value: "1"},
+			{Column: "account", Operator: repo.Eq, Value: "1"},
+		},
+	}
+	favorites, err := store.Get(context.Background(), &query)
+	require.NoError(t, err)
+	assert.Empty(t, favorites)
+}
+
+// --------------------------------------------------
 // Order
 // --------------------------------------------------
 

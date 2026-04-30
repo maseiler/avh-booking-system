@@ -89,6 +89,16 @@ CREATE TABLE IF NOT EXISTS product_visibility
     FOREIGN KEY (product) REFERENCES product (product_id)
 );
 
+CREATE TABLE IF NOT EXISTS favorites
+(
+    product INTEGER NOT NULL,
+    account INTEGER NOT NULL,
+    count   INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (product, account),
+    FOREIGN KEY (product) REFERENCES product (product_id),
+    FOREIGN KEY (account) REFERENCES account (account_id)
+);
+
 CREATE TABLE IF NOT EXISTS "order"
 (
     order_id   SERIAL PRIMARY KEY,
