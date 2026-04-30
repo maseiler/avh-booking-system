@@ -89,6 +89,13 @@ CREATE TABLE IF NOT EXISTS product_visibility
     FOREIGN KEY (product) REFERENCES product (product_id)
 );
 
+CREATE TABLE IF NOT EXISTS service_sewobe
+(
+    service_sewobe_id SERIAL PRIMARY KEY,
+    sewobe_api_key    VARCHAR(200) NOT NULL,
+    sewobe_url        VARCHAR(200) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS role
 (
     role_id SERIAL PRIMARY KEY,
@@ -121,6 +128,16 @@ CREATE TABLE IF NOT EXISTS user_option
     PRIMARY KEY (user_id, key),
     FOREIGN KEY (user_id) REFERENCES "user" (user_id)
         ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS service_link
+(
+    foreign_user_id INTEGER NOT NULL,
+    "user"          INTEGER NOT NULL,
+    service_sewobe  INTEGER NOT NULL,
+    PRIMARY KEY (foreign_user_id),
+    FOREIGN KEY ("user") REFERENCES "user" (user_id),
+    FOREIGN KEY (service_sewobe) REFERENCES service_sewobe (service_sewobe_id)
 );
 
 CREATE TABLE IF NOT EXISTS settings_frontend

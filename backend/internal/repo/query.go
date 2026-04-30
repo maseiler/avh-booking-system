@@ -18,6 +18,8 @@ const (
 	TableCategory          TableName = "category"
 	TableLocation          TableName = "location"
 	TableFavorites         TableName = "favorites"
+	TableServiceLink       TableName = "service_link"
+	TableServiceSewobe     TableName = "service_sewobe"
 	TableRights            TableName = "rights"
 	TableRole              TableName = "role"
 	TableUser              TableName = "user"

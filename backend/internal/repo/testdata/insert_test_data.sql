@@ -108,6 +108,10 @@ VALUES (1, 1, 1),
        (3, 2, 3),
        (4, 2, 3);
 
+INSERT INTO service_sewobe(sewobe_api_key, sewobe_url)
+VALUES ('key-abc-123', 'https://sewobe.example.com'),
+       ('key-xyz-456', 'https://sewobe2.example.com');
+
 INSERT INTO role(name)
 VALUES ('Admin'),
        ('Member');
@@ -124,6 +128,10 @@ VALUES ('Francis Drake', 1, 'hashed_password_1'),
 INSERT INTO user_option(user_id, key, value)
 VALUES (1, 'two_factor', 'true'),
        (2, 'two_factor', 'false');
+
+INSERT INTO service_link(foreign_user_id, "user", service_sewobe)
+VALUES (1001, 1, 1),
+       (1002, 2, 2);
 
 INSERT INTO settings_frontend(key, value)
 VALUES ('theme', 'dark'),

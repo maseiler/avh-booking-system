@@ -542,6 +542,137 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 }
 
 // --------------------------------------------------
+// ServiceSewobe
+// --------------------------------------------------
+
+func TestInsertServiceSewobe(t *testing.T) {
+	store := &repo.ServiceSewobeStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateServiceSewobe("new-key", "https://new.example.com"))
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetServiceSewobes(t *testing.T) {
+	store := &repo.ServiceSewobeStore{DB: beginTx(t)}
+	entries, err := store.Get(context.Background(), &repo.Query{Table: repo.TableServiceSewobe})
+
+	require.NoError(t, err)
+	assert.Len(t, entries, 2)
+}
+
+func TestGetServiceSewobeById(t *testing.T) {
+	store := &repo.ServiceSewobeStore{DB: beginTx(t)}
+	entry, err := store.GetByID(context.Background(), 1)
+
+	require.NoError(t, err)
+	require.NotNil(t, entry)
+	assert.Equal(t, 1, entry.ID)
+	assert.Equal(t, "key-abc-123", entry.SewobeApiKey)
+	assert.Equal(t, "https://sewobe.example.com", entry.SewobeUrl)
+}
+
+func TestGetServiceSewobeByIdNotFound(t *testing.T) {
+	store := &repo.ServiceSewobeStore{DB: beginTx(t)}
+	entry, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, entry)
+}
+
+func TestUpdateServiceSewobe(t *testing.T) {
+	store := &repo.ServiceSewobeStore{DB: beginTx(t)}
+	entry, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+
+	entry.SewobeApiKey = "updated-key"
+	id, err := store.Update(context.Background(), *entry)
+	require.NoError(t, err)
+	assert.Equal(t, 1, id)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "updated-key", saved.SewobeApiKey)
+}
+
+func TestDeleteServiceSewobe(t *testing.T) {
+	store := &repo.ServiceSewobeStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateServiceSewobe("temp-key", "https://temp.example.com"))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+// --------------------------------------------------
+// ServiceLink
+// --------------------------------------------------
+
+func TestInsertServiceLink(t *testing.T) {
+	store := &repo.ServiceLinkStore{DB: beginTx(t)}
+	err := store.Insert(context.Background(), models.CreateServiceLink(9999, 1, 1))
+
+	require.NoError(t, err)
+}
+
+func TestGetServiceLinks(t *testing.T) {
+	store := &repo.ServiceLinkStore{DB: beginTx(t)}
+	entries, err := store.Get(context.Background(), &repo.Query{Table: repo.TableServiceLink})
+
+	require.NoError(t, err)
+	assert.Len(t, entries, 2)
+}
+
+func TestGetServiceLinkById(t *testing.T) {
+	store := &repo.ServiceLinkStore{DB: beginTx(t)}
+	entry, err := store.GetByID(context.Background(), 1001)
+
+	require.NoError(t, err)
+	require.NotNil(t, entry)
+	assert.Equal(t, 1001, entry.ForeignUserID)
+	assert.Equal(t, 1, entry.UserID)
+	assert.Equal(t, 1, entry.ServiceSewobeID)
+}
+
+func TestGetServiceLinkByIdNotFound(t *testing.T) {
+	store := &repo.ServiceLinkStore{DB: beginTx(t)}
+	entry, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, entry)
+}
+
+func TestUpdateServiceLink(t *testing.T) {
+	store := &repo.ServiceLinkStore{DB: beginTx(t)}
+	entry, err := store.GetByID(context.Background(), 1001)
+	require.NoError(t, err)
+
+	entry.ServiceSewobeID = 2
+	err = store.Update(context.Background(), *entry)
+	require.NoError(t, err)
+
+	saved, err := store.GetByID(context.Background(), 1001)
+	require.NoError(t, err)
+	assert.Equal(t, 2, saved.ServiceSewobeID)
+}
+
+func TestDeleteServiceLink(t *testing.T) {
+	store := &repo.ServiceLinkStore{DB: beginTx(t)}
+	err := store.Insert(context.Background(), models.CreateServiceLink(9999, 1, 1))
+	require.NoError(t, err)
+
+	err = store.Delete(context.Background(), 9999)
+	require.NoError(t, err)
+
+	_, err = store.GetByID(context.Background(), 9999)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+// --------------------------------------------------
 // Role
 // --------------------------------------------------
 
