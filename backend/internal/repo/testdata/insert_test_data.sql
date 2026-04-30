@@ -108,6 +108,18 @@ VALUES (1, 1, 1),
        (3, 2, 3),
        (4, 2, 3);
 
+INSERT INTO settings_frontend(key, value)
+VALUES ('theme', 'dark'),
+       ('language', 'en');
+
+INSERT INTO settings_payment(key, value)
+VALUES ('currency', 'EUR'),
+       ('tax_included', 'true');
+
+INSERT INTO settings_email(key, value)
+VALUES ('smtp_host', 'mail.example.com'),
+       ('smtp_port', '587');
+
 INSERT INTO favorites(product, account, count)
 VALUES (1, 1, 5),
        (2, 2, 3),

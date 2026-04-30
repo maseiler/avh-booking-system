@@ -89,6 +89,24 @@ CREATE TABLE IF NOT EXISTS product_visibility
     FOREIGN KEY (product) REFERENCES product (product_id)
 );
 
+CREATE TABLE IF NOT EXISTS settings_frontend
+(
+    key   VARCHAR(40) PRIMARY KEY,
+    value VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS settings_payment
+(
+    key   VARCHAR(40) PRIMARY KEY,
+    value VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS settings_email
+(
+    key   VARCHAR(40) PRIMARY KEY,
+    value VARCHAR(200) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS favorites
 (
     product INTEGER NOT NULL,

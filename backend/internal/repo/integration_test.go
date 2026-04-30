@@ -542,6 +542,78 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 }
 
 // --------------------------------------------------
+// Settings
+// --------------------------------------------------
+
+func TestGetAllSettingsFrontend(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsFrontend}
+	settings, err := store.GetAll(context.Background())
+
+	require.NoError(t, err)
+	assert.Len(t, settings, 2)
+}
+
+func TestGetSettingFrontend(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsFrontend}
+	setting, err := store.Get(context.Background(), "theme")
+
+	require.NoError(t, err)
+	require.NotNil(t, setting)
+	assert.Equal(t, "theme", setting.Key)
+	assert.Equal(t, "dark", setting.Value)
+}
+
+func TestGetSettingFrontendNotFound(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsFrontend}
+	setting, err := store.Get(context.Background(), "nonexistent")
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, setting)
+}
+
+func TestInsertSettingFrontend(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsFrontend}
+	err := store.Insert(context.Background(), models.CreateSetting("sidebar_collapsed", "false"))
+
+	require.NoError(t, err)
+}
+
+func TestUpdateSettingFrontend(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsFrontend}
+	err := store.Update(context.Background(), models.CreateSetting("theme", "light"))
+	require.NoError(t, err)
+
+	saved, err := store.Get(context.Background(), "theme")
+	require.NoError(t, err)
+	assert.Equal(t, "light", saved.Value)
+}
+
+func TestDeleteSettingFrontend(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsFrontend}
+	err := store.Delete(context.Background(), "theme")
+	require.NoError(t, err)
+
+	_, err = store.Get(context.Background(), "theme")
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+func TestSettingsPaymentSmokeTest(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsPayment}
+	settings, err := store.GetAll(context.Background())
+
+	require.NoError(t, err)
+	assert.Len(t, settings, 2)
+}
+
+func TestSettingsEmailSmokeTest(t *testing.T) {
+	store := &repo.SettingsStore{DB: beginTx(t), Table: repo.TableSettingsEmail}
+	settings, err := store.GetAll(context.Background())
+
+	require.NoError(t, err)
+	assert.Len(t, settings, 2)
+}
+
+// --------------------------------------------------
 // Favorites
 // --------------------------------------------------
 
