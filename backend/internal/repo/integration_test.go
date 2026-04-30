@@ -192,6 +192,15 @@ func TestInsertCategory(t *testing.T) {
 	assert.NotZero(t, id)
 }
 
+func TestGetCategories(t *testing.T) {
+	store := &repo.CategoryStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableCategory}
+	categories, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, categories, 4)
+}
+
 func TestGetCategoryById(t *testing.T) {
 	const categoryID = 1
 	store := &repo.CategoryStore{DB: beginTx(t)}
@@ -206,6 +215,14 @@ func TestGetCategoryById(t *testing.T) {
 	require.Equal(t, "account", cat.Type)
 }
 
+func TestGetCategoryByIdNotFound(t *testing.T) {
+	store := &repo.CategoryStore{DB: beginTx(t)}
+	cat, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, cat)
+}
+
 // --------------------------------------------------
 // Product
 // --------------------------------------------------
@@ -217,6 +234,15 @@ func TestInsertProduct(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.NotZero(t, id)
+}
+
+func TestGetProducts(t *testing.T) {
+	store := &repo.ProductStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableProduct}
+	products, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, products, 3)
 }
 
 func TestGetProductById(t *testing.T) {
@@ -236,6 +262,14 @@ func TestGetProductById(t *testing.T) {
 	require.Equal(t, 2, product.CategoryID)
 }
 
+func TestGetProductByIdNotFound(t *testing.T) {
+	store := &repo.ProductStore{DB: beginTx(t)}
+	product, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, product)
+}
+
 // --------------------------------------------------
 // ProductGroup
 // --------------------------------------------------
@@ -250,6 +284,15 @@ func TestInsertProductGroup(t *testing.T) {
 	assert.NotZero(t, id)
 }
 
+func TestGetProductGroups(t *testing.T) {
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableProductGroup}
+	groups, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, groups, 5)
+}
+
 func TestGetProductGroupById(t *testing.T) {
 	const groupID = 1
 	store := &repo.ProductGroupStore{DB: beginTx(t)}
@@ -260,6 +303,14 @@ func TestGetProductGroupById(t *testing.T) {
 	require.Equal(t, groupID, group.ID)
 	require.Equal(t, "Alcohol", group.Name)
 	require.Nil(t, group.ParentID)
+}
+
+func TestGetProductGroupByIdNotFound(t *testing.T) {
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
+	group, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, group)
 }
 
 // --------------------------------------------------
@@ -275,6 +326,15 @@ func TestInsertUnit(t *testing.T) {
 	assert.NotZero(t, id)
 }
 
+func TestGetUnits(t *testing.T) {
+	store := &repo.UnitStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableUnit}
+	units, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, units, 2)
+}
+
 func TestGetUnitById(t *testing.T) {
 	const unitID = 1
 	store := &repo.UnitStore{DB: beginTx(t)}
@@ -284,6 +344,14 @@ func TestGetUnitById(t *testing.T) {
 	require.NotNil(t, unit)
 	require.Equal(t, unitID, unit.ID)
 	require.Equal(t, "ml", unit.Name)
+}
+
+func TestGetUnitByIdNotFound(t *testing.T) {
+	store := &repo.UnitStore{DB: beginTx(t)}
+	unit, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, unit)
 }
 
 // --------------------------------------------------
@@ -299,6 +367,15 @@ func TestInsertProductVisibility(t *testing.T) {
 	assert.NotZero(t, id)
 }
 
+func TestGetProductVisibilities(t *testing.T) {
+	store := &repo.ProductVisibilityStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableProductVisibility}
+	visibilities, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, visibilities, 7)
+}
+
 func TestProductVisibilityById(t *testing.T) {
 	const visibilityID = 1
 	store := &repo.ProductVisibilityStore{DB: beginTx(t)}
@@ -309,6 +386,14 @@ func TestProductVisibilityById(t *testing.T) {
 	require.Equal(t, visibilityID, vis.ID)
 	require.Equal(t, 1, vis.CategoryID)
 	require.Equal(t, 1, vis.ProductID)
+}
+
+func TestProductVisibilityByIdNotFound(t *testing.T) {
+	store := &repo.ProductVisibilityStore{DB: beginTx(t)}
+	vis, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, vis)
 }
 
 // --------------------------------------------------
@@ -324,6 +409,15 @@ func TestInsertLocation(t *testing.T) {
 	assert.NotZero(t, id)
 }
 
+func TestGetLocations(t *testing.T) {
+	store := &repo.LocationStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableLocation}
+	locations, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, locations, 2)
+}
+
 func TestGetLocationById(t *testing.T) {
 	const locationID = 1
 	store := &repo.LocationStore{DB: beginTx(t)}
@@ -333,6 +427,14 @@ func TestGetLocationById(t *testing.T) {
 	require.NotNil(t, location)
 	require.Equal(t, locationID, location.ID)
 	require.Equal(t, "Bermuda Triangle", location.Name)
+}
+
+func TestGetLocationByIdNotFound(t *testing.T) {
+	store := &repo.LocationStore{DB: beginTx(t)}
+	location, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, location)
 }
 
 // --------------------------------------------------
@@ -348,6 +450,15 @@ func TestInsertVat(t *testing.T) {
 	assert.NotZero(t, id)
 }
 
+func TestGetVats(t *testing.T) {
+	store := &repo.VatStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableVat}
+	vats, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, vats, 1)
+}
+
 func TestGetVatById(t *testing.T) {
 	const vatID = 1
 	store := &repo.VatStore{DB: beginTx(t)}
@@ -359,11 +470,15 @@ func TestGetVatById(t *testing.T) {
 	require.Equal(t, 19, vat.Rate)
 }
 
-// --------------------------------------------------
-// Error cases
-// --------------------------------------------------
+func TestGetVatByIdNotFound(t *testing.T) {
+	store := &repo.VatStore{DB: beginTx(t)}
+	vat, err := store.GetByID(context.Background(), 99999)
 
-func TestGetByIDNotFound(t *testing.T) {
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, vat)
+}
+
+func TestGetAccountByIdNotFound(t *testing.T) {
 	store := &repo.AccountStore{DB: beginTx(t)}
 	account, err := store.GetByID(context.Background(), 99999)
 
