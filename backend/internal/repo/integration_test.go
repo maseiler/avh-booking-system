@@ -542,6 +542,264 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 }
 
 // --------------------------------------------------
+// Role
+// --------------------------------------------------
+
+func TestInsertRole(t *testing.T) {
+	store := &repo.RoleStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateRole("Guest"))
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetRoles(t *testing.T) {
+	store := &repo.RoleStore{DB: beginTx(t)}
+	roles, err := store.Get(context.Background(), &repo.Query{Table: repo.TableRole})
+
+	require.NoError(t, err)
+	assert.Len(t, roles, 2)
+}
+
+func TestGetRoleById(t *testing.T) {
+	store := &repo.RoleStore{DB: beginTx(t)}
+	role, err := store.GetByID(context.Background(), 1)
+
+	require.NoError(t, err)
+	require.NotNil(t, role)
+	assert.Equal(t, 1, role.ID)
+	assert.Equal(t, "Admin", role.Name)
+}
+
+func TestGetRoleByIdNotFound(t *testing.T) {
+	store := &repo.RoleStore{DB: beginTx(t)}
+	role, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, role)
+}
+
+func TestUpdateRole(t *testing.T) {
+	store := &repo.RoleStore{DB: beginTx(t)}
+	role, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+
+	role.Name = "SuperAdmin"
+	id, err := store.Update(context.Background(), *role)
+	require.NoError(t, err)
+	assert.Equal(t, 1, id)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "SuperAdmin", saved.Name)
+}
+
+func TestDeleteRole(t *testing.T) {
+	store := &repo.RoleStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateRole("Temporary"))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+// --------------------------------------------------
+// Rights
+// --------------------------------------------------
+
+func TestInsertRights(t *testing.T) {
+	store := &repo.RightsStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateRights(1, "manage_orders", true))
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetRights(t *testing.T) {
+	store := &repo.RightsStore{DB: beginTx(t)}
+	rights, err := store.Get(context.Background(), &repo.Query{Table: repo.TableRights})
+
+	require.NoError(t, err)
+	assert.Len(t, rights, 3)
+}
+
+func TestGetRightsById(t *testing.T) {
+	store := &repo.RightsStore{DB: beginTx(t)}
+	r, err := store.GetByID(context.Background(), 1)
+
+	require.NoError(t, err)
+	require.NotNil(t, r)
+	assert.Equal(t, 1, r.ID)
+	assert.Equal(t, 1, r.RoleID)
+	assert.Equal(t, "manage_accounts", r.Permission)
+	assert.True(t, r.Allowed)
+}
+
+func TestGetRightsByIdNotFound(t *testing.T) {
+	store := &repo.RightsStore{DB: beginTx(t)}
+	r, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, r)
+}
+
+func TestUpdateRights(t *testing.T) {
+	store := &repo.RightsStore{DB: beginTx(t)}
+	r, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+
+	r.Allowed = false
+	id, err := store.Update(context.Background(), *r)
+	require.NoError(t, err)
+	assert.Equal(t, 1, id)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.False(t, saved.Allowed)
+}
+
+func TestDeleteRights(t *testing.T) {
+	store := &repo.RightsStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateRights(2, "temporary", true))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+// --------------------------------------------------
+// User
+// --------------------------------------------------
+
+func TestInsertUser(t *testing.T) {
+	store := &repo.UserStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateUser("Blackbeard", 1, "hashed_pw"))
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetUsers(t *testing.T) {
+	store := &repo.UserStore{DB: beginTx(t)}
+	users, err := store.Get(context.Background(), &repo.Query{Table: repo.TableUser})
+
+	require.NoError(t, err)
+	assert.Len(t, users, 2)
+}
+
+func TestGetUserById(t *testing.T) {
+	store := &repo.UserStore{DB: beginTx(t)}
+	user, err := store.GetByID(context.Background(), 1)
+
+	require.NoError(t, err)
+	require.NotNil(t, user)
+	assert.Equal(t, 1, user.ID)
+	assert.Equal(t, "Francis Drake", user.Name)
+	assert.Equal(t, 1, user.RoleID)
+}
+
+func TestGetUserByIdNotFound(t *testing.T) {
+	store := &repo.UserStore{DB: beginTx(t)}
+	user, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, user)
+}
+
+func TestUpdateUser(t *testing.T) {
+	store := &repo.UserStore{DB: beginTx(t)}
+	user, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+
+	user.Name = "Sir Francis Drake"
+	id, err := store.Update(context.Background(), *user)
+	require.NoError(t, err)
+	assert.Equal(t, 1, id)
+
+	saved, err := store.GetByID(context.Background(), 1)
+	require.NoError(t, err)
+	assert.Equal(t, "Sir Francis Drake", saved.Name)
+}
+
+func TestDeleteUser(t *testing.T) {
+	store := &repo.UserStore{DB: beginTx(t)}
+	id, err := store.Insert(context.Background(), models.CreateUser("Temporary", 2, "pw"))
+	require.NoError(t, err)
+
+	deletedID, err := store.Delete(context.Background(), id)
+	require.NoError(t, err)
+	assert.Equal(t, id, deletedID)
+
+	_, err = store.GetByID(context.Background(), id)
+	require.ErrorIs(t, err, database.ErrNoRecord)
+}
+
+// --------------------------------------------------
+// UserOption
+// --------------------------------------------------
+
+func TestInsertUserOption(t *testing.T) {
+	store := &repo.UserOptionStore{DB: beginTx(t)}
+	userID, key, err := store.Insert(context.Background(), models.CreateUserOption(1, "preferred_lang", "en"))
+
+	require.NoError(t, err)
+	assert.Equal(t, 1, userID)
+	assert.Equal(t, "preferred_lang", key)
+}
+
+func TestInsertUserOptionAndReadBack(t *testing.T) {
+	store := &repo.UserOptionStore{DB: beginTx(t)}
+	opt := models.CreateUserOption(1, "preferred_lang", "en")
+
+	userID, key, err := store.Insert(context.Background(), opt)
+	require.NoError(t, err)
+
+	saved, err := store.Get(context.Background(), userID, key)
+	require.NoError(t, err)
+	require.NotNil(t, saved)
+	assert.Equal(t, 1, saved.UserID)
+	assert.Equal(t, "preferred_lang", saved.Key)
+	assert.Equal(t, "en", saved.Value)
+}
+
+func TestGetUserOption(t *testing.T) {
+	store := &repo.UserOptionStore{DB: beginTx(t)}
+	opt, err := store.Get(context.Background(), 1, "two_factor")
+
+	require.NoError(t, err)
+	require.NotNil(t, opt)
+	assert.Equal(t, 1, opt.UserID)
+	assert.Equal(t, "two_factor", opt.Key)
+	assert.Equal(t, "true", opt.Value)
+}
+
+func TestGetUserOptionNotFound(t *testing.T) {
+	store := &repo.UserOptionStore{DB: beginTx(t)}
+	opt, err := store.Get(context.Background(), 1, "nonexistent")
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, opt)
+}
+
+func TestUpdateUserOption(t *testing.T) {
+	store := &repo.UserOptionStore{DB: beginTx(t)}
+	err := store.Update(context.Background(), models.CreateUserOption(1, "two_factor", "false"))
+	require.NoError(t, err)
+
+	saved, err := store.Get(context.Background(), 1, "two_factor")
+	require.NoError(t, err)
+	assert.Equal(t, "false", saved.Value)
+}
+
+// --------------------------------------------------
 // Settings
 // --------------------------------------------------
 

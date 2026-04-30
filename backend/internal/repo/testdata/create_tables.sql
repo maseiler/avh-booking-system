@@ -89,6 +89,40 @@ CREATE TABLE IF NOT EXISTS product_visibility
     FOREIGN KEY (product) REFERENCES product (product_id)
 );
 
+CREATE TABLE IF NOT EXISTS role
+(
+    role_id SERIAL PRIMARY KEY,
+    name    VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS rights
+(
+    rights_id  SERIAL PRIMARY KEY,
+    role       INTEGER     NOT NULL,
+    permission VARCHAR(40) NOT NULL,
+    allowed    BOOL        NOT NULL,
+    FOREIGN KEY (role) REFERENCES role (role_id)
+);
+
+CREATE TABLE IF NOT EXISTS "user"
+(
+    user_id  SERIAL PRIMARY KEY,
+    name     VARCHAR(40) NOT NULL,
+    role     INTEGER     NOT NULL,
+    password VARCHAR(200) NOT NULL,
+    FOREIGN KEY (role) REFERENCES role (role_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_option
+(
+    user_id INTEGER     NOT NULL,
+    key     VARCHAR(40) NOT NULL,
+    value   VARCHAR(200) NOT NULL,
+    PRIMARY KEY (user_id, key),
+    FOREIGN KEY (user_id) REFERENCES "user" (user_id)
+        ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS settings_frontend
 (
     key   VARCHAR(40) PRIMARY KEY,

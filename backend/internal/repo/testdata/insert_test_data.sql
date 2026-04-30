@@ -108,6 +108,23 @@ VALUES (1, 1, 1),
        (3, 2, 3),
        (4, 2, 3);
 
+INSERT INTO role(name)
+VALUES ('Admin'),
+       ('Member');
+
+INSERT INTO rights(role, permission, allowed)
+VALUES (1, 'manage_accounts', true),
+       (1, 'manage_products', true),
+       (2, 'manage_accounts', false);
+
+INSERT INTO "user"(name, role, password)
+VALUES ('Francis Drake', 1, 'hashed_password_1'),
+       ('Anne Bonny', 2, 'hashed_password_2');
+
+INSERT INTO user_option(user_id, key, value)
+VALUES (1, 'two_factor', 'true'),
+       (2, 'two_factor', 'false');
+
 INSERT INTO settings_frontend(key, value)
 VALUES ('theme', 'dark'),
        ('language', 'en');
