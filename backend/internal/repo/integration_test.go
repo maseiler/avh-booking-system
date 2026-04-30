@@ -2,6 +2,7 @@ package repo_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"testing"
@@ -9,6 +10,7 @@ import (
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/repo"
+	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -537,6 +539,53 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 
 	require.ErrorIs(t, err, database.ErrNoRecord)
 	assert.Nil(t, opt)
+}
+
+// --------------------------------------------------
+// WithTx
+// --------------------------------------------------
+
+func TestWithTxCommitsOnSuccess(t *testing.T) {
+	var insertedID int
+	err := dbPool.WithTx(context.Background(), func(tx pgx.Tx) error {
+		store := &repo.CategoryStore{DB: tx}
+		id, err := store.Insert(context.Background(), models.CreateCategory("Temporary", "trash", "account"))
+		if err != nil {
+			return err
+		}
+		insertedID = id
+		return nil
+	})
+	require.NoError(t, err)
+
+	// Verify the row is visible outside the transaction
+	store := &repo.CategoryStore{DB: beginTx(t)}
+	cat, err := store.GetByID(context.Background(), insertedID)
+	require.NoError(t, err)
+	assert.Equal(t, "Temporary", cat.Name)
+
+	// Clean up — delete the committed row so it doesn't affect other tests
+	_, _ = store.Delete(context.Background(), insertedID)
+}
+
+func TestWithTxRollsBackOnError(t *testing.T) {
+	sentinel := errors.New("abort")
+	var insertedID int
+	err := dbPool.WithTx(context.Background(), func(tx pgx.Tx) error {
+		store := &repo.CategoryStore{DB: tx}
+		id, err := store.Insert(context.Background(), models.CreateCategory("ShouldNotExist", "trash", "account"))
+		if err != nil {
+			return err
+		}
+		insertedID = id
+		return sentinel
+	})
+	require.ErrorIs(t, err, sentinel)
+
+	// Verify the row was rolled back and is not visible
+	store := &repo.CategoryStore{DB: beginTx(t)}
+	_, err = store.GetByID(context.Background(), insertedID)
+	require.ErrorIs(t, err, database.ErrNoRecord)
 }
 
 // --------------------------------------------------
