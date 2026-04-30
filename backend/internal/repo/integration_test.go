@@ -542,6 +542,114 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 }
 
 // --------------------------------------------------
+// Order
+// --------------------------------------------------
+
+func TestInsertOrder(t *testing.T) {
+	store := &repo.OrderStore{DB: beginTx(t)}
+	order := models.CreateOrder(1)
+	id, err := store.Insert(context.Background(), order)
+
+	require.NoError(t, err)
+	assert.NotZero(t, id)
+}
+
+func TestGetOrders(t *testing.T) {
+	store := &repo.OrderStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableOrder}
+	orders, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, orders, 2)
+}
+
+func TestGetOrderById(t *testing.T) {
+	const orderID = 1
+	store := &repo.OrderStore{DB: beginTx(t)}
+	order, err := store.GetByID(context.Background(), orderID)
+
+	require.NoError(t, err)
+	require.NotNil(t, order)
+	assert.Equal(t, orderID, order.ID)
+	assert.Equal(t, 1, order.AccountID)
+	assert.NotZero(t, order.CreatedAt)
+}
+
+func TestGetOrderByIdNotFound(t *testing.T) {
+	store := &repo.OrderStore{DB: beginTx(t)}
+	order, err := store.GetByID(context.Background(), 99999)
+
+	require.ErrorIs(t, err, database.ErrNoRecord)
+	assert.Nil(t, order)
+}
+
+func TestInsertOrderAndReadBack(t *testing.T) {
+	store := &repo.OrderStore{DB: beginTx(t)}
+	order := models.CreateOrder(3)
+
+	id, err := store.Insert(context.Background(), order)
+	require.NoError(t, err)
+	require.NotZero(t, id)
+
+	saved, err := store.GetByID(context.Background(), id)
+	require.NoError(t, err)
+	require.NotNil(t, saved)
+	assert.Equal(t, 3, saved.AccountID)
+	assert.NotZero(t, saved.CreatedAt)
+}
+
+// --------------------------------------------------
+// ProductOrder
+// --------------------------------------------------
+
+func TestInsertProductOrder(t *testing.T) {
+	store := &repo.ProductOrderStore{DB: beginTx(t)}
+	item := models.CreateProductOrder(1, 2, 1, 600)
+	err := store.Insert(context.Background(), item)
+
+	require.NoError(t, err)
+}
+
+func TestGetProductOrders(t *testing.T) {
+	store := &repo.ProductOrderStore{DB: beginTx(t)}
+	query := repo.Query{Table: repo.TableProductOrder}
+	items, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	assert.Len(t, items, 3)
+}
+
+func TestGetProductOrdersByOrderID(t *testing.T) {
+	store := &repo.ProductOrderStore{DB: beginTx(t)}
+	query := repo.Query{
+		Table:  repo.TableProductOrder,
+		Filter: []repo.Filter{{Column: "order_id", Operator: repo.Eq, Value: "1"}},
+	}
+	items, err := store.Get(context.Background(), &query)
+
+	require.NoError(t, err)
+	require.Len(t, items, 2)
+	for _, item := range items {
+		assert.Equal(t, 1, item.OrderID)
+	}
+}
+
+func TestDeleteProductOrder(t *testing.T) {
+	store := &repo.ProductOrderStore{DB: beginTx(t)}
+	err := store.Delete(context.Background(), 1, 1)
+
+	require.NoError(t, err)
+
+	query := repo.Query{
+		Table:  repo.TableProductOrder,
+		Filter: []repo.Filter{{Column: "order_id", Operator: repo.Eq, Value: "1"}},
+	}
+	items, err := store.Get(context.Background(), &query)
+	require.NoError(t, err)
+	assert.Len(t, items, 1)
+}
+
+// --------------------------------------------------
 // WithTx
 // --------------------------------------------------
 

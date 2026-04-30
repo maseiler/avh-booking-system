@@ -88,3 +88,22 @@ CREATE TABLE IF NOT EXISTS product_visibility
     FOREIGN KEY (location) REFERENCES location (location_id),
     FOREIGN KEY (product) REFERENCES product (product_id)
 );
+
+CREATE TABLE IF NOT EXISTS "order"
+(
+    order_id   SERIAL PRIMARY KEY,
+    account    INTEGER   NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (account) REFERENCES account (account_id)
+);
+
+CREATE TABLE IF NOT EXISTS product_order
+(
+    order_id      INTEGER NOT NULL,
+    product       INTEGER NOT NULL,
+    amount        INTEGER NOT NULL,
+    product_price INTEGER NOT NULL,
+    PRIMARY KEY (order_id, product),
+    FOREIGN KEY (order_id) REFERENCES "order" (order_id),
+    FOREIGN KEY (product) REFERENCES product (product_id)
+);

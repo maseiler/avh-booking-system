@@ -18,6 +18,7 @@ const (
 	TableCategory          TableName = "category"
 	TableLocation          TableName = "location"
 	TableOrder             TableName = "order"
+	TableProductOrder      TableName = "product_order"
 	TableProduct           TableName = "product"
 	TableProductGroup      TableName = "product_group"
 	TableProductVisibility TableName = "product_visibility"
@@ -136,7 +137,7 @@ type Sorting struct {
 // ============================================================================
 
 func buildSelectSQL(q *Query) (string, []any, error) {
-	stmt := "SELECT * FROM " + string(q.Table)
+	stmt := "SELECT * FROM " + pgx.Identifier{string(q.Table)}.Sanitize()
 	var args []any
 
 	if len(q.Filter) > 0 {

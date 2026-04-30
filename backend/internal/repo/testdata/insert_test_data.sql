@@ -107,3 +107,12 @@ VALUES (1, 1, 1),
        (3, 1, 3),
        (3, 2, 3),
        (4, 2, 3);
+
+INSERT INTO "order"(account)
+VALUES (1),
+       (2);
+
+INSERT INTO product_order(order_id, product, amount, product_price)
+VALUES (1, 1, 2, 1800),
+       (1, 3, 1, 2330),
+       (2, 2, 3, 600);
