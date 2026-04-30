@@ -28,8 +28,8 @@ func TestMain(m *testing.M) {
 
 func TestInsertAccount(t *testing.T) {
 	store := &repo.AccountStore{DB: beginTx(t)}
-	dummyAccount := models.CreateAccount("Andi", "", "Theke",
-		"andiwillsaufen@bier.com", "+49 170 1234567", 9900, 10, 3)
+	dummyAccount := models.CreateAccount("Edward", "Blackbeard", "Teach",
+		"blackbeard@queenanne.com", "+1 910 555 1718", 9900, 10, 3)
 	id, err := store.Insert(context.Background(), dummyAccount)
 
 	require.NoError(t, err)
@@ -500,8 +500,8 @@ func TestGetAccountOptionNotFound(t *testing.T) {
 
 func TestInsertAccountAndReadBack(t *testing.T) {
 	store := &repo.AccountStore{DB: beginTx(t)}
-	account := models.CreateAccount("Andi", "Biermeister", "Theke",
-		"andiwillsaufen@bier.com", "+49 170 1234567", 9900, 500, 3)
+	account := models.CreateAccount("Edward", "Blackbeard", "Teach",
+		"blackbeard@queenanne.com", "+1 910 555 1718", 9900, 500, 3)
 
 	id, err := store.Insert(context.Background(), account)
 	require.NoError(t, err)
@@ -510,11 +510,11 @@ func TestInsertAccountAndReadBack(t *testing.T) {
 	saved, err := store.GetByID(context.Background(), id)
 	require.NoError(t, err)
 	require.NotNil(t, saved)
-	assert.Equal(t, "Andi", saved.FirstName)
-	assert.Equal(t, "Biermeister", saved.Nickname)
-	assert.Equal(t, "Theke", saved.LastName)
-	assert.Equal(t, "andiwillsaufen@bier.com", saved.Email)
-	assert.Equal(t, "+49 170 1234567", saved.Phone)
+	assert.Equal(t, "Edward", saved.FirstName)
+	assert.Equal(t, "Blackbeard", saved.Nickname)
+	assert.Equal(t, "Teach", saved.LastName)
+	assert.Equal(t, "blackbeard@queenanne.com", saved.Email)
+	assert.Equal(t, "+1 910 555 1718", saved.Phone)
 	assert.Equal(t, 9900, saved.Balance)
 	assert.Equal(t, 500, saved.MaxDebt)
 	assert.Equal(t, 3, saved.Category)
