@@ -558,14 +558,16 @@ func TestWithTxCommitsOnSuccess(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	// beginTx rolls back at cleanup — use dbPool directly to delete the committed row
+	t.Cleanup(func() {
+		_, _ = dbPool.Exec(context.Background(), "DELETE FROM category WHERE category_id = $1", insertedID)
+	})
+
 	// Verify the row is visible outside the transaction
 	store := &repo.CategoryStore{DB: beginTx(t)}
 	cat, err := store.GetByID(context.Background(), insertedID)
 	require.NoError(t, err)
 	assert.Equal(t, "Temporary", cat.Name)
-
-	// Clean up — delete the committed row so it doesn't affect other tests
-	_, _ = store.Delete(context.Background(), insertedID)
 }
 
 func TestWithTxRollsBackOnError(t *testing.T) {
