@@ -193,6 +193,23 @@ func TestGetAccountOptionByAccountAndKey(t *testing.T) {
 	require.Equal(t, "true", opt.Value)
 }
 
+func TestInsertAccountOptionAndReadBack(t *testing.T) {
+	store := &repo.AccountOptionStore{DB: beginTx(t)}
+	opt := models.CreateAccountOption(1, "favourite_sea", "Caribbean")
+
+	accountID, key, err := store.Insert(context.Background(), opt)
+	require.NoError(t, err)
+	require.Equal(t, 1, accountID)
+	require.Equal(t, "favourite_sea", key)
+
+	saved, err := store.Get(context.Background(), accountID, key)
+	require.NoError(t, err)
+	require.NotNil(t, saved)
+	assert.Equal(t, 1, saved.AccountID)
+	assert.Equal(t, "favourite_sea", saved.Key)
+	assert.Equal(t, "Caribbean", saved.Value)
+}
+
 // --------------------------------------------------
 // Category
 // --------------------------------------------------
@@ -325,6 +342,20 @@ func TestGetProductGroupByIdNotFound(t *testing.T) {
 
 	require.ErrorIs(t, err, database.ErrNoRecord)
 	assert.Nil(t, group)
+}
+
+func TestGetProductGroupWithParent(t *testing.T) {
+	// group 3 is "Port Wine" with parent 1 ("Alcohol")
+	const groupID = 3
+	store := &repo.ProductGroupStore{DB: beginTx(t)}
+	group, err := store.GetByID(context.Background(), groupID)
+
+	require.NoError(t, err)
+	require.NotNil(t, group)
+	assert.Equal(t, groupID, group.ID)
+	assert.Equal(t, "Port Wine", group.Name)
+	require.NotNil(t, group.ParentID)
+	assert.Equal(t, 1, *group.ParentID)
 }
 
 // --------------------------------------------------
