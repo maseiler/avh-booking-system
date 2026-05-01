@@ -94,3 +94,15 @@ func (s *Service) marshalBroadcastQueryResultList(table repo.TableName, data *[]
 
 	return s.marshalAndValidateMessage(&msg)
 }
+
+func marshalSlice[T any](items []T) ([]json.RawMessage, *WSError) {
+	var raw []json.RawMessage
+	for _, item := range items {
+		b, err := json.Marshal(item)
+		if err != nil {
+			return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode item"}
+		}
+		raw = append(raw, b)
+	}
+	return raw, nil
+}
