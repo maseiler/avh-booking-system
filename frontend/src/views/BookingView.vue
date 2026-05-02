@@ -4,7 +4,7 @@
       <div style="position:absolute; z-index:-50; left:50%; transform: translateX(-50%); opacity:.6;">
         <img v-if="companyLogo != null" :src="companyLogo"></img>
       </div>
-    <OrderViewer />
+    <OrderViewer :allowEdit="true" :accounts="account$.selected" :totals="cart$.getTotals" :contents="cart$.cartContents"/>
 
     <!-- ToDo? Do this as a own component? -->
     <!-- Only visible on mobile -->
@@ -80,6 +80,7 @@ import OrderViewer from '../components/OrderViewer/OrderViewer.vue';
 import { useAccountStore } from '../store/AccountStore';
 import ProductSelector from '../components/ProductSelector/ProductSelector.vue';
 import { useSettingStore } from '../store/SettingStore';
+import { useCartStore } from '../store/CartStore';
 
   export default {
     components: {
@@ -92,6 +93,7 @@ import { useSettingStore } from '../store/SettingStore';
         visiblePart: 0 as number,
         account$: useAccountStore(),
         setting$: useSettingStore(),
+        cart$: useCartStore(),
       }  
     },
     methods: {

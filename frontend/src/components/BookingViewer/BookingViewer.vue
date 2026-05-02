@@ -2,6 +2,7 @@
 import Message from '../../composables/elements/Message.vue';
 import { Booking } from '../../composables/booking';
 import { computed } from 'vue';
+import AccountTagList from '../OrderViewer/AccountTagList.vue';
 
 const props = defineProps<{
   booking: Booking
@@ -18,7 +19,7 @@ const dateString = computed(() => {
   let hrs = date.getHours();
   let mnts = date.getMinutes();
   let scnds = date.getSeconds();
-  let result = `${dows[dow]} ${hrs}:${mnts}:${scnds} - ${day}.${month+1}.${year}`;
+  let result = `${dows[dow]} ${hrs}:${mnts}:${scnds} - ${day.toString().length == 1 ? '0' + day : day}.${month+1}.${year}`;
   return result;
 })
 
@@ -27,10 +28,10 @@ const dateString = computed(() => {
 <template>
   <Message>
     <template #header>
-      Booking from {{ dateString }}
+      Bestellung / Buchungstype {{ dateString }}
     </template>
+    <AccountTagList :accounts="props.booking.account"></AccountTagList>
 
-    Booking for: {{ props.booking.account.getFullName() }} <br>
     Booking Total: {{ props.booking.getTotals()[0] }} <br>
     Booking Tax: {{ props.booking.getTotals()[1] }} <br>
     <div v-for="product in props.booking.products">

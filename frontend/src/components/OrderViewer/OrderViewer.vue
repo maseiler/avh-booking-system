@@ -1,34 +1,27 @@
 <template>
-  <div class="order message is-info">
+  <article class="order message is-info">
 
     <div class="message-header" @click="toggleOrderDetails">
       <span>
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon details" :icon="['fas', 'arrow-up-short-wide']" />
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon" :icon="['fas', 'arrow-down-short-wide']" />
-        {{ $t('transaction.cart') }}
+        {{ $t('transaction.cart') }} {{ dateString }}
       </span>
-      <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" :title="$t('transaction.discardCartTooltip')"></button>
+      <button v-if="accounts.length > 0 && allowEdit" class="delete" @click="cancelOrder" :title="$t('transaction.discardCartTooltip')"></button>
     </div>
 
     <div :class="showOrderDetails ? 'showDetails' : ''" class="message-body fixed-grid has-3-cols">
-      <div class="selectedAccounts">
-        <div class="tag is-primary is-medium" v-for="account in account$.selected">
-          {{ account.getFullName() }}
-          <button class="delete is-small" @click="unselectAccount(account as Account)"></button>
-        </div>
-      </div>
+      <AccountTagList :accounts="accounts" :allowEdit="allowEdit" @unselect="(a) => unselectAccount(a)"></AccountTagList>
 
-      <CartList @cancelOrder="cancelOrder()"/>
+      <CartList  :allowEdit="allowEdit" :contents="contents" />
+      <CartSums :totals="totals" v-if="accounts.length > 0"/>
+      <CartControl v-if="allowEdit && accounts.length > 0" @cancelOrder="cancelOrder"/>
     </div>
     <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
-  </div>
+  </article>
 </template>
 
 <style scoped>
-
-.selectedAccounts{
-  margin-bottom:.75rem;
-}
 .order{
   position:relative;
 }
@@ -51,7 +44,7 @@
 }
 .message-body{
   display:none;
-  position:absolute;
+  /* position:absolute; */
   width:100%;
   z-index:20;
   /* background-color: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l)); */
@@ -104,17 +97,52 @@
   }
   .message-body{
     display:block;
-    /* position:static; */
   }
 }
 </style>
 
+<script lang="ts" setup>
+import type { BookingTotals } from '../../composables/booking';
+import { Account } from '../../composables/account.ts';
+import CartContent from '../../composables/cartContent.ts';
+import { computed } from 'vue';
+
+const props = defineProps<{
+  totals: BookingTotals,
+  accounts: Account[],
+  contents: CartContent[],
+  allowEdit: Boolean,
+  timestamp?: string,
+}>()
+
+const dateString = computed(() => {
+  if(!props.timestamp){
+    return 
+  }
+  let date = new Date(props.timestamp);
+  let dow = date.getDay();
+  let dows = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  let day = date.getDate();
+  let month = date.getMonth();
+  let year = date.getFullYear();
+  let hrs = date.getHours();
+  let mnts = date.getMinutes();
+  let scnds = date.getSeconds();
+  let result = `${dows[dow]} ${day.toString().length == 1 ? '0' + day : day}.${(month+1).toString().length == 1 ? '0' + (month+1) : month}.${year} - ${hrs}:${mnts}:${scnds}`;
+  return result;
+})
+
+</script>
+
+
 <script lang="ts">
 import { useAccountStore } from '../../store/AccountStore';
-import type { Account } from '../../composables/account';
 import { useCartStore } from '../../store/CartStore';
 import CartList from './CartList.vue';
 import Message from '../../composables/elements/Message.vue';
+import AccountTagList from './AccountTagList.vue';
+import CartSums from './CartSums.vue';
+import CartControl from './CartControl.vue';
 
 
 export default {
@@ -127,7 +155,10 @@ export default {
   },
   components: {
     CartList,
-    Message
+    Message,
+    AccountTagList,
+    CartSums,
+    CartControl
   },
   methods: {
     unselectAccount(account: Account){

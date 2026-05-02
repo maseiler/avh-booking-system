@@ -12,7 +12,7 @@ export const useBookingStore = defineStore('booking', {
     }
   },
   actions:{
-    addBooking(cartContent: CartContent[], account: Account, type: BookingType, reference?: Booking){
+    addBooking(cartContent: CartContent[], account: Account[], type: BookingType, reference?: Booking){
       const timestamp = new Date(Date.now()).toISOString();
       let newBooking = new Booking({
         products: cartContent,

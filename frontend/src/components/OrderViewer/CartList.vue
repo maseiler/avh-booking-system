@@ -1,6 +1,20 @@
+<script lang="ts" setup>
+import { useAccountStore } from '../../store/AccountStore';
+import CartContent from '../../composables/cartContent.ts';
+import CartProduct from './CartProduct.vue';
+
+const account$ = useAccountStore();
+
+const props = defineProps<{
+  contents: CartContent[],
+  allowEdit: Boolean
+}>()
+
+</script>
+
 <template>
-<p v-if="account$.selected.length == 0">{{ $t('messages.selectAccount') }}</p>
-<div class="cartList" v-if="account$.selected.length != 0">
+<p v-if="allowEdit && account$.selected.length == 0">{{ $t('messages.selectAccount') }}</p>
+<div class="cartList" v-if="account$.selected.length != 0 || !allowEdit">
   <div class="table-container">
     <table class="table is-striped">
       <thead><tr>
@@ -11,17 +25,11 @@
         <th class="has-text-right">{{ $t('transaction.amount') }}</th>
       </tr></thead>
       <tbody>
-        <CartProduct v-for="content in cart$.cartContents" :content="content"/>
+        <CartProduct  :allowEdit="allowEdit" v-for="content in contents" :content="content"/>
       </tbody>
     </table>
-  </div>
-  
+  </div>  
   <div class="dblhr"></div>
-
-  <CartSums />
-  <CartControl @cancelOrder="$emit('cancelOrder')"/>
-  <!-- Component OrderControls -->
-  
 </div>
 </template>
 
@@ -45,28 +53,3 @@
   margin-bottom: .5rem;
 }
 </style>
-
-<script lang="ts">
-import { useAccountStore } from '../../store/AccountStore';
-import { useCartStore } from '../../store/CartStore';
-import CartControl from './CartControl.vue';
-import CartProduct from './CartProduct.vue';
-import CartSums from './CartSums.vue';
-
-export default {
-  data() {
-    return {
-      account$: useAccountStore(),
-      cart$: useCartStore(),
-    }
-  },
-  components:{
-    CartProduct,
-    CartSums,
-    CartControl
-  },
-  emits: {
-    cancelOrder: null
-  }
-}
-</script>

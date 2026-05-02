@@ -1,11 +1,20 @@
+<script lang="ts" setup>
+import type { BookingTotals } from '../../composables/booking';
+
+const props = defineProps<{
+  totals: BookingTotals
+}>()
+</script>
+
+
 <template>
 <p class="cartSum">
   {{ $t('transaction.sum') }}:
-  <span>{{ $n(cart$.getTotals[0] / 100, 'currency') }}</span>
+  <span>{{ $n(totals[0] / 100, 'currency') }}</span>
 </p>
 <p class="cartTax">
   {{ $t('transaction.partVat') }}:
-  <span>{{ $n(cart$.getTotals[1] / 100, 'currency') }}</span>
+  <span>{{ $n(totals[1] / 100, 'currency') }}</span>
 </p>
 </template>
 
@@ -29,14 +38,3 @@
 }
 </style>
 
-<script lang="ts">
-import { useCartStore } from '../../store/CartStore';
-
-export default {
-  data() {
-    return {
-      cart$: useCartStore()
-    }
-  },
-}
-</script>

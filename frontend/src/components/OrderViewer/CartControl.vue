@@ -35,7 +35,7 @@
 
   <Message
   class="is-danger hint"
-  v-if="cart$.isOverdrawn"
+  v-if="cart$.isOverdrawn" 
   >
     <icon :icon="['fas', 'warning']" />
     {{ $t('transaction.allowanceExceeded') }} <br>
@@ -73,7 +73,7 @@ export default{
   },
   methods: {
     checkoutOrder(){
-      this.booking$.addBooking(this.cart$.cartContents, this.account$.selected[0], 0)
+      this.booking$.addBooking(this.cart$.cartContents, this.account$.selected, 0)
       this.$emit('cancelOrder')
       // ToDo: this
     }
