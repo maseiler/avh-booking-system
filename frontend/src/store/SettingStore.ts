@@ -22,7 +22,7 @@ export const useSettingStore = defineStore('setting', {
       let foundSetting = this.settings.filter((set) => set.key == key)[0];
       return foundSetting == undefined || foundSetting.value == "" ? -1 : foundSetting;
     },
-    set(key: string, value: string){
+    set(key: string, value: string | ArrayBuffer | null){
       let newSetting = {
         key: key,
         value: value
