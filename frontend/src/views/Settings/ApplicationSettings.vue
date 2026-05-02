@@ -24,7 +24,22 @@ const companySlogan =  computed( {
   }
 });
 
-const companyLogo = ref("");
+const companyLogo = computed({
+  get(){
+    if (setting$.get("compLogo") == -1){
+      return null;
+    }
+    return setting$.get("compLogo").value;
+  },
+  set(newValue: string | ArrayBuffer | null) {
+    if(newValue.length / 1024 > 200) {
+      console.error("New Image uploaded with size (KB)", newValue.length / 1024, "This is too much. Reduce image Size so that is is below 200 KB.");
+      return;
+    }
+    setting$.set("compLogo", newValue);
+  }
+});
+
 function changeLogo(e){
   const reader = new FileReader();
   reader.addEventListener("load", () => {
@@ -84,8 +99,8 @@ function changeIcon(e){
   </div>
 
   <div class="columns">
-    <div class="column is-3">
-      Logo (.png below 100kb)
+    <div class="column is-3 has-start-align">
+      Logo (.png/.svg below 200kb)
     </div>
     <div class="column">
       <p class="control has-icons-left">
@@ -95,13 +110,13 @@ function changeIcon(e){
         </span>
       </p>
       <!-- Logo Preview -->
-      <img width="150px" :src="companyLogo.valueOf()">
+      <img width="150px" v-if="!(companyLogo == -1 || companyLogo == null)" :src="companyLogo">
 
     </div>
   </div>
 
   <div class="columns">
-    <div class="column is-3">
+    <div class="column is-3 has-start-align">
       Icon
     </div>
     <div class="column">
@@ -190,5 +205,9 @@ function changeIcon(e){
 <style scoped>
 .columns{
   align-items: center;
+}
+.has-start-align {
+  align-self: start;
+  margin-top:.5em;
 }
 </style>
