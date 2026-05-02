@@ -1,11 +1,21 @@
 import { defineStore } from "pinia";
 import { type Setting } from "../composables/setting";
 
+
 export const useSettingStore = defineStore('setting', {
   state: () => {
       return {
-        settings: [] as Setting[]
+        settings: [] as Setting[],
+        clientId: "",
       }
+  },
+  getters: {
+    needsSetup(): boolean{
+      return (!this.hasClientId) || false;
+    },
+    hasClientId(): boolean{
+      return this.clientId != "";
+    }
   },
   actions: {
     get(key: string){
@@ -38,5 +48,9 @@ export const useSettingStore = defineStore('setting', {
         })
       })
     }
+  },
+  persist:{
+    storage: localStorage,
+    pick: ['clientId'],
   }
 })
