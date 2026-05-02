@@ -1,6 +1,9 @@
 <template>
   <section class="fixed-grid has-1-cols-mobile has-3-cols-tablet">
     <div class="grid">
+      <div style="position:absolute; z-index:-50; left:50%; transform: translateX(-50%); opacity:.6;">
+        <img v-if="companyLogo != null" :src="companyLogo"></img>
+      </div>
     <OrderViewer />
 
     <!-- ToDo? Do this as a own component? -->
@@ -76,6 +79,7 @@ import AccountSelector from '../components/AccountSelector/AccountSelector.vue';
 import OrderViewer from '../components/OrderViewer/OrderViewer.vue';
 import { useAccountStore } from '../store/AccountStore';
 import ProductSelector from '../components/ProductSelector/ProductSelector.vue';
+import { useSettingStore } from '../store/SettingStore';
 
   export default {
     components: {
@@ -86,12 +90,21 @@ import ProductSelector from '../components/ProductSelector/ProductSelector.vue';
     data() {
       return {
         visiblePart: 0 as number,
-        account$: useAccountStore()
+        account$: useAccountStore(),
+        setting$: useSettingStore(),
       }  
     },
     methods: {
       setVisiblePart(partNr: number){
         this.visiblePart = partNr;
+      }
+    },
+    computed: {
+      companyLogo(){
+        if (this.setting$.get("compLogo") == -1){
+          return null;
+        }
+        return this.setting$.get("compLogo").value;
       }
     }
   }
