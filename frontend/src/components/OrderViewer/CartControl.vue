@@ -2,34 +2,34 @@
 
   <Buttons>
     <Button
-    class="is-warning is-inverted is-outlined"
+    class="is-warning"
     @click="$emit('cancelOrder')"
-    title="discard cart and unselect account"
+    :title="$t('transaction.discardCartTooltip')"
     :fa-icon="['fas', 'trash']"
     icon-position="left"
     >
-    Cancel Order
+    {{ $t('transaction.discardCart') }}
     </Button>
 
     <Button
     v-if="!cart$.isOverdrawn"
-    class="is-success is-inverted is-outlined"
-    @click="checkoutOrder" 
-    title="discard cart and unselect account"
+    class="is-primary"
+    @click="checkoutOrder"
+    :title="$t('transaction.bookNowTooltip')"
     :fa-icon="['fas', 'beer']"
     icon-position="right"
     >
-    Book now
+    {{ $t('transaction.bookNow') }}
     </Button>
 
     <Button
     v-if="cart$.isOverdrawn"
-    class="is-inverted is-danger is-outlined"
-    title="discard cart and unselect account"
+    class="is-danger"
+    :title="$t('transaction.payNowTooltip')"
     :fa-icon="['fas', 'coins']"
     icon-position="right"
     >
-    Pay for this order
+    {{ $t('transaction.payNow') }}
     </Button>
   </Buttons>
 
@@ -38,8 +38,8 @@
   v-if="cart$.isOverdrawn"
   >
     <icon :icon="['fas', 'warning']" />
-    The Cart exceeds the allowance! <br>
-    <router-link to="/payment">Top up the account</router-link> or pay for this order immediately with the button above.
+    {{ $t('transaction.allowanceExceeded') }} <br>
+    <router-link to="/payment">{{ $t('transaction.topUp') }}</router-link> {{ $t('transaction.orPayNow') }}
   </Message>
 </template>
 

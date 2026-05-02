@@ -5,14 +5,14 @@
       <span>
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon details" :icon="['fas', 'arrow-up-short-wide']" />
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon" :icon="['fas', 'arrow-down-short-wide']" />
-        New Order
+        {{ $t('transaction.cart') }}
       </span>
-      <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" title="discard cart and unselect account"></button>
+      <button v-if="account$.selected.length > 0" class="delete" @click="cancelOrder" :title="$t('transaction.discardCartTooltip')"></button>
     </div>
 
     <div :class="showOrderDetails ? 'showDetails' : ''" class="message-body fixed-grid has-3-cols">
       <div class="selectedAccounts">
-        <div class="tag" v-for="account in account$.selected">
+        <div class="tag is-primary is-medium" v-for="account in account$.selected">
           {{ account.getFullName() }}
           <button class="delete is-small" @click="unselectAccount(account as Account)"></button>
         </div>
@@ -26,11 +26,8 @@
 
 <style scoped>
 
-.buttons{
-  justify-content: end;
-}
 .selectedAccounts{
-  margin-bottom:.5rem;
+  margin-bottom:.75rem;
 }
 .order{
   position:relative;
@@ -49,12 +46,17 @@
 }
 .message-header{
   cursor:pointer;
+  font-size:1.05rem;
+  letter-spacing: 0.02em;
 }
 .message-body{
   display:none;
   position:absolute;
   width:100%;
   z-index:20;
+  /* background-color: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l)); */
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  border-top: none;
 }
 .order-ripped-teaser{
   --_bg-color:hsl(var(--bulma-message-h),var(--bulma-message-s),var(--bulma-message-background-l));
@@ -84,6 +86,10 @@
     display:block;
   }
 }
+.tag{
+  margin-bottom:.25em;
+  margin-right:.25em;
+}
 @media screen and (min-width: 768px) {
   .order-icon,
   .showDetails.order-icon.details{
@@ -98,6 +104,7 @@
   }
   .message-body{
     display:block;
+    /* position:static; */
   }
 }
 </style>

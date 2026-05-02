@@ -1,6 +1,6 @@
 <template>
   <p class="control has-icons-left has-icons-right">
-    <input v-model="search" type="text" class="input" placeholder="Search" />
+    <input v-model="search" type="text" class="input" :placeholder="$t('search')" />
     <span class="icon is-left">
       <icon :icon="['fas', 'search']" />
     </span>
@@ -10,7 +10,7 @@
   </p>
   <!-- Category Filter -->
   <div class="tags is-flex is-justify-content-space-around category-filter">
-    <button class="tag is-hoverable" :class="selectedCategory == 0 ? 'is-primary' : ''" @click="selectCategory(0)">All</button>
+    <button class="tag is-hoverable" :class="selectedCategory == 0 ? 'is-primary' : ''" @click="selectCategory(0)">{{ $t('all') }}</button>
     <button v-for="category in categories" class="tag is-hoverable" :class="selectedCategory == category.id ? 'is-primary' : ''" @click="selectCategory(category.id)">
       <span class="icon"><icon :icon="category.icon"/></span>
       <span>{{ category.title }}</span>

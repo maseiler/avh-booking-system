@@ -35,19 +35,20 @@
 </template>
 
 <script lang="ts">
+import { useSettingStore } from '../store/SettingStore';
+
 export default {
-  emits: ['setup-complete'],
   data() {
     return {
       locationName: '',
+      setting$: useSettingStore()
     };
   },
   methods: {
     save() {
       const name = this.locationName.trim();
       if (!name) return;
-      localStorage.setItem('avhbs_client_id', name);
-      this.$emit('setup-complete');
+      this.setting$.clientId = name;
     },
   },
 };

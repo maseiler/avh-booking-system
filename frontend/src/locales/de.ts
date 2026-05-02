@@ -1,210 +1,50 @@
 const de = {
-  "home":{
-    "title": "Akademischer Verein Hütte",
-    "subtitle": "Buchungssystem",
-    "slogan": "Vivat Crescat Floreat Hütte"
+  "search": "Suchen",
+  "quantity": "Anzahl",
+  "all": "Alle",
+  "messages": {
+    "selectAccount": "Bitte wähle ein Konto aus.",
   },
-  "admin":{
-    "menuLabel": "Administration",
-    "loginTitle":"Als Admin einloggen",
-    "userSettings":{
-      "menuLabel":"Benutzereinstellungen",
-      "deleteUserTitle":"Benutzer löschen",
-      "selectFirst":"Zuerst Nutzer auswählen",
-      "deleteShure":"Möchtest du das wirklich Löschen?",
-      "add":"Benutzer hinzufügen",
-      "modify":"Benutzer bearbeiten"
+  "menu":{
+    "home": "Start",
+    "booking": "Buchen",
+    "payment": "Zahlen",
+    "orders": "Bestellungen",
+    "stats": "Statistiken",
+    "settings": {
+      "menuTitle": "Einstellungen",
+      "item": "Wareneinstellungen",
+      "account": "Kontoeinstellungen",
+      "payment": "Zahlungseinsntellungen",
+      "system": "Systemeinstellungen"
     },
-    "itemSettings":{
-      "menuLabel": "Wareneinstellungen",
-      "deleteItemTitle":"Ware Löschen",
-      "selectFirst":"Zuerst Elemet auswählen.",
-      "deleteShure":"Möchtest du das wirklich Löschen?",
-      "add":"Ware hinzufügen",
-      "modify":"Ware bearbeiten"
-    },
-    "bookingSettings":{
-      "menuLabel":"Buchungseinstellungen",
-      "getBookEntries":"Buchungseinträge abfragen",
-      "lastN":"Letzte N",
-      "ofUser":"Von Benutzer",
-      "ofItem":"Von Ware",
-      "userPayments":"Benutzer Zahlungen",
-      "undoEntry":"Eintrag zurücknehmen",
-      "delEntry":"Eintrag löschen"
-    },
-    "otherSettings":{
-      "menuLabel": "Sonstige Einstellungen"
-    },
-    "feedbackList": "Rückmeldungen",
-    "reportSettings":{
-      "menuLabel":"Berichteinstellungen",
-      "sendCurrentDebtsUntil":"Bericht beinhaltet bis",
-      "sendCurrentDebts":"Sende Schuldenbericht",
-      "eMailLabel" : "E-Mail Einstellungen",
-      "eMailServer": "E-Mail Server Host",
-      "eMailPort": "E-Mail Server Port",
-      "eMailUser": "E-Mail Benutzername",
-      "eMailPass": "E-Mail Passwort",
-      "eMailSender": "E-Mail Absendername",
-      "reportLabel": "E-Mail Berichte",
-      "reportReceiver": "Bericht Empfänger"
-    },
-    "addUser":{
-      "title":"Neuen Benutzer hinzufügen"
-    },
-    "password":{
-      "old":"Altes Passwort",
-      "new":"Neues Passwort",
-      "confirm":"Neues Passwort bestätigen",
-      "change":"Passwort ändern"
-    },
-    "paymentSettings": {
-      "menuLabel": "Zahlungseinstellungen",
-      "stripeAPILabel": "Stripe API Schlüssel",
-      "stripeCardReaderLabel": "Kartenlesegerät"
-    }
+    "login": "Log In",
   },
-  "statistics":{
-    "menuLabel": "Statistiken",
-    "showBookingsStats":"Buchungseinträge",
-    "showFavoriteItemsStats":"Lieblingswaren",
-    "numDays":"# Tage",
-    "createChart":"Erzeuge Diagramm",
-    "selectDays":"Wähle die Anzahl an vergangenen Tagen, die angezeigt werden sollen",
-    "clickToDisEn":"Klicke auf eine Ware um sie zu aktivieren oder deaktivieren",
-    "from":"Von",
-    "to":"Bis",
-    "n":"N"
+  "booking": {
+    "accounts": "Konten",
+    "products": "Produkte"
   },
-  "feedback":{
-    "button": "Rückmeldung",
-    "title": "Rückmeldung",
-    "subtitle": "Du hast Kommentare, einen Fehler gefunden oder eine Idee für eine neue Funktion? Lass es uns wissen!",
-    "PHName": "Name (optional)",
-    "PHComment": "Kommentar hier..."
+  "settings":{
+    "language": "Sprache",
+    "de": "deutsch",
+    "en": "englisch",
   },
-  "generic":{
-    "submit": "Senden",
-    "cancel": "Abbrechen",
-    "alcoholic":"alkoholisch",
-    "nonAlcoholic":"alkoholfrei",
-    "food":"Essen",
-    "favorites":"Favoriten",
-    "refresh":"Neu laden",
-    "comment":"Kommentar",
-    "credit":"Guthaben",
-    "debt":"Schulden",
-    "balance":"Saldo",
-    "max":"Max",
-    "id":"ID",
-    "download":"Herunterladen",
-    "change":"Ändern",
-    "delete":"Löschen",
-    "name":"Name",
-    "text":"Text",
-    "modify":"Ändern"
-  },
-  "navigation":{
-    "home":"Start",
-    "booking": "Buchungen",
-    "statistics": "Statistiken"
-  },
-  "notification":{
-    "success":"Erfolgreich",
-    "error":"Fehler",
-    "processing":"Wird bearbeitet"
-  },
-  "booking":{
-    "addItem":{
-      "title":"Neue Ware hinzufügen"
-    },
-    "addUser":{
-      "title":"Neuen Benutzer hinzufügen"
-    },
-    "search":{
-      "items":"Waren durchsuchen",
-      "users":"Benutzer durchsuchen"
-    },
-    "entries":{
-      "payment":"Zahlung",
-      "undid":"Ungemachter Buchungseintrag"
-    },
-    "payment":{
-      "title":"Zahlung",
-      "htp":"muss noch bezahlen",
-      "subtitle":"Bitte tu das Geld in die Kasse!",
-      "cash":"Bar",
-      "card":"Karte",
-      "lastPayment":"Letzte Zahlungen",
-      "timestamp":"Zeitstempel",
-      "recharge":{
-        "title":"Aufladen",
-        "sub1":"kann nicht bezahlen.",
-        "sub2":"Verfügbares Guthaben ist",
-        "sub3":"€",
-        "addCreditNotice":"Um Guthaben aufzuladen, Betrag unten eingeben und bezahlen."
-      },
-      "pay":"Bezahlen",
-      "method":"Zahlungsmethode",
-      "processing": "Bezahlung im Gange",
-      "failed": "Zahlung fehlgeschlagen"
-    }
-  },
-  "item":{
-    "item":"Ware",
-    "name":"Name",
-    "price":"Preis",
-    "size":"Größe",
-    "unit":"Einheit",
-    "unitL":"l",
-    "unitPiece":"Stück",
-    "type":"Typ",
-    "enabled":"Aktiviert"
-  },
-  "user":{
-    "user":"Benutzer",
-    "status":"Status",
-    "nickname":"Biername",
-    "firstName":"Vorname",
-    "lastName":"Nachname",
-    "boatName":"Bootsname",
-    "eMail":"E-Mail",
-    "phoneNumber":"Telefonnummer",
-    "password":"Passwort"
-  },
-  "cart":{
-    "amount":"Anzahl",
-    "checkout":"Einbuchen",
-    "total":"Summe"
-  },
-  "messages":{
-    "success":{
-      "newUserAdded":"Neuer Benutzer wurde hinzugefügt",
-      "newItemAdded":"Neues Item wurde hinzugefügt",
-      "checkoutFrom":"Buchung von",
-      "paid":"bezahlte",
-      "newFeedbackAdded":"Dankeschön! ❤",
-      "passwordChangedAdmin":"Passwort geändert. \n \n Bitte stelle sicher, dass alle verantwortlichen Personen das neue Passwort kennen.",
-      "deletedItem":"Gelöschte Ware",
-      "deleteUser":"Gelöschter Benutzer",
-      "deleteFeedback":"Feedback Eintrag gelöscht.",
-      "modifiedItem":"Bearbeitete Ware",
-      "modifiedUser":"Bearbeiteter Benutzer",
-      "emailSend":"E-Mail wurde gesendet"
-    },
-    "failure":{
-      "noFavoriteItems":"Es konnten keine Favoriten abgerufen werden.",
-      "negativePaymentNotAllowed":"Zahlungen die kleiner oder gleich 0,50 sind, sind nicht erlaubt.",
-      "error":"Error",
-      "wrongPassword":"Falsches Passwort?",
-      "noDebts":"Es konnten keine Schulden abgerufen werden.",
-      "submitFeedback":"Senden des Feedbacks war nicht erfolgreich.",
-      "passwordNoMatch":"Die neuen Passwörter stimmen nicht überein.",
-      "itemDelete":"Ware konnte nicht gelöscht werden.",
-      "userDelete":"Benutzer konnte nicht gelöscht werden.",
-      "feedbackDelete":"Feedback Eintrag konnte nicht gelöscht werden."
-    }
+  "transaction": {
+    "cart": "Warenkorb",
+    "sum": "Summe",
+    "vat": "Steuer",
+    "price": "Einzelpreis",
+    "amount": "Betrag",
+    "partVat": "Davon Steuer",
+    "discardCart": "Buchung abbrechen",
+    "discardCartTooltip": "Warenkorb leeren und Kontoselektion zurücksetzen",
+    "bookNow": "Einbuchen",
+    "bookNowTooltip": "",
+    "payNow": "Buchung direkt bezahlen",
+    "payNowTooltip": "Direkt bezahlen, ohne Guthaben zu benutzen",
+    "allowanceExceeded": "Der Warenkorb überschreitet das Guthaben!",
+    "topUp": "Lade Guthaben auf das Konto",
+    "orPayNow": "oder bezahle direkt für die Buchung mit dem obigen Knopf.",
   }
 }
 export default de

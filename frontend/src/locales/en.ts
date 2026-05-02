@@ -1,4 +1,9 @@
 const en = {
+  "settings":{
+    "language": "Language",
+    "de": "german",
+    "en": "english",
+  },
   "home":{
     "title": "Academic Association Hütte",
     "subtitle": "Booking System",

@@ -1,5 +1,5 @@
 <template>
-  <div class="panel" v-if="account$.selected.length > 0">
+  <div class="panel is-primary" v-if="account$.selected.length > 0">
     <div class="panel-heading">
       <span>{{ account$.selected[0].getFullName() }}</span>
       <button class="delete" aria-label="delete" @click="account$.unselect();"></button>
@@ -14,7 +14,7 @@
         </div>
         <div class="balance-area">
           <span>Balance</span><br>
-          <span class="balance">{{ $n(account$.selected[0].balance / 100, 'currency', 'de-DE') }}</span>
+          <span class="balance" :class="account$.selected[0].balance <= (-1* account$.selected[0].maxDebt) ? 'has-text-danger' : 'has-text-primary'">{{ $n(account$.selected[0].balance / 100, 'currency') }}</span>
         </div>
       </div>
 
@@ -23,7 +23,7 @@
           List Orders
         </Button>
 
-        <Button class="is-success is-inverted is-outlined" :fa-icon="['fas', 'coins']" icon-position="right">
+        <Button class="is-success" :fa-icon="['fas', 'coins']" icon-position="right">
           Pay now
         </Button>
       </Buttons>
@@ -70,6 +70,7 @@
   display:grid;
   grid-template-columns: 1.5rem auto;
   align-items: center;
+  gap: 0.1rem 0.25rem;
 }
 .columns{
   width:100%;
@@ -78,12 +79,18 @@
   max-width: 80ch;
   margin-inline: auto;
   position:relative;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.panel-heading{
+  font-size:1.05rem;
+  letter-spacing: 0.02em;
 }
 .panel-block{
   display:block;
+  background-color: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
 }
 .buttons{
-  margin-top:.5rem;
+  margin-top:.75rem;
   justify-content: end;
 }
 .balance-area{
@@ -91,7 +98,7 @@
 }
 .balance{
   font-size:2rem;
-  font-weight:600;
+  font-weight:700;
 }
 .delete{
   position:absolute;

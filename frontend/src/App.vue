@@ -1,5 +1,9 @@
 <template>
-  <ClientSetup v-if="needsSetup" @setup-complete="onSetupComplete" />
+  <!-- ToDo: Maybe a whole 'Welcome Experience' should be introduced.
+   It could just be limited to setting the ClientId, when evrything else is done.
+   But if this is the first installation, maybe it would be nice to be able to be redirected to the
+   Admin Settings directly. -->
+  <ClientSetup v-if="setting$.needsSetup" />
   <template v-else>
     <DevModeBar v-if="dev" />
     <MainNavigation />
@@ -12,6 +16,9 @@ import MainNavigation from './components/MainNavigation.vue';
 import DevModeBar from './components/DevModeBar.vue';
 import ClientSetup from './views/ClientSetup.vue';
 import { useSocketStore } from './store/socketStore';
+import { useSettingStore } from './store/SettingStore';
+import { useThemeStore } from './store/themeStore';
+
 
 export default {
   components: {
@@ -20,23 +27,21 @@ export default {
     ClientSetup,
   },
   data() {
-    const clientId = localStorage.getItem('avhbs_client_id');
     return {
       dev: false,
-      needsSetup: !clientId,
-      socket$: clientId ? useSocketStore() : null,
+      setting$: useSettingStore(),
+      socket$: useSocketStore(),
+      theme$: useThemeStore(),
     };
   },
   mounted() {
     this.dev = import.meta.env.DEV;
-    if (this.socket$) {
+    if (this.socket$ && !this.setting$.needsSetup) {
       this.socket$.getAllFromDb();
     }
+    this.theme$.init()
   },
   methods: {
-    onSetupComplete() {
-      location.reload();
-    },
   },
 };
 </script>

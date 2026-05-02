@@ -7,7 +7,7 @@
           v-for="account in dict"
           @mousemove="changeSelectMode"
           @click="selectAccount($event, account)"
-          :class="account$.selected.includes(account) ? 'is-primary' : ''"
+          :class="account.getShortName() + (account$.selected.includes(account) ? ' is-primary' : '')"
           title="select account">
           {{ account.getShortName() }}
         </Button>
@@ -33,6 +33,15 @@
     margin-bottom:0;
   }
 }
+
+button.Brenner {
+  cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40px" height="30px" style="font-size: 20px;"><text y="15">🔥</text></svg>'), auto;
+}
+button.Käptn {
+  cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40px" height="30px" style="font-size: 20px;"><text y="15">⚓</text></svg>'), auto;
+}
+
+
 </style>
 
 <script lang="ts">
@@ -66,22 +75,22 @@ export default {
     accountsInOrder(): dictionary {
       var dict: dictionary = {};
       this.accounts?.forEach(acc => {
-      var char = acc.getShortName()[0].toUpperCase();
-      var charCode = char.charCodeAt(0);
-      if (charCode >= 65 && charCode <= 90) { // A-Z
-      } else if (charCode >= 48 && charCode <= 57) { // 0-9
-        char = "#";
-      } else {
-        char = "?";
-      }
-      if (dict[char] === undefined) {
-        dict[char] = [acc]
-      } else {
-        dict[char].push(acc);
-      }
-    })
-    return dict;
-    }
+        var char = acc.getShortName()[0].toUpperCase();
+        var charCode = char.charCodeAt(0);
+        if (charCode >= 65 && charCode <= 90) { // A-Z
+        } else if (charCode >= 48 && charCode <= 57) { // 0-9
+          char = "#";
+        } else {
+          char = "?";
+        }
+        if (dict[char] === undefined) {
+          dict[char] = [acc]
+        } else {
+          dict[char].push(acc);
+        }
+      })
+      return dict;
+    },
   },
   components: {
     Button,

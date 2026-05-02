@@ -1,6 +1,6 @@
 <template>
   <p class="control has-icons-left has-icons-right">
-    <input v-model="search" type="text" class="input" placeholder="Search" />
+    <input v-model="search" type="text" class="input" :placeholder="$t('search')" />
     <span class="icon is-left">
       <icon :icon="['fas', 'search']" />
     </span>

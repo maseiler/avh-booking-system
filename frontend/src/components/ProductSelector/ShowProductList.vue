@@ -33,7 +33,7 @@
               <span>{{ visibility.getCategory()?.title }}</span>
             </button>
           </td>
-          <td>{{$n(product.price / 100, 'currency', 'de-DE')}}</td>
+          <td>{{$n(product.price / 100, 'currency')}}</td>
           <td>{{product.getVat()?.rate}}%</td>
           <td v-show="hasEditProductRights">
             <button class="tag">
