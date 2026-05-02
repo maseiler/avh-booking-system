@@ -22,16 +22,18 @@ export const useThemeStore = defineStore('theme', {
       this.currentTheme = flavor
       document.documentElement.setAttribute('data-theme', flavor)
       document.documentElement.setAttribute('data-bulma-theme', flavor === 'catppuccin-latte' ? 'light' : 'dark')
-      localStorage.setItem('avhbs-theme', flavor)
     },
     init() {
-      const saved = localStorage.getItem('avhbs-theme') as ThemeFlavor
-      if (VALID_THEMES.includes(saved)) {
-        this.applyTheme(saved)
+      if (VALID_THEMES.includes(this.currentTheme)) {
+        this.applyTheme(this.currentTheme)
         return
       }
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       this.applyTheme(prefersDark ? 'catppuccin-mocha' : 'catppuccin-latte')
     }
+  },
+  persist: {
+    storage: localStorage,
+    pick: ['currentTheme'],
   }
 })

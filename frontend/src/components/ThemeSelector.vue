@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       theme$: useThemeStore(),
+      // ToDo: Get the available Themes from ThemeStore
       themes: [
         { key: 'catppuccin-latte',     label: 'Latte' },
         { key: 'catppuccin-frappe',    label: 'Frappé' },

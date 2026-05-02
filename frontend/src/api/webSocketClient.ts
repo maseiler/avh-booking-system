@@ -11,6 +11,7 @@ import {useProductStore} from "../store/ProductStore.ts";
 import {useLocationStore} from "../store/LocationStore.ts";
 import {useProductVisibilityStore} from "../store/ProductVisibilityStore.ts";
 import type { ProductVisibility } from "../composables/productVisibility.ts";
+import { useSettingStore } from "../store/SettingStore.ts";
 
 interface WebSocketClientOptions {
     reconnectInterval?: number;
@@ -83,7 +84,7 @@ export class WebSocketClient {
 
     connect(): void {
         let url = this.url;
-        const clientId = localStorage.getItem('avhbs_client_id');
+        const clientId = useSettingStore().clientId;
         if (clientId && clientId.length > 0) {
             url += "?id=" + clientId;
         }
