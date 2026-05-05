@@ -87,7 +87,9 @@ func (s *Service) ReadPump(c *Client) {
 				continue
 			}
 
-			c.Hub.Broadcast <- message
+			if message != nil {
+				c.Hub.Broadcast <- message
+			}
 
 		default:
 			s.log.Warn("Unknown message type", slog.String("msg_type", msg.Type.String()))
