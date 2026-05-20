@@ -84,7 +84,22 @@ export const useSocketStore = defineStore("notificationStore", {
             let msg = {type: "mutation", payload: payload}
             //console.debug(msg)
             this.wsClient.send(msg)
-        }, queryCategories() {
+        },
+        addCategory(newCategory: { name: string, icon: [string, string], type: string }) {
+            let payload = {
+                "operation": "insert",
+                "table": "category",
+                "values": {
+                    "name": newCategory.name,
+                    "enabled": true,
+                    "icon": newCategory.icon,
+                    "type": newCategory.type
+                }
+            }
+            let msg = {type: "mutation", payload: payload}
+            this.wsClient.send(msg)
+        },
+        queryCategories() {
             let payload = {
                 "table": "category",
             }

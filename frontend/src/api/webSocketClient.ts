@@ -225,6 +225,10 @@ export class WebSocketClient {
                     }
                     return;
                 }
+                case 'error': {
+                    this.trigger('wsError', message.payload);
+                    return;
+                }
                 case 'broadcast' : {
                     console.info('Received broadcast');
                     // TODO check if payload exists

@@ -4,7 +4,7 @@
     <Button
       icon-position="left"
       :fa-icon="['fas', 'plus']"
-      @click="console.warn('Not yet implemented!')">
+      @click="$router.push({ name: 'CategorySettingsAdd', params: { type: 'account' } })">
       Kategorie hinzufügen
     </Button>
 

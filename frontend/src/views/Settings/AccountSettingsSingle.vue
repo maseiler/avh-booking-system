@@ -8,6 +8,7 @@ import Buttons from '../../composables/elements/Buttons.vue'
 import Button from '../../composables/elements/Button.vue'
 import { useSocketStore } from '../../store/socketStore'
 import ToggleSwitch from '../../composables/elements/ToggleSwitch.vue'
+import ErrorModal from '../../components/ErrorModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -23,6 +24,10 @@ const saveStatus = ref<'idle' | 'pending' | 'success' | 'error'>('idle')
 let saveStartTime = 0
 let saveTimeoutId: number | null = null
 let mutationHandler: ((res: any) => void) | null = null
+let wsErrorHandler: ((err: any) => void) | null = null
+
+const errorModalVisible = ref(false)
+const currentError = ref<{ code: string, message: string, details?: string } | null>(null)
 
 const isEdit = computed(() => (route.params.accountId?.toString().length ?? 0) > 0)
 const categoryIcon = computed(() => category$.byId(account.value.category)?.icon)
@@ -42,12 +47,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (mutationHandler) {
-    socket$.wsClient.off('mutationResult', mutationHandler)
-  }
-  if (saveTimeoutId !== null) {
-    window.clearTimeout(saveTimeoutId)
-  }
+  cleanupSaveListeners()
 })
 
 function actionButtonClicked() {
@@ -63,18 +63,29 @@ function actionButtonClicked() {
   socket$.addAccount(account.value)
 }
 
+function cleanupSaveListeners() {
+  if (mutationHandler) {
+    socket$.wsClient.off('mutationResult', mutationHandler)
+    mutationHandler = null
+  }
+  if (wsErrorHandler) {
+    socket$.wsClient.off('wsError', wsErrorHandler)
+    wsErrorHandler = null
+  }
+  if (saveTimeoutId !== null) {
+    window.clearTimeout(saveTimeoutId)
+    saveTimeoutId = null
+  }
+}
+
 function startSave() {
   saveStatus.value = 'pending'
   saveStartTime = Date.now()
 
-  const handler = (res: any) => {
+  mutationHandler = (res: any) => {
     if (res.table !== 'account') return
     if (isEdit.value && res.id !== account.value.id) return
-
-    socket$.wsClient.off('mutationResult', handler)
-    window.clearTimeout(saveTimeoutId!)
-    mutationHandler = null
-    saveTimeoutId = null
+    cleanupSaveListeners()
 
     const elapsed = Date.now() - saveStartTime
     window.setTimeout(() => {
@@ -85,15 +96,18 @@ function startSave() {
     }, Math.max(0, 500 - elapsed))
   }
 
-  mutationHandler = handler
-  socket$.wsClient.on('mutationResult', handler)
+  wsErrorHandler = (err: any) => {
+    cleanupSaveListeners()
+    saveStatus.value = 'idle'
+    currentError.value = err
+    errorModalVisible.value = true
+  }
+
+  socket$.wsClient.on('mutationResult', mutationHandler)
+  socket$.wsClient.on('wsError', wsErrorHandler)
 
   saveTimeoutId = window.setTimeout(() => {
-    if (mutationHandler) {
-      socket$.wsClient.off('mutationResult', mutationHandler)
-      mutationHandler = null
-    }
-    saveTimeoutId = null
+    cleanupSaveListeners()
     saveStatus.value = 'error'
     window.setTimeout(() => { saveStatus.value = 'idle' }, 500)
   }, 5000)
@@ -251,6 +265,7 @@ function startSave() {
     </div>
   </div>
 
+  <ErrorModal v-model="errorModalVisible" :error="currentError" />
 </template>
 
 <style scoped>
