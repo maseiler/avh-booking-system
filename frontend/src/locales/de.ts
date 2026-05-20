@@ -15,6 +15,7 @@ const de = {
       "menuTitle": "Einstellungen",
       "item": "Wareneinstellungen",
       "account": "Kontoeinstellungen",
+      "category": "Kategorieeinstellungen",
       "payment": "Zahlungseinsntellungen",
       "system": "Systemeinstellungen"
     },

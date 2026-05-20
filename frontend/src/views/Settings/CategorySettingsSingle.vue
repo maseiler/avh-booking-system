@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CategoryType, CategoryTypeToString, StringToCategoryType } from '../../composables/category'
+import { useCategoryStore } from '../../store/CategoryStore'
 import Buttons from '../../composables/elements/Buttons.vue'
 import Button from '../../composables/elements/Button.vue'
 import { useSocketStore } from '../../store/socketStore'
@@ -10,14 +11,18 @@ import ErrorModal from '../../components/ErrorModal.vue'
 const route = useRoute()
 const router = useRouter()
 const socket$ = useSocketStore()
+const category$ = useCategoryStore()
 
 const categoryType = computed(() => StringToCategoryType[route.params.type as string])
 const typeLabel = computed(() => categoryType.value === CategoryType.ACCOUNT ? 'Account' : 'Produkt')
-const backRoute = computed(() =>
-  categoryType.value === CategoryType.ACCOUNT
+const isEdit = computed(() => !!route.params.categoryId)
+const editId = computed(() => isEdit.value ? parseInt(route.params.categoryId as string) : null)
+const backRoute = computed(() => {
+  if (isEdit.value) return { name: 'CategorySettings' }
+  return categoryType.value === CategoryType.ACCOUNT
     ? { name: 'AccountSettings' }
     : { name: 'ProductSettings' }
-)
+})
 
 const name = ref('')
 const iconName = ref('')
@@ -32,6 +37,16 @@ let wsErrorHandler: ((err: any) => void) | null = null
 
 const errorModalVisible = ref(false)
 const currentError = ref<{ code: string, message: string, details?: string } | null>(null)
+
+onMounted(() => {
+  if (isEdit.value && editId.value !== null) {
+    const cat = category$.byId(editId.value)
+    if (cat) {
+      name.value = cat.title
+      iconName.value = Array.isArray(cat.icon) ? cat.icon[1] : (typeof cat.icon === 'string' ? cat.icon : '')
+    }
+  }
+})
 
 onBeforeUnmount(() => {
   cleanupSaveListeners()
@@ -58,6 +73,7 @@ function save() {
 
   mutationHandler = (res: any) => {
     if (res.table !== 'category') return
+    if (isEdit.value && res.id !== editId.value) return
     cleanupSaveListeners()
 
     const elapsed = Date.now() - saveStartTime
@@ -85,16 +101,26 @@ function save() {
     window.setTimeout(() => { saveStatus.value = 'idle' }, 500)
   }, 5000)
 
-  socket$.addCategory({
-    name: name.value.trim(),
-    icon: ['fas', iconName.value.trim()],
-    type: CategoryTypeToString[categoryType.value]
-  })
+  if (isEdit.value && editId.value !== null) {
+    socket$.updateCategory({
+      id: editId.value,
+      name: name.value.trim(),
+      icon: ['fas', iconName.value.trim()],
+      type: CategoryTypeToString[categoryType.value]
+    })
+  } else {
+    socket$.addCategory({
+      name: name.value.trim(),
+      icon: ['fas', iconName.value.trim()],
+      type: CategoryTypeToString[categoryType.value]
+    })
+  }
 }
 </script>
 
 <template>
-  <h1 class="title">Neue {{ typeLabel }}-Kategorie erstellen</h1>
+  <h1 class="title" v-if="isEdit">{{ typeLabel }}-Kategorie bearbeiten</h1>
+  <h1 class="title" v-else>Neue {{ typeLabel }}-Kategorie erstellen</h1>
 
   <div class="columns">
     <div class="column is-3">Name:</div>
@@ -141,7 +167,7 @@ function save() {
             icon-position="right"
             :disabled="saveStatus === 'pending' || !name.trim() || !iconName.trim()"
           >
-            Erstellen
+            {{ isEdit ? 'Speichern' : 'Erstellen' }}
           </Button>
         </Buttons>
         <span v-if="saveStatus === 'pending'" class="ml-3 icon has-text-grey">
