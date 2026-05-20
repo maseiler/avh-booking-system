@@ -54,94 +54,105 @@ onBeforeUnmount(() => {
 
   <div class="columns">
     <div class="column">
-      <h2 class="subtitle">Account-Kategorien</h2>
-      <table class="table is-fullwidth is-striped is-hoverable">
-        <thead>
-          <tr>
-            <th>Aktiv</th>
-            <th>Kategorie</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="cat in category$.accountCategories" :key="cat.id">
-            <td>
-              <div class="is-flex is-align-items-center">
-                <ToggleSwitch
-                  :model-value="cat.enabled"
-                  :disabled="pendingIds.includes(cat.id)"
-                  @update:model-value="toggleEnabled(cat)"
-                />
-                <span v-if="pendingIds.includes(cat.id)" class="icon has-text-grey ml-2">
-                  <icon :icon="['fas', 'spinner']" :spin="true" />
-                </span>
-              </div>
-            </td>
-            <td>
-              <span class="tag is-medium">
-                <span class="icon is-small"><icon :icon="cat.icon" /></span>
-                <span>{{ cat.title }}</span>
-              </span>
-            </td>
-            <td>
-              <button class="button is-small" @click="editCategory(cat.id, CategoryTypeToString[cat.type])">
-                <span class="icon is-small"><icon :icon="['fas', 'pen']" /></span>
-              </button>
-            </td>
-          </tr>
-          <tr v-if="category$.accountCategories.length === 0">
-            <td colspan="3" class="has-text-grey has-text-centered is-italic">
-              Keine Account-Kategorien vorhanden
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="panel">
+        <p class="panel-heading has-text-primary-dark">Account-Kategorien</p>
+
+        <div class="panel-block">
+
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th>Aktiv</th>
+                <th>Kategorie</th>
+                <th class="has-text-right">Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="cat in category$.accountCategories" :key="cat.id">
+                <td>
+                  <div>
+                    <ToggleSwitch
+                      :model-value="cat.enabled"
+                      :disabled="pendingIds.includes(cat.id)"
+                      @update:model-value="toggleEnabled(cat)"
+                    />
+                    <span v-if="pendingIds.includes(cat.id)" class="icon has-text-grey ml-2">
+                      <icon :icon="['fas', 'spinner']" :spin="true" />
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag is-medium">
+                    <span class="icon is-small"><icon :icon="cat.icon" /></span>
+                    <span>{{ cat.title }}</span>
+                  </span>
+                </td>
+                <td class="has-text-right">
+                  <button class="button is-small" @click="editCategory(cat.id, CategoryTypeToString[cat.type])">
+                    <span class="icon is-small"><icon :icon="['fas', 'pen']" /></span>
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="category$.accountCategories.length === 0">
+                <td colspan="3" class="has-text-grey has-text-centered is-italic">
+                  Keine Account-Kategorien vorhanden
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <div class="column">
-      <h2 class="subtitle">Produkt-Kategorien</h2>
-      <table class="table is-fullwidth is-striped is-hoverable">
-        <thead>
-          <tr>
-            <th>Aktiv</th>
-            <th>Kategorie</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="cat in category$.productCategories" :key="cat.id">
-            <td>
-              <div class="is-flex is-align-items-center">
-                <ToggleSwitch
-                  :model-value="cat.enabled"
-                  :disabled="pendingIds.includes(cat.id)"
-                  @update:model-value="toggleEnabled(cat)"
-                />
-                <span v-if="pendingIds.includes(cat.id)" class="icon has-text-grey ml-2">
-                  <icon :icon="['fas', 'spinner']" :spin="true" />
-                </span>
-              </div>
-            </td>
-            <td>
-              <span class="tag is-medium">
-                <span class="icon is-small"><icon :icon="cat.icon" /></span>
-                <span>{{ cat.title }}</span>
-              </span>
-            </td>
-            <td>
-              <button class="button is-small" @click="editCategory(cat.id, CategoryTypeToString[cat.type])">
-                <span class="icon is-small"><icon :icon="['fas', 'pen']" /></span>
-              </button>
-            </td>
-          </tr>
-          <tr v-if="category$.productCategories.length === 0">
-            <td colspan="3" class="has-text-grey has-text-centered is-italic">
-              Keine Produkt-Kategorien vorhanden
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="panel">
+        <p class="panel-heading has-text-primary-dark">Produkt-Kategorien</p>
+        <div class="panel-block">
+
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th>Aktiv</th>
+                <th>Kategorie</th>
+                <th class="has-text-right">Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="cat in category$.productCategories" :key="cat.id">
+                <td>
+                  <div>
+                    <ToggleSwitch
+                      :model-value="cat.enabled"
+                      :disabled="pendingIds.includes(cat.id)"
+                      @update:model-value="toggleEnabled(cat)"
+                    />
+                    <span v-if="pendingIds.includes(cat.id)" class="icon has-text-grey ml-2">
+                      <icon :icon="['fas', 'spinner']" :spin="true" />
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag is-medium">
+                    <span class="icon is-small"><icon :icon="cat.icon" /></span>
+                    <span>{{ cat.title }}</span>
+                  </span>
+                </td>
+                <td class="has-text-right">
+                  <button class="button is-small" @click="editCategory(cat.id, CategoryTypeToString[cat.type])">
+                    <span class="icon is-small"><icon :icon="['fas', 'pen']" /></span>
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="category$.productCategories.length === 0">
+                <td colspan="3" class="has-text-grey has-text-centered is-italic">
+                  Keine Produkt-Kategorien vorhanden
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
   </div>
 
   <ErrorModal v-model="errorModalVisible" :error="currentError" />
