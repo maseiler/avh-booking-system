@@ -98,6 +98,14 @@ onBeforeUnmount(() => {
                   Keine Account-Kategorien vorhanden
                 </td>
               </tr>
+              <tr>
+                <td colspan="3" class="has-text-centered">
+                  <button class="button" @click="router.push({ name: 'CategorySettingsAdd', params: { type: 'account' } })">
+                    <span class="icon"><icon :icon="['fas', 'plus']" /></span>
+                    <span>Account Kategorie hinzufügen</span>
+                  </button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -146,6 +154,14 @@ onBeforeUnmount(() => {
               <tr v-if="category$.productCategories.length === 0">
                 <td colspan="3" class="has-text-grey has-text-centered is-italic">
                   Keine Produkt-Kategorien vorhanden
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3" class="has-text-centered">
+                  <button class="button" @click="router.push({ name: 'CategorySettingsAdd', params: { type: 'product' } })">
+                    <span class="icon"><icon :icon="['fas', 'plus']" /></span>
+                    <span>Produkt Kategorie hinzufügen</span>
+                  </button>
                 </td>
               </tr>
             </tbody>

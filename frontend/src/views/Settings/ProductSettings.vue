@@ -15,7 +15,7 @@
       Produkt hinzufügen
     </Button>
   </Buttons>
-  <ProductSelector show="list"></ProductSelector>
+  <ProductSelector show="list" :all="true"></ProductSelector>
 </template>
 
 <script lang="ts">

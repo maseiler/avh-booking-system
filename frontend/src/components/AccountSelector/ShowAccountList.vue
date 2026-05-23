@@ -153,7 +153,7 @@ watch(() => props.accounts, (newList) => {
         <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accountsSorted" :key="account.id" @click="account$.select(account)">
           <td>{{ account.id }}</td>
           <td>
-              <div style="display:flex;align-items:center;gap:.4rem;">
+              <div>
                 <ToggleSwitch
                   :model-value="account.enabled"
                   :disabled="pendingIds.includes(account.id)"
@@ -172,9 +172,13 @@ watch(() => props.accounts, (newList) => {
           <td class="has-text-right">{{ $n(account.balance / 100, 'currency') }}</td>
           <td class="has-text-right">{{ $n(account.maxDebt / 100, 'currency') }}</td>
           <td>
-            <button class="tag" :class="account.getCategory() == undefined? 'is-skeleton' : ''">
+            <button class="tag" :class="{
+              'is-skeleton': account.getCategory() == undefined,
+              'is-warning':  account.getCategory()?.enabled === false
+            }">
               <span class="icon"><icon :icon="account.getCategory()?.icon" /></span>
               <span>{{ account.getCategory()?.title }}</span>
+              <span v-if="!account.getCategory()?.enabled" class="icon"><icon :icon="['fas', 'eye-slash']"></icon></span>
             </button>  
           </td>
           <td>{{ new Date(account.createdAt).toLocaleString() }}</td>

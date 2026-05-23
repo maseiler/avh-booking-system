@@ -69,7 +69,8 @@ export default {
       return this.account$.getBySearchAndCategory(this.search, this.selectedCategory, this.all);
     },
     categories(){
-      return this.category$.accountCategories;
+      if (this.all) return this.category$.accountCategories;
+      return this.category$.accountCategories.filter(cat => cat.enabled);
     }
   }
 }
