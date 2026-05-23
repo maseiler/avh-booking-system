@@ -53,7 +53,7 @@ export const useSocketStore = defineStore("notificationStore", {
                 "values": values
             }
             let msg = {type: "mutation", payload: payload};
-            this.wsClient.send(JSON.stringify(msg));
+            this.wsClient.send(msg);
         },
         addVisibility(newVisibility: ProductVisibility) {
             let payload = {
@@ -84,6 +84,15 @@ export const useSocketStore = defineStore("notificationStore", {
             let msg = {type: "mutation", payload: payload}
             //console.debug(msg)
             this.wsClient.send(msg)
+        },
+        updateProduct(product: Product) {
+            let payload = {
+                "operation": "update",
+                "table": "product",
+                "where": { "product_id": product.id?.toString() },
+                "values": product
+            }
+            this.wsClient.send({ type: "mutation", payload: payload })
         },
         addCategory(newCategory: { name: string, icon: [string, string], type: string }) {
             let payload = {
