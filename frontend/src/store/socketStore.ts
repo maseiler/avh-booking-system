@@ -99,6 +99,15 @@ export const useSocketStore = defineStore("notificationStore", {
             let msg = {type: "mutation", payload: payload}
             this.wsClient.send(msg)
         },
+        toggleAccountEnabled(id: number, enabled: boolean) {
+            let payload = {
+                "operation": "update",
+                "table": "account",
+                "where": { "account_id": id.toString() },
+                "values": { "enabled": enabled }
+            }
+            this.wsClient.send({ type: "mutation", payload: payload })
+        },
         toggleCategoryEnabled(id: number, enabled: boolean) {
             let payload = {
                 "operation": "update",

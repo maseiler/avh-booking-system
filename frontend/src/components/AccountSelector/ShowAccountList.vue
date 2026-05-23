@@ -1,3 +1,110 @@
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import type { Account } from '../../composables/account'
+import { useAccountStore } from '../../store/AccountStore'
+import { useCategoryStore } from '../../store/CategoryStore'
+import { useSocketStore } from '../../store/socketStore'
+import ToggleSwitch from '../../composables/elements/ToggleSwitch.vue'
+import ErrorModal from '../ErrorModal.vue'
+
+const props = defineProps<{
+  accounts?: Account[]
+}>()
+
+const account$ = useAccountStore()
+const category$ = useCategoryStore()
+const socket$ = useSocketStore()
+
+const dev = ref(false)
+const accountsSorted = ref<Account[]>([])
+const sortedTo = ref('')
+const pendingIds = ref<number[]>([])
+const errorModalVisible = ref(false)
+const currentError = ref<{ code: string, message: string, details?: string } | null>(null)
+
+const hasEditAccountRights = computed(() => {
+  if (dev.value) {
+    console.warn('User has elevated privileges to edit products because you are running this in development environment')
+    return true
+  }
+  // ToDo Check if currently loged in user is allowed to edit products
+  return false
+})
+
+function copyText(txt: string) {
+  navigator.clipboard.writeText(txt)
+}
+
+function toggleEnabled(account: Account) {
+  if (pendingIds.value.includes(account.id)) return
+  pendingIds.value.push(account.id)
+  socket$.toggleAccountEnabled(account.id, !account.enabled)
+}
+
+function onMutationResult(res: any) {
+  if (res.table !== 'account') return
+  const idx = pendingIds.value.indexOf(res.id)
+  if (idx !== -1) pendingIds.value.splice(idx, 1)
+}
+
+function onWsError(err: any) {
+  if (pendingIds.value.length === 0) return
+  pendingIds.value = []
+  currentError.value = err
+  errorModalVisible.value = true
+}
+
+function sortFor(sortParam: string) {
+  sortedTo.value = sortParam
+  const list = props.accounts ?? []
+  switch (sortParam) {
+    case 'id':
+      accountsSorted.value = [...list].sort((a, b) => a.id - b.id); break
+    case 'enabled':
+      accountsSorted.value = [...list].sort((a, b) => (b.enabled ? 1 : 0) - (a.enabled ? 1 : 0)); break
+    case 'fn':
+      accountsSorted.value = [...list].sort((a, b) => a.firstName.localeCompare(b.firstName)); break
+    case 'nn':
+      accountsSorted.value = [...list].sort((a, b) => a.nickname.localeCompare(b.nickname)); break
+    case 'ln':
+      accountsSorted.value = [...list].sort((a, b) => a.lastName.localeCompare(b.lastName)); break
+    case 'mail':
+      accountsSorted.value = [...list].sort((a, b) => a.email.localeCompare(b.email)); break
+    case 'phone':
+      accountsSorted.value = [...list].sort((a, b) => a.phone?.localeCompare(b.phone)); break
+    case 'bal':
+      accountsSorted.value = [...list].sort((a, b) => a.balance - b.balance); break
+    case 'md':
+      accountsSorted.value = [...list].sort((a, b) => a.maxDebt - b.maxDebt); break
+    case 'cat':
+      accountsSorted.value = [...list].sort((a, b) => a.category - b.category); break
+    case 'create':
+      accountsSorted.value = [...list].sort((a, b) => {
+        const aDate = new Date(a.createdAt as string)
+        const bDate = new Date(b.createdAt as string)
+        return aDate > bDate ? -1 : 1
+      }); break
+  }
+}
+
+onMounted(() => {
+  dev.value = import.meta.env.DEV
+  accountsSorted.value = props.accounts ?? []
+  socket$.wsClient.on('mutationResult', onMutationResult)
+  socket$.wsClient.on('wsError', onWsError)
+})
+
+onBeforeUnmount(() => {
+  socket$.wsClient.off('mutationResult', onMutationResult)
+  socket$.wsClient.off('wsError', onWsError)
+})
+
+watch(() => props.accounts, (newList) => {
+  accountsSorted.value = newList ?? []
+  sortFor(sortedTo.value)
+})
+</script>
+
 <template>
   <div class="table-container">
     <table class="table is-striped is-hoverable">
@@ -43,9 +150,20 @@
           {{ sortedTo == "create" ? "⯆" : "" }}</th>
           <th v-show="hasEditAccountRights">Edit</th>
         </tr>
-        <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accountsSorted" @click="account$.select(account)">
+        <tr :class="account$.selected.includes(account) ? 'is-primary' : ''" v-for="account in accountsSorted" :key="account.id" @click="account$.select(account)">
           <td>{{ account.id }}</td>
-          <td><ToggleSwitch v-model="account.enabled" :disabled="false" /></td>
+          <td>
+              <div style="display:flex;align-items:center;gap:.4rem;">
+                <ToggleSwitch
+                  :model-value="account.enabled"
+                  :disabled="pendingIds.includes(account.id)"
+                  @update:model-value="toggleEnabled(account)"
+                />
+                <span v-if="pendingIds.includes(account.id)" class="icon has-text-grey">
+                  <icon :icon="['fas', 'spinner']" :spin="true" />
+                </span>
+              </div>
+            </td>
           <td>{{ account.firstName }}</td>
           <td>{{ account.nickname }}</td>
           <td>{{ account.lastName }}</td>
@@ -72,133 +190,11 @@
       </tbody>
     </table>
   </div>
+
+  <ErrorModal v-model="errorModalVisible" :error="currentError" />
 </template>
 
-<script lang="ts">
-import type { Account } from '../../composables/account';
-import { useAccountStore } from '../../store/AccountStore';
-import type { PropType } from 'vue';
-import { useCategoryStore } from '../../store/CategoryStore';
-import ToggleSwitch from '../../composables/elements/ToggleSwitch.vue';
 
-export default {
-  data(){
-    return {
-      account$: useAccountStore(),
-      category$: useCategoryStore(),
-      dev: false,
-      accountsSorted: [] as Account[],
-      sortedTo: "",
-    }
-  },
-  props: {
-    accounts: {
-      type: Array as PropType<Account[]>
-    }
-  },
-  methods: {
-    copyText(txt: string){
-      navigator.clipboard.writeText(txt);
-    },
-    sortFor(sortParam: string){
-      this.sortedTo = sortParam;
-      switch (sortParam) {
-        case("id"):{
-          this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.id - b.id;
-          }) as Account[];
-          return;
-        } 
-        case("enabled"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return (b.enabled ? 1 : 0) - (a.enabled ? 1 : 0);
-          }) as Account[];
-          return;
-        }
-        case("fn"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.firstName.localeCompare(b.firstName);
-          }) as Account[];
-          return;
-        }
-        case("nn"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.nickname.localeCompare(b.nickname);
-          }) as Account[];
-          return;
-        }
-        case("ln"): {
-            this.accountsSorted = this.accounts?.sort((a, b) => {
-            return a.lastName.localeCompare(b.lastName);
-          }) as Account[];
-          return;
-        }
-        case("mail"): {
-            this.accountsSorted = this.accounts?.sort((a, b) => {
-            return a.email.localeCompare(b.email);
-          }) as Account[];
-          return;
-        }
-        case("phone"): {
-            this.accountsSorted = this.accounts?.sort((a, b) => {
-            return a.phone?.localeCompare(b.phone);
-          }) as Account[];
-          return;
-        }
-        case("bal"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.balance - b.balance;
-          }) as Account[];
-          return;
-        }
-        case("md"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.maxDebt - b.maxDebt;
-          }) as Account[];
-          return;
-        }
-        case("cat"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-            return a.category - b.category;
-          }) as Account[];
-          return;
-        }
-        case("create"): {
-            this.accountsSorted = this.accounts.sort((a, b) => {
-              let aDate = new Date(a.createdAt as string);
-              let bDate = new Date(b.createdAt as string);
-              if (aDate > bDate) { return -1} else { return 1};
-          }) as Account[];
-          return;
-        }
-      }
-    }
-  },
-  components: {
-    ToggleSwitch
-  },
-  computed: {
-    hasEditAccountRights(){
-      if(this.dev){
-        console.warn("User has elevated privileges to edit products because you are running this in development environment")
-        return true;
-      }
-      //ToDo Check if currently loged in user is allowed to edit products
-      return false
-    }
-  },
-  mounted() {
-    this.dev = import.meta.env.DEV;
-    this.accountsSorted = this.accounts as Account[];
-  },
-  watch: {
-    accounts(newList, oldList){
-      this.accountsSorted = newList;
-      this.sortFor(this.sortedTo);
-    }
-  }
-}
-</script>
 
 <style scoped>
   .has-copy-btn{
