@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
 import QRCode from 'qrcode'
-import { buildKassenbelegV1, computeVatBreakdown } from '../../composables/useReceiptQrCode'
+import { buildKassenbelegV1, buildDigitalReceiptText, computeVatBreakdown } from '../../composables/useReceiptQrCode'
 import type { CartContent } from '../../composables/cartContent'
 import type { Account } from '../../composables/account'
+import { useSettingStore } from '../../store/SettingStore'
 
 const props = defineProps<{
   products: CartContent[]
@@ -16,25 +17,51 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const qrDataUrl   = ref('')
-const isLoading   = ref(true)
-const hasError    = ref(false)
+const setting$ = useSettingStore()
+
+const activeTab    = ref<'tse' | 'receipt'>('tse')
+const qrDataUrl    = ref('')
+const digitalQrUrl = ref('')
+const isLoading    = ref(true)
+const hasError     = ref(false)
+
+const shopName = computed(() => {
+  const s = setting$.get('compTitle')
+  return s === -1 ? '[Shopname]' : String(s.value)
+})
 
 watchEffect(async () => {
-  isLoading.value = true
-  hasError.value  = false
-  qrDataUrl.value = ''
+  isLoading.value    = true
+  hasError.value     = false
+  qrDataUrl.value    = ''
+  digitalQrUrl.value = ''
 
   try {
-    const qrString = await buildKassenbelegV1({
+    // ── TSE-Code ────────────────────────────────────────────────────────────
+    const tseString = await buildKassenbelegV1({
       products:  props.products,
       timestamp: props.timestamp,
       id:        props.bookingId,
     })
-    qrDataUrl.value = await QRCode.toDataURL(qrString, {
+    qrDataUrl.value = await QRCode.toDataURL(tseString, {
       width:  256,
       margin: 2,
       color:  { dark: '#000000', light: '#ffffff' },
+    })
+
+    // ── Digitaler Kassenzettel ───────────────────────────────────────────────
+    const receiptText = buildDigitalReceiptText({
+      products:     props.products,
+      timestamp:    props.timestamp,
+      id:           props.bookingId,
+      accountNames: props.accounts.map(a => a.getFullName()),
+      shopName:     shopName.value,
+    })
+    digitalQrUrl.value = await QRCode.toDataURL(receiptText, {
+      width:                256,
+      margin:               2,
+      errorCorrectionLevel: 'L',
+      color:                { dark: '#000000', light: '#ffffff' },
     })
   } catch {
     hasError.value = true
@@ -96,13 +123,34 @@ function formatEur(cents: number): string {
 
           <!-- QR-Code -->
           <div class="qr-area">
+            <div class="tabs is-boxed is-small mb-2">
+              <ul>
+                <li :class="{ 'is-active': activeTab === 'tse' }">
+                  <a @click="activeTab = 'tse'">TSE-Code</a>
+                </li>
+                <li :class="{ 'is-active': activeTab === 'receipt' }">
+                  <a @click="activeTab = 'receipt'">Kassenzettel</a>
+                </li>
+              </ul>
+            </div>
             <div v-if="isLoading" class="qr-placeholder is-skeleton" />
             <div v-else-if="hasError" class="qr-placeholder has-text-danger has-text-centered">
               <icon :icon="['fas', 'circle-xmark']" size="3x" /><br>
               QR-Code konnte nicht generiert werden.
             </div>
-            <img v-else :src="qrDataUrl" alt="Kassenbeleg QR-Code" class="qr-image" />
-            <p class="has-text-centered is-size-7 has-text-grey mt-1">Kassenbeleg-V1</p>
+            <template v-else>
+              <img v-if="activeTab === 'tse'"
+                   :src="qrDataUrl"
+                   alt="TSE QR-Code"
+                   class="qr-image" />
+              <img v-else
+                   :src="digitalQrUrl"
+                   alt="Kassenzettel QR-Code"
+                   class="qr-image" />
+            </template>
+            <p class="has-text-centered is-size-7 has-text-grey mt-1">
+              {{ activeTab === 'tse' ? 'Kassenbeleg-V1 (TSE)' : 'Digitaler Kassenzettel' }}
+            </p>
           </div>
 
           <!-- Belegdaten -->

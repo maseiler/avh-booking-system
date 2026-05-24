@@ -181,3 +181,84 @@ export async function buildKassenbelegV1(receipt: ReceiptInput): Promise<string>
 
   return `V0;${tseLine}`
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Digitaler Kassenzettel (Klartext-QR)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface DigitalReceiptInput {
+  products: CartContent[]
+  timestamp: string
+  id?: number
+  /** Vollständige Kontonamen, z.B. ['Max Mustermann'] */
+  accountNames?: string[]
+  /** Firmenname — setting$.get('compTitle'), Fallback '[Shopname]' */
+  shopName: string
+}
+
+/**
+ * Erstellt den Klartext-Inhalt für den Kassenzettel-QR-Code.
+ * Synchron, kein Crypto nötig.
+ *
+ * Format:
+ *   [Firmenname]
+ *   [Datum und Uhrzeit]
+ *   Nr.: [Beleg-ID]           (nur wenn vorhanden)
+ *   Kto.: [Kontonamen]        (nur wenn vorhanden)
+ *
+ *   [Menge]x [Produktname] [Größe] [Einheit]  [Brutto]
+ *   ...
+ *
+ *   [Gruppe] ([Satz]%): Netto [Netto], MwSt. [Steuer]
+ *   ...
+ *
+ *   Gesamt: [Brutto gesamt]
+ */
+export function buildDigitalReceiptText(input: DigitalReceiptInput): string {
+  const { products, timestamp, id, accountNames, shopName } = input
+
+  function eur(cents: number): string {
+    return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+  }
+
+  const dateStr = new Date(timestamp).toLocaleString('de-DE', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+
+  const lines: string[] = []
+
+  // ── Kopf ───────────────────────────────────────────────────────────────────
+  lines.push(shopName)
+  lines.push(dateStr)
+  if (id !== undefined) lines.push(`Nr.: ${id}`)
+  if (accountNames?.length) lines.push(`Kto.: ${accountNames.join(', ')}`)
+  lines.push('')
+
+  // ── Positionen ─────────────────────────────────────────────────────────────
+  for (const item of products) {
+    const unit    = item.product.getUnit()
+    const sizeStr = unit && item.product.size > 0
+      ? ` ${Number(item.product.size).toLocaleString('de-DE')} ${unit.name}`
+      : ''
+    lines.push(
+      `${item.quantity}x ${item.product.name}${sizeStr}  ${eur(item.price * item.quantity)}`
+    )
+  }
+
+  // ── MwSt-Aufschlüsselung ───────────────────────────────────────────────────
+  const breakdown = computeVatBreakdown(products)
+  if (breakdown.length > 0) {
+    lines.push('')
+    for (const { group, rate, netCents, taxCents } of breakdown) {
+      lines.push(`${group} (${rate}%): Netto ${eur(netCents)}, MwSt. ${eur(taxCents)}`)
+    }
+  }
+
+  // ── Gesamt ─────────────────────────────────────────────────────────────────
+  const totalCents = products.reduce((s, i) => s + i.price * i.quantity, 0)
+  lines.push('')
+  lines.push(`Gesamt: ${eur(totalCents)}`)
+
+  return lines.join('\n')
+}
