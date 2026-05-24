@@ -36,7 +36,7 @@ watch(filterAccountId, (id) => {
 
 // Filtered bookings
 const filteredBookings = computed(() => {
-  return booking$.bookings.filter((booking) => {
+  let foundBookings = booking$.bookings.filter((booking) => {
     // Account filter
     if (filterAccountId.value !== null) {
       const accounts = Array.isArray(booking.account) ? booking.account : [booking.account]
@@ -58,6 +58,10 @@ const filteredBookings = computed(() => {
 
     return true
   })
+  let sortedBookings = foundBookings.sort((a, b) => {
+    return Date.parse(a.timestamp) - Date.parse(b.timestamp) <= 0 ? 1 : -1;
+  })
+  return sortedBookings;
 })
 </script>
 
