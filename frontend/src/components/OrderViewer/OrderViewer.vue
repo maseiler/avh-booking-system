@@ -7,7 +7,10 @@
         <icon :class="showOrderDetails ? 'showDetails' : ''" class="order-icon" :icon="['fas', 'arrow-down-short-wide']" />
         {{ $t('transaction.cart') }} {{ dateString }}
       </span>
-      <button v-if="accounts.length > 0 && allowEdit" class="delete" @click="cancelOrder" :title="$t('transaction.discardCartTooltip')"></button>
+      <button v-if="!allowEdit" class="button is-small is-ghost receipt-btn" @click.stop="showReceiptModal = true" :title="$t('transaction.showReceipt', 'Kassenbon anzeigen')">
+          <span class="icon"><icon :icon="['fas', 'receipt']" /></span>
+        </button>
+        <button v-if="accounts.length > 0 && allowEdit" class="delete" @click="cancelOrder" :title="$t('transaction.discardCartTooltip')"></button>
     </div>
 
     <div :class="showOrderDetails ? 'showDetails' : ''" class="message-body fixed-grid has-3-cols">
@@ -19,6 +22,17 @@
     </div>
     <div :class="showOrderDetails ? 'showDetails' : ''" class="order-ripped-teaser"> </div>
   </article>
+
+  <Teleport to="body">
+    <ReceiptModal
+      v-if="showReceiptModal"
+      :products="contents"
+      :accounts="accounts"
+      :timestamp="timestamp ?? ''"
+      :booking-id="bookingId"
+      @close="showReceiptModal = false"
+    />
+  </Teleport>
 </template>
 
 <style scoped>
@@ -41,6 +55,11 @@
   cursor:pointer;
   font-size:1.05rem;
   letter-spacing: 0.02em;
+}
+.receipt-btn{
+  color: inherit;
+  opacity: 0.75;
+  &:hover{ opacity: 1; }
 }
 .message-body{
   display:none;
@@ -92,6 +111,10 @@
     cursor:auto;
     pointer-events:none;
   }
+  .receipt-btn{
+    pointer-events: auto;
+    cursor: pointer;
+  }
   .order-ripped-teaser{
     display:none;
   }
@@ -113,6 +136,7 @@ const props = defineProps<{
   contents: CartContent[],
   allowEdit: Boolean,
   timestamp?: string,
+  bookingId?: number,
 }>()
 
 const dateString = computed(() => {
@@ -143,6 +167,7 @@ import Message from '../../composables/elements/Message.vue';
 import AccountTagList from './AccountTagList.vue';
 import CartSums from './CartSums.vue';
 import CartControl from './CartControl.vue';
+import ReceiptModal from '../Receipt/ReceiptModal.vue';
 
 
 export default {
@@ -150,6 +175,7 @@ export default {
     return {
       account$: useAccountStore(),
       showOrderDetails: false,
+      showReceiptModal: false,
       cart$: useCartStore(),
     }
   },
@@ -158,7 +184,8 @@ export default {
     Message,
     AccountTagList,
     CartSums,
-    CartControl
+    CartControl,
+    ReceiptModal,
   },
   methods: {
     unselectAccount(account: Account){

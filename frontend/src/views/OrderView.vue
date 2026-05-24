@@ -93,6 +93,7 @@ const filteredBookings = computed(() => {
         :totals="booking.getTotals()"
         :contents="booking.products"
         :timestamp="booking.timestamp"
+        :booking-id="booking.id"
       />
     </div>
   </div>
