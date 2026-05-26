@@ -46,11 +46,22 @@ func main() {
 	stores := ws.Stores{
 		Account:           &repo.AccountStore{DB: dbPool},
 		Category:          &repo.CategoryStore{DB: dbPool},
+		Favorites:         &repo.FavoritesStore{DB: dbPool},
 		Location:          &repo.LocationStore{DB: dbPool},
+		Order:             &repo.OrderStore{DB: dbPool},
 		Product:           &repo.ProductStore{DB: dbPool},
 		ProductGroup:      &repo.ProductGroupStore{DB: dbPool},
+		ProductOrder:      &repo.ProductOrderStore{DB: dbPool},
 		ProductVisibility: &repo.ProductVisibilityStore{DB: dbPool},
+		Rights:            &repo.RightsStore{DB: dbPool},
+		Role:              &repo.RoleStore{DB: dbPool},
+		ServiceLink:       &repo.ServiceLinkStore{DB: dbPool},
+		ServiceSewobe:     &repo.ServiceSewobeStore{DB: dbPool},
+		SettingsFrontend:  &repo.SettingsStore{DB: dbPool, Table: repo.TableSettingsFrontend},
+		SettingsPayment:   &repo.SettingsStore{DB: dbPool, Table: repo.TableSettingsPayment},
+		SettingsEmail:     &repo.SettingsStore{DB: dbPool, Table: repo.TableSettingsEmail},
 		Unit:              &repo.UnitStore{DB: dbPool},
+		User:              &repo.UserStore{DB: dbPool},
 		Vat:               &repo.VatStore{DB: dbPool},
 	}
 
