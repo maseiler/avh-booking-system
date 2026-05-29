@@ -39,6 +39,7 @@
             @click="selectedGroup = product"
             title="select product group">
               {{ product.name }}
+              <icon style="margin-left:.5em" :icon="['fas', 'list']" />
           </Button>
         </template>
       </div>

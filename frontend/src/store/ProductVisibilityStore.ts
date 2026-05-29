@@ -43,13 +43,20 @@ export const useProductVisibilityStore = defineStore('product_visibility', {
             let newVis = {'categoryId': categoryId, 'productId': productId, 'locationId': 1} as ProductVisibility;
             useSocketStore().addVisibility(newVis);
         },
-        patchVisibilities(newVisibilities: ProductVisibility[]) {
+        patchVisibilities(newVisibilities: ProductVisibility[] | ProductVisibility) {
             this.$patch(state => {
-                state.visibilities = [];
-                newVisibilities.forEach(newVis => {
-                    const newVisObj = new ProductVisibility(newVis);
+                if(newVisibilities.constructor.name == "Array"){
+                    // If all visibilities are queried
+                    state.visibilities = [];
+                    newVisibilities.forEach((newVis) => {
+                        const newVisObj = new ProductVisibility(newVis);
+                        state.visibilities.push(newVisObj);
+                    })
+                } else {
+                    // if only one visibility was queried
+                    const newVisObj = new ProductVisibility(newVisibilities);
                     state.visibilities.push(newVisObj);
-                })
+                }
             })
         }
     }

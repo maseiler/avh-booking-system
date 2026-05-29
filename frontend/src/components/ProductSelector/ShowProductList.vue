@@ -29,7 +29,9 @@
               <span v-if="!product.getCategory()?.enabled" class="icon"><icon :icon="['fas', 'eye-slash']" /></span>
             </button>
           </td>
-          <td>{{ product.getGroup()?.name }}</td>
+          <td>
+            <span class="tag" v-if="product.productGroup != 0">{{ product.getGroup()?.name }}</span>
+          </td>
           <td>
             
             <button v-for="visibility in visibility$.byProductId(product.id)" class="tag">
