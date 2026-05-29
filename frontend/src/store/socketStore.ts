@@ -133,7 +133,7 @@ export const useSocketStore = defineStore("notificationStore", {
                 "where": { "category_id": cat.id.toString() },
                 "values": {
                     "name": cat.name,
-                    "icon": cat.icon,
+                    "icon": cat.icon[1],
                     "type": cat.type
                 }
             }
