@@ -2,20 +2,20 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
+	"github.com/jackc/pgx/v5"
 )
 
-// AccountOptionModel provides database operations for AccountOption entities.
-type AccountOptionModel struct {
-	DB *database.DB
+// AccountOptionStore provides database operations for AccountOption entities.
+type AccountOptionStore struct {
+	DB DBTx
 }
 
 // Insert adds a new account option to the database.
-func (m *AccountOptionModel) Insert(ctx context.Context, opt models.AccountOption) (int, string, error) {
+func (m *AccountOptionStore) Insert(ctx context.Context, opt models.AccountOption) (int, string, error) {
 	query := `
         INSERT INTO account_option (account, key, value)
         VALUES ($1, $2, $3)
@@ -31,8 +31,19 @@ func (m *AccountOptionModel) Insert(ctx context.Context, opt models.AccountOptio
 	return account, key, err
 }
 
+// Update modifies the value of an existing account option.
+func (m *AccountOptionStore) Update(ctx context.Context, opt models.AccountOption) error {
+	query := `
+        UPDATE account_option
+        SET value = $1
+        WHERE account = $2 AND key = $3`
+	_, err := m.DB.Exec(ctx, query, opt.Value, opt.AccountID, opt.Key)
+
+	return err
+}
+
 // Get retrieves a specific account option by account ID and key.
-func (m *AccountOptionModel) Get(ctx context.Context, accountID int, key string) (*models.AccountOption, error) {
+func (m *AccountOptionStore) Get(ctx context.Context, accountID int, key string) (*models.AccountOption, error) {
 	stmt := `SELECT account, key, value
 			FROM account_option
 			WHERE account = $1 AND key = $2`
@@ -41,7 +52,7 @@ func (m *AccountOptionModel) Get(ctx context.Context, accountID int, key string)
 	var opt models.AccountOption
 	err := row.Scan(&opt.AccountID, &opt.Key, &opt.Value)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, database.ErrNoRecord
 		} else {
 			return nil, err

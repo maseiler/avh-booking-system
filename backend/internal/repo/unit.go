@@ -2,21 +2,20 @@ package repo
 
 import (
 	"context"
-	"database/sql"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
 )
 
-// UnitModel provides database operations for Unit entities.
-type UnitModel struct {
-	DB *database.DB
+// UnitStore provides database operations for Unit entities.
+type UnitStore struct {
+	DB DBTx
 }
 
 // Get retrieves units based on the provided query specification.
-func (m *UnitModel) Get(ctx context.Context, query *Query) ([]models.Unit, error) {
+func (m *UnitStore) Get(ctx context.Context, query *Query) ([]models.Unit, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -35,33 +34,50 @@ func (m *UnitModel) Get(ctx context.Context, query *Query) ([]models.Unit, error
 }
 
 // GetByID retrieves a unit by its ID.
-func (m *UnitModel) GetByID(ctx context.Context, id int) (*models.Unit, error) {
-	stmt := `SELECT unit_id, name
-			FROM unit
-			WHERE unit_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var unit models.Unit
-	err := row.Scan(&unit.ID, &unit.Name)
+func (m *UnitStore) GetByID(ctx context.Context, id int) (*models.Unit, error) {
+	query := Query{Table: TableUnit, Filter: []Filter{{Column: "unit_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	units, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &unit, nil
+	if len(units) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &units[0], nil
 }
 
 // Insert adds a new unit to the database.
-func (m *UnitModel) Insert(ctx context.Context, unit models.Unit) (int, error) {
+func (m *UnitStore) Insert(ctx context.Context, unit models.Unit) (int, error) {
 	query := `
         INSERT INTO unit (name)
         VALUES ($1)
         RETURNING unit_id;`
 	var id int
 	err := m.DB.QueryRow(ctx, query, unit.Name).Scan(&id)
+
+	return id, err
+}
+
+// Update modifies an existing unit in the database.
+func (m *UnitStore) Update(ctx context.Context, unit models.Unit) (int, error) {
+	query := `
+        UPDATE unit
+        SET name = $1
+        WHERE unit_id = $2
+        RETURNING unit_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, unit.Name, unit.ID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a unit from the database.
+func (m *UnitStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM unit
+        WHERE unit_id = $1
+        RETURNING unit_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
 
 	return id, err
 }

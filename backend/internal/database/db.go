@@ -4,6 +4,8 @@ package database
 import (
 	"context"
 	"fmt"
+
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -29,4 +31,22 @@ func New(dbUser string, dbPassword string, dbHost string, dbPort int, dbName str
 	}
 
 	return &DB{dbPool}, nil
+}
+
+// WithTx runs fn inside a transaction. It commits on success and rolls back on
+// any error returned by fn or by Commit itself.
+func (db *DB) WithTx(ctx context.Context, fn func(pgx.Tx) error) error {
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback(ctx)
+		}
+	}()
+	if err = fn(tx); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }

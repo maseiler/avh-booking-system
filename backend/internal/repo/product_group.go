@@ -2,28 +2,24 @@ package repo
 
 import (
 	"context"
-	"database/sql"
-	"errors"
-	"strings"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
 )
 
-// ProductGroupModel provides database operations for ProductGroup entities.
-type ProductGroupModel struct {
-	DB *database.DB
+// ProductGroupStore provides database operations for ProductGroup entities.
+type ProductGroupStore struct {
+	DB DBTx
 }
 
 // Get retrieves product groups based on the provided query specification.
-func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.ProductGroup, error) {
+func (m *ProductGroupStore) Get(ctx context.Context, query *Query) ([]models.ProductGroup, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
 	}
-	// pgx will panic when it tries to assign null to int as might be the case for the parent field. COALESCE in the SQL select statement will replace null values with 0.
-	stmt = strings.Replace(stmt, "SELECT *", "SELECT product_group_id, name, COALESCE(parent, 0) AS parent", 1)
 	rows, err := m.DB.Query(ctx, stmt, args...)
 	if err != nil {
 		return nil, err
@@ -38,36 +34,23 @@ func (m *ProductGroupModel) Get(ctx context.Context, query *Query) ([]models.Pro
 }
 
 // GetByID retrieves a product group by its ID.
-func (m *ProductGroupModel) GetByID(ctx context.Context, id int) (*models.ProductGroup, error) {
-	stmt := `SELECT product_group_id, name, parent
-			FROM product_group
-			WHERE product_group_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var productGroup models.ProductGroup
-	var parentID *int // pointer to read null
-	err := row.Scan(&productGroup.ID, &productGroup.Name, &parentID)
+func (m *ProductGroupStore) GetByID(ctx context.Context, id int) (*models.ProductGroup, error) {
+	query := Query{Table: TableProductGroup, Filter: []Filter{{Column: "product_group_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	groups, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-	if parentID == nil {
-		productGroup.ParentID = 0
-	} else {
-		productGroup.ParentID = *parentID
+	if len(groups) == 0 {
+		return nil, database.ErrNoRecord
 	}
-
-	return &productGroup, nil
+	return &groups[0], nil
 }
 
 // Insert adds a new product group to the database.
-func (m *ProductGroupModel) Insert(ctx context.Context, group models.ProductGroup) (int, error) {
+func (m *ProductGroupStore) Insert(ctx context.Context, group models.ProductGroup) (int, error) {
 	var id int
 	var err error
-	if group.ParentID <= 0 {
+	if group.ParentID == nil {
 		query := `
         INSERT INTO product_group (name)
         VALUES ($1)
@@ -80,6 +63,30 @@ func (m *ProductGroupModel) Insert(ctx context.Context, group models.ProductGrou
         RETURNING product_group_id`
 		err = m.DB.QueryRow(ctx, query, group.Name, group.ParentID).Scan(&id)
 	}
+
+	return id, err
+}
+
+// Update modifies an existing product group in the database.
+func (m *ProductGroupStore) Update(ctx context.Context, group models.ProductGroup) (int, error) {
+	query := `
+        UPDATE product_group
+        SET name = $1, parent = $2
+        WHERE product_group_id = $3
+        RETURNING product_group_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, group.Name, group.ParentID, group.ID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a product group from the database.
+func (m *ProductGroupStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM product_group
+        WHERE product_group_id = $1
+        RETURNING product_group_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
 
 	return id, err
 }

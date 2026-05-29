@@ -2,21 +2,20 @@ package repo
 
 import (
 	"context"
-	"database/sql"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
 )
 
-// VatModel provides database operations for Vat entities.
-type VatModel struct {
-	DB *database.DB
+// VatStore provides database operations for Vat entities.
+type VatStore struct {
+	DB DBTx
 }
 
 // Get retrieves VATs based on the provided query specification.
-func (m *VatModel) Get(ctx context.Context, query *Query) ([]models.Vat, error) {
+func (m *VatStore) Get(ctx context.Context, query *Query) ([]models.Vat, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -35,33 +34,50 @@ func (m *VatModel) Get(ctx context.Context, query *Query) ([]models.Vat, error) 
 }
 
 // GetByID retrieves a VAT rate by its ID.
-func (m *VatModel) GetByID(ctx context.Context, id int) (*models.Vat, error) {
-	stmt := `SELECT vat_id, rate
-			FROM vat
-			WHERE vat_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var vat models.Vat
-	err := row.Scan(&vat.ID, &vat.Rate)
+func (m *VatStore) GetByID(ctx context.Context, id int) (*models.Vat, error) {
+	query := Query{Table: TableVat, Filter: []Filter{{Column: "vat_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	vats, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &vat, nil
+	if len(vats) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &vats[0], nil
 }
 
 // Insert adds a new VAT rate to the database.
-func (m *VatModel) Insert(ctx context.Context, vat models.Vat) (int, error) {
+func (m *VatStore) Insert(ctx context.Context, vat models.Vat) (int, error) {
 	query := `
         INSERT INTO vat (rate)
         VALUES ($1)
         RETURNING vat_id;`
 	var id int
 	err := m.DB.QueryRow(ctx, query, vat.Rate).Scan(&id)
+
+	return id, err
+}
+
+// Update modifies an existing VAT rate in the database.
+func (m *VatStore) Update(ctx context.Context, vat models.Vat) (int, error) {
+	query := `
+        UPDATE vat
+        SET rate = $1
+        WHERE vat_id = $2
+        RETURNING vat_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query, vat.Rate, vat.ID).Scan(&id)
+
+	return id, err
+}
+
+// Delete removes a VAT rate from the database.
+func (m *VatStore) Delete(ctx context.Context, id int) (int, error) {
+	query := `
+        DELETE FROM vat
+        WHERE vat_id = $1
+        RETURNING vat_id`
+	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
 
 	return id, err
 }

@@ -10,26 +10,14 @@ import (
 
 	"github.com/av-huette/avh-booking-system/internal/config"
 	"github.com/av-huette/avh-booking-system/internal/database"
-	"github.com/av-huette/avh-booking-system/internal/repo"
 	"github.com/jackc/pgx/v5"
+	"github.com/stretchr/testify/require"
 )
 
 var dbPool *database.DB
 
-type modelStructs struct {
-	account           *repo.AccountModel
-	accountOption     *repo.AccountOptionModel
-	category          *repo.CategoryModel
-	product           *repo.ProductModel
-	productGroup      *repo.ProductGroupModel
-	unit              *repo.UnitModel
-	productVisibility *repo.ProductVisibilityModel
-	location          *repo.LocationModel
-	vat               *repo.VatModel
-}
-
-// run sets up members and the database before executing tests and tearing them down after execution.
-func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
+// run sets up the database before executing tests and tears it down after.
+func run(m *testing.M) (code int, err error) {
 	currentWorkDirectory, _ := os.Getwd()
 	if err := config.LoadEnvFromFile(currentWorkDirectory + `/.env`); err != nil {
 		panic(err)
@@ -45,20 +33,19 @@ func run(m *testing.M, dbModels *modelStructs) (code int, err error) {
 	}
 
 	setUp()
-
-	dbModels.account = &repo.AccountModel{DB: dbPool}
-	dbModels.accountOption = &repo.AccountOptionModel{DB: dbPool}
-	dbModels.category = &repo.CategoryModel{DB: dbPool}
-	dbModels.product = &repo.ProductModel{DB: dbPool}
-	dbModels.productGroup = &repo.ProductGroupModel{DB: dbPool}
-	dbModels.unit = &repo.UnitModel{DB: dbPool}
-	dbModels.productVisibility = &repo.ProductVisibilityModel{DB: dbPool}
-	dbModels.location = &repo.LocationModel{DB: dbPool}
-	dbModels.vat = &repo.VatModel{DB: dbPool}
-
 	defer tearDown()
 
 	return m.Run(), nil
+}
+
+// beginTx starts a transaction and registers a rollback via t.Cleanup,
+// leaving the database in its seeded state after each test.
+func beginTx(t *testing.T) pgx.Tx {
+	t.Helper()
+	tx, err := dbPool.Begin(context.Background())
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = tx.Rollback(context.Background()) })
+	return tx
 }
 
 // getQueriesFromFile reads the file content specified in `filePath` into a string. It expects the content
@@ -78,21 +65,14 @@ func getQueriesFromFile(filePath string) []string {
 	return queries
 }
 
-// batchExecQueries executes a list of queries.
-func batchExecQueries(queries []string) pgx.BatchResults {
-	batch := &pgx.Batch{}
-	for _, query := range queries {
-		batch.Queue(query)
-	}
-
+// execQueries executes a list of queries sequentially, panicking if any one fails.
+func execQueries(queries []string) {
 	ctx := context.Background()
-	br := dbPool.SendBatch(ctx, batch)
-	_, err := br.Exec()
-	if err != nil {
-		panic(err)
+	for _, query := range queries {
+		if _, err := dbPool.Exec(ctx, query); err != nil {
+			panic(err)
+		}
 	}
-
-	return br
 }
 
 // setUp creates tables and inserts test data.
@@ -100,12 +80,12 @@ func setUp() {
 	currentWorkDirectory, _ := os.Getwd()
 	filePath := currentWorkDirectory + `/testdata/create_tables.sql`
 	queries := getQueriesFromFile(filePath)
-	batchExecQueries(queries)
+	execQueries(queries)
 	logSetup("Created tables")
 
 	filePath = currentWorkDirectory + `/testdata/insert_test_data.sql`
 	queries = getQueriesFromFile(filePath)
-	batchExecQueries(queries)
+	execQueries(queries)
 	logSetup("Inserted test data")
 }
 
@@ -115,13 +95,7 @@ func tearDown() {
 	filePath := currentWorkDirectory + `/testdata/drop_tables.sql`
 	queries := getQueriesFromFile(filePath)
 
-	br := batchExecQueries(queries)
-
-	err := br.Close()
-	if err != nil {
-		panic(err)
-	}
-
+	execQueries(queries)
 	logTearDown("Dropped tables")
 
 	// TODO: this is a workaround to close the dbPool as it is stuck in an endless loop

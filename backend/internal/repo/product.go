@@ -2,21 +2,20 @@ package repo
 
 import (
 	"context"
-	"database/sql"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
 )
 
-// ProductModel provides database operations for Product entities.
-type ProductModel struct {
-	DB *database.DB
+// ProductStore provides database operations for Product entities.
+type ProductStore struct {
+	DB DBTx
 }
 
 // Get retrieves products based on the provided query specification.
-func (m *ProductModel) Get(ctx context.Context, query *Query) ([]models.Product, error) {
+func (m *ProductStore) Get(ctx context.Context, query *Query) ([]models.Product, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -35,28 +34,20 @@ func (m *ProductModel) Get(ctx context.Context, query *Query) ([]models.Product,
 }
 
 // GetByID retrieves a product by its ID.
-func (m *ProductModel) GetByID(ctx context.Context, productID int) (*models.Product, error) {
-	stmt := `SELECT product_id, name, price, vat, product_group, size, unit, category, created_at
-			FROM product
-			WHERE product_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, productID)
-
-	var product models.Product
-	err := row.Scan(&product.ID, &product.Name, &product.Price, &product.VatID, &product.ProductGroupID,
-		&product.Size, &product.UnitID, &product.CategoryID, &product.CreatedAt)
+func (m *ProductStore) GetByID(ctx context.Context, productID int) (*models.Product, error) {
+	query := Query{Table: TableProduct, Filter: []Filter{{Column: "product_id", Operator: Eq, Value: strconv.Itoa(productID)}}}
+	products, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &product, nil
+	if len(products) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &products[0], nil
 }
 
 // Insert adds a new product to the database.
-func (m *ProductModel) Insert(ctx context.Context, product models.Product) (int, error) {
+func (m *ProductStore) Insert(ctx context.Context, product models.Product) (int, error) {
 	query := `
         INSERT INTO product (name, price, vat, product_group, size, unit, category)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -70,6 +61,28 @@ func (m *ProductModel) Insert(ctx context.Context, product models.Product) (int,
 		product.Size,
 		product.UnitID,
 		product.CategoryID,
+	).Scan(&id)
+
+	return id, err
+}
+
+// Update modifies an existing product in the database.
+func (m *ProductStore) Update(ctx context.Context, product models.Product) (int, error) {
+	query := `
+        UPDATE product
+        SET name = $1, price = $2, vat = $3, product_group = $4, size = $5, unit = $6, category = $7
+        WHERE product_id = $8
+        RETURNING product_id`
+	var id int
+	err := m.DB.QueryRow(ctx, query,
+		product.Name,
+		product.Price,
+		product.VatID,
+		product.ProductGroupID,
+		product.Size,
+		product.UnitID,
+		product.CategoryID,
+		product.ID,
 	).Scan(&id)
 
 	return id, err

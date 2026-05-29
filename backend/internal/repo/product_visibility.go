@@ -2,21 +2,20 @@ package repo
 
 import (
 	"context"
-	"database/sql"
-	"errors"
+	"strconv"
 
 	"github.com/av-huette/avh-booking-system/internal/database"
 	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/jackc/pgx/v5"
 )
 
-// ProductVisibilityModel provides database operations for ProductVisibility entities.
-type ProductVisibilityModel struct {
-	DB *database.DB
+// ProductVisibilityStore provides database operations for ProductVisibility entities.
+type ProductVisibilityStore struct {
+	DB DBTx
 }
 
 // Get retrieves ProductVisibilities based on the provided query specification.
-func (m *ProductVisibilityModel) Get(ctx context.Context, query *Query) ([]models.ProductVisibility, error) {
+func (m *ProductVisibilityStore) Get(ctx context.Context, query *Query) ([]models.ProductVisibility, error) {
 	stmt, args, err := buildSelectSQL(query)
 	if err != nil {
 		return nil, err
@@ -35,27 +34,20 @@ func (m *ProductVisibilityModel) Get(ctx context.Context, query *Query) ([]model
 }
 
 // GetByID retrieves a product visibility rule by its ID.
-func (m *ProductVisibilityModel) GetByID(ctx context.Context, id int) (*models.ProductVisibility, error) {
-	stmt := `SELECT product_visibility_id, category, location, product
-			FROM product_visibility
-			WHERE product_visibility_id = $1`
-	row := m.DB.QueryRow(ctx, stmt, id)
-
-	var productVisibility models.ProductVisibility
-	err := row.Scan(&productVisibility.ID, &productVisibility.CategoryID, &productVisibility.LocationID, &productVisibility.ProductID)
+func (m *ProductVisibilityStore) GetByID(ctx context.Context, id int) (*models.ProductVisibility, error) {
+	query := Query{Table: TableProductVisibility, Filter: []Filter{{Column: "product_visibility_id", Operator: Eq, Value: strconv.Itoa(id)}}}
+	visibilities, err := m.Get(ctx, &query)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, database.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
-
-	return &productVisibility, nil
+	if len(visibilities) == 0 {
+		return nil, database.ErrNoRecord
+	}
+	return &visibilities[0], nil
 }
 
 // Insert adds a new product visibility rule to the database.
-func (m *ProductVisibilityModel) Insert(ctx context.Context, visibility models.ProductVisibility) (int, error) {
+func (m *ProductVisibilityStore) Insert(ctx context.Context, visibility models.ProductVisibility) (int, error) {
 	var id int
 	query := `
         INSERT INTO product_visibility (category, location, product)
@@ -67,12 +59,11 @@ func (m *ProductVisibilityModel) Insert(ctx context.Context, visibility models.P
 }
 
 // Delete removes an existing visibility from the database.
-func (m *ProductVisibilityModel) Delete(ctx context.Context, id int) (int, error) {
+func (m *ProductVisibilityStore) Delete(ctx context.Context, id int) (int, error) {
 	query := `
         DELETE FROM product_visibility
         WHERE product_visibility_id = $1
-			RETURNING $1;
-			`
+        RETURNING product_visibility_id`
 	err := m.DB.QueryRow(ctx, query, id).Scan(&id)
 
 	return id, err

@@ -50,7 +50,16 @@ VALUES ('Vasco',
         5500,
         12345,
         4,
-        true);
+        true),
+       ('Davy',
+        'Keeper of the Deep',
+        'Jones',
+        'davy.jones@locker.sea',
+        '+0 000 000 0000',
+        0,
+        0,
+        2,
+        false);
 
 
 INSERT INTO account_option(account, key, value)
@@ -98,3 +107,54 @@ VALUES (1, 1, 1),
        (3, 1, 3),
        (3, 2, 3),
        (4, 2, 3);
+
+INSERT INTO service_sewobe(sewobe_api_key, sewobe_url)
+VALUES ('key-abc-123', 'https://sewobe.example.com'),
+       ('key-xyz-456', 'https://sewobe2.example.com');
+
+INSERT INTO role(name)
+VALUES ('Admin'),
+       ('Member');
+
+INSERT INTO rights(role, permission, allowed)
+VALUES (1, 'manage_accounts', true),
+       (1, 'manage_products', true),
+       (2, 'manage_accounts', false);
+
+INSERT INTO "user"(name, role, password)
+VALUES ('Francis Drake', 1, 'hashed_password_1'),
+       ('Anne Bonny', 2, 'hashed_password_2');
+
+INSERT INTO user_option(user_id, key, value)
+VALUES (1, 'two_factor', 'true'),
+       (2, 'two_factor', 'false');
+
+INSERT INTO service_link(foreign_user_id, "user", service_sewobe)
+VALUES (1001, 1, 1),
+       (1002, 2, 2);
+
+INSERT INTO settings_frontend(key, value)
+VALUES ('theme', 'dark'),
+       ('language', 'en');
+
+INSERT INTO settings_payment(key, value)
+VALUES ('currency', 'EUR'),
+       ('tax_included', 'true');
+
+INSERT INTO settings_email(key, value)
+VALUES ('smtp_host', 'mail.example.com'),
+       ('smtp_port', '587');
+
+INSERT INTO favorites(product, account, count)
+VALUES (1, 1, 5),
+       (2, 2, 3),
+       (3, 1, 2);
+
+INSERT INTO "order"(account)
+VALUES (1),
+       (2);
+
+INSERT INTO product_order(order_id, product, amount, product_price)
+VALUES (1, 1, 2, 1800),
+       (1, 3, 1, 2330),
+       (2, 2, 3, 600);

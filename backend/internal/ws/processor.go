@@ -3,22 +3,15 @@ package ws
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"log/slog"
 	"strconv"
 	"time"
 
-	"github.com/av-huette/avh-booking-system/internal/models"
 	"github.com/av-huette/avh-booking-system/internal/repo"
 )
 
 func queryError(table repo.TableName, err error) *WSError {
-	code := WSErrorCode(WSDBQueryError)
-	if errors.Is(err, repo.ErrInvalidColumn) {
-		code = WSInvalidFilter
-	}
-	return &WSError{Code: code, Message: err.Error(), Details: "Query failed for table " + string(table)}
+	return &WSError{Code: WSDBQueryError, Message: err.Error(), Details: "Query failed for table " + string(table)}
 }
 
 func (s *Service) processPing(message Message) ([]byte, *WSError) {
@@ -49,7 +42,6 @@ func (s *Service) processPing(message Message) ([]byte, *WSError) {
 	return b, nil
 }
 
-// processQuery unmarshals the message, fetches the data from the database and returns the object as JSON
 func (s *Service) processQuery(ctx context.Context, message Message) ([]byte, *WSError) {
 	query, err := unmarshalInterface[repo.Query](message.Payload)
 	if err != nil {
@@ -58,124 +50,43 @@ func (s *Service) processQuery(ctx context.Context, message Message) ([]byte, *W
 
 	switch query.Table {
 	case repo.TableAccount:
-		accounts, dbErr := s.stores.Account.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, account := range accounts {
-			rawAccount, err := json.Marshal(account)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode account"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawAccount)
-		}
-		return s.marshalQueryResultList(repo.TableAccount, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.Account.Get)
 	case repo.TableCategory:
-		categories, dbErr := s.stores.Category.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, category := range categories {
-			rawCategory, err := json.Marshal(category)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode category"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawCategory)
-		}
-		return s.marshalQueryResultList(repo.TableCategory, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.Category.Get)
+	case repo.TableFavorites:
+		return processGetQuery(ctx, s, query, s.stores.Favorites.Get)
 	case repo.TableLocation:
-		locations, dbErr := s.stores.Location.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, loc := range locations {
-			rawLoc, err := json.Marshal(loc)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode location"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawLoc)
-		}
-		return s.marshalQueryResultList(repo.TableLocation, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.Location.Get)
+	case repo.TableOrder:
+		return processGetQuery(ctx, s, query, s.stores.Order.Get)
 	case repo.TableProduct:
-		products, dbErr := s.stores.Product.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, product := range products {
-			rawProduct, err := json.Marshal(product)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawProduct)
-		}
-		return s.marshalQueryResultList(repo.TableProduct, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.Product.Get)
 	case repo.TableProductGroup:
-		groups, dbErr := s.stores.ProductGroup.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, group := range groups {
-			rawGroup, err := json.Marshal(group)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product group"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawGroup)
-		}
-		return s.marshalQueryResultList(repo.TableProductGroup, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.ProductGroup.Get)
+	case repo.TableProductOrder:
+		return processGetQuery(ctx, s, query, s.stores.ProductOrder.Get)
 	case repo.TableProductVisibility:
-		visibilities, dbErr := s.stores.ProductVisibility.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, vis := range visibilities {
-			rawVis, err := json.Marshal(vis)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product visibility"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawVis)
-		}
-		return s.marshalQueryResultList(repo.TableProductVisibility, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.ProductVisibility.Get)
+	case repo.TableRights:
+		return processGetQuery(ctx, s, query, s.stores.Rights.Get)
+	case repo.TableRole:
+		return processGetQuery(ctx, s, query, s.stores.Role.Get)
+	case repo.TableServiceLink:
+		return processGetQuery(ctx, s, query, s.stores.ServiceLink.Get)
+	case repo.TableServiceSewobe:
+		return processGetQuery(ctx, s, query, s.stores.ServiceSewobe.Get)
+	case repo.TableSettingsFrontend:
+		return processGetAllQuery(ctx, s, repo.TableSettingsFrontend, s.stores.SettingsFrontend.GetAll)
+	case repo.TableSettingsPayment:
+		return processGetAllQuery(ctx, s, repo.TableSettingsPayment, s.stores.SettingsPayment.GetAll)
+	case repo.TableSettingsEmail:
+		return processGetAllQuery(ctx, s, repo.TableSettingsEmail, s.stores.SettingsEmail.GetAll)
 	case repo.TableUnit:
-		units, dbErr := s.stores.Unit.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, unit := range units {
-			rawUnit, err := json.Marshal(unit)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode unit"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawUnit)
-		}
-		return s.marshalQueryResultList(repo.TableUnit, &rawJSONSlice)
-
+		return processGetQuery(ctx, s, query, s.stores.Unit.Get)
+	case repo.TableUser:
+		return processGetQuery(ctx, s, query, s.stores.User.Get)
 	case repo.TableVat:
-		vats, dbErr := s.stores.Vat.Get(ctx, query)
-		if dbErr != nil {
-			return nil, queryError(query.Table, dbErr)
-		}
-		var rawJSONSlice []json.RawMessage
-		for _, vat := range vats {
-			rawVat, err := json.Marshal(vat)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode vat"}
-			}
-			rawJSONSlice = append(rawJSONSlice, rawVat)
-		}
-		return s.marshalQueryResultList(repo.TableVat, &rawJSONSlice)
+		return processGetQuery(ctx, s, query, s.stores.Vat.Get)
 	}
 
 	return nil, &WSError{
@@ -185,173 +96,222 @@ func (s *Service) processQuery(ctx context.Context, message Message) ([]byte, *W
 	}
 }
 
-// processMutation unmarshals the message and initiates a database mutation
 func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]byte, int, *WSError) {
-
 	switch mutation.Operation {
 	case repo.OpInsert:
-		{
-			switch mutation.Table {
-			case repo.TableAccount:
-				account, wsErr := unmarshalInterface[models.Account](mutation.Values)
-				if wsErr != nil {
-					return nil, 0, wsErr
-				}
-
-				newID, err := s.stores.Account.Insert(ctx, *account)
-				if err != nil {
-					return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not create account"}
-				}
-
-				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
-				return b, newID, wsErr
-
-			case repo.TableProductVisibility:
-				visibility, wsErr := unmarshalInterface[models.ProductVisibility](mutation.Values)
-				if wsErr != nil {
-					return nil, 0, wsErr
-				}
-
-				newID, err := s.stores.ProductVisibility.Insert(ctx, *visibility)
-				if err != nil {
-					return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not create product visibility"}
-				}
-
-				b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
-				return b, newID, wsErr
-			}
-
-			return nil, 0, &WSError{
-				Code:    WSInvalidTable,
-				Message: "Invalid table",
-				Details: "Could not process mutation for table " + string(mutation.Table),
-			}
+		switch mutation.Table {
+		case repo.TableAccount:
+			return processInsert(ctx, s, mutation, s.stores.Account.Insert)
+		case repo.TableCategory:
+			return processInsert(ctx, s, mutation, s.stores.Category.Insert)
+		case repo.TableFavorites:
+			return processInsertNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Insert)
+		case repo.TableLocation:
+			return processInsert(ctx, s, mutation, s.stores.Location.Insert)
+		case repo.TableOrder:
+			return processInsert(ctx, s, mutation, s.stores.Order.Insert)
+		case repo.TableProduct:
+			return processInsert(ctx, s, mutation, s.stores.Product.Insert)
+		case repo.TableProductGroup:
+			return processInsert(ctx, s, mutation, s.stores.ProductGroup.Insert)
+		case repo.TableProductOrder:
+			return processInsertNoReturn(ctx, s, mutation, 0, s.stores.ProductOrder.Insert)
+		case repo.TableProductVisibility:
+			return processInsert(ctx, s, mutation, s.stores.ProductVisibility.Insert)
+		case repo.TableRights:
+			return processInsert(ctx, s, mutation, s.stores.Rights.Insert)
+		case repo.TableRole:
+			return processInsert(ctx, s, mutation, s.stores.Role.Insert)
+		case repo.TableServiceLink:
+			return processInsertNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Insert)
+		case repo.TableServiceSewobe:
+			return processInsert(ctx, s, mutation, s.stores.ServiceSewobe.Insert)
+		case repo.TableSettingsFrontend:
+			return processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Insert)
+		case repo.TableSettingsPayment:
+			return processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsPayment.Insert)
+		case repo.TableSettingsEmail:
+			return processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Insert)
+		case repo.TableUnit:
+			return processInsert(ctx, s, mutation, s.stores.Unit.Insert)
+		case repo.TableUser:
+			return processInsert(ctx, s, mutation, s.stores.User.Insert)
+		case repo.TableVat:
+			return processInsert(ctx, s, mutation, s.stores.Vat.Insert)
 		}
+
 	case repo.OpUpdate:
-		{
-			account, wsErr := unmarshalInterface[models.Account](mutation.Values)
-			if wsErr != nil {
-				return nil, 0, wsErr
-			}
-
-			newID, err := s.stores.Account.Update(ctx, *account)
-			if err != nil {
-				return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not update account"}
-			}
-
-			b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
-			return b, newID, wsErr
+		switch mutation.Table {
+		case repo.TableAccount:
+			return processUpdate(ctx, s, mutation, s.stores.Account.Update)
+		case repo.TableCategory:
+			return processUpdate(ctx, s, mutation, s.stores.Category.Update)
+		case repo.TableFavorites:
+			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Update)
+		case repo.TableProduct:
+			return processUpdate(ctx, s, mutation, s.stores.Product.Update)
+		case repo.TableProductGroup:
+			return processUpdate(ctx, s, mutation, s.stores.ProductGroup.Update)
+		case repo.TableRights:
+			return processUpdate(ctx, s, mutation, s.stores.Rights.Update)
+		case repo.TableRole:
+			return processUpdate(ctx, s, mutation, s.stores.Role.Update)
+		case repo.TableServiceLink:
+			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Update)
+		case repo.TableServiceSewobe:
+			return processUpdate(ctx, s, mutation, s.stores.ServiceSewobe.Update)
+		case repo.TableSettingsFrontend:
+			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Update)
+		case repo.TableSettingsPayment:
+			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsPayment.Update)
+		case repo.TableSettingsEmail:
+			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Update)
+		case repo.TableUnit:
+			return processUpdate(ctx, s, mutation, s.stores.Unit.Update)
+		case repo.TableUser:
+			return processUpdate(ctx, s, mutation, s.stores.User.Update)
+		case repo.TableVat:
+			return processUpdate(ctx, s, mutation, s.stores.Vat.Update)
 		}
 
 	case repo.OpDelete:
-		{
-			switch mutation.Table {
-			case repo.TableAccount:
-				{
-					return nil, 0, &WSError{Code: WSInvalidOperation,
-						Message: "Invalid operation",
-						Details: "Deletion of accounts is not supported"}
-				}
-
-			case repo.TableProductVisibility:
-				{
-					idStr, ok := mutation.Where["product_visibility_id"]
-					if !ok {
-						return nil, 0, &WSError{
-							Code:    WSBadJSON,
-							Message: "Missing product_visibility_id in where clause",
-							Details: "Delete requires product_visibility_id",
-						}
-					}
-
-					id, err := strconv.Atoi(idStr)
-					if err != nil {
-						return nil, 0, &WSError{
-							Code:    WSBadJSON,
-							Message: err.Error(),
-							Details: "product_visibility_id must be an integer",
-						}
-					}
-
-					oldID, err := s.stores.ProductVisibility.Delete(ctx, id)
-					if err != nil {
-						return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not delete visibility"}
-					}
-
-					b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, oldID)
-					return b, oldID, wsErr
-
-				}
+		switch mutation.Table {
+		case repo.TableAccount:
+			return nil, 0, &WSError{Code: WSInvalidOperation, Message: "Invalid operation", Details: "Deletion of accounts is not supported"}
+		case repo.TableCategory:
+			return processDeleteByIntID(ctx, s, mutation, "category_id", s.stores.Category.Delete)
+		case repo.TableProductGroup:
+			return processDeleteByIntID(ctx, s, mutation, "product_group_id", s.stores.ProductGroup.Delete)
+		case repo.TableProductVisibility:
+			return processDeleteByIntID(ctx, s, mutation, "product_visibility_id", s.stores.ProductVisibility.Delete)
+		case repo.TableRights:
+			return processDeleteByIntID(ctx, s, mutation, "rights_id", s.stores.Rights.Delete)
+		case repo.TableRole:
+			return processDeleteByIntID(ctx, s, mutation, "role_id", s.stores.Role.Delete)
+		case repo.TableServiceLink:
+			idStr, ok := mutation.Where["foreign_user_id"]
+			if !ok {
+				return nil, 0, &WSError{Code: WSBadJSON, Message: "Missing foreign_user_id in where clause", Details: "Delete requires foreign_user_id"}
 			}
-
-			return nil, 0, &WSError{
-				Code:    WSInvalidTable,
-				Message: "Invalid table",
-				Details: "Could not process delete for table " + string(mutation.Table),
+			fid, parseErr := strconv.Atoi(idStr)
+			if parseErr != nil {
+				return nil, 0, &WSError{Code: WSBadJSON, Message: parseErr.Error(), Details: "foreign_user_id must be an integer"}
 			}
+			if delErr := s.stores.ServiceLink.Delete(ctx, fid); delErr != nil {
+				return nil, 0, &WSError{Code: WSInternalError, Message: delErr.Error(), Details: "Could not delete from service_link"}
+			}
+			b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, fid)
+			return b, fid, wsErr
+		case repo.TableServiceSewobe:
+			return processDeleteByIntID(ctx, s, mutation, "service_sewobe_id", s.stores.ServiceSewobe.Delete)
+		case repo.TableSettingsFrontend:
+			return processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsFrontend.Delete)
+		case repo.TableSettingsPayment:
+			return processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsPayment.Delete)
+		case repo.TableSettingsEmail:
+			return processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsEmail.Delete)
+		case repo.TableUnit:
+			return processDeleteByIntID(ctx, s, mutation, "unit_id", s.stores.Unit.Delete)
+		case repo.TableUser:
+			return processDeleteByIntID(ctx, s, mutation, "user_id", s.stores.User.Delete)
+		case repo.TableVat:
+			return processDeleteByIntID(ctx, s, mutation, "vat_id", s.stores.Vat.Delete)
 		}
 	}
 
 	return nil, 0, &WSError{
 		Code:    WSInvalidOperation,
 		Message: "Invalid operation",
-		Details: "Could not process mutation for operation " + string(mutation.Operation),
+		Details: "Could not process mutation for operation " + string(mutation.Operation) + " on table " + string(mutation.Table),
 	}
 }
 
 func (s *Service) prepareBroadcast(ctx context.Context, mutation *Mutation, id int) ([]byte, *WSError) {
-	var queryResultList []json.RawMessage
 	switch mutation.Table {
 	case repo.TableAccount:
-		account, err := s.stores.Account.GetByID(ctx, id)
-		if err != nil {
-			return nil, &WSError{
-				Code:    WSDBQueryError,
-				Message: err.Error(),
-				Details: fmt.Sprintf("Could not get account with ID %d", id),
-			}
+		return broadcastByID(ctx, s, repo.TableAccount, id, s.stores.Account.GetByID)
+
+	case repo.TableCategory:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableCategory, s.stores.Category.Get)
 		}
-		rawAcc, err := json.Marshal(account)
-		if err != nil {
-			return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode account for broadcast"}
+		return broadcastByID(ctx, s, repo.TableCategory, id, s.stores.Category.GetByID)
+
+	case repo.TableFavorites:
+		return broadcastList(ctx, s, repo.TableFavorites, s.stores.Favorites.Get)
+
+	case repo.TableLocation:
+		return broadcastByID(ctx, s, repo.TableLocation, id, s.stores.Location.GetByID)
+
+	case repo.TableOrder:
+		return broadcastByID(ctx, s, repo.TableOrder, id, s.stores.Order.GetByID)
+
+	case repo.TableProduct:
+		return broadcastByID(ctx, s, repo.TableProduct, id, s.stores.Product.GetByID)
+
+	case repo.TableProductGroup:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableProductGroup, s.stores.ProductGroup.Get)
 		}
-		queryResultList = append(queryResultList, rawAcc)
+		return broadcastByID(ctx, s, repo.TableProductGroup, id, s.stores.ProductGroup.GetByID)
+
+	case repo.TableProductOrder:
+		return broadcastList(ctx, s, repo.TableProductOrder, s.stores.ProductOrder.Get)
 
 	case repo.TableProductVisibility:
-		query := repo.Query{
-			Table: repo.TableProductVisibility,
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableProductVisibility, s.stores.ProductVisibility.Get)
 		}
-		visibilities, err := s.stores.ProductVisibility.Get(ctx, &query)
-		if err != nil {
-			return nil, &WSError{
-				Code:    WSDBQueryError,
-				Message: err.Error(),
-				Details: "Could not reload product visibilities after delete",
-			}
-		}
-		for _, vis := range visibilities {
-			rawVis, err := json.Marshal(vis)
-			if err != nil {
-				return nil, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Failed to encode product visibility for broadcast"}
-			}
-			queryResultList = append(queryResultList, rawVis)
-		}
+		return broadcastByID(ctx, s, repo.TableProductVisibility, id, s.stores.ProductVisibility.GetByID)
 
-	} // end of switch
+	case repo.TableRights:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableRights, s.stores.Rights.Get)
+		}
+		return broadcastByID(ctx, s, repo.TableRights, id, s.stores.Rights.GetByID)
 
-	if len(queryResultList) == 1 {
-		message, wsErr := s.marshalBroadcastQueryResult(mutation.Table, queryResultList[0])
-		if wsErr != nil {
-			return nil, wsErr
+	case repo.TableRole:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableRole, s.stores.Role.Get)
 		}
-		return message, nil
-	} else if len(queryResultList) > 1 {
-		message, wsErr := s.marshalBroadcastQueryResultList(mutation.Table, &queryResultList)
-		if wsErr != nil {
-			return nil, wsErr
+		return broadcastByID(ctx, s, repo.TableRole, id, s.stores.Role.GetByID)
+
+	case repo.TableServiceLink:
+		return broadcastList(ctx, s, repo.TableServiceLink, s.stores.ServiceLink.Get)
+
+	case repo.TableServiceSewobe:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableServiceSewobe, s.stores.ServiceSewobe.Get)
 		}
-		return message, nil
+		return broadcastByID(ctx, s, repo.TableServiceSewobe, id, s.stores.ServiceSewobe.GetByID)
+
+	case repo.TableSettingsFrontend:
+		return broadcastGetAllList(ctx, s, repo.TableSettingsFrontend, s.stores.SettingsFrontend.GetAll)
+
+	case repo.TableSettingsPayment:
+		return broadcastGetAllList(ctx, s, repo.TableSettingsPayment, s.stores.SettingsPayment.GetAll)
+
+	case repo.TableSettingsEmail:
+		return broadcastGetAllList(ctx, s, repo.TableSettingsEmail, s.stores.SettingsEmail.GetAll)
+
+	case repo.TableUnit:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableUnit, s.stores.Unit.Get)
+		}
+		return broadcastByID(ctx, s, repo.TableUnit, id, s.stores.Unit.GetByID)
+
+	case repo.TableUser:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableUser, s.stores.User.Get)
+		}
+		return broadcastByID(ctx, s, repo.TableUser, id, s.stores.User.GetByID)
+
+	case repo.TableVat:
+		if mutation.Operation == repo.OpDelete {
+			return broadcastList(ctx, s, repo.TableVat, s.stores.Vat.Get)
+		}
+		return broadcastByID(ctx, s, repo.TableVat, id, s.stores.Vat.GetByID)
 	}
 
-	return nil, &WSError{Code: WSUnknown, Message: "Broadcast data is empty"}
+	return nil, nil
 }
