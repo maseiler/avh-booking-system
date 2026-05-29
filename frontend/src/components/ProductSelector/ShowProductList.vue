@@ -20,10 +20,14 @@
           <td>{{ product.size }}</td>
           <td>{{ product.getUnit()?.name }}</td>
           <td>
-            <button class="tag">
+            <button class="tag" :class="{
+              'is-skeleton': product.getCategory() == undefined,
+              'is-warning':  product.getCategory()?.enabled === false
+            }">
               <span class="icon"><icon :icon="product.getCategory()?.icon" /></span>
               <span>{{ product.getCategory()?.title }}</span>
-            </button>            
+              <span v-if="!product.getCategory()?.enabled" class="icon"><icon :icon="['fas', 'eye-slash']" /></span>
+            </button>
           </td>
           <td>{{ product.getGroup()?.name }}</td>
           <td>

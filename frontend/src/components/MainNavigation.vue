@@ -39,6 +39,7 @@
         <div class="navbar-dropdown">
           <router-link to="/settings/products" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.item') }}</router-link>
           <router-link to="/settings/accounts" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.account') }}</router-link>
+          <router-link to="/settings/categories" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.category') }}</router-link>
           <router-link to="/settings/payments" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.payment') }}</router-link>
           <router-link to="/settings/application" class="navbar-item" @click="burgerActive = false">{{ $t('menu.settings.system') }}</router-link>
         </div>

@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {Product} from '../composables/product'
 import { useProductVisibilityStore } from './ProductVisibilityStore'
 import { useAccountStore } from './AccountStore'
+import { useCategoryStore } from './CategoryStore'
 
 export const useProductStore = defineStore('product', {
     state: () => {
@@ -11,11 +12,13 @@ export const useProductStore = defineStore('product', {
         }
     },
     actions: {
-        getByCategory(categoryId: number, selectedAccountCategorys: number[]): Product[] {
+        getByCategory(categoryId: number, selectedAccountCategorys: number[], all?: boolean): Product[] {
             const currentCategoryProducts = this.products.filter((prod) => {
+                // Hide products whose category is disabled (unless all=true, e.g. in settings)
+                if (!all && !useCategoryStore().byId(prod.category)?.enabled) { return false }
                 // ToDo Hide Products that are not available at this location
                 if (categoryId == 0) {return true}
-                return prod.category == categoryId 
+                return prod.category == categoryId
             });
 
             const visibleProducts = currentCategoryProducts.filter((prod) => {
@@ -36,9 +39,9 @@ export const useProductStore = defineStore('product', {
                 return a.name.localeCompare(b.name);
             });
         },
-        getBySearchAndCategory(searchString: string, categoryId: number, selectedAccountCategorys: number[]): Product[] {
+        getBySearchAndCategory(searchString: string, categoryId: number, selectedAccountCategorys: number[], all?: boolean): Product[] {
             let search = searchString.toLowerCase();
-            let byCategory = this.getByCategory(categoryId, selectedAccountCategorys);
+            let byCategory = this.getByCategory(categoryId, selectedAccountCategorys, all);
             let searchResults = byCategory.filter((prod) => prod.name.toLowerCase().includes(search));
             return searchResults;
         },

@@ -113,17 +113,31 @@
   <div class="columns">
     <div class="column is-3"></div>
     <div class="column">
-      <Buttons>
-        <Button :fa-icon="['fas', 'times']" icon-position="left" @click="$router.go(-1)">
-          Cancel
-        </Button>
-
-        <Button class="is-primary" @click="actionButtonClicked" :fa-icon="['fas', 'save']" icon-position="right">
-          {{ actionButton }}
-        </Button>
-      </Buttons>      
+      <div class="is-flex is-align-items-center">
+        <Buttons>
+          <Button :fa-icon="['fas', 'times']" icon-position="left" @click="$router.go(-1)">
+            Cancel
+          </Button>
+          <Button class="is-primary" @click="actionButtonClicked" :fa-icon="['fas', 'save']" icon-position="right" :disabled="saveStatus === 'pending'">
+            {{ actionButton }}
+          </Button>
+        </Buttons>
+        <span v-if="saveStatus === 'pending'" class="ml-3 icon has-text-grey">
+          <icon :icon="['fas', 'spinner']" :spin="true" />
+        </span>
+        <span v-else-if="saveStatus === 'success'" class="ml-3 icon-text has-text-success">
+          <span class="icon"><icon :icon="['fas', 'check']" /></span>
+          <span>Saved</span>
+        </span>
+        <span v-else-if="saveStatus === 'error'" class="ml-3 icon-text has-text-danger">
+          <span class="icon"><icon :icon="['fas', 'times']" /></span>
+          <span>Saving failed</span>
+        </span>
+      </div>
     </div>
   </div>
+
+  <ErrorModal v-model="errorModalVisible" :error="currentError" />
 </template>
 
 <script lang="ts">
@@ -136,6 +150,7 @@ import Buttons from '../../composables/elements/Buttons.vue';
 import Button from '../../composables/elements/Button.vue';
 import { useSocketStore } from '../../store/socketStore';
 import { useVatStore } from '../../store/VatStore.ts';
+import ErrorModal from '../../components/ErrorModal.vue';
 
 export default {
   data() {
@@ -147,7 +162,13 @@ export default {
       socket$: useSocketStore(),
       vat$: useVatStore(),
       product: {} as Product,
-      doneMounting: false
+      doneMounting: false,
+      saveStatus: 'idle' as 'idle' | 'pending' | 'success' | 'error',
+      errorModalVisible: false,
+      currentError: null as { code: string, message: string, details?: string } | null,
+      saveTimeoutId: null as number | null,
+      mutationHandler: null as ((res: any) => void) | null,
+      wsErrorHandler: null as ((err: any) => void) | null,
     }
   },
   mounted() {
@@ -158,7 +179,9 @@ export default {
       this.product = new Product(newProduct);
     }
     this.doneMounting = true;
-    console.log(this.product);
+  },
+  beforeUnmount() {
+    this.cleanupSaveListeners();
   },
   computed: {
     categoryIcon(){
@@ -180,20 +203,67 @@ export default {
     }
   },
   methods: {
-    actionButtonClicked(){
-      if(this.isEdit){
-        // Update current User
-        this.product$.byId(parseInt(this.$route.params.productId.toString()))?.update(this.product);
-        this.$router.push({name:'ProductSettings'});
+    cleanupSaveListeners() {
+      if (this.mutationHandler) {
+        this.socket$.wsClient.off('mutationResult', this.mutationHandler);
+        this.mutationHandler = null;
+      }
+      if (this.wsErrorHandler) {
+        this.socket$.wsClient.off('wsError', this.wsErrorHandler);
+        this.wsErrorHandler = null;
+      }
+      if (this.saveTimeoutId !== null) {
+        window.clearTimeout(this.saveTimeoutId);
+        this.saveTimeoutId = null;
+      }
+    },
+    startSave() {
+      this.saveStatus = 'pending';
+      const saveStartTime = Date.now();
+
+      this.mutationHandler = (res: any) => {
+        if (res.table !== 'product') return;
+        if (this.isEdit && res.id !== this.product.id) return;
+        this.cleanupSaveListeners();
+        const elapsed = Date.now() - saveStartTime;
+        window.setTimeout(() => {
+          this.saveStatus = 'success';
+          window.setTimeout(() => {
+            this.$router.push({ name: 'ProductSettings' });
+          }, 500);
+        }, Math.max(0, 500 - elapsed));
+      };
+
+      this.wsErrorHandler = (err: any) => {
+        this.cleanupSaveListeners();
+        this.saveStatus = 'idle';
+        this.currentError = err;
+        this.errorModalVisible = true;
+      };
+
+      this.socket$.wsClient.on('mutationResult', this.mutationHandler);
+      this.socket$.wsClient.on('wsError', this.wsErrorHandler);
+
+      this.saveTimeoutId = window.setTimeout(() => {
+        this.cleanupSaveListeners();
+        this.saveStatus = 'error';
+        window.setTimeout(() => { this.saveStatus = 'idle'; }, 500);
+      }, 5000);
+    },
+    actionButtonClicked() {
+      if (this.isEdit) {
+        this.startSave();
+        this.socket$.updateProduct(this.product as Product);
         return;
       }
+      this.startSave();
       this.socket$.addProduct(this.product as Product);
-      this.$router.push({name:'ProductSettings'});
     }
   },
   components: {
     Button,
-    Buttons
+    Buttons,
+    ErrorModal,
   }
 }
 </script>

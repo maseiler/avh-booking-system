@@ -31,7 +31,8 @@ export type CategoryVisibility = (typeof CategoryVisibility)[keyof typeof Catego
 export interface Category {
     title: string
     type: CategoryType
-    visibility: CategoryVisibility
+    enabled: boolean
+    visibility?: CategoryVisibility
     icon?: Icon
     id: number
 }
@@ -41,6 +42,7 @@ export class Category implements Category {
     constructor(cat: Category) {
         this.title = cat.title;
         this.type = cat.type;
+        this.enabled = cat.enabled;
         this.visibility = cat.visibility;
         this.icon = cat.icon;
         this.id = cat.id;
@@ -55,7 +57,7 @@ export function createCategory(obj: any): Category {
     const cat = {} as Category;
     cat.id = obj.id;
     cat.title = obj.name;
-    cat.visibility = obj.enabled;
+    cat.enabled = obj.enabled;
     cat.icon = obj.icon;
     cat.type = StringToCategoryType[obj.type];
     return new Category(cat);

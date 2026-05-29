@@ -213,16 +213,20 @@ export class WebSocketClient {
 
                 case 'mutationResult': {
                     const res = message.payload as ResultMutation
+                    this.trigger('mutationResult', res);
 
                     switch (res.table) {
                         case 'account': {
-                            // For future use
                             return;
                         }
                         default: {
                             console.info(res)
                         }
                     }
+                    return;
+                }
+                case 'error': {
+                    this.trigger('wsError', message.payload);
                     return;
                 }
                 case 'broadcast' : {

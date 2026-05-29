@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { Account, type Account} from '../composables/account'
 import { useSocketStore } from './socketStore'
+import { useCategoryStore } from './CategoryStore'
 
 export const useAccountStore = defineStore('account', {
   state: () => {
@@ -26,7 +27,11 @@ export const useAccountStore = defineStore('account', {
     getByCategory(categoryId: number, all?: boolean): Account[]{
       let enabledUsers = this.accounts as Account[];
       if(!all){
-        enabledUsers = this.accounts.filter((acc) => acc.enabled) as Account[];
+        enabledUsers = this.accounts.filter((acc) => {
+          if (!acc.enabled) return false;
+          if (!useCategoryStore().byId(acc.category)?.enabled) return false;
+          return true;
+        }) as Account[];
       }
       if(categoryId == 0){
         return enabledUsers;

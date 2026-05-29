@@ -49,7 +49,8 @@ export default {
     ShowProductList
   },
   props: {
-    show: String
+    show: String,
+    all: Boolean
   },
   data() {
     return {
@@ -69,10 +70,11 @@ export default {
     products(){
       let selectedAccountCategorys = [...new Set(this.account$.selected.map(a => a.category))] as number[];
       // return this.product$.products;
-      return this.product$.getBySearchAndCategory(this.search, this.selectedCategory, selectedAccountCategorys);
+      return this.product$.getBySearchAndCategory(this.search, this.selectedCategory, selectedAccountCategorys, this.all);
     },
     categories(){
-      return this.category$.productCategories;
+      if (this.all) return this.category$.productCategories;
+      return this.category$.productCategories.filter(cat => cat.enabled);
     }
   }
 }

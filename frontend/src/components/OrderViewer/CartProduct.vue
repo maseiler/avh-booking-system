@@ -1,7 +1,7 @@
 <template>
   <tr class="cartProduct">
     <td class="cell productQuantity">
-      <div class="field has-addons">
+      <div class="field has-addons" v-if="allowEdit">
         <p class="control">
           <button class="button" @click="cart$.removeFromCart(content.product)"><icon :icon="['fas', 'trash']" /></button>
         </p>
@@ -11,6 +11,7 @@
           <span class="icon is-right" @click="content.quantity ++"><icon :icon="['fas', 'circle-plus']" /></span>
         </p>
       </div>
+      <div class="field input" v-if="!allowEdit">{{ content.quantity }}</div>
     </td>
     <td class="cell productName"><span>{{ content.product.name }} ({{ content.product.size }} {{ content.product.getUnit().name }})</span></td>
     <td class="cell productTax has-text-right"><span>{{ content.tax }}%</span></td>
@@ -66,7 +67,8 @@ export default{
    }   
   },
   props:{
-    content: {} as CartContent
+    content: {} as CartContent,
+    allowEdit: Boolean,
   },
   methods: {
     reduceQuant(){

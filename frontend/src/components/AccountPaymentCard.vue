@@ -19,7 +19,7 @@
       </div>
 
       <Buttons>
-        <Button :fa-icon="['fas', 'list']" icon-position="left" title="List all Orders of this Account">
+        <Button :fa-icon="['fas', 'list']" icon-position="left" title="List all Orders of this Account" @click="goToOrders">
           List Orders
         </Button>
 
@@ -122,6 +122,14 @@ export default {
   components: {
     Button,
     Buttons
+  },
+  methods: {
+    goToOrders(){
+      const id = this.account$.selected[0]?.id;
+      if (id !== undefined) {
+        this.$router.push({ name: 'Orders', query: { account: String(id) } });
+      }
+    }
   },
   computed: {
     categoryIcon(){

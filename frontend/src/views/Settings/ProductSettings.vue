@@ -4,7 +4,7 @@
     <Button
       icon-position="left"
       :fa-icon="['fas', 'plus']"
-      @click="console.warn('Not yet implemented!')">
+      @click="$router.push({ name: 'CategorySettingsAdd', params: { type: 'product' } })">
       Kategorie hinzufügen
     </Button>
 
@@ -15,7 +15,7 @@
       Produkt hinzufügen
     </Button>
   </Buttons>
-  <ProductSelector show="list"></ProductSelector>
+  <ProductSelector show="list" :all="true"></ProductSelector>
 </template>
 
 <script lang="ts">
