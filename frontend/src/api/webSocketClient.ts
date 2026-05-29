@@ -253,6 +253,10 @@ export class WebSocketClient {
                             useProductStore().patchProducts(newProducts);
                             return;
                         }
+                        case 'product_group': {
+                            useProductGroupStore().patchProductGroups([result.data]);
+                            return;
+                        }
                     }
                     return
                 }

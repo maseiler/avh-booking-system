@@ -16,6 +16,11 @@ export const useProductGroupStore = defineStore('productGroup', {
         byId(id: number | undefined): ProductGroup | undefined {
             return this.productGroups.find((productGroup) => productGroup.id == id)
         },
+        removeById(id: number) {
+            this.$patch(state => {
+                state.productGroups = state.productGroups.filter(g => g.id !== id)
+            })
+        },
         patchProductGroups(newGroups: ProductGroup[]) {
             this.$patch(state => {
                 newGroups.forEach(newGroup => {

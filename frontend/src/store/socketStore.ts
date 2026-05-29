@@ -94,6 +94,31 @@ export const useSocketStore = defineStore("notificationStore", {
             }
             this.wsClient.send({ type: "mutation", payload: payload })
         },
+        deleteProductGroup(id: number) {
+            let payload = {
+                "operation": "delete",
+                "table": "product_group",
+                "where": { "product_group_id": id.toString() }
+            }
+            this.wsClient.send({ type: "mutation", payload: payload })
+        },
+        addProductGroup(name: string) {
+            let payload = {
+                "operation": "insert",
+                "table": "product_group",
+                "values": { "name": name }
+            }
+            this.wsClient.send({ type: "mutation", payload: payload })
+        },
+        updateProductGroup(id: number, name: string) {
+            let payload = {
+                "operation": "update",
+                "table": "product_group",
+                "where": { "product_group_id": id.toString() },
+                "values": { "name": name }
+            }
+            this.wsClient.send({ type: "mutation", payload: payload })
+        },
         addCategory(newCategory: { name: string, icon: [string, string], type: string }) {
             let payload = {
                 "operation": "insert",

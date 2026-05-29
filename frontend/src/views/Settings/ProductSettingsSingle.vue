@@ -46,6 +46,30 @@
 
   <div class="columns">
     <div class="column is-3">
+      Produktgruppe:
+      <router-link :to="{ name: 'ProductGroupSettings' }" class="tag">
+        <icon :icon="['fas', 'gear']" title="Produktgruppen-Einstellungen"/>
+      </router-link>
+    </div>
+    <div class="column">
+      <div class="control has-icons-left">
+        <div class="select">
+          <select v-model="product.productGroup">
+            <option :value="0">Keine Gruppe</option>
+            <option v-for="group in productGroup$.all.filter(g => g.id !== 0)" :value="group.id">
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div class="icon is-small is-left">
+          <icon :icon="['fas', 'list']"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column is-3">
       Size and Unit:
       <!-- ToDo: Add Unit Settings -->
       <router-link to="#" class="tag">
@@ -160,6 +184,7 @@ import { Product } from '../../composables/product';
 import { useProductStore } from '../../store/ProductStore';
 import { useCategoryStore } from '../../store/CategoryStore';
 import { useProductVisibilityStore } from '../../store/ProductVisibilityStore.ts';
+import { useProductGroupStore } from '../../store/ProductGroupStore.ts';
 import {useUnitStore} from "../../store/UnitStore.ts";
 import Buttons from '../../composables/elements/Buttons.vue';
 import Button from '../../composables/elements/Button.vue';
@@ -173,6 +198,7 @@ export default {
       product$: useProductStore(),
       category$: useCategoryStore(),
       visibility$: useProductVisibilityStore(),
+      productGroup$: useProductGroupStore(),
       unit$: useUnitStore(),
       socket$: useSocketStore(),
       vat$: useVatStore(),

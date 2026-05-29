@@ -5,6 +5,8 @@ import BookingView from '../views/BookingView.vue'
 import PaymentView from '../views/PaymentView.vue'
 import ProductSettings from '../views/Settings/ProductSettings.vue'
 import ProductSettingsSingle from '../views/Settings/ProductSettingsSingle.vue'
+import ProductGroupSettings from '../views/Settings/ProductGroupSettings.vue'
+import ProductGroupSettingsSingle from '../views/Settings/ProductGroupSettingsSingle.vue'
 import AccountSettings from '../views/Settings/AccountSettings.vue'
 import AccountSettingsSingle from '../views/Settings/AccountSettingsSingle.vue'
 import CategorySettingsSingle from '../views/Settings/CategorySettingsSingle.vue'
@@ -21,6 +23,9 @@ const routes = [
   { name: 'ProductSettings', path: '/settings/products', component: ProductSettings},
   { name: 'ProductSettingsSingle', path: '/settings/products/:productId', component: ProductSettingsSingle},
   { name: 'ProductSettingsAdd', path: '/settings/products/add', component: ProductSettingsSingle},
+  { name: 'ProductGroupSettings', path: '/settings/product-groups', component: ProductGroupSettings },
+  { name: 'ProductGroupSettingsAdd', path: '/settings/product-groups/add', component: ProductGroupSettingsSingle },
+  { name: 'ProductGroupSettingsEdit', path: '/settings/product-groups/:groupId', component: ProductGroupSettingsSingle },
   { name: 'CategorySettings', path: '/settings/categories', component: CategorySettings },
   { name: 'CategorySettingsAdd', path: '/settings/categories/:type/add', component: CategorySettingsSingle },
   { name: 'CategorySettingsSingleEdit', path: '/settings/categories/:type/:categoryId', component: CategorySettingsSingle },
