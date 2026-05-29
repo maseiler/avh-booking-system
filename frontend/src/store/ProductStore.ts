@@ -35,6 +35,15 @@ export const useProductStore = defineStore('product', {
                 return retVal;
             })
 
+            // if(all) {
+            //     // Gib alle Produkte aus, wenn die all-Flag gesetzt ist
+            //     return visibleProducts.sort((a, b) => {
+            //         return a.name.localeCompare(b.name)
+            //     });
+            // }
+
+            // const nonGroupedProducts = visibleProducts.filter((prod) => prod.productGroup == 0);
+
             return visibleProducts.sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });

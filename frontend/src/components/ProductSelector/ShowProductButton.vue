@@ -3,13 +3,21 @@
     <div class="dictionary" v-for="(dict, key) of productsInOrder" :key="key">
       <span class="title is-1">{{ key }}</span>
       <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-flex-start is-gap-1">
+        <template v-for="product in dict">
           <Button
-          v-for="product in dict"
+          v-if="product.constructor.name == 'Product'"
           @click="cart$.addToCart(product)"
           title="select product">
             {{ product.name }} {{ product.size }} {{ product.getUnit()?.name }}
             <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
-        </Button>
+          </Button>
+
+          <Button
+            v-if="product.constructor.name == 'ProductGroup'"
+            title="select product">
+              {{ product.name }}
+          </Button>
+        </template>
       </div>
     </div>
   </div>
@@ -57,6 +65,7 @@
 
 <script lang="ts">
 import { Product } from '../../composables/product';
+import { ProductGroup } from '../../composables/productGroup.ts';
 import { useProductStore } from '../../store/ProductStore';
 import type { PropType } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
@@ -82,22 +91,36 @@ export default {
   },
   computed: {
     productsInOrder() {
-      var dict: {[key: string]: Product[]} = {};
+      var dict: {[key: string]: Product[] | ProductGroup[]} = {};
       this.products?.forEach(prod => {
-      var char = prod.name[0].toUpperCase();
-      var charCode = char.charCodeAt(0);
-      if (charCode >= 65 && charCode <= 90) { // A-Z
-      } else if (charCode >= 48 && charCode <= 57) { // 0-9
-        char = "#";
-      } else {
-        char = "?";
-      }
-      if (dict[char] === undefined) {
-        dict[char] = [prod]
-      } else {
-        dict[char].push(prod);
-      }
-    })
+        var char = prod.name[0].toUpperCase();
+        var charCode = char.charCodeAt(0);
+
+        if(prod.productGroup != 0) { 
+          // Use the Group Name instead if available
+          let pG = prod.getGroup()
+          char = pG.name[0].toUpperCase();
+          charCode = char.charCodeAt(0);
+        }
+
+        if (charCode >= 65 && charCode <= 90) { // A-Z
+        } else if (charCode >= 48 && charCode <= 57) { // 0-9
+          char = "#";
+        } else {
+         char = "?";
+        }
+
+        let toAdd = prod;
+        if(prod.productGroup != 0) {
+          toAdd = prod.getGroup();
+        }
+        
+        if (dict[char] === undefined) {
+          dict[char] = [toAdd]
+        } else if(!dict[char].includes(toAdd)) {
+          dict[char].push(toAdd); 
+        }
+      })
     return dict;
     }
   },

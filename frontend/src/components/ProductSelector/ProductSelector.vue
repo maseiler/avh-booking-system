@@ -42,6 +42,7 @@ import ShowProductButton from './ShowProductButton.vue';
 import ShowProductList from './ShowProductList.vue';
 import { useProductStore } from '../../store/ProductStore';
 import { useAccountStore } from '../../store/AccountStore';
+import { useProductGroupStore } from '../../store/ProductGroupStore.ts';
 
 export default {
   components: {
@@ -55,6 +56,7 @@ export default {
   data() {
     return {
       product$: useProductStore(),
+      productGroup$: useProductGroupStore(),
       category$: useCategoryStore(),
       account$: useAccountStore(),
       selectedCategory: 0 as number,

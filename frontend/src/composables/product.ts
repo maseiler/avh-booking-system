@@ -12,7 +12,7 @@ export interface Product {
     name: string
     price: number
     vat: number
-    group: number
+    productGroup: number
     size: number
     unit: number
     category: number
@@ -29,7 +29,7 @@ export class Product implements Product {
         this.id = prod.id;
         this.name = prod.name;
         this.price = prod.price;
-        this.group = prod.group;
+        this.productGroup = prod.productGroup;
         this.size = prod.size;
         this.unit = prod.unit;
         this.category = prod.category;
@@ -41,7 +41,7 @@ export class Product implements Product {
     }
 
     public getGroup(): ProductGroup | undefined{
-        return useProductGroupStore().byId(this.group)
+        return useProductGroupStore().byId(this.productGroup)
     }
 
     public getUnit(): Unit | undefined{
@@ -61,7 +61,7 @@ export class Product implements Product {
         this.id = reference.id;
         this.name = reference.name;
         this.price = reference.price;
-        this.group = reference.group;
+        this.productGroup = reference.productGroup;
         this.size = reference.size;
         this.unit = reference.unit;
         this.category = reference.category;
