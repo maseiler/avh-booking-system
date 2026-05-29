@@ -1,20 +1,43 @@
 <template>
   <div class="accountList" :style="`--_height:${height}px;`" ref="resizeBox" @mouseenter="onResize" @scroll="onResize">
-    <div class="dictionary" v-for="(dict, key) of productsInOrder" :key="key">
-      <span class="title is-1">{{ key }}</span>
+
+    <div v-if="selectedGroup" class="group-overlay">
+      <div class="group-overlay-header">
+        <button class="button is-small" @click="selectedGroup = null">
+          <span class="icon is-small"><icon :icon="['fas', 'arrow-left']" /></span>
+          <span>Zurück</span>
+        </button>
+        <span class="group-overlay-title">{{ selectedGroup.name }}</span>
+        <button class="delete is-medium" @click="selectedGroup = null" />
+      </div>
       <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-flex-start is-gap-1">
-        <template v-for="product in dict">
-          <Button
-          v-if="product.constructor.name == 'Product'"
+        <Button
+          v-for="product in productsForSelectedGroup"
+          :key="product.id"
           @click="cart$.addToCart(product)"
           title="select product">
             {{ product.name }} {{ product.size }} {{ product.getUnit()?.name }}
             <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
+        </Button>
+      </div>
+    </div>
+
+    <div class="dictionary" v-for="(dict, key) of processedProducts.dict" :key="key">
+      <span class="title is-1">{{ key }}</span>
+      <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-flex-start is-gap-1">
+        <template v-for="product in dict">
+          <Button
+            v-if="product.constructor.name == 'Product'"
+            @click="cart$.addToCart(product)"
+            title="select product">
+              {{ product.name }} {{ product.size }} {{ product.getUnit()?.name }}
+              <span class="cartHint" v-if="cart$.productCartQuantity(product) != -1">{{ cart$.productCartQuantity(product) }}</span>
           </Button>
 
           <Button
             v-if="product.constructor.name == 'ProductGroup'"
-            title="select product">
+            @click="selectedGroup = product"
+            title="select product group">
               {{ product.name }}
           </Button>
         </template>
@@ -27,6 +50,7 @@
 .accountList{
   height: var(--_height);
   overflow-y: scroll;
+  position: relative;
 }
 .dictionary{
   display:grid;
@@ -61,6 +85,27 @@
     display:none;
   }
 }
+
+.group-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bulma-scheme-main);
+  overflow-y: auto;
+  z-index: 10;
+  padding: .5rem;
+}
+.group-overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--bulma-border);
+  margin-bottom: .5rem;
+}
+.group-overlay-title {
+  font-weight: 600;
+  font-size: 1.1em;
+}
 </style>
 
 <script lang="ts">
@@ -79,6 +124,7 @@ export default {
       height: 0,
       resizeElement: {} as HTMLElement,
       cart$: useCartStore(),
+      selectedGroup: null as ProductGroup | null,
     }
   },
   props: {
@@ -90,15 +136,23 @@ export default {
     Button
   },
   computed: {
-    productsInOrder() {
-      var dict: {[key: string]: Product[] | ProductGroup[]} = {};
-      this.products?.forEach(prod => {
-        var char = prod.name[0].toUpperCase();
-        var charCode = char.charCodeAt(0);
+    processedProducts() {
+      const dict: {[key: string]: (Product | ProductGroup)[]} = {};
+      const groupProductsMap: {[key: number]: Product[]} = {};
 
-        if(prod.productGroup != 0) { 
-          // Use the Group Name instead if available
-          let pG = prod.getGroup()
+      this.products?.forEach(prod => {
+        if (prod.productGroup != 0) {
+          if (!groupProductsMap[prod.productGroup]) {
+            groupProductsMap[prod.productGroup] = [];
+          }
+          groupProductsMap[prod.productGroup].push(prod);
+        }
+
+        let char = prod.name[0].toUpperCase();
+        let charCode = char.charCodeAt(0);
+
+        if (prod.productGroup != 0) {
+          const pG = prod.getGroup();
           char = pG.name[0].toUpperCase();
           charCode = char.charCodeAt(0);
         }
@@ -107,21 +161,28 @@ export default {
         } else if (charCode >= 48 && charCode <= 57) { // 0-9
           char = "#";
         } else {
-         char = "?";
+          char = "?";
         }
 
-        let toAdd = prod;
-        if(prod.productGroup != 0) {
-          toAdd = prod.getGroup();
-        }
-        
+        const toAdd: Product | ProductGroup = prod.productGroup != 0 ? prod.getGroup() : prod;
+
         if (dict[char] === undefined) {
-          dict[char] = [toAdd]
-        } else if(!dict[char].includes(toAdd)) {
-          dict[char].push(toAdd); 
+          dict[char] = [toAdd];
+        } else if (!dict[char].includes(toAdd)) {
+          dict[char].push(toAdd);
         }
-      })
-    return dict;
+      });
+
+      return { dict, groupProductsMap };
+    },
+    productsForSelectedGroup() {
+      if (!this.selectedGroup) return [];
+      return this.processedProducts.groupProductsMap[this.selectedGroup.id ?? -1] ?? [];
+    }
+  },
+  watch: {
+    products() {
+      // this.selectedGroup = null;
     }
   },
   methods: {
@@ -129,15 +190,14 @@ export default {
       let y = window.innerHeight;
       let _y = this.resizeElement.getBoundingClientRect().top;
       let dy = y - _y;
-      this.height = dy -15 ;
+      this.height = dy - 15;
     }
   },
   mounted() {
-    this.resizeElement = this.$refs.resizeBox as HTMLElement
-    // Watch for resizing
+    this.resizeElement = this.$refs.resizeBox as HTMLElement;
     useResizeObserver(this.resizeElement, () => {
       this.onResize();
-    })
+    });
   },
 }
 </script>
