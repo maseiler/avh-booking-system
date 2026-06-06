@@ -3,8 +3,13 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
+
+type msgValidator interface {
+	validate([]byte) error
+}
 
 type messageValidator struct {
 	schema *jsonschema.Schema

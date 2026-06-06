@@ -10,7 +10,7 @@ import (
 type Service struct {
 	log       *slog.Logger
 	hub       *Hub
-	validator *messageValidator
+	validator msgValidator
 	stores    Stores
 }
 
