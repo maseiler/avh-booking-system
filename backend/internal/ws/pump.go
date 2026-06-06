@@ -74,14 +74,14 @@ func (s *Service) ReadPump(c *Client) {
 				continue
 			}
 
-			response, id, wsErr := s.processMutation(c.Ctx, mutation)
+			response, broadcast, wsErr := s.processMutation(c.Ctx, mutation)
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
 			}
 			c.Send <- response
 
-			message, wsErr = s.prepareBroadcast(c.Ctx, mutation, id)
+			message, wsErr = broadcast()
 			if wsErr != nil {
 				s.sendError(c, wsErr)
 				continue
