@@ -105,115 +105,139 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableAccount, id, s.stores.Account.GetByID)
+			}, nil
 		case repo.TableCategory:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Category.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableCategory, id, s.stores.Category.GetByID)
+			}, nil
 		case repo.TableFavorites:
-			b, id, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Insert)
+			b, _, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableFavorites, s.stores.Favorites.Get) }, nil
 		case repo.TableLocation:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Location.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableLocation, id, s.stores.Location.GetByID)
+			}, nil
 		case repo.TableOrder:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Order.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableOrder, id, s.stores.Order.GetByID) }, nil
 		case repo.TableProduct:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Product.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableProduct, id, s.stores.Product.GetByID)
+			}, nil
 		case repo.TableProductGroup:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.ProductGroup.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableProductGroup, id, s.stores.ProductGroup.GetByID)
+			}, nil
 		case repo.TableProductOrder:
-			b, id, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.ProductOrder.Insert)
+			b, _, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.ProductOrder.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableProductOrder, s.stores.ProductOrder.Get)
+			}, nil
 		case repo.TableProductVisibility:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.ProductVisibility.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableProductVisibility, id, s.stores.ProductVisibility.GetByID)
+			}, nil
 		case repo.TableRights:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Rights.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableRights, id, s.stores.Rights.GetByID) }, nil
 		case repo.TableRole:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Role.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableRole, id, s.stores.Role.GetByID) }, nil
 		case repo.TableServiceLink:
-			b, id, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Insert)
+			b, _, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableServiceLink, s.stores.ServiceLink.Get)
+			}, nil
 		case repo.TableServiceSewobe:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.ServiceSewobe.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableServiceSewobe, id, s.stores.ServiceSewobe.GetByID)
+			}, nil
 		case repo.TableSettingsFrontend:
-			b, id, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Insert)
+			b, _, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsFrontend, s.stores.SettingsFrontend.GetAll)
+			}, nil
 		case repo.TableSettingsPayment:
-			b, id, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsPayment.Insert)
+			b, _, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsPayment.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsPayment, s.stores.SettingsPayment.GetAll)
+			}, nil
 		case repo.TableSettingsEmail:
-			b, id, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Insert)
+			b, _, wsErr := processInsertNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsEmail, s.stores.SettingsEmail.GetAll)
+			}, nil
 		case repo.TableUnit:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Unit.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableUnit, id, s.stores.Unit.GetByID) }, nil
 		case repo.TableUser:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.User.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableUser, id, s.stores.User.GetByID) }, nil
 		case repo.TableVat:
 			b, id, wsErr := processInsert(ctx, s, mutation, s.stores.Vat.Insert)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableVat, id, s.stores.Vat.GetByID) }, nil
 		}
 
 	case repo.OpUpdate:
@@ -223,91 +247,109 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableAccount, id, s.stores.Account.GetByID)
+			}, nil
 		case repo.TableCategory:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.Category.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableCategory, id, s.stores.Category.GetByID)
+			}, nil
 		case repo.TableFavorites:
-			b, id, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Update)
+			b, _, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableFavorites, s.stores.Favorites.Get) }, nil
 		case repo.TableProduct:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.Product.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableProduct, id, s.stores.Product.GetByID)
+			}, nil
 		case repo.TableProductGroup:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.ProductGroup.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableProductGroup, id, s.stores.ProductGroup.GetByID)
+			}, nil
 		case repo.TableRights:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.Rights.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableRights, id, s.stores.Rights.GetByID) }, nil
 		case repo.TableRole:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.Role.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableRole, id, s.stores.Role.GetByID) }, nil
 		case repo.TableServiceLink:
-			b, id, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Update)
+			b, _, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableServiceLink, s.stores.ServiceLink.Get)
+			}, nil
 		case repo.TableServiceSewobe:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.ServiceSewobe.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastByID(ctx, s, repo.TableServiceSewobe, id, s.stores.ServiceSewobe.GetByID)
+			}, nil
 		case repo.TableSettingsFrontend:
-			b, id, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Update)
+			b, _, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsFrontend, s.stores.SettingsFrontend.GetAll)
+			}, nil
 		case repo.TableSettingsPayment:
-			b, id, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsPayment.Update)
+			b, _, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsPayment.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsPayment, s.stores.SettingsPayment.GetAll)
+			}, nil
 		case repo.TableSettingsEmail:
-			b, id, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Update)
+			b, _, wsErr := processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsEmail, s.stores.SettingsEmail.GetAll)
+			}, nil
 		case repo.TableUnit:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.Unit.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableUnit, id, s.stores.Unit.GetByID) }, nil
 		case repo.TableUser:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.User.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableUser, id, s.stores.User.GetByID) }, nil
 		case repo.TableVat:
 			b, id, wsErr := processUpdate(ctx, s, mutation, s.stores.Vat.Update)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastByID(ctx, s, repo.TableVat, id, s.stores.Vat.GetByID) }, nil
 		}
 
 	case repo.OpDelete:
@@ -315,35 +357,39 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 		case repo.TableAccount:
 			return nil, nil, &WSError{Code: WSInvalidOperation, Message: "Invalid operation", Details: "Deletion of accounts is not supported"}
 		case repo.TableCategory:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "category_id", s.stores.Category.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "category_id", s.stores.Category.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableCategory, s.stores.Category.Get) }, nil
 		case repo.TableProductGroup:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "product_group_id", s.stores.ProductGroup.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "product_group_id", s.stores.ProductGroup.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableProductGroup, s.stores.ProductGroup.Get)
+			}, nil
 		case repo.TableProductVisibility:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "product_visibility_id", s.stores.ProductVisibility.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "product_visibility_id", s.stores.ProductVisibility.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableProductVisibility, s.stores.ProductVisibility.Get)
+			}, nil
 		case repo.TableRights:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "rights_id", s.stores.Rights.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "rights_id", s.stores.Rights.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableRights, s.stores.Rights.Get) }, nil
 		case repo.TableRole:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "role_id", s.stores.Role.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "role_id", s.stores.Role.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableRole, s.stores.Role.Get) }, nil
 		case repo.TableServiceLink:
 			idStr, ok := mutation.Where["foreign_user_id"]
 			if !ok {
@@ -360,49 +406,59 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, fid) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableServiceLink, s.stores.ServiceLink.Get)
+			}, nil
 		case repo.TableServiceSewobe:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "service_sewobe_id", s.stores.ServiceSewobe.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "service_sewobe_id", s.stores.ServiceSewobe.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastList(ctx, s, repo.TableServiceSewobe, s.stores.ServiceSewobe.Get)
+			}, nil
 		case repo.TableSettingsFrontend:
-			b, id, wsErr := processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsFrontend.Delete)
+			b, _, wsErr := processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsFrontend.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsFrontend, s.stores.SettingsFrontend.GetAll)
+			}, nil
 		case repo.TableSettingsPayment:
-			b, id, wsErr := processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsPayment.Delete)
+			b, _, wsErr := processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsPayment.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsPayment, s.stores.SettingsPayment.GetAll)
+			}, nil
 		case repo.TableSettingsEmail:
-			b, id, wsErr := processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsEmail.Delete)
+			b, _, wsErr := processDeleteByStringKey(ctx, s, mutation, "key", s.stores.SettingsEmail.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) {
+				return broadcastGetAllList(ctx, s, repo.TableSettingsEmail, s.stores.SettingsEmail.GetAll)
+			}, nil
 		case repo.TableUnit:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "unit_id", s.stores.Unit.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "unit_id", s.stores.Unit.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableUnit, s.stores.Unit.Get) }, nil
 		case repo.TableUser:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "user_id", s.stores.User.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "user_id", s.stores.User.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableUser, s.stores.User.Get) }, nil
 		case repo.TableVat:
-			b, id, wsErr := processDeleteByIntID(ctx, s, mutation, "vat_id", s.stores.Vat.Delete)
+			b, _, wsErr := processDeleteByIntID(ctx, s, mutation, "vat_id", s.stores.Vat.Delete)
 			if wsErr != nil {
 				return nil, nil, wsErr
 			}
-			return b, func() ([]byte, *WSError) { return s.prepareBroadcast(ctx, mutation, id) }, nil
+			return b, func() ([]byte, *WSError) { return broadcastList(ctx, s, repo.TableVat, s.stores.Vat.Get) }, nil
 		}
 	}
 
@@ -411,94 +467,4 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 		Message: "Invalid operation",
 		Details: "Could not process mutation for operation " + string(mutation.Operation) + " on table " + string(mutation.Table),
 	}
-}
-
-func (s *Service) prepareBroadcast(ctx context.Context, mutation *Mutation, id int) ([]byte, *WSError) {
-	switch mutation.Table {
-	case repo.TableAccount:
-		return broadcastByID(ctx, s, repo.TableAccount, id, s.stores.Account.GetByID)
-
-	case repo.TableCategory:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableCategory, s.stores.Category.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableCategory, id, s.stores.Category.GetByID)
-
-	case repo.TableFavorites:
-		return broadcastList(ctx, s, repo.TableFavorites, s.stores.Favorites.Get)
-
-	case repo.TableLocation:
-		return broadcastByID(ctx, s, repo.TableLocation, id, s.stores.Location.GetByID)
-
-	case repo.TableOrder:
-		return broadcastByID(ctx, s, repo.TableOrder, id, s.stores.Order.GetByID)
-
-	case repo.TableProduct:
-		return broadcastByID(ctx, s, repo.TableProduct, id, s.stores.Product.GetByID)
-
-	case repo.TableProductGroup:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableProductGroup, s.stores.ProductGroup.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableProductGroup, id, s.stores.ProductGroup.GetByID)
-
-	case repo.TableProductOrder:
-		return broadcastList(ctx, s, repo.TableProductOrder, s.stores.ProductOrder.Get)
-
-	case repo.TableProductVisibility:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableProductVisibility, s.stores.ProductVisibility.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableProductVisibility, id, s.stores.ProductVisibility.GetByID)
-
-	case repo.TableRights:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableRights, s.stores.Rights.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableRights, id, s.stores.Rights.GetByID)
-
-	case repo.TableRole:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableRole, s.stores.Role.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableRole, id, s.stores.Role.GetByID)
-
-	case repo.TableServiceLink:
-		return broadcastList(ctx, s, repo.TableServiceLink, s.stores.ServiceLink.Get)
-
-	case repo.TableServiceSewobe:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableServiceSewobe, s.stores.ServiceSewobe.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableServiceSewobe, id, s.stores.ServiceSewobe.GetByID)
-
-	case repo.TableSettingsFrontend:
-		return broadcastGetAllList(ctx, s, repo.TableSettingsFrontend, s.stores.SettingsFrontend.GetAll)
-
-	case repo.TableSettingsPayment:
-		return broadcastGetAllList(ctx, s, repo.TableSettingsPayment, s.stores.SettingsPayment.GetAll)
-
-	case repo.TableSettingsEmail:
-		return broadcastGetAllList(ctx, s, repo.TableSettingsEmail, s.stores.SettingsEmail.GetAll)
-
-	case repo.TableUnit:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableUnit, s.stores.Unit.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableUnit, id, s.stores.Unit.GetByID)
-
-	case repo.TableUser:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableUser, s.stores.User.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableUser, id, s.stores.User.GetByID)
-
-	case repo.TableVat:
-		if mutation.Operation == repo.OpDelete {
-			return broadcastList(ctx, s, repo.TableVat, s.stores.Vat.Get)
-		}
-		return broadcastByID(ctx, s, repo.TableVat, id, s.stores.Vat.GetByID)
-	}
-
-	return nil, nil
 }
