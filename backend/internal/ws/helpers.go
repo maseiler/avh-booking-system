@@ -60,17 +60,35 @@ func processInsertNoReturn[T any](ctx context.Context, s *Service, mutation *Mut
 	return b, id, wsErr
 }
 
-func processUpdate[T any](ctx context.Context, s *Service, mutation *Mutation, update func(context.Context, T) (int, error)) ([]byte, int, *WSError) {
-	item, wsErr := unmarshalInterface[T](mutation.Values)
-	if wsErr != nil {
-		return nil, 0, wsErr
+func processUpdate[T any](ctx context.Context, s *Service, mutation *Mutation, idField string, getByID func(context.Context, int) (*T, error), update func(context.Context, T) (int, error)) ([]byte, int, *WSError) {
+	idStr, ok := mutation.Where[idField]
+	if !ok {
+		return nil, 0, &WSError{Code: WSBadJSON, Message: "Missing " + idField + " in where clause", Details: "Update requires " + idField}
 	}
-	id, err := update(ctx, *item)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return nil, 0, &WSError{Code: WSBadJSON, Message: err.Error(), Details: idField + " must be an integer"}
+	}
+
+	current, err := getByID(ctx, id)
+	if err != nil {
+		return nil, 0, &WSError{Code: WSDBQueryError, Message: err.Error(), Details: "Could not fetch current " + string(mutation.Table) + " for update"}
+	}
+
+	patch, err := json.Marshal(mutation.Values)
+	if err != nil {
+		return nil, 0, &WSError{Code: WSBadInterface, Message: err.Error(), Details: "Could not marshal patch values"}
+	}
+	if err := json.Unmarshal(patch, current); err != nil {
+		return nil, 0, &WSError{Code: WSBadJSON, Message: err.Error(), Details: "Could not apply patch to " + string(mutation.Table)}
+	}
+
+	newID, err := update(ctx, *current)
 	if err != nil {
 		return nil, 0, &WSError{Code: WSInternalError, Message: err.Error(), Details: "Could not update in " + string(mutation.Table)}
 	}
-	b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, id)
-	return b, id, wsErr
+	b, wsErr := s.marshalResultMutation(mutation.Table, mutation.Operation, newID)
+	return b, newID, wsErr
 }
 
 // processUpdateNoReturn handles updates for stores that return only error (composite-PK tables).

@@ -143,23 +143,23 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 	case repo.OpUpdate:
 		switch mutation.Table {
 		case repo.TableAccount:
-			return processUpdate(ctx, s, mutation, s.stores.Account.Update)
+			return processUpdate(ctx, s, mutation, "account_id", s.stores.Account.GetByID, s.stores.Account.Update)
 		case repo.TableCategory:
-			return processUpdate(ctx, s, mutation, s.stores.Category.Update)
+			return processUpdate(ctx, s, mutation, "category_id", s.stores.Category.GetByID, s.stores.Category.Update)
 		case repo.TableFavorites:
 			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.Favorites.Update)
 		case repo.TableProduct:
-			return processUpdate(ctx, s, mutation, s.stores.Product.Update)
+			return processUpdate(ctx, s, mutation, "product_id", s.stores.Product.GetByID, s.stores.Product.Update)
 		case repo.TableProductGroup:
-			return processUpdate(ctx, s, mutation, s.stores.ProductGroup.Update)
+			return processUpdate(ctx, s, mutation, "product_group_id", s.stores.ProductGroup.GetByID, s.stores.ProductGroup.Update)
 		case repo.TableRights:
-			return processUpdate(ctx, s, mutation, s.stores.Rights.Update)
+			return processUpdate(ctx, s, mutation, "rights_id", s.stores.Rights.GetByID, s.stores.Rights.Update)
 		case repo.TableRole:
-			return processUpdate(ctx, s, mutation, s.stores.Role.Update)
+			return processUpdate(ctx, s, mutation, "role_id", s.stores.Role.GetByID, s.stores.Role.Update)
 		case repo.TableServiceLink:
 			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.ServiceLink.Update)
 		case repo.TableServiceSewobe:
-			return processUpdate(ctx, s, mutation, s.stores.ServiceSewobe.Update)
+			return processUpdate(ctx, s, mutation, "service_sewobe_id", s.stores.ServiceSewobe.GetByID, s.stores.ServiceSewobe.Update)
 		case repo.TableSettingsFrontend:
 			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsFrontend.Update)
 		case repo.TableSettingsPayment:
@@ -167,11 +167,11 @@ func (s *Service) processMutation(ctx context.Context, mutation *Mutation) ([]by
 		case repo.TableSettingsEmail:
 			return processUpdateNoReturn(ctx, s, mutation, 0, s.stores.SettingsEmail.Update)
 		case repo.TableUnit:
-			return processUpdate(ctx, s, mutation, s.stores.Unit.Update)
+			return processUpdate(ctx, s, mutation, "unit_id", s.stores.Unit.GetByID, s.stores.Unit.Update)
 		case repo.TableUser:
-			return processUpdate(ctx, s, mutation, s.stores.User.Update)
+			return processUpdate(ctx, s, mutation, "user_id", s.stores.User.GetByID, s.stores.User.Update)
 		case repo.TableVat:
-			return processUpdate(ctx, s, mutation, s.stores.Vat.Update)
+			return processUpdate(ctx, s, mutation, "vat_id", s.stores.Vat.GetByID, s.stores.Vat.Update)
 		}
 
 	case repo.OpDelete:
